@@ -1,15 +1,17 @@
 
+#include "default_map.h"
 #include "error.h"
-#include "pdx.h"
 
 #include <cstdio>
+#include <cassert>
 #include <string>
 
 
 typedef std::string string;
 
 
-const string ROOT_DIR("/cygdrive/d/SteamLibrary/steamapps/common/Crusader Kings II");
+//const string ROOT_DIR("/cygdrive/d/SteamLibrary/steamapps/common/Crusader Kings II");
+const string ROOT_DIR("/cygdrive/d/g/SWMH-BETA/SWMH");
 
 
 int main(int argc, char** argv) {
@@ -25,12 +27,7 @@ int main(int argc, char** argv) {
     // TODO: draw output image
 
     try {
-
-        string dm_path = ROOT_DIR + "/map/default.map";
-        pdx::plexer lex(dm_path.c_str());
-
-        pdx::block* dm_root = new pdx::block(lex, true);
-
+        default_map dm(ROOT_DIR + "/map/default.map");
     }
     catch (std::exception& e) {
         fprintf(stderr, "fatal: %s\n", e.what());

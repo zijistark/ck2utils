@@ -9,6 +9,8 @@
 #include "token.h"
 #include "error.h"
 
+#include <cstring>
+
 namespace pdx {
 
   struct block;
@@ -46,6 +48,11 @@ namespace pdx {
   struct stmt {
     obj key;
     obj val;
+
+    bool key_eq(const char* s) {
+      return (key.type == obj::STR
+              && strcmp(key.data.s, s) == 0);
+    }
   };
 
   struct plexer : public lexer {
