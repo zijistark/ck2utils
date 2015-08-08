@@ -17,6 +17,7 @@ class default_map {
 
     uint          _max_province_id;
     std::string   _definitions_filename;
+    std::string   _provinces_filename;
     id_pair_vec_t _seazone_vec;
     id_set_t      _major_river_set;
 
@@ -25,6 +26,7 @@ public:
 
     uint max_province_id() const noexcept { return _max_province_id; }
     const std::string& definitions_filename() const noexcept { return _definitions_filename; }
+    const std::string& provinces_filename() const noexcept { return _provinces_filename; }
     const id_pair_vec_t& seazone_vec() const noexcept { return _seazone_vec; }
     const id_set_t& major_river_set() const noexcept { return _major_river_set; }
 };

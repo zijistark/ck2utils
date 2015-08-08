@@ -32,7 +32,15 @@ int main(int argc, char** argv) {
         default_map dm(ROOT_DIR + "/map/default.map");
         
         color2id_map_t color2id_map;
-        fill_color2id_map(color2id_map, ROOT_DIR + "/map/" + dm.definitions_filename(), dm.max_province_id());
+        fill_color2id_map(color2id_map,
+                          ROOT_DIR + "/map/" + dm.definitions_filename(),
+                          dm.max_province_id());
+
+        /*
+        province_map pm(ROOT_DIR + "/map/" + dm.provinces_filename(),
+                        color2id_map,
+                        dm.max_province_id());
+        */
 
     }
     catch (std::exception& e) {
@@ -64,10 +72,8 @@ void fill_color2id_map(color2id_map_t& m, const std::string& definitions_path, u
         char* n_str[4];
         n_str[0] = strtok(p, ";");
 
-        for (uint x = 1; x < 4; ++x) {
+        for (uint x = 1; x < 4; ++x)
             n_str[x] = strtok(NULL, ";");
-            assert(n_str[x] != NULL);
-        }
 
         uint n[4];
 
