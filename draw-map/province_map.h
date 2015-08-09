@@ -27,6 +27,9 @@ class province_map {
 public:
     province_map(const default_map&);
 
+    static const uint16_t TYPE_OCEAN = (1<<16)-1;
+    static const uint16_t TYPE_IMPASSABLE = (1<<16)-2;
+
     uint width() const noexcept { return _n_width; }
     uint height() const noexcept { return _n_height; }
 

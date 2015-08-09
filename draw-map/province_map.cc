@@ -80,15 +80,18 @@ province_map::province_map(const default_map& dm)
     assert( bi_hdr.n_colors == 0 );
     assert( bi_hdr.n_important_colors == 0 );
 
-    uint n_width = bi_hdr.n_width;
-    uint n_height = bi_hdr.n_height;
+    _n_width = bi_hdr.n_width;
+    _n_height = bi_hdr.n_height;
 
     /* calculate row size with 32-bit alignment padding */
-    uint n_row_sz = (bi_hdr.n_bpp * n_width + 31) / 32;
+    uint n_row_sz = (bi_hdr.n_bpp * _n_width + 31) / 32;
     n_row_sz *= 4;
 
     if (bi_hdr.n_bitmap_size)
-        assert( bi_hdr.n_bitmap_size == n_row_sz * n_height );
+        assert( bi_hdr.n_bitmap_size == n_row_sz * _n_height );
+
+    /* allocate ID map */
+    _p_map = new uint16_t[_n_width * _n_height];
 
     /* seek past any other bytes and directly to offset of pixel array (if needed). */
     if ( fseek(f, bf_hdr.n_bitmap_offset, SEEK_SET) != 0 )
@@ -99,29 +102,40 @@ province_map::province_map(const default_map& dm)
 
     /* read bitmap image data (pixel array), row by row, in bottom-to-top raster scan order */
 
-    unsigned char row_buf[n_row_sz];
+    uint8_t row_buf[n_row_sz];
 
-    for (uint row = 0; row < n_height; ++row) {
+    for (uint row = 0; row < _n_height; ++row) {
         
         if ( fread(&row_buf, n_row_sz, 1, f) < 1 ) {
             if (errno)
-                throw va_error("failed to read bitmap file header: %s: %s", strerror(errno), path);
+                throw va_error("failed to read raw bitmap data: %s: %s", strerror(errno), path);
             else
                 throw va_error("unexpected EOF while reading raw bitmap data: %s", path);
         }
 
-        const uint y = n_height-1 - row;
+        const uint y = _n_height-1 - row;
 
-        for (uint x = 0; x < n_width; ++x) {
-            const unsigned char* p = &row_buf[3*x];
-            uint32_t color = make_color(p[2], p[1], p[0]);
-            auto i = color2id_map.find(color);
+        for (uint x = 0; x < _n_width; ++x) {
+            const auto p = &row_buf[3*x];
+            uint16_t id;
 
-            if (i == color2id_map.end())
-                throw va_error("unexpected color RGB(%hhu, %hhu, %hhu) in provinces bitmap at (%u, %u)",
-                               p[2], p[1], p[0], x, y);
+            if (p[0] == 0xFF && p[1] == 0xFF && p[2] == 0xFF)
+                id = TYPE_OCEAN;
+            else if (p[0] == 0x00 && p[1] == 0x00 && p[2] == 0x00)
+                id = TYPE_IMPASSABLE;
+            else {
 
-            printf("%u\n", i->second);
+                uint32_t color = make_color(p[2], p[1], p[0]);
+                auto i = color2id_map.find(color);
+
+                if (i == color2id_map.end())
+                    throw va_error("unexpected color RGB(%hhu, %hhu, %hhu) in provinces bitmap at (%u, %u)",
+                                   p[2], p[1], p[0], x, y);
+
+                id = i->second;
+            }
+
+            _p_map[y*_n_width + x] = id;
         }
     }
 
@@ -138,15 +152,19 @@ void province_map::fill_color2id_map(color2id_map_t& m, const default_map& dm) {
         throw va_error("could not open file: %s: %s", strerror(errno), path);
 
     char buf[128];
-    char* p = &buf[0];
     uint n_line = 0;
-    
-    if ( fgets(p, sizeof(buf), f) == nullptr ) // consume CSV header
-        return;
-    
-    while ( fgets(p, sizeof(buf), f) != nullptr ) {
+
+    if ( fgets(&buf[0], sizeof(buf), f) == nullptr ) // consume CSV header
+        throw va_error("definitions file lacks at least 1 line of text: %s", path);
+
+    while ( fgets(&buf[0], sizeof(buf), f) != nullptr ) {
 
         ++n_line;
+
+        char* p = &buf[0];
+
+        if (*p == '#')
+            continue;
 
         char* n_str[4];
         n_str[0] = strtok(p, ";");
@@ -169,4 +187,7 @@ void province_map::fill_color2id_map(color2id_map_t& m, const default_map& dm) {
     }
 
     fclose(f);
+
+    if (m.empty())
+        throw va_error("definitions file lacked any data: %s", path);
 }
