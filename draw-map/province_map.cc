@@ -13,7 +13,7 @@ static const uint16_t BMP_MAGIC = 0x4D42;
 
 
 struct bmp_file_header {
-    uint16_t magic; // should be 0x424D ("BM")
+    uint16_t magic; // should be 0x4D42 ("BM", accounting for endianness)
     uint32_t n_file_size; // bytes (entire file)
     uint16_t reserved1;
     uint16_t reserved2;
@@ -115,6 +115,12 @@ province_map::province_map(const default_map& dm)
 
         const uint y = _n_height-1 - row;
 
+        /* cache previous pixel's value & province ID */
+        uint8_t  prev_b;
+        uint8_t  prev_g;
+        uint8_t  prev_r;
+        uint16_t prev_id;
+
         for (uint x = 0; x < _n_width; ++x) {
             const auto p = &row_buf[3*x];
             uint16_t id;
@@ -123,6 +129,8 @@ province_map::province_map(const default_map& dm)
                 id = TYPE_OCEAN;
             else if (p[0] == 0x00 && p[1] == 0x00 && p[2] == 0x00)
                 id = TYPE_IMPASSABLE;
+            else if (x > 0 && p[0] == prev_b && p[1] == prev_g && p[2] == prev_r)
+                id = prev_id;
             else {
 
                 uint32_t color = make_color(p[2], p[1], p[0]);
@@ -135,7 +143,10 @@ province_map::province_map(const default_map& dm)
                 id = i->second;
             }
 
-            _p_map[y*_n_width + x] = id;
+            prev_b = p[0];
+            prev_g = p[1];
+            prev_r = p[2];
+            prev_id = _p_map[y*_n_width + x] = id;
         }
     }
 
