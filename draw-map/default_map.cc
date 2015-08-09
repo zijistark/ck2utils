@@ -7,11 +7,12 @@
 #include <cassert>
 
 
-default_map::default_map(const std::string& path)
+default_map::default_map(const std::string& root_path)
 : _max_province_id(0) {
 
     using namespace pdx;
 
+    const std::string path = root_path + "/map/default.map";
     plexer lex(path.c_str());
     block doc(lex, true);
 
@@ -22,11 +23,11 @@ default_map::default_map(const std::string& path)
         }
         else if (s.key_eq("definitions")) {
             assert(s.val.type == obj::STR);
-            _definitions_filename = s.val.data.s;
+            _definitions_path = root_path + "/map/" + s.val.data.s;
         }
         else if (s.key_eq("provinces")) {
             assert(s.val.type == obj::STR);
-            _provinces_filename = s.val.data.s;
+            _provinces_path = root_path + "/map/" + s.val.data.s;
         }
         else if (s.key_eq("sea_zones")) {
             assert(s.val.type == obj::LIST);
@@ -50,6 +51,5 @@ default_map::default_map(const std::string& path)
         }
     }
 
-    assert( max_province_id() > 0);
-    assert( !definitions_filename().empty() );
+    assert( max_province_id() > 0 );
 }

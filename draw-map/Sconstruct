@@ -3,7 +3,7 @@
 env = Environment()
 env.Append(CXXFLAGS="-Wall -Wextra -Wno-unused-function -Wno-unused-parameter -g -O0 --std=c++11")
 
-sources = ["main.cc", "token.cc", "lexer.cc", "pdx.cc", "default_map.cc"]
+sources = ["main.cc", "token.cc", "lexer.cc", "pdx.cc", "default_map.cc", "province_map.cc"]
 sources += env.CXXFile('scanner.ll')
 
 env.Program('draw-map', sources)
