@@ -96,6 +96,7 @@ def main():
         'common/minor_titles/*.txt',
         'common/job_titles/*.txt',
         'common/job_actions/*.txt',
+        'common/religious_titles/*.txt',
         'common/cb_types/*.txt',
         'common/scripted_triggers/*.txt',
         'common/scripted_effects/*.txt',
@@ -113,10 +114,10 @@ def main():
                     else:
                         rel_path = '<vanilla>' / path.relative_to(vanilladir)
                     if lhs:
-                        print('Title in <title> = { ... }:', file=fp)
+                        fp.write('Undefined reference as SCOPE:\n\t{}'.format(rel_path))
                     else:
-                        print('Other:', file=fp)
-                    print('\t', rel_path, *titles, sep='\n\t\t', file=fp)
+                        fp.write('Undefined reference:\n\t{}'.format(rel_path))
+                    print('\t', *titles, sep='\n\t\t', file=fp)
 
 
 if __name__ == '__main__':
