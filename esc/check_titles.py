@@ -13,31 +13,27 @@ rootpath = localpaths.rootpath
 vanilladir = localpaths.vanilladir
 swmhpath = rootpath / 'SWMH-BETA/SWMH'
 
-results = collections.defaultdict(list)
+results = {True: collections.defaultdict(list),
+           False: collections.defaultdict(list)}
 
-def check_title(v, path, titles):
+def check_title(v, path, titles, lhs=False):
     if not isinstance(v, str):
         v = v.val
     if ck2parser.is_codename(v) and v not in titles:
-        results[path].append(v)
+        results[lhs][path].append(v)
         return False
     return True
 
 def check_titles(path, titles):
     def recurse(tree):
         if tree.has_pairs:
-            try:
-                for n, v in tree:
-                    check_title(n, path, titles)
-                    try:
-                        check_title(v, path, titles)
-                    except AttributeError:
-                        recurse(v)
-            except TypeError:
-                for x in tree:
-                    if isinstance(x, ck2parser.String):
-                        print(x.val)
-                raise
+            for n, v in tree:
+                v_is_obj = isinstance(v, ck2parser.Obj)
+                check_title(n, path, titles, v_is_obj)
+                if v_is_obj:
+                    recurse(v)
+                else:
+                    check_title(v, path, titles)
         else:
             for v in tree:
                 check_title(v, path, titles)
@@ -109,13 +105,18 @@ def main():
         for path in ck2parser.files(glob, swmhpath):
             check_titles(path, titles)
     with (rootpath / 'out.txt').open('w', encoding='cp1252') as fp:
-        for path, titles in sorted(results.items()):
-            if titles:
-                if swmhpath in path.parents:
-                    rel_path = '<mod>' / path.relative_to(swmhpath)
-                else:
-                    rel_path = '<vanilla>' / path.relative_to(vanilladir)
-                print(rel_path, *titles, sep='\n\t', file=fp)
+        for lhs in [True, False]:
+            for path, titles in sorted(results[lhs].items()):
+                if titles:
+                    if swmhpath in path.parents:
+                        rel_path = '<mod>' / path.relative_to(swmhpath)
+                    else:
+                        rel_path = '<vanilla>' / path.relative_to(vanilladir)
+                    if lhs:
+                        print('Title in <title> = { ... }:', file=fp)
+                    else:
+                        print('Other:', file=fp)
+                    print('\t', rel_path, *titles, sep='\n\t\t', file=fp)
 
 
 if __name__ == '__main__':
