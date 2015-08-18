@@ -4,6 +4,7 @@ import collections
 import csv
 import pathlib
 import re
+import sys
 import shutil
 import tempfile
 import localpaths
@@ -77,6 +78,8 @@ def process_landed_titles():
     return titles
 
 def main():
+    if len(sys.argv) > 1:
+        swmhpath = pathlib.Path(sys.argv[1])
     titles = process_landed_titles()
     check_province_history(titles)
     for path in ck2parser.files('history/titles/*.txt', swmhpath):
