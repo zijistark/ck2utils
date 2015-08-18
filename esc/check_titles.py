@@ -93,8 +93,17 @@ def main():
             else:
                 check_titles(path, titles)
     globs = [
-        'events/*.txt', 'common/decisions/*.txt', 'common/minor_titles/*.txt',
-        'common/achievements.txt', 'common/laws/*.txt'
+        'events/*.txt',
+        'decisions/*.txt',
+        'common/laws/*.txt',
+        'common/objectives/*.txt',
+        'common/minor_titles/*.txt',
+        'common/job_titles/*.txt',
+        'common/job_actions/*.txt',
+        'common/cb_types/*.txt',
+        'common/scripted_triggers/*.txt',
+        'common/scripted_effects/*.txt',
+        'common/achievements.txt',
         ]
     for glob in globs:
         for path in ck2parser.files(glob, swmhpath):
