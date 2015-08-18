@@ -17,24 +17,29 @@ modpath = rootpath / 'SWMH-BETA/SWMH'
 results = {True: collections.defaultdict(list),
            False: collections.defaultdict(list)}
 
-def check_title(v, path, titles, lhs=False):
-    if not isinstance(v, str):
-        v = v.val
-    if ck2parser.is_codename(v) and v not in titles:
-        results[lhs][path].append(v)
+def check_title(v, path, titles, lhs=False, line=None):
+    if isinstance(v, str):
+        v_str = v
+    else:
+        v_str = v.val
+    if ck2parser.is_codename(v_str) and v_str not in titles:
+        if line is not None:
+            v_str = line.inline_str(0)[0].split('\n', maxsplit=1)[0]
+        results[lhs][path].append(v_str)
         return False
     return True
 
 def check_titles(path, titles):
     def recurse(tree):
         if tree.has_pairs:
-            for n, v in tree:
+            for p in tree:
+                n, v = p
                 v_is_obj = isinstance(v, ck2parser.Obj)
-                check_title(n, path, titles, v_is_obj)
+                check_title(n, path, titles, v_is_obj, p)
                 if v_is_obj:
                     recurse(v)
                 else:
-                    check_title(v, path, titles)
+                    check_title(v, path, titles, line=p)
         else:
             for v in tree:
                 check_title(v, path, titles)
@@ -86,10 +91,12 @@ def main():
     for path in ck2parser.files('history/titles/*.txt', modpath):
         tree = ck2parser.parse_file(path)
         if tree.contents:
-            good = check_title(path.stem, path.parent, titles)
+            good = check_title(path.stem, path, titles)
             if not good and modpath not in path.parents:
                 newpath = modpath / 'history/titles' / path.name
-                newpath.open('w').close()
+                # newpath.open('w').close()
+                print('Should override {} with blank file'.format(
+                      '<vanilla>' / path.relative_to(vanilladir)))
             else:
                 check_titles(path, titles)
     globs = [
