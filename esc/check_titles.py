@@ -12,7 +12,7 @@ import ck2parser
 
 rootpath = localpaths.rootpath
 vanilladir = localpaths.vanilladir
-swmhpath = rootpath / 'SWMH-BETA/SWMH'
+modpath = rootpath / 'SWMH-BETA/SWMH'
 
 results = {True: collections.defaultdict(list),
            False: collections.defaultdict(list)}
@@ -46,17 +46,17 @@ def check_titles(path, titles):
         raise
 
 def check_province_history(titles):
-    tree = ck2parser.parse_file(swmhpath / 'map/default.map')
+    tree = ck2parser.parse_file(modpath / 'map/default.map')
     defs = next(v.val for n, v in tree if n.val == 'definitions')
     id_name = {}
-    with (swmhpath / 'map' / defs).open(newline='',
+    with (modpath / 'map' / defs).open(newline='',
                                         encoding='cp1252') as csvfile:
         for row in csv.reader(csvfile, dialect='ckii'):
             try:
                 id_name[int(row[0])] = row[4]
             except (IndexError, ValueError):
                 continue
-    for path in ck2parser.files('history/provinces/*.txt', swmhpath):
+    for path in ck2parser.files('history/provinces/*.txt', modpath):
         number, name = path.stem.split(' - ')
         id_number = int(number)
         if id_name[id_number] == name:
@@ -73,21 +73,22 @@ def process_landed_titles():
                 titles.add(n.val)
                 recurse(v)
 
-    for path in ck2parser.files('common/landed_titles/*.txt', swmhpath):
+    for path in ck2parser.files('common/landed_titles/*.txt', modpath):
         recurse(ck2parser.parse_file(path))
     return titles
 
 def main():
+    global modpath
     if len(sys.argv) > 1:
-        swmhpath = pathlib.Path(sys.argv[1])
+        modpath = pathlib.Path(sys.argv[1])
     titles = process_landed_titles()
     check_province_history(titles)
-    for path in ck2parser.files('history/titles/*.txt', swmhpath):
+    for path in ck2parser.files('history/titles/*.txt', modpath):
         tree = ck2parser.parse_file(path)
         if tree.contents:
             good = check_title(path.stem, path.parent, titles)
-            if not good and swmhpath not in path.parents:
-                newpath = swmhpath / 'history/titles' / path.name
+            if not good and modpath not in path.parents:
+                newpath = modpath / 'history/titles' / path.name
                 newpath.open('w').close()
             else:
                 check_titles(path, titles)
@@ -106,18 +107,19 @@ def main():
         'common/achievements.txt',
         ]
     for glob in globs:
-        for path in ck2parser.files(glob, swmhpath):
+        for path in ck2parser.files(glob, modpath):
             check_titles(path, titles)
     with (rootpath / 'out.txt').open('w', encoding='cp1252') as fp:
         for lhs in [True, False]:
-            if lhs:
-                print('Undefined references as SCOPE:', file=fp)
-            else:
-                print('Undefined references:', file=fp)
+            if results[lhs]:
+                if lhs:
+                    print('Undefined references as SCOPE:', file=fp)
+                else:
+                    print('Undefined references:', file=fp)
             for path, titles in sorted(results[lhs].items()):
                 if titles:
-                    if swmhpath in path.parents:
-                        rel_path = '<mod>' / path.relative_to(swmhpath)
+                    if modpath in path.parents:
+                        rel_path = '<mod>' / path.relative_to(modpath)
                     else:
                         rel_path = '<vanilla>' / path.relative_to(vanilladir)
                     print('\t' + str(rel_path), *titles, sep='\n\t\t', file=fp)
