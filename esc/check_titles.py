@@ -112,7 +112,7 @@ def main():
         for path, titles in sorted(results.items()):
             if titles:
                 if swmhpath in path.parents:
-                    rel_path = '<swmh>' / path.relative_to(swmhpath)
+                    rel_path = '<mod>' / path.relative_to(swmhpath)
                 else:
                     rel_path = '<vanilla>' / path.relative_to(vanilladir)
                 print(rel_path, *titles, sep='\n\t', file=fp)
