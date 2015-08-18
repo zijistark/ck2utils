@@ -107,17 +107,17 @@ def main():
             check_titles(path, titles)
     with (rootpath / 'out.txt').open('w', encoding='cp1252') as fp:
         for lhs in [True, False]:
+            if lhs:
+                print('Undefined references as SCOPE:', file=fp)
+            else:
+                print('Undefined references:', file=fp)
             for path, titles in sorted(results[lhs].items()):
                 if titles:
                     if swmhpath in path.parents:
                         rel_path = '<mod>' / path.relative_to(swmhpath)
                     else:
                         rel_path = '<vanilla>' / path.relative_to(vanilladir)
-                    if lhs:
-                        fp.write('Undefined reference as SCOPE:\n\t{}'.format(rel_path))
-                    else:
-                        fp.write('Undefined reference:\n\t{}'.format(rel_path))
-                    print('\t', *titles, sep='\n\t\t', file=fp)
+                    print('\t' + str(rel_path), *titles, sep='\n\t\t', file=fp)
 
 
 if __name__ == '__main__':
