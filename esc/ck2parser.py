@@ -11,7 +11,8 @@ vanilladir = localpaths.vanilladir
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
                      quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
 
-TAB_WIDTH = 4
+# these used only to compute long line wrapping
+TAB_WIDTH = 4 # minimum 2
 CHARS_PER_LINE = 120
 
 fq_keys = []
@@ -54,7 +55,13 @@ def is_codename(string):
 
 def chars(line):
     line = str(line).splitlines()[-1]
-    return len(line) + line.count('\t') * (TAB_WIDTH - 1)
+    col = 0
+    for char in line:
+        if char == '\t':
+            col = (col // TAB_WIDTH + 1) * TAB_WIDTH
+        else:
+            col += 1
+    return col
 
 token_specs = [
     ('comment', (r'#(.*\S)?',)),
@@ -68,6 +75,26 @@ token_specs = [
 ]
 useless = ['whitespace']
 tokenize = lexer.make_tokenizer(token_specs)
+
+def comments_to_str(comments, indent):
+    sep = '\n' + indent * '\t'
+    try:
+        tree = parse('\n'.join(c.val for c in comments))
+        if not tree.contents:
+            raise ValueError()
+    except (parser.NoParseError, ValueError):
+        return sep.join(str(c) for c in comments) + '\n'
+    tree.indent = indent
+    s = ''
+    for p in tree:
+        p_is, _ = p.inline_str(tree.indent_col)
+        p_is_lines = p_is.rstrip().splitlines()
+        s += '#' + p_is_lines[0] + sep
+        s += ''.join('#' + line[indent:] + sep for line in p_is_lines[1:])
+    if tree.post_comments:
+        s += comments_to_str(tree.post_comments, indent)
+    s = s.rstrip('\t')
+    return s
 
 class Comment(object):
     def __init__(self, string):
@@ -126,7 +153,8 @@ class TopLevel(Stringifiable):
     def str(self):
         s = ''.join(x.str() for x in self)
         if self.post_comments:
-            s += '\n'.join(str(c) for c in self.post_comments) + '\n'
+            s += self.indent * '\t'
+            s += comments_to_str(self.post_comments, self.indent)
         return s
 
 class Commented(Stringifiable):
@@ -155,10 +183,11 @@ class Commented(Stringifiable):
         return s, col + chars(s)
 
     def str(self):
-        s = self.indent * '\t'
+        s = ''
         if self.pre_comments:
-            s += ('\n' + s).join(str(self.pre_comments)) + '\n'
-        s += self.val_str()
+            s += self.indent * '\t'
+            s += comments_to_str(self.pre_comments, self.indent)
+        s += self.indent * '\t' + self.val_str()
         if self.post_comment:
             s += ' ' + str(self.post_comment)
         s += '\n'
@@ -169,12 +198,19 @@ class Commented(Stringifiable):
         sep = '\n' + self.indent * '\t'
         s = ''
         if self.pre_comments:
-            if (col > self.indent_col and
-                col + chars(self.pre_comments[0]) > CHARS_PER_LINE):
+            if col > self.indent_col:
                 s += sep
                 nl += 1
-            s += sep.join(str(c) for c in self.pre_comments) + sep
-            nl += len(self.pre_comments)
+            if isinstance(self, Op) and self.val == '}':
+                pre_indent = self.indent + 1
+                s += '\t'
+            else:
+                pre_indent = self.indent
+            # I can't tell the difference if I'm just after, say, "nor = { "
+            # with TAB_WIDTH == 8, but whatever.
+            c_s = comments_to_str(self.pre_comments, pre_indent) + sep[1:]
+            s += c_s
+            nl += c_s.count('\n')
             col = self.indent_col
         val_is, col_val = self.val_inline_str(col)
         s += val_is
@@ -397,7 +433,7 @@ class Obj(Stringifiable):
                     col_oneline += 1
                 ker_is, (nl_ker, col_ker) = self.ker.inline_str(col_oneline)
                 if (nl_ker == 0 or
-                    chars(ker_is.splitlines()[0]) > CHARS_PER_LINE):
+                    chars(ker_is.splitlines()[0]) <= CHARS_PER_LINE):
                     s_oneline += ker_is
                     return s_oneline, (nl_ker, col_ker)
         if self.has_pairs:
@@ -446,8 +482,6 @@ class Obj(Stringifiable):
         nl += nl_ker
         col = col_ker
         return s, (nl, col)
-
-flag = False
 
 def unquote(string):
     return string[1:-1]
