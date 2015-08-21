@@ -11,6 +11,9 @@ import ck2parser
 rootpath = pathlib.Path('C:/Users/Nicholas/Documents/CK2')
 swmhpath = rootpath / 'SWMH-BETA/SWMH'
 
+# templar castles referenced by vanilla events
+swmh_titles_to_keep = ['b_beitdejan', 'b_lafeve']
+
 def get_cultures():
     cultures = []
     for path in ck2parser.files('common/cultures/*.txt', swmhpath):
@@ -137,7 +140,8 @@ def main():
                         for child in v2.contents:
                             if child.key.val.startswith('b_'):
                                 if (child.key.val in historical_baronies or
-                                    child.key.val in used_baronies[n2.val]):
+                                    child.key.val in used_baronies[n2.val] or
+                                    child.key.val in swmh_titles_to_keep):
                                     num_baronies += 1
                                 else:
                                     baronies_to_remove.append(child)
