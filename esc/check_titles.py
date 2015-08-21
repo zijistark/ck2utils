@@ -24,12 +24,10 @@ def check_title(v, path, titles, lhs=False, line=None):
         v_str = v.val
     if ck2parser.is_codename(v_str) and v_str not in titles:
         if line is not None:
-            pre_comments = line.pre_comments
-            line.pre_comments = []
-            v_str = line.inline_str(0)[0].split('\n', maxsplit=1)[0]
-            # let's not mutate where we don't need to
-            line.pre_comments = pre_comments
-        results[lhs][path].append(v_str)
+            v_lines = line.inline_str(0)[0].splitlines()
+            line = next((l for l in v_lines if not re.match(r'\s*#', l)),
+                        v_lines[0])
+        results[lhs][path].append(line)
         return False
     return True
 
