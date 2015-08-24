@@ -23,7 +23,9 @@ def check_title(v, path, titles, lhs=False, line=None):
     else:
         v_str = v.val
     if ck2parser.is_codename(v_str) and v_str not in titles:
-        if line is not None:
+        if line is None:
+            line = '<file>'
+        else:
             v_lines = line.inline_str(0)[0].splitlines()
             line = next((l for l in v_lines if not re.match(r'\s*#', l)),
                         v_lines[0])
@@ -44,7 +46,7 @@ def check_titles(path, titles):
                     check_title(v, path, titles, line=p)
         else:
             for v in tree:
-                check_title(v, path, titles)
+                check_title(v, path, titles, line=v)
 
     try:
         recurse(ck2parser.parse_file(path))
