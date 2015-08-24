@@ -26,6 +26,7 @@ def check_title(v, path, titles, lhs=False, line=None):
         if line is None:
             line = '<file>'
         else:
+            line.indent = 0
             v_lines = line.inline_str(0)[0].splitlines()
             line = next((l for l in v_lines if not re.match(r'\s*#', l)),
                         v_lines[0])
