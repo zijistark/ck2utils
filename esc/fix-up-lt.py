@@ -108,9 +108,9 @@ def main():
                         if n3.val == 'capital':
                             prov_key = 'PROV{}'.format(v3.val)
                             capital_name = localisation[prov_key]
-                            if not v3.post_comment:
-                                v3.post_comment = ck2parser.Comment(
-                                    capital_name)
+                            if v3.post_comment.val.strip() == capital_name:
+                                v3.post_comment = None
+                            prepend_post_comment(v3, capital_name)
                             # elif capital_name != v3.post_comment.val:
                             #     print('{},{},{}'.format(v3.val,
                             #           v3.post_comment.val, capital_name))
@@ -131,19 +131,27 @@ def main():
                         #     print('c   ' + v2.kel.post_comment.val)
                         if (not v2.kel.post_comment or
                             re.search(r'\(?\d+\)?', v2.kel.post_comment.val)):
-                            prev_cmnt = None
+                            prev_1 = None
+                            prev_2 = None
                             if v2.kel.post_comment is not None:
-                                prev_cmnt = re.match(r'[^(]*',
-                                                     v2.kel.post_comment.val)
+                                match = re.fullmatch(
+                                    r'([^(]+)\(\d+\)[^#]*(?:#(.+))?',
+                                    v2.kel.post_comment.val)
+                                if match:
+                                    prev_1, prev_2 = match.groups()
                                 v2.kel.post_comment = None
                             try:
                                 prov_id = province_id[n2.val]
                                 name = localisation['PROV{}'.format(prov_id)]
                                 comment = '{} ({})'.format(name, prov_id)
-                                if prev_cmnt:
-                                    prev_cmnt = prev_cmnt.group(0).strip()
-                                    if prev_cmnt != name:
-                                        prepend_post_comment(v2.kel, prev_cmnt)
+                                if prev_1:
+                                    prev_1 = prev_1.strip()
+                                    if prev_1 != name:
+                                        prepend_post_comment(v2.kel, prev_1)
+                                if prev_2:
+                                    prev_2 = prev_2.strip()
+                                    if prev_2 != name:
+                                        prepend_post_comment(v2.kel, prev_2)
                                 prepend_post_comment(v2.kel, comment)
                             except KeyError:
                                 print('!!! ' + n2.val)
