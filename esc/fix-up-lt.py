@@ -129,13 +129,21 @@ def main():
                     if n2.val.startswith('c_'):
                         # if v2.kel.post_comment:
                         #     print('c   ' + v2.kel.post_comment.val)
-                        if (v2.kel.post_comment and
+                        if (not v2.kel.post_comment or
                             re.search(r'\(?\d+\)?', v2.kel.post_comment.val)):
+                            prev_cmnt = None
+                            if v2.kel.post_comment is not None:
+                                prev_cmnt = re.match(r'[^(]*',
+                                                     v2.kel.post_comment.val)
+                                v2.kel.post_comment = None
                             try:
                                 prov_id = province_id[n2.val]
-                                comment = '{} ({})'.format(
-                                    localisation['PROV{}'.format(prov_id)],
-                                    prov_id)
+                                name = localisation['PROV{}'.format(prov_id)]
+                                comment = '{} ({})'.format(name, prov_id)
+                                if prev_cmnt:
+                                    prev_cmnt = prev_cmnt.group(0).strip()
+                                    if prev_cmnt != name:
+                                        prepend_post_comment(v2.kel, prev_cmnt)
                                 prepend_post_comment(v2.kel, comment)
                             except KeyError:
                                 print('!!! ' + n2.val)
