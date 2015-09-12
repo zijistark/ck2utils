@@ -7,12 +7,12 @@ import re
 import shutil
 import tempfile
 import ck2parser
+import localpaths
 
-rootpath = pathlib.Path('C:/Users/Nicholas/Documents/CK2')
+rootpath = localpaths.rootpath
+vanillapath = localpaths.vanilladir
 swmhpath = rootpath / 'SWMH-BETA/SWMH'
 outpath = rootpath / 'SWMH-BETA/metadata'
-vanillapath = pathlib.Path(
-    'C:/Program Files (x86)/Steam/SteamApps/common/Crusader Kings II')
 
 def valid_codename(string):
     try:
@@ -135,6 +135,8 @@ def main():
                       .format(loc_key, vanilla_loc[loc_key]), file=f)
                 for title, key in cases:
                     print('\t\t{} {}'.format(title, key), file=f)
+
+    raise SystemExit()
 
     # static_nouns = set()
     # static_adjs = set()
