@@ -39,6 +39,10 @@ def files(glob, *moddirs, basedir=vanilladir):
     for _, p in sorted(result_paths.items(), key=lambda t: t[0].parts):
         yield p
 
+def parse_files(glob, *moddirs, basedir=vanilladir):
+    for path in files(glob, *moddirs, basedir=basedir):
+        yield path, parse_file(path)
+
 def localisation(moddir=None, ordered=False):
     def process_csv(path):
         with path.open(newline='', encoding='cp1252', errors='replace') as f:
