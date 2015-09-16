@@ -53,3 +53,15 @@ default_map::default_map(const std::string& root_path)
 
     assert( max_province_id() > 0 );
 }
+
+
+bool default_map::id_is_seazone(uint prov_id) const {
+    if (!id_is_valid(prov_id))
+        return false;
+
+    for (auto&& sea_range : _seazone_vec)
+        if (prov_id >= sea_range.first && prov_id <= sea_range.second)
+            return true;
+
+    return false;
+}

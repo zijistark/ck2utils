@@ -16,16 +16,17 @@ class lexer {
   /* position of last-lexed token */
   uint _line;
   const char* _filename;
-  
+
 
 public:
 
   lexer(const char* filename);
-  
+
   lexer(FILE* f) : _f(f), _line(0), _filename("") {
     yyin = f;
+    yylineno = 1;
   }
-  
+
   ~lexer() {
     if (_f)
       fclose(_f);

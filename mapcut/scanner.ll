@@ -26,7 +26,7 @@ DATE    [0-9]{1,4}\.[0-9]{1,2}\.[0-9]{1,2}
 "}"             { return token::CLOSE; }
 {STR}           { return token::STR; }
 {QSTR}          { return token::QSTR; }
-"#".*"\r"?$     { return token::COMMENT; }
+"#".*           { return token::COMMENT; }
 {WS}+           /* skip */
 .               { return token::FAIL; }
 

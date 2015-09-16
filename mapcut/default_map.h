@@ -11,7 +11,7 @@
 typedef unsigned int uint;
 
 
-class default_map { 
+class default_map {
     typedef std::vector< std::pair<uint, uint> > id_pair_vec_t;
     typedef std::unordered_set<uint> id_set_t;
 
@@ -29,6 +29,9 @@ public:
     const std::string& provinces_path() const noexcept { return _provinces_path; }
     const id_pair_vec_t& seazone_vec() const noexcept { return _seazone_vec; }
     const id_set_t& major_river_set() const noexcept { return _major_river_set; }
+
+    bool id_is_valid(uint prov_id) const { return (prov_id > 0 && prov_id <= _max_province_id); }
+    bool id_is_seazone(uint prov_id) const;
 };
 
 

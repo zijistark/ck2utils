@@ -10,18 +10,19 @@ lexer::lexer(const char* filename)
   : _f(fopen(filename, "rb")),
     _line(0),
     _filename(filename) {
-  
+
   if (!_f)
     throw va_error("Could not open file: %s\n", filename);
 
   yyin = _f;
+  yylineno = 1;
 }
 
 
 bool lexer::next(token* p_tok) {
 
   uint type;
-  
+
   if (( type = yylex() ) == 0) {
     /* EOF, so close our filehandle, and signal EOF */
     fclose(_f);

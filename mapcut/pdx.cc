@@ -12,7 +12,7 @@
 namespace pdx {
 
   block block::EMPTY_BLOCK;
-  
+
   block::block(plexer& lex, bool is_root, bool is_save) {
 
     if (is_root && is_save) {
@@ -20,7 +20,7 @@ namespace pdx {
       token t;
       lex.next_expected(&t, token::STR);
     }
-    
+
     while (1) {
       token tok;
 
@@ -28,29 +28,29 @@ namespace pdx {
 
       if (tok.type == token::END)
         return;
-    
+
       if (tok.type == token::CLOSE) {
         if (is_root && !is_save) // closing braces are only bad at root level
           throw va_error("Unmatched closing brace in %s (before line %u)",
                          lex.filename(), lex.line());
-      
+
         // otherwise, they mean it's time return to the previous block
         return;
       }
 
       stmt_list.push_back(stmt());
       stmt& stmt = stmt_list.back();
-    
+
       if (tok.type == token::STR || tok.type == token::DATE) {
 
         stmt.key.data.s = strdup( tok.text );
-      
+
         if (tok.type == token::DATE)
           stmt.key.type = obj::DATE;
         else if (looks_like_title( tok.text ))
           stmt.key.type = obj::TITLE;
         else {
-        
+
           if ( (strcmp(tok.text, "color") == 0) ||
                (strcmp(tok.text, "color2") == 0) ) {
 
@@ -65,7 +65,7 @@ namespace pdx {
       }
       else
         lex.unexpected_token(tok);
-    
+
       /* ...done with key */
 
       lex.next_expected(&tok, token::EQ);
@@ -77,16 +77,16 @@ namespace pdx {
 
         /* need to do token lookahead for 2 tokens to determine whether this is opening a
            generic list or a recursive block of statements */
-        
+
         lex.next(&tok);
         bool double_open = false;
 
         if (tok.type == token::CLOSE) {
           /* empty block */
-          
+
           stmt.val.type = obj::BLOCK;
           stmt.val.data.p_block = &EMPTY_BLOCK;
-          
+
           continue;
         }
         else if (tok.type == token::OPEN) {
@@ -102,10 +102,10 @@ namespace pdx {
         }
 
         lex.save_and_lookahead(&tok);
-        
+
         if (tok.type != token::EQ ||
             double_open) {
-          
+
           /* by God, this is (probably) a list! */
           stmt.val.type = obj::LIST;
           stmt.val.data.p_list = new list(lex);
@@ -120,7 +120,13 @@ namespace pdx {
 
         /* ... will handle its own closing brace */
       }
-      else if (tok.type == token::STR || tok.type == token::QSTR) {
+      else if (tok.type == token::STR) {
+        stmt.val.data.s = strdup( tok.text );
+
+        if (looks_like_title( tok.text ))
+          stmt.val.type = obj::TITLE;
+      }
+      else if (tok.type == token::QSTR) {
         stmt.val.data.s = strdup( tok.text );
       }
       else if (tok.type == token::QDATE || tok.type == token::DATE) {
@@ -156,7 +162,7 @@ namespace pdx {
 
     lex.next_expected(&t, token::INT);
     obj.data.color.g = static_cast<uint8_t>( atoi(t.text) );
-  
+
     lex.next_expected(&t, token::INT);
     obj.data.color.b = static_cast<uint8_t>( atoi(t.text) );
 
@@ -196,7 +202,7 @@ namespace pdx {
         return;
     }
   }
-  
+
   void plexer::next_expected(token* p_tok, uint type) {
     next(p_tok);
 
@@ -231,14 +237,14 @@ namespace pdx {
 
       /* debug */
       //      printf("%s\n", p_tok->type_name());
-      
+
       if (p_tok->type == token::END) {
         if (!eof_ok)
           throw va_error("Unexpected EOF at %s:L%d", filename(), line());
         else
           return;
       }
-      
+
       if (p_tok->type == token::FAIL)
         throw va_error("Unrecognized token at %s:L%d", filename(), line());
 
@@ -254,16 +260,16 @@ namespace pdx {
     /* save our two tokens of lookahead */
     tok1.type = p_tok->type;
     strcpy(tok1.text, p_tok->text); // buffer overflows are myths
-    
+
     next(p_tok);
-    
+
     tok2.type = p_tok->type;
     strcpy(tok2.text, p_tok->text);
-        
+
     /* set lexer to read from the saved tokens first */
     state = TOK1;
   }
-  
+
 
   /* not handled directly by scanner because there are some things that look like titles
      and are not, but these aberrations (e.g., mercenary composition tags) only appear on
@@ -271,11 +277,11 @@ namespace pdx {
   bool looks_like_title(const char* s) {
     if (strlen(s) < 3)
       return false;
-  
+
     if ( !(*s == 'b' || *s == 'c' || *s == 'd' || *s == 'k' || *s == 'e') )
       return false;
 
-  
+
     if (s[1] != '_')
       return false;
 
