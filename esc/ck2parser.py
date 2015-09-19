@@ -45,16 +45,15 @@ def parse_files(glob, *moddirs, basedir=vanilladir):
 
 def localisation(moddir=None, ordered=False):
     def process_csv(path):
-        with path.open(newline='', encoding='cp1252', errors='replace') as f:
-            for row in csv.reader(f, dialect='ckii'):
-                try:
-                    if row[0] not in locs:
-                        locs[row[0]] = row[1]
-                except IndexError:
-                    continue
+        for row in csv_rows(path):
+            try:
+                if row[0] not in locs:
+                    locs[row[0]] = row[1]
+            except IndexError:
+                continue
 
     locs = collections.OrderedDict() if ordered else {}
-    loc_glob = 'localisation/*.csv'
+    loc_glob = 'localisation/*'
     mod_files = set()
     if moddir:
         for path in files(loc_glob, basedir=moddir):
