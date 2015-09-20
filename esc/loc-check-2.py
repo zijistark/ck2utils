@@ -46,16 +46,16 @@ def main():
             cultures.add(n.val)
             cultures.update(
                 n2.val for n2, _ in v if n2.val != 'graphical_cultures')
-    defined_titles = set()
-    commented_out_titles = set()
+    defined_titles = []
+    commented_out_titles = []
     for _, tree in ck2parser.parse_files('common/landed_titles/*', swmhpath):
         for title, defined in recurse(tree):
-            (defined_titles if defined else commented_out_titles).add(title)
-    titles = defined_titles | commented_out_titles
+            (defined_titles if defined else commented_out_titles).append(title)
+    titles = set(defined_titles) | set(commented_out_titles)
     localisation = ck2parser.localisation(swmhpath)
     unlocalised_noncounty_titles = [
         t for t in defined_titles
-        if not t.startswith('c') and t not in localisation]
+        if not t.startswith('c') and t not in localisation and t != 'e_null']
     unrecognized_nonbarony_keys = []
     unrecognized_barony_keys = []
     unrecognized_culture_keys = []
