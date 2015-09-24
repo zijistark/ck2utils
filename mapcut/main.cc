@@ -12,17 +12,33 @@
 
 using namespace boost::filesystem;
 
-void print_block(int indent, const pdx::block*);
-void print_stmt(int indent, const pdx::stmt&);
-void print_obj(int indent, const pdx::obj&);
 
 const path VROOT_DIR("D:/SteamLibrary/steamapps/common/Crusader Kings II");
 const path ROOT_DIR("D:/g/SWMH-BETA/SWMH");
 const path TITLES_PATH("common/landed_titles/swmh_landed_titles.txt");
 
 
+void print_block(int indent, const pdx::block*);
+void print_stmt(int indent, const pdx::stmt&);
+void print_obj(int indent, const pdx::obj&);
+
+typedef std::vector<std::string> strvec_t;
+
+const pdx::block* find_title(const char* title, const pdx::block* p_root);
+void find_titles_under(const pdx::block*, strvec_t& out);
+
 
 int main(int argc, char** argv) {
+
+    if (argc != 2) {
+        // TODO: use Boost::ProgramOptions, and cut the crap! :frowning_imp:
+        fprintf(stderr, "USAGE:\n  %s <TOP_TITLE>\n", argv[0]);
+        return 1;
+    }
+
+    const char* top_title = argv[1];
+    assert( pdx::looks_like_title(top_title) );
+    assert( pdx::title_tier(top_title) >= pdx::TIER_COUNT );
 
     try {
         default_map dm(ROOT_DIR.string());
@@ -80,7 +96,7 @@ int main(int argc, char** argv) {
                 if (s.key_eq("title")) {
                     assert( s.val.type == pdx::obj::TITLE );
                     county = s.val.data.s;
-                    assert( county[0] == 'c' && "Expected count-tier title ID; got some other-tier title ID" );
+                    assert( pdx::title_tier(county) == pdx::TIER_COUNT );
                 }
             }
 
@@ -99,9 +115,25 @@ int main(int argc, char** argv) {
             }
         }
 
-        for (auto&& m : county_to_id_map) {
-            printf("%s => %u\n", m.first.c_str(), m.second);
+        const path titles_path = ROOT_DIR / TITLES_PATH;
+        pdx::plexer lex(titles_path.c_str());
+        pdx::block doc(lex, true);
+
+        const pdx::block* p_top_title_block = find_title(top_title, &doc);
+
+        if (p_top_title_block == nullptr)
+            throw va_error("Top de jure title '%s' not found: %s",
+                           top_title, titles_path.c_str());
+
+        strvec_t deleted_titles = { top_title };
+
+        find_titles_under(p_top_title_block, deleted_titles);
+
+        for (auto&& t : deleted_titles) {
+            printf("%s ", t.c_str());
         }
+
+        printf("\n");
     }
     catch (std::exception& e) {
         fprintf(stderr, "fatal: %s\n", e.what());
@@ -111,6 +143,47 @@ int main(int argc, char** argv) {
     return 0;
 }
 
+
+const pdx::block* find_title(const char* top_title, const pdx::block* p_root) {
+
+    uint top_title_tier = pdx::title_tier(top_title);
+
+    for (auto&& s : p_root->stmt_list) {
+        if (s.key.type != pdx::obj::TITLE)
+            continue;
+
+        const pdx::block* p = s.val.as_block();
+        const char* t = s.key.data.s;
+
+        if (strcmp(t, top_title) == 0)
+            return p; // base case, terminate
+
+        if (pdx::title_tier(t) <= top_title_tier)
+            continue; // skip recursion, because the title's tier is insufficient
+
+        p = find_title(top_title, p); // recurse into title block
+
+        if (p != nullptr)
+            return p; // cool, found in subtree, pass it along and terminate search
+    }
+
+    return nullptr;
+}
+
+
+void find_titles_under(const pdx::block* p_root, strvec_t& found_titles) {
+
+    for (auto&& s : p_root->stmt_list) {
+        if (s.key.type != pdx::obj::TITLE)
+            continue;
+
+        const char* t = s.key.data.s;
+        found_titles.push_back(t);
+
+        if (pdx::title_tier(t) > pdx::TIER_BARON)
+            find_titles_under(s.val.as_block(), found_titles);
+    }
+}
 
 void print_block(int indent, const pdx::block* p_b) {
     for (auto&& s : p_b->stmt_list)

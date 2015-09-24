@@ -13,9 +13,6 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-
 # Compiled Static libraries
 *.lai
 *.la
@@ -33,3 +30,7 @@
 
 # Scons
 .sconsign.dblite
+
+# Sublime Text 3
+*.sublime-project
+*.sublime-workspace

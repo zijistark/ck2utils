@@ -10,6 +10,7 @@
 #include "error.h"
 
 #include <cstring>
+#include <cassert>
 
 namespace pdx {
 
@@ -43,6 +44,12 @@ namespace pdx {
     static const uint LIST    = 8;
 
     obj() : type(STR) {}
+
+    char*  as_string()  const noexcept { assert(type == STR); return data.s; }
+    int    as_integer() const noexcept { assert(type == INT); return data.i; }
+    char*  as_title()   const noexcept { assert(type == TITLE); return data.s; }
+    block* as_block()   const noexcept { assert(type == BLOCK); return data.p_block; }
+    list*  as_list()    const noexcept { assert(type == LIST); return data.p_list; }
   };
 
   struct stmt {
@@ -60,13 +67,13 @@ namespace pdx {
     void next_expected(token*, uint type);
     void unexpected_token(const token&) const;
     void save_and_lookahead(token*);
-    
+
   private:
     struct saved_token : public token {
       char buf[128];
       saved_token() : token(0, &buf[0]) { }
     };
-    
+
     enum {
       NORMAL, // read from lexer::next(...)
       TOK1,   // read from tok1, then tok2
@@ -94,11 +101,34 @@ namespace pdx {
 
   protected:
     static block EMPTY_BLOCK;
-    
+
     void slurp_color(obj&, plexer&) const;
   };
 
+  static const uint TIER_BARON = 1;
+  static const uint TIER_COUNT = 2;
+  static const uint TIER_DUKE = 3;
+  static const uint TIER_KING = 4;
+  static const uint TIER_EMPEROR = 5;
+
+  inline uint title_tier(const char* s) {
+    switch (*s) {
+        case 'b':
+            return TIER_BARON;
+        case 'c':
+            return TIER_COUNT;
+        case 'd':
+            return TIER_DUKE;
+        case 'k':
+            return TIER_KING;
+        case 'e':
+            return TIER_EMPEROR;
+        default:
+            return 0;
+    }
+  }
+
   bool looks_like_title(const char*);
 }
-  
+
 #endif
