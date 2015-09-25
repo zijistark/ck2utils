@@ -15,10 +15,11 @@
 using namespace boost::filesystem;
 
 
+/* TODO: use Boost::ProgramOptions (or just a config file), and end this nonsense */
 const path VROOT_DIR("D:/SteamLibrary/steamapps/common/Crusader Kings II");
 const path ROOT_DIR("D:/g/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("D:/g/minswmh/minswmh");
-const path TITLES_PATH("common/landed_titles/swmh_landed_titles.txt");
+const path TITLES_PATH("common/landed_titles/swmh_landed_titles.txt"); // only uses this landed_titles file
 
 void print_block(int indent, const pdx::block*);
 void print_stmt(int indent, const pdx::stmt&);
@@ -35,15 +36,20 @@ void blank_title_history(const strvec_t&);
 
 int main(int argc, char** argv) {
 
-    if (argc != 2) {
-        // TODO: use Boost::ProgramOptions, and cut the crap! :frowning_imp:
-        fprintf(stderr, "USAGE:\n  %s <TITLE>\n", argv[0]);
+    if (argc < 2) {
+        fprintf(stderr, "USAGE:\n  %s TITLE [TITLE ...]\n\nTITLE: top de jure title to remove (if plural, should not overlap)\n", argv[0]);
         return 1;
     }
 
-    const char* top_title = argv[1];
-    assert( pdx::looks_like_title(top_title) );
-    assert( pdx::title_tier(top_title) >= pdx::TIER_COUNT );
+    const char* top_titles[argc-1];
+
+    for (int i = 1; i < argc; ++i) {
+        const int j = i-1;
+        top_titles[j] = argv[i];
+
+        assert( pdx::looks_like_title( top_titles[j] ) );
+        assert( pdx::title_tier( top_titles[j] ) >= pdx::TIER_COUNT );
+    }
 
     try {
         default_map dm(ROOT_DIR);
@@ -56,15 +62,18 @@ int main(int argc, char** argv) {
         pdx::plexer lex(titles_path.c_str());
         pdx::block doc(lex, true);
 
-        const pdx::block* p_top_title_block = find_title(top_title, &doc);
+        strvec_t del_titles;
 
-        if (p_top_title_block == nullptr)
-            throw va_error("top de jure title '%s' not found: %s",
-                           top_title, titles_path.c_str());
+        for (auto top_title : top_titles) {
+            const pdx::block* p_top_title_block = find_title(top_title, &doc);
 
-        strvec_t del_titles = { top_title };
+            if (p_top_title_block == nullptr)
+                throw va_error("top de jure title '%s' not found: %s",
+                               top_title, titles_path.c_str());
 
-        find_titles_under(p_top_title_block, del_titles);
+            del_titles.emplace_back(top_title);
+            find_titles_under(p_top_title_block, del_titles);
+        }
 
         /* for every deleted county title, convert its associated province into
            wasteland */
@@ -112,13 +121,15 @@ const pdx::block* find_title(const char* top_title, const pdx::block* p_root) {
         if (strcmp(t, top_title) == 0)
             return p; // base case, terminate
 
+        /* recursive case... */
+
         if (pdx::title_tier(t) <= top_title_tier)
-            continue; // skip recursion, because the title's tier is insufficient
+            continue; // skip recursion, because the title's tier is too low
 
         p = find_title(top_title, p); // recurse into title block
 
         if (p != nullptr)
-            return p; // cool, found in subtree, pass it along and terminate search
+            return p; // cool, found in subtree, pass it upstream and terminate
     }
 
     return nullptr;
