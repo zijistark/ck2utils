@@ -7,6 +7,8 @@
 #include <boost/filesystem.hpp>
 
 #include <cstdio>
+#include <cerrno>
+#include <cstring>
 #include <string>
 #include <unordered_map>
 
@@ -15,6 +17,7 @@ using namespace boost::filesystem;
 
 const path VROOT_DIR("D:/SteamLibrary/steamapps/common/Crusader Kings II");
 const path ROOT_DIR("D:/g/SWMH-BETA/SWMH");
+const path OUT_ROOT_DIR("D:/g/minswmh/minswmh");
 const path TITLES_PATH("common/landed_titles/swmh_landed_titles.txt");
 
 
@@ -25,9 +28,10 @@ void print_obj(int indent, const pdx::obj&);
 typedef std::vector<std::string> strvec_t;
 typedef std::unordered_map<std::string, uint> str2id_map_t;
 
-void fill_county_to_id_map(const default_map&, const definitions_table&, str2id_map_t& out);
 const pdx::block* find_title(const char* title, const pdx::block* p_root);
 void find_titles_under(const pdx::block*, strvec_t& out);
+void fill_county_to_id_map(const default_map&, const definitions_table&, str2id_map_t& out);
+void blank_title_history(const strvec_t&);
 
 
 int main(int argc, char** argv) {
@@ -63,11 +67,7 @@ int main(int argc, char** argv) {
 
         find_titles_under(p_top_title_block, deleted_titles);
 
-        for (auto&& t : deleted_titles) {
-            printf("%s ", t.c_str());
-        }
-
-        printf("\n");
+        blank_title_history(deleted_titles);
     }
     catch (std::exception& e) {
         fprintf(stderr, "fatal: %s\n", e.what());
@@ -190,6 +190,34 @@ void fill_county_to_id_map(const default_map& dm,
         if (!county_to_id_map.insert( {county, id} ).second) {
             throw va_error("county '%s' maps to both province %u and %u (at the least)!",
                            county, county_to_id_map[county], id);
+        }
+    }
+}
+
+
+void blank_title_history(const strvec_t& deleted_titles) {
+
+    path title_hist_root = ROOT_DIR / "history/titles";
+    path title_hist_vroot = VROOT_DIR / "history/titles";
+    path title_hist_oroot = OUT_ROOT_DIR / "history/titles";
+
+    for (auto&& title : deleted_titles) {
+
+        std::string filename = title + ".txt";
+
+        path title_hist_path = title_hist_root / filename;
+        path title_hist_vpath = title_hist_vroot / filename;
+
+        if ( exists(title_hist_path) || exists(title_hist_vpath) ) {
+
+            path title_hist_opath = title_hist_oroot / filename;
+            FILE* f;
+
+            if ( (f = fopen(title_hist_opath.c_str(), "w")) == nullptr )
+                throw va_error("Failed to blank title history: %s: %s",
+                               strerror(errno), title_hist_opath.c_str());
+
+            fclose(f);
         }
     }
 }
