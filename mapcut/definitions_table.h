@@ -5,10 +5,13 @@
 
 #include "default_map.h"
 
+#include <boost/filesystem.hpp>
+
 #include <cstdint>
 #include <string>
 #include <vector>
 
+namespace fs = boost::filesystem;
 
 class definitions_table {
 
@@ -20,13 +23,14 @@ public:
         uint8_t green;
         uint8_t blue;
 
-        row(const std::string& n, uint8_t r, uint8_t g, uint8_t b) : name(n), red(r), green(g), blue(b) {}
+        row(const std::string& n, uint8_t r, uint8_t g, uint8_t b)
+        : name(n), red(r), green(g), blue(b) { }
     };
 
     std::vector<row> row_vec;
 
     definitions_table(const default_map&);
-    void write(const std::string& path);
+    void write(const fs::path& path);
 };
 
 

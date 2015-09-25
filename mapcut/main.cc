@@ -20,7 +20,6 @@ const path ROOT_DIR("D:/g/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("D:/g/minswmh/minswmh");
 const path TITLES_PATH("common/landed_titles/swmh_landed_titles.txt");
 
-
 void print_block(int indent, const pdx::block*);
 void print_stmt(int indent, const pdx::stmt&);
 void print_obj(int indent, const pdx::obj&);
@@ -38,7 +37,7 @@ int main(int argc, char** argv) {
 
     if (argc != 2) {
         // TODO: use Boost::ProgramOptions, and cut the crap! :frowning_imp:
-        fprintf(stderr, "USAGE:\n  %s <TOP_TITLE>\n", argv[0]);
+        fprintf(stderr, "USAGE:\n  %s <TITLE>\n", argv[0]);
         return 1;
     }
 
@@ -47,7 +46,7 @@ int main(int argc, char** argv) {
     assert( pdx::title_tier(top_title) >= pdx::TIER_COUNT );
 
     try {
-        default_map dm(ROOT_DIR.string());
+        default_map dm(ROOT_DIR);
         definitions_table def_tbl(dm);
 
         str2id_map_t county_to_id_map;
@@ -60,12 +59,15 @@ int main(int argc, char** argv) {
         const pdx::block* p_top_title_block = find_title(top_title, &doc);
 
         if (p_top_title_block == nullptr)
-            throw va_error("Top de jure title '%s' not found: %s",
+            throw va_error("top de jure title '%s' not found: %s",
                            top_title, titles_path.c_str());
 
         strvec_t del_titles = { top_title };
 
         find_titles_under(p_top_title_block, del_titles);
+
+        /* for every deleted county title, convert its associated province into
+           wasteland */
 
         for (auto&& t : del_titles) {
             if (pdx::title_tier(t.c_str()) != pdx::TIER_COUNT)
@@ -77,11 +79,13 @@ int main(int argc, char** argv) {
                 throw va_error("County not assigned in province history: %s", t.c_str());
 
             uint id = i->second;
+
+            /* blank the province name in definitions to turn it into a wasteland */
             def_tbl.row_vec[id-1].name = "";
         }
 
-        path out_def_path = OUT_ROOT_DIR / "map" / path(dm.definitions_path()).filename();
-        def_tbl.write(out_def_path.string());
+        path out_def_path = OUT_ROOT_DIR / "map" / dm.definitions_path();
+        def_tbl.write(out_def_path);
 
         blank_title_history(del_titles);
     }
@@ -144,9 +148,11 @@ void fill_county_to_id_map(const default_map& dm,
     path prov_hist_root = ROOT_DIR / "history/provinces";
     path prov_hist_vroot = VROOT_DIR / "history/provinces";
 
-    for (uint i = 0; i < def_tbl.row_vec.size(); ++i) {
-        const definitions_table::row& r = def_tbl.row_vec[i];
-        const uint id = i+1;
+    char filename[256];
+    uint id = 0;
+
+    for (auto&& r : def_tbl.row_vec) {
+        ++id;
 
         if (dm.id_is_seazone(id)) // sea | major river
             continue;
@@ -154,7 +160,6 @@ void fill_county_to_id_map(const default_map& dm,
         if (r.name.empty()) // wasteland | external
             continue;
 
-        char filename[128];
         sprintf(filename, "%u - %s.txt", id, r.name.c_str());
 
         path prov_hist_file = prov_hist_root / filename;
@@ -179,8 +184,6 @@ void fill_county_to_id_map(const default_map& dm,
             }
         }
 
-        assert( exists(prov_hist_file) );
-
         const char* county = nullptr;
 
         pdx::plexer lex(prov_hist_file.c_str());
@@ -188,8 +191,7 @@ void fill_county_to_id_map(const default_map& dm,
 
         for (auto&& s : doc.stmt_list) {
             if (s.key_eq("title")) {
-                assert( s.val.type == pdx::obj::TITLE );
-                county = s.val.data.s;
+                county = s.val.as_title();
                 assert( pdx::title_tier(county) == pdx::TIER_COUNT );
             }
         }
@@ -199,7 +201,7 @@ void fill_county_to_id_map(const default_map& dm,
                blank (for a wasteland or something). we may want to warn the
                user about this, although the behavior of CK2's error.log
                would suggest that empty history files ought be used for
-               wasteland (which I believe is incorrect). */
+               wasteland (which is incorrect, causing confusion). */
             continue;
         }
 
@@ -225,6 +227,9 @@ void blank_title_history(const strvec_t& deleted_titles) {
         path title_hist_vpath = title_hist_vroot / filename;
 
         if ( exists(title_hist_path) || exists(title_hist_vpath) ) {
+
+            /* there is indeed reason to add a blank file override for
+               this title, so let's get on with it... */
 
             path title_hist_opath = title_hist_oroot / filename;
             FILE* f;

@@ -45,11 +45,19 @@ namespace pdx {
 
     obj() : type(STR) {}
 
-    char*  as_string()  const noexcept { assert(type == STR); return data.s; }
+    /* more readable accessors (checked type) */
+    char*  as_c_str()   const noexcept { assert(type == STR); return data.s; }
     int    as_integer() const noexcept { assert(type == INT); return data.i; }
     char*  as_title()   const noexcept { assert(type == TITLE); return data.s; }
     block* as_block()   const noexcept { assert(type == BLOCK); return data.p_block; }
     list*  as_list()    const noexcept { assert(type == LIST); return data.p_list; }
+
+    /* more readable accessors (unchecked type) */
+    char*  c_str()   const noexcept { return data.s; }
+    int    integer() const noexcept { return data.i; }
+    char*  title()   const noexcept { return data.s; }
+    block* block()   const noexcept { return data.p_block; }
+    list*  list()    const noexcept { return data.p_list; }
   };
 
   struct stmt {
