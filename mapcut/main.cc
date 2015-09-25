@@ -93,7 +93,9 @@ int main(int argc, char** argv) {
             def_tbl.row_vec[id-1].name = "";
         }
 
-        path out_def_path = OUT_ROOT_DIR / "map" / dm.definitions_path();
+        path out_def_path = OUT_ROOT_DIR / "map";
+        create_directories(out_def_path);
+        out_def_path /= dm.definitions_path();
         def_tbl.write(out_def_path);
 
         blank_title_history(del_titles);
@@ -229,6 +231,13 @@ void blank_title_history(const strvec_t& deleted_titles) {
     path title_hist_root = ROOT_DIR / "history/titles";
     path title_hist_vroot = VROOT_DIR / "history/titles";
     path title_hist_oroot = OUT_ROOT_DIR / "history/titles";
+
+    if (! create_directories(title_hist_oroot)) {
+        // output directory preexisted, so we need to ensure that it's clean first
+
+        for (auto&& e : directory_iterator(title_hist_oroot))
+            remove(e.path());
+    }
 
     for (auto&& title : deleted_titles) {
 
