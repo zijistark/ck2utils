@@ -33,6 +33,24 @@ void find_titles_under(const pdx::block*, strvec_t& out);
 void fill_county_to_id_map(const default_map&, const definitions_table&, str2id_map_t& out);
 void blank_title_history(const strvec_t&);
 
+struct {
+    uint n_counties_before;
+    uint n_counties_cut;
+    uint n_titles_cut;
+    uint n_title_hist_blanked;
+
+    /* all wishful thinking below (FOR NOW!) */
+    uint n_adjacencies_before;
+    uint n_adjacencies_cut;
+    uint n_title_hist_rewritten;
+    uint n_regions_modified;
+    uint n_regions_cut;
+    uint n_island_regions_modified;
+    uint n_island_regions_cut;
+    uint n_invalidated_prov_refs;
+    uint n_invalidated_title_refs;
+} g_stats;
+
 
 int main(int argc, char** argv) {
 
@@ -51,12 +69,15 @@ int main(int argc, char** argv) {
         assert( pdx::title_tier( top_titles[j] ) >= pdx::TIER_COUNT );
     }
 
+
     try {
         default_map dm(ROOT_DIR);
         definitions_table def_tbl(dm);
 
         str2id_map_t county_to_id_map;
         fill_county_to_id_map(dm, def_tbl, county_to_id_map);
+
+        g_stats.n_counties_before = county_to_id_map.size();
 
         const path titles_path = ROOT_DIR / TITLES_PATH;
         pdx::plexer lex(titles_path.c_str());
@@ -75,6 +96,9 @@ int main(int argc, char** argv) {
             find_titles_under(p_top_title_block, del_titles);
         }
 
+        g_stats.n_titles_cut = del_titles.size();
+        g_stats.n_counties_cut = 0;
+
         /* for every deleted county title, convert its associated province into
            wasteland */
 
@@ -85,12 +109,14 @@ int main(int argc, char** argv) {
             auto i = county_to_id_map.find(t);
 
             if (i == county_to_id_map.end())
-                throw va_error("County not assigned in province history: %s", t.c_str());
+                throw va_error("county not assigned in province history: %s", t.c_str());
 
             uint id = i->second;
 
             /* blank the province name in definitions to turn it into a wasteland */
             def_tbl.row_vec[id-1].name = "";
+
+            ++g_stats.n_counties_cut;
         }
 
         path out_def_path = OUT_ROOT_DIR / "map";
@@ -99,6 +125,11 @@ int main(int argc, char** argv) {
         def_tbl.write(out_def_path);
 
         blank_title_history(del_titles);
+
+        printf("Counties before cut:   %u\n", g_stats.n_counties_before);
+        printf("Counties cut:          %u\n", g_stats.n_counties_cut);
+        printf("Titles cut:            %u\n", g_stats.n_titles_cut);
+        printf("Blanked title history: %u\n", g_stats.n_title_hist_blanked);
     }
     catch (std::exception& e) {
         fprintf(stderr, "fatal: %s\n", e.what());
@@ -239,6 +270,8 @@ void blank_title_history(const strvec_t& deleted_titles) {
             remove(e.path());
     }
 
+    g_stats.n_title_hist_blanked = 0;
+
     for (auto&& title : deleted_titles) {
 
         std::string filename = title + ".txt";
@@ -259,6 +292,7 @@ void blank_title_history(const strvec_t& deleted_titles) {
                                strerror(errno), title_hist_opath.c_str());
 
             fclose(f);
+            ++g_stats.n_title_hist_blanked;
         }
     }
 }
@@ -296,10 +330,10 @@ void print_obj(int indent, const pdx::obj& o) {
         printf("%s", o.data.s);
     }
     else if (o.type == obj::DATE) {
-        printf("DATE(%s)", o.data.s);
+        printf("%s", o.data.s);
     }
     else if (o.type == obj::TITLE) {
-        printf("TITLE(%s)", o.data.s);
+        printf("%s", o.data.s);
     }
     else if (o.type == obj::BLOCK) {
         printf("{\n");
