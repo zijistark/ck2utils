@@ -63,11 +63,27 @@ int main(int argc, char** argv) {
             throw va_error("Top de jure title '%s' not found: %s",
                            top_title, titles_path.c_str());
 
-        strvec_t deleted_titles = { top_title };
+        strvec_t del_titles = { top_title };
 
-        find_titles_under(p_top_title_block, deleted_titles);
+        find_titles_under(p_top_title_block, del_titles);
 
-        blank_title_history(deleted_titles);
+        for (auto&& t : del_titles) {
+            if (pdx::title_tier(t.c_str()) != pdx::TIER_COUNT)
+                continue;
+
+            auto i = county_to_id_map.find(t);
+
+            if (i == county_to_id_map.end())
+                throw va_error("County not assigned in province history: %s", t.c_str());
+
+            uint id = i->second;
+            def_tbl.row_vec[id-1].name = "";
+        }
+
+        path out_def_path = OUT_ROOT_DIR / "map" / path(dm.definitions_path()).filename();
+        def_tbl.write(out_def_path.string());
+
+        blank_title_history(del_titles);
     }
     catch (std::exception& e) {
         fprintf(stderr, "fatal: %s\n", e.what());
