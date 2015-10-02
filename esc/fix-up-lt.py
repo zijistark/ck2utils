@@ -7,8 +7,9 @@ import re
 import shutil
 import tempfile
 import ck2parser
+import localpaths
 
-rootpath = pathlib.Path('C:/Users/Nicholas/Documents/CK2')
+rootpath = localpaths.rootpath
 swmhpath = rootpath / 'SWMH-BETA/SWMH'
 
 # templar castles referenced by vanilla events
@@ -85,11 +86,11 @@ def prepend_post_comment(item, s):
         s += ' ' + str(item.post_comment)
     item.post_comment = ck2parser.Comment(s)
 
-kingdoms_for_barony_swap = [
-    'k_bulgaria', 'k_serbia', 'k_bosnia', 'k_croatia', 'k_hungary',
-    'k_denmark', 'k_norway', 'k_finland', 'k_pomerania', 'k_terra',
-    'k_lithuania', 'k_taurica', 'k_khazaria' 'k_alania', 'k_volga_bulgaria',
-    'k_bjarmia', 'k_perm']
+# kingdoms_for_barony_swap = [
+#     'k_bulgaria', 'k_serbia', 'k_bosnia', 'k_croatia', 'k_hungary',
+#     'k_denmark', 'k_norway', 'k_finland', 'k_pomerania', 'k_terra',
+#     'k_lithuania', 'k_taurica', 'k_khazaria' 'k_alania', 'k_volga_bulgaria',
+#     'k_bjarmia', 'k_perm']
 
 def main():
     lt = swmhpath / 'common/landed_titles'
@@ -107,9 +108,12 @@ def main():
                         if n3.val == 'capital':
                             prov_key = 'PROV{}'.format(v3.val)
                             capital_name = localisation[prov_key]
-                            if not v3.post_comment:
-                                v3.post_comment = ck2parser.Comment(
-                                    capital_name)
+                            if v3.post_comment.val.strip() == capital_name:
+                                v3.post_comment = None
+                            prepend_post_comment(v3, capital_name)
+                            # elif capital_name != v3.post_comment.val:
+                            #     print('{},{},{}'.format(v3.val,
+                            #           v3.post_comment.val, capital_name))
                             break
                     v2.ker.post_comment = None
                     _, (nl, _) = v2.inline_str(0)
@@ -125,14 +129,29 @@ def main():
                     if n2.val.startswith('c_'):
                         # if v2.kel.post_comment:
                         #     print('c   ' + v2.kel.post_comment.val)
-                        if (v2.kel.post_comment and
-                            v2.kel.post_comment.val.isdigit()):
-                            v2.kel.post_comment = None
+                        if (not v2.kel.post_comment or
+                            re.search(r'\(?\d+\)?', v2.kel.post_comment.val)):
+                            prev_1 = None
+                            prev_2 = None
+                            if v2.kel.post_comment is not None:
+                                match = re.fullmatch(
+                                    r'([^(]+)\(\d+\)[^#]*(?:#(.+))?',
+                                    v2.kel.post_comment.val)
+                                if match:
+                                    prev_1, prev_2 = match.groups()
+                                v2.kel.post_comment = None
                             try:
                                 prov_id = province_id[n2.val]
-                                comment = '{} ({})'.format(
-                                    localisation['PROV{}'.format(prov_id)],
-                                    prov_id)
+                                name = localisation['PROV{}'.format(prov_id)]
+                                comment = '{} ({})'.format(name, prov_id)
+                                if prev_1:
+                                    prev_1 = prev_1.strip()
+                                    if prev_1 != name:
+                                        prepend_post_comment(v2.kel, prev_1)
+                                if prev_2:
+                                    prev_2 = prev_2.strip()
+                                    if prev_2 != name:
+                                        prepend_post_comment(v2.kel, prev_2)
                                 prepend_post_comment(v2.kel, comment)
                             except KeyError:
                                 print('!!! ' + n2.val)
@@ -148,7 +167,7 @@ def main():
                         if (num_baronies + len(baronies_to_remove) <
                             max_settlements[n2.val]):
                             print(('{} has {} subholdings '
-                                   'but {} max_settlements!').format(
+                                   'but {} max_settlements!').format(n2.val,
                                    num_baronies + len(baronies_to_remove),
                                    max_settlements[n2.val]))
                         keep = max(0, max_settlements[n2.val] - num_baronies)
