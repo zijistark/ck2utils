@@ -193,7 +193,7 @@ def main():
             if re.fullmatch(r'c_((?!_adj($|_)).)*', key):
                 return None
         elif prov_match:
-            prov_id = prov_match.group(1)
+            prov_id = int(prov_match.group(1))
             if not (0 < prov_id < max_provs):
                 return None
         elif re.fullmatch(misc_regex, key):
