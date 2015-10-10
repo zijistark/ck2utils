@@ -37,28 +37,9 @@ def make_outpath(outroot, inpath, *roots):
             if i == len(roots) - 1:
                 raise
 
-def get_province_id(where):
+def get_max_provs(where):
     tree = ck2parser.parse_file(where / 'map/default.map')
-    defs = next(v.val for n, v in tree if n.val == 'definitions')
-    id_name = {}
-    for row in ck2parser.csv_rows(where / 'map' / defs):
-        try:
-            id_name[int(row[0])] = row[4]
-        except (IndexError, ValueError):
-            continue
-    province_id = {}
-    province_title = {}
-    for path in ck2parser.files('history/provinces/*', where):
-        number, name = path.stem.split(' - ')
-        if id_name[int(number)] == name:
-            tree = ck2parser.parse_file(path)
-            try:
-                title = next(v.val for n, v in tree if n.val == 'title')
-            except StopIteration:
-                continue
-            the_id = 'PROV' + number
-            province_title[the_id] = title
-    return province_title
+    return next(int(v.val) for n, v in tree if n.val == 'max_provinces')
 
 def process_cultures(where, build):
     def update_obj(obj):
@@ -153,7 +134,7 @@ def main():
         except FileExistsError: # pls cygwin gib 3.5
             pass
 
-    prov_title = get_province_id(modpath)
+    max_provs = get_max_provs(modpath)
     cultures, culture_groups = process_cultures(modpath, build)
     religions, religion_groups = get_religions(modpath)
     governments, gov_prefixes = get_governments(modpath)
@@ -204,7 +185,7 @@ def main():
 
     def check_key(key):
         lt_match = re.match(r'[ekdcb]_((?!_adj($|_)).)*', key)
-        prov_match = re.fullmatch(r'PROV\d+', key)
+        prov_match = re.fullmatch(r'PROV(\d+)', key)
         if lt_match:
             title = lt_match.group()
             if title not in titles:
@@ -212,11 +193,8 @@ def main():
             if re.fullmatch(r'c_((?!_adj($|_)).)*', key):
                 return None
         elif prov_match:
-            try:
-                title = prov_title[prov_match.group()]
-            except KeyError:
-                return None
-            if title not in titles:
+            prov_id = prov_match.group(1)
+            if not (0 < prov_id < max_provs):
                 return None
         elif re.fullmatch(misc_regex, key):
             pass
