@@ -20,6 +20,7 @@ import csv
 import pathlib
 import re
 import sys
+import time
 import ck2parser
 import localpaths
 
@@ -117,6 +118,7 @@ def get_unlanded_titles(where):
     return ul_titles
 
 def main():
+    start_time = time.time()
     if len(sys.argv) <= 1:
         modpath = localpaths.rootpath / 'SWMH-BETA/SWMH'
     else:
@@ -244,6 +246,8 @@ def main():
     outpath = build / 'localisation' / 'A AAA testing override.csv'
     with outpath.open('w', encoding='cp1252', newline='') as csvfile:
         csv.writer(csvfile, dialect='ckii').writerows(outrows)
+    end_time = time.time()
+    print('Time: {} s'.format(end_time - start_time))
 
 if __name__ == '__main__':
     main()
