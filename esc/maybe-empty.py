@@ -43,9 +43,10 @@ def process_provinces(where):
 def process_titles(where):
     nomads = set()
     vassals = collections.defaultdict(set)
-    for path, tree in ck2parser.parse_files('history/titles/*', where):
+    for path in ck2parser.files('history/titles/*', where):
         title = path.stem
         if not title.startswith('b'):
+            tree = ck2parser.parse_file(path)
             for n, v in tree:
                 for n2, v2 in v:
                     if isinstance(v2, ck2parser.String):
