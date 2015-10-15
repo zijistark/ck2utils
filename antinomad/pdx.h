@@ -31,6 +31,11 @@ namespace pdx {
         uint8_t g;
         uint8_t b;
       } color;
+      struct {
+        uint16_t y;
+        uint8_t  m;
+        uint8_t  d;
+      } date;
     } data;
 
     static const uint STR     = 0;
@@ -58,6 +63,8 @@ namespace pdx {
     char*  title()   const noexcept { return data.s; }
     block* block()   const noexcept { return data.p_block; }
     list*  list()    const noexcept { return data.p_list; }
+
+    void store_date_from_str(char* str);
   };
 
   struct stmt {

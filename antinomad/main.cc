@@ -100,7 +100,9 @@ void do_stuff_with_provinces(const default_map& dm,
         pdx::block doc(lex, true);
 
         for (auto&& s : doc.stmt_list) {
-            // ... DO SHIT
+            if (s.key.type == pdx::obj::DATE) {
+                printf("%hu/%hhu/%hhu\n", s.key.data.date.y, s.key.data.date.m, s.key.data.date.d);
+            }
         }
 
     }

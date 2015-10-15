@@ -41,7 +41,7 @@ namespace pdx {
       stmt_list.push_back(stmt());
       stmt& stmt = stmt_list.back();
 
-      if (tok.type == token::STR || tok.type == token::DATE) {
+      if (tok.type == token::STR) {
 
         stmt.key.data.s = strdup( tok.text );
 
@@ -58,6 +58,10 @@ namespace pdx {
             continue;
           }
         }
+      }
+      else if (tok.type == token::DATE) {
+          stmt.key.type = obj::DATE;
+          stmt.key.store_date_from_str(tok.text);
       }
       else if (tok.type == token::INT) {
         stmt.key.type = obj::INT;
@@ -290,4 +294,19 @@ namespace pdx {
 
     return true;
   }
+}
+
+
+void pdx::obj::store_date_from_str(char* str) {
+  char* s = str;
+  char* s_y = strsep(&s, ".");
+  assert(*s_y && s != nullptr);
+  char* s_m = strsep(&s, ".");
+  assert(*s_m && s != nullptr);
+  char* s_d = strsep(&s, ".");
+  assert(*s_d && s == nullptr);
+  data.date.y = atoi(s_y);
+  data.date.m = atoi(s_m);
+  data.date.d = atoi(s_d);
+  assert(data.date.y && data.date.m && data.date.d);
 }
