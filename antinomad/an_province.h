@@ -35,10 +35,11 @@ public:
         : _id(id), _name(name) {}
 
     uint id() const noexcept { return _id; }
+    const std::string& name() const noexcept { return _name; }
     hist_list_t& hist_list() noexcept { return _hist_list; }
     const hist_list_t& hist_list() const noexcept { return _hist_list; }
 
-    void write_event(FILE*) const;
+    void write_event(FILE*, uint event_id) const;
 };
 
 

@@ -17,13 +17,14 @@ using namespace boost::filesystem;
 
 const path VROOT_DIR("D:/SteamLibrary/steamapps/common/Crusader Kings II");
 const path ROOT_DIR("D:/g/SWMH-BETA/SWMH");
-const path DEFAULT_OUTPUT_PATH("./emf_nomad_codegen.txt");
-const bool OUTPUT_HISTORY_DATA = false; // debugging data to stderr re: history execution
 const uint END_YEAR = 1337;
-
 //const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 769}, {769, 867}, {867, 1000}, {1000, 1066}, };
 //const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 769}, {769, 867}, {867, 1066}, };
 const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 867}, {867, 1066}, };
+
+const path DEFAULT_OUTPUT_PATH("./emf_nomad_codegen.txt");
+const bool OUTPUT_HISTORY_DATA = false; // debugging data to stderr re: history execution
+const uint BASE_EVENT_ID = 1000;
 
 void execute_province_history(const default_map&, const definitions_table&, an_province**);
 void write_main_event(FILE*, an_province** prov_map, uint map_sz);
@@ -59,7 +60,7 @@ int main(int argc, char** argv) {
 
         for (uint i = 1; i < prov_map_sz; ++i)
             if (prov_map[i])
-                prov_map[i]->write_event(of);
+                prov_map[i]->write_event(of, BASE_EVENT_ID + i);
 
         fclose(of);
     }
@@ -287,6 +288,37 @@ void execute_province_history(const default_map& dm,
 
 
 void write_main_event(FILE* f, an_province** prov_map, uint prov_map_sz) {
+    fprintf(f, "# emf_nomad.%u\n", BASE_EVENT_ID);
+    fprintf(f, "#\n# Invoked on startup to build temples & tribes as necessary to preserve\n");
+    fprintf(f, "# the culture+religion, as specified in province history, of each potentially\n");
+    fprintf(f, "# nomad-affected province on the map at any playable start date. Each\n");
+    fprintf(f, "# such province is given its own province_event, the ID of which is\n");
+    fprintf(f, "# %u + <province ID> in this namespace.\n#\n", BASE_EVENT_ID);
+    fprintf(f, "# NOTE: None of these province events actually execute unless they are\n");
+    fprintf(f, "# actually found to be empty/nomadic at runtime, so while there may be\n");
+    fprintf(f, "# a lot of events here, very little of the code will actually be run for\n");
+    fprintf(f, "# any given start.\n#\n");
+    fprintf(f, "# How these events were created: All event code following was generated\n");
+    fprintf(f, "# automatically by a program which emulates CK2 history execution, written\n");
+    fprintf(f, "# by secret ninjas. If in need, contact zijistark (azrinon@gmail.com) so that\n");
+    fprintf(f, "# he may relay your message to said ninjas and deliver their reply.\n");
+    fprintf(f, "character_event = {\n");
+    fprintf(f, "\tid = emf_nomad.%u\n", BASE_EVENT_ID);
+    fprintf(f, "\thide_window = yes\n");
+    fprintf(f, "\tis_triggered_only = yes\n\n");
+    fprintf(f, "\ttrigger = { has_dlc = \"Horse Lords\" }\n\n");
+    fprintf(f, "\timmediate = {\n");
+
+    for (uint id = 1; id < prov_map_sz; ++id) {
+        if (prov_map[id] == nullptr)
+            continue;
+
+        fprintf(f, "\t\t%-4u = { province_event = { id = emf_nomad.%u } } # %s\n",
+                id, BASE_EVENT_ID + id, prov_map[id]->name().c_str());
+    }
+
+
+    fprintf(f, "\t}\n}\n\n\n");
 
 }
 
