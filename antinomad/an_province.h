@@ -26,17 +26,19 @@ public:
 private:
 
     uint _id;
+    std::string _name;
     hist_list_t _hist_list;
 
 public:
 
-    an_province(uint id) noexcept : _id(id) {}
+    an_province(uint id, const std::string& name) noexcept
+        : _id(id), _name(name) {}
 
     uint id() const noexcept { return _id; }
     hist_list_t& hist_list() noexcept { return _hist_list; }
     const hist_list_t& hist_list() const noexcept { return _hist_list; }
 
-    void write_event(FILE*) const {}
+    void write_event(FILE*) const;
 };
 
 

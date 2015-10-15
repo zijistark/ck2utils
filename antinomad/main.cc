@@ -15,28 +15,18 @@
 
 using namespace boost::filesystem;
 
-
-/*
-
-config:
-
-- where to write our generated events (stdout seems a reasonable default)
-- where to find the province history (path to mod root)
-- where to find fallback province history (path to vanilla)
-- start year, end year
-- [filter list of province IDs] path to this file or accept it on stdin (stdin default)
-*/
-
-
 const path VROOT_DIR("D:/SteamLibrary/steamapps/common/Crusader Kings II");
 const path ROOT_DIR("D:/g/SWMH-BETA/SWMH");
-
+const path DEFAULT_OUTPUT_PATH("./emf_nomad_codegen.txt");
+const bool OUTPUT_HISTORY_DATA = false; // debugging data to stderr re: history execution
 const uint END_YEAR = 1337;
 
 //const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 769}, {769, 867}, {867, 1000}, {1000, 1066}, };
+//const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 769}, {769, 867}, {867, 1066}, };
 const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 867}, {867, 1066}, };
 
-void do_stuff_with_provinces(const default_map&, const definitions_table&, an_province**);
+void execute_province_history(const default_map&, const definitions_table&, an_province**);
+void write_main_event(FILE*, an_province** prov_map, uint map_sz);
 
 void print_block(int indent, const pdx::block*);
 void print_stmt(int indent, const pdx::stmt&);
@@ -44,14 +34,34 @@ void print_obj(int indent, const pdx::obj&);
 
 int main(int argc, char** argv) {
 
+    path output_path = DEFAULT_OUTPUT_PATH;
+
+    if (argc >= 2)
+        output_path = path(argv[1]);
+
     try {
         default_map dm(ROOT_DIR);
         definitions_table def_tbl(dm);
 
-        an_province** prov_map = new an_province*[ dm.max_province_id() ];
+        uint prov_map_sz = dm.max_province_id() + 1;
+        an_province** prov_map = new an_province*[prov_map_sz];
+        for (uint i = 0; i < prov_map_sz; ++i) prov_map[i] = nullptr;
 
-        do_stuff_with_provinces(dm, def_tbl, prov_map);
+        execute_province_history(dm, def_tbl, prov_map);
 
+        FILE* of = fopen(output_path.c_str(), "wb");
+
+        if (of == nullptr)
+            throw va_error("could not open event output file: %s: %s",
+                           strerror(errno), output_path.c_str());
+
+        write_main_event(of, prov_map, prov_map_sz);
+
+        for (uint i = 1; i < prov_map_sz; ++i)
+            if (prov_map[i])
+                prov_map[i]->write_event(of);
+
+        fclose(of);
     }
     catch (std::exception& e) {
         fprintf(stderr, "fatal: %s\n", e.what());
@@ -80,9 +90,7 @@ struct hist_record {
     hist_record(pdx::date_t d)
         : date(d), cul(nullptr), rel(nullptr), is_holy(false) {}
 
-    bool operator<(const hist_record& e) const noexcept {
-        return date < e.date;
-    }
+    bool operator<(const hist_record& e) const noexcept { return date < e.date; }
 };
 
 
@@ -132,11 +140,9 @@ uint round_date_to_playable_year(pdx::date_t d) {
 }
 
 
-void do_stuff_with_provinces(const default_map& dm,
-                             const definitions_table& def_tbl,
-                             an_province** prov_map) {
-
-    using namespace pdx;
+void execute_province_history(const default_map& dm,
+                              const definitions_table& def_tbl,
+                              an_province** prov_map) {
 
     path prov_hist_root = ROOT_DIR / "history/provinces";
     path prov_hist_vroot = VROOT_DIR / "history/provinces";
@@ -144,17 +150,16 @@ void do_stuff_with_provinces(const default_map& dm,
     char filename[256];
     uint id = 0;
 
-    for (auto&& r : def_tbl.row_vec) {
+    for (auto&& def : def_tbl.row_vec) {
         ++id;
-        prov_map[id] = 0;
 
         if (dm.id_is_seazone(id)) // sea | major river
             continue;
 
-        if (r.name.empty()) // wasteland | external
+        if (def.name.empty()) // wasteland | external
             continue;
 
-        sprintf(filename, "%u - %s.txt", id, r.name.c_str());
+        sprintf(filename, "%u - %s.txt", id, def.name.c_str());
 
         path prov_hist_file = prov_hist_root / filename;
 
@@ -170,14 +175,13 @@ void do_stuff_with_provinces(const default_map& dm,
         pdx::plexer lex(prov_hist_file.c_str());
         pdx::block doc(lex, true);
 
-
-        std::vector<hist_record> records;
-
         /* ensure that this province history file has an associated county title,
          * else skip it, because it's wasteland or something. */
 
         if (!block_has_title_stmt(doc))
             continue;
+
+        std::vector<hist_record> records;
 
         /* scan top-level... */
 
@@ -213,32 +217,35 @@ void do_stuff_with_provinces(const default_map& dm,
         // history records are possibly out-of-order, so fix that now.
         std::sort(records.begin(), records.end());
 
-        /* build a merged (start year, culture, religion, has_temple) level table... */
+        assert( !records.empty() ); // seriously.
 
-        assert( !records.empty() );
+        /* some useful debugging output... */
 
-        prov_map[id] = new an_province(id);
-        an_province& prov = *prov_map[id];
+        if (OUTPUT_HISTORY_DATA) {
+            fprintf(stderr, "=======================================================\n");
+            fprintf(stderr, "ID %u (%s):\n", id, def.name.c_str());
 
-        /* and some useful debugging output... */
+            for (auto&& r : records) {
+                printf("  %hu.%hhu.%hhu:\n", r.date.y, r.date.m, r.date.d);
 
-        printf("=====================================================================\n%u (%s):\n", id, r.name.c_str());
-
-        for (auto&& r : records) {
-            printf("  %hu.%hhu.%hhu:\n", r.date.y, r.date.m, r.date.d);
-
-            if (r.cul)
-                printf("    culture:  %s\n", r.cul);
-            if (r.rel)
-                printf("    religion: %s\n", r.rel);
-            if (r.is_holy)
-                printf("    HOLY\n");
+                if (r.cul)
+                    printf("    culture:  %s\n", r.cul);
+                if (r.rel)
+                    printf("    religion: %s\n", r.rel);
+                if (r.is_holy)
+                    printf("    temple\n");
+            }
         }
+
+        /* build a merged (start year, culture, religion, has_temple) level table... */
 
         uint cw_year = round_date_to_playable_year(records.front().date); // current working year
         const char* cul = nullptr;
         const char* rel = nullptr;
         bool is_holy = false;
+
+        prov_map[id] = new an_province(id, def.name);
+        an_province& prov = *prov_map[id];
 
         for (auto&& r : records) {
             uint year = round_date_to_playable_year(r.date);
@@ -263,15 +270,26 @@ void do_stuff_with_provinces(const default_map& dm,
         prov.hist_list().emplace_back(round_date_to_playable_year(records.back().date),
                                       cul, rel, is_holy);
 
-        printf("\n%4s | %18s | %18s | HOLY?\n", "YEAR", "CULTURE", "RELIGION");
+        if (OUTPUT_HISTORY_DATA) {
+            fprintf(stderr, "------------------------------------------------------+\n");
+            fprintf(stderr, "%4s | %17s | %18s | HOLY? |\n", "YEAR", "CULTURE", "RELIGION");
 
-        for (auto&& e : prov.hist_list()) {
-            printf("%4u | %18s | %18s | %s\n", e.year, e.culture.c_str(), e.religion.c_str(), (e.has_temple) ? "Y" : "N");
+            for (auto&& e : prov.hist_list()) {
+                printf("%4u | %17s | %18s | %s     |\n",
+                       e.year, e.culture.c_str(), e.religion.c_str(),
+                       (e.has_temple) ? "Y" : "N");
+            }
+
+            fprintf(stderr, "------------------------------------------------------+\n\n\n");
         }
-
-        printf("\n");
     }
 }
+
+
+void write_main_event(FILE* f, an_province** prov_map, uint prov_map_sz) {
+
+}
+
 
 void print_block(int indent, const pdx::block* p_b) {
     for (auto&& s : p_b->stmt_list)
