@@ -48,12 +48,13 @@ def process_titles(where):
         if not title.startswith('b'):
             for n, v in tree:
                 for n2, v2 in v:
-                    if n2.val == 'liege':
-                        liege = v2.val
-                        if liege != title:
-                            vassals[v2.val].add(title)
-                    elif n2.val == 'historical_nomad' and v2.val == 'yes':
-                        nomads.add(title)
+                    if isinstance(v2, ck2parser.String):
+                        if n2.val == 'liege':
+                            liege = v2.val
+                            if liege != title:
+                                vassals[v2.val].add(title)
+                        elif n2.val == 'historical_nomad' and v2.val == 'yes':
+                            nomads.add(title)
     return nomads, vassals
 
 def main():
@@ -61,18 +62,15 @@ def main():
     province_id, tribals = process_provinces(modpath)
     nomads, vassals = process_titles(modpath)
     maybe_empty = set()
-    visited = set()
 
     def check_nomad(title):
-        if title not in visited:
-            visited.add(title)
-            if title.startswith('c'):
-                number = province_id[title]
-                if number in tribals:
-                    maybe_empty.add(number)
-            else:
-                for vassal in vassals[title]:
-                    check_nomad(vassal)
+        if title.startswith('c'):
+            number = province_id[title]
+            if number in tribals:
+                maybe_empty.add(number)
+        else:
+            for vassal in vassals[title]:
+                check_nomad(vassal)
 
     for title in nomads:
         check_nomad(title)
