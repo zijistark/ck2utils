@@ -1,6 +1,8 @@
+import collections
 import csv
 import datetime
 import operator
+import pathlib
 import re
 from funcparserlib import lexer
 from funcparserlib import parser
@@ -21,6 +23,14 @@ def force_quote(key):
     global fq_keys
     return isinstance(key, String) and key.val in fq_keys
 
+def csv_rows(path):
+    try:
+        with path.open(newline='', encoding='cp1252', errors='replace') as f:
+            yield from csv.reader(f, dialect='ckii')
+    except AttributeError:
+        with open(path, newline='', encoding='cp1252', errors='replace') as f:
+            yield from csv.reader(f, dialect='ckii')
+
 # give mod dirs in descending lexicographical order of mod name (Z-A),
 # modified for dependencies as necessary.
 def files(glob, *moddirs, basedir=vanilladir):
@@ -29,27 +39,34 @@ def files(glob, *moddirs, basedir=vanilladir):
     for _, p in sorted(result_paths.items(), key=lambda t: t[0].parts):
         yield p
 
-def localisation(moddir=None):
-    def process_csv(path):
-        with path.open(newline='', encoding='cp1252', errors='replace') as f:
-            for row in csv.reader(f, dialect='ckii'):
-                try:
-                    locs[row[0]] = row[1]
-                except IndexError:
-                    continue
+def parse_files(glob, *moddirs, basedir=vanilladir):
+    for path in files(glob, *moddirs, basedir=basedir):
+        yield path, parse_file(path)
 
-    locs = {}
-    loc_glob = 'localisation/*.csv'
-    for path in files(loc_glob):
-        process_csv(path)
+def localisation(moddir=None, ordered=False):
+    def process_csv(path):
+        for row in csv_rows(path):
+            try:
+                if row[0] not in locs:
+                    locs[row[0]] = row[1]
+            except IndexError:
+                continue
+
+    locs = collections.OrderedDict() if ordered else {}
+    loc_glob = 'localisation/*'
+    mod_files = set()
     if moddir:
         for path in files(loc_glob, basedir=moddir):
+            process_csv(path)
+            mod_files.add(path.name)
+    for path in files(loc_glob):
+        if path.name not in mod_files:
             process_csv(path)
     return locs
 
 def is_codename(string):
     try:
-        return re.match(r'[ekdcb]_', string)
+        return re.match(r'[ekdcb]_', string) is not None
     except TypeError:
         return False
 
