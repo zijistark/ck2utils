@@ -16,6 +16,9 @@ public:
         std::string culture;
         std::string religion;
         bool has_temple;
+
+        hist_entry(uint y, const char* cul, const char* rel, bool is_holy)
+            : year(y), culture(cul), religion(rel), has_temple(is_holy) {}
     };
 
     typedef std::vector<hist_entry> hist_list_t;

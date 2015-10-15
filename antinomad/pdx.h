@@ -37,6 +37,11 @@ namespace pdx {
       if (e.d < d) return false;
       return false;
     }
+
+    uint16_t year()  const noexcept { return y; }
+    uint8_t  month() const noexcept { return m; }
+    uint8_t  day()   const noexcept { return d; }
+
   } __attribute__ ((packed)); // do indeed make a 32-bit POD out of this
 
   struct obj {

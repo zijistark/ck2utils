@@ -31,9 +31,10 @@ config:
 const path VROOT_DIR("D:/SteamLibrary/steamapps/common/Crusader Kings II");
 const path ROOT_DIR("D:/g/SWMH-BETA/SWMH");
 
-const uint START_YEAR = 867;
 const uint END_YEAR = 1337;
 
+//const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 769}, {769, 867}, {867, 1000}, {1000, 1066}, };
+const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 867}, {867, 1066}, };
 
 void do_stuff_with_provinces(const default_map&, const definitions_table&, an_province**);
 
@@ -118,6 +119,19 @@ bool process_hist_record(const pdx::block* p_block, std::vector<hist_record>& re
 }
 
 
+uint round_date_to_playable_year(pdx::date_t d) {
+    uint y = d.year();
+
+    /* check if the year is unplayable, and if so, round up to the next playable year. */
+
+    for (auto&& r : UNPLAYABLE_YEAR_RANGES)
+        if (y > r.first && y < r.second)
+            return r.second;
+
+    return y;
+}
+
+
 void do_stuff_with_provinces(const default_map& dm,
                              const definitions_table& def_tbl,
                              an_province** prov_map) {
@@ -159,17 +173,23 @@ void do_stuff_with_provinces(const default_map& dm,
 
         std::vector<hist_record> records;
 
+        /* ensure that this province history file has an associated county title,
+         * else skip it, because it's wasteland or something. */
+
+        if (!block_has_title_stmt(doc))
+            continue;
+
         /* scan top-level... */
 
         static const pdx::date_t EPOCH = { 1, 1, 1 };
         records.emplace_back(EPOCH);
         process_hist_record(&doc, records);
 
-        if (!records.front().cul && block_has_title_stmt(doc))
+        if (!records.front().cul)
             throw va_error("province %u lacks a top-level culture assignment: %s",
                            id, prov_hist_file.c_str());
 
-        if (!records.front().rel && block_has_title_stmt(doc))
+        if (!records.front().rel)
             throw va_error("province %u lacks a top-level religion assignment: %s",
                            id, prov_hist_file.c_str());
 
@@ -179,7 +199,12 @@ void do_stuff_with_provinces(const default_map& dm,
             if (!s.key.is_date())
                 continue;
 
-            records.emplace_back( s.key.date() );
+            pdx::date_t date = s.key.date();
+
+            if (date.year() > END_YEAR)
+                continue; // skip history records that can never have an effect
+
+            records.emplace_back(date);
             if (!process_hist_record(s.val.as_block(), records))
                 records.pop_back(); // n/m, the entry didn't contain any relevant info
 
@@ -190,13 +215,14 @@ void do_stuff_with_provinces(const default_map& dm,
 
         /* build a merged (start year, culture, religion, has_temple) level table... */
 
-        an_province* p_prov = prov_map[id] = new an_province(id);
+        assert( !records.empty() );
 
-        // ACTUALLY DO THE MERGE...
+        prov_map[id] = new an_province(id);
+        an_province& prov = *prov_map[id];
 
         /* and some useful debugging output... */
 
-        printf("%u (%s):\n", id, r.name.c_str());
+        printf("=====================================================================\n%u (%s):\n", id, r.name.c_str());
 
         for (auto&& r : records) {
             printf("  %hu.%hhu.%hhu:\n", r.date.y, r.date.m, r.date.d);
@@ -208,9 +234,44 @@ void do_stuff_with_provinces(const default_map& dm,
             if (r.is_holy)
                 printf("    HOLY\n");
         }
+
+        uint cw_year = round_date_to_playable_year(records.front().date); // current working year
+        const char* cul = nullptr;
+        const char* rel = nullptr;
+        bool is_holy = false;
+
+        for (auto&& r : records) {
+            uint year = round_date_to_playable_year(r.date);
+
+            if (year > cw_year) {
+                /* output current working state to an an_provice::hist_entry */
+                prov.hist_list().emplace_back(cw_year, cul, rel, is_holy);
+                cw_year = year;
+            }
+
+            if (r.cul)
+                cul = r.cul;
+            if (r.rel)
+                rel = r.rel;
+            if (r.is_holy)
+                is_holy = true;
+        }
+
+        /* output the last hist_entry (it will never be output in the above loop,
+         * but our current working state will reflect it). note that this could even
+         * be last = first with the above loop having output nothing at all. */
+        prov.hist_list().emplace_back(round_date_to_playable_year(records.back().date),
+                                      cul, rel, is_holy);
+
+        printf("\n%4s | %18s | %18s | HOLY?\n", "YEAR", "CULTURE", "RELIGION");
+
+        for (auto&& e : prov.hist_list()) {
+            printf("%4u | %18s | %18s | %s\n", e.year, e.culture.c_str(), e.religion.c_str(), (e.has_temple) ? "Y" : "N");
+        }
+
+        printf("\n");
     }
 }
-
 
 void print_block(int indent, const pdx::block* p_b) {
     for (auto&& s : p_b->stmt_list)
