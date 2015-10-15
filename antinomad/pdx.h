@@ -76,14 +76,14 @@ namespace pdx {
     bool is_list()    const noexcept { return type == LIST; }
     bool is_date()    const noexcept { return type == DATE; }
 
-    void store_date_from_str(char* str);
+    void store_date_from_str(char* str, lexer* p_lex = nullptr);
   };
 
   struct stmt {
     obj key;
     obj val;
 
-    bool key_eq(const char* s) {
+    bool key_eq(const char* s) const noexcept {
       return (key.type == obj::STR
               && strcmp(key.data.s, s) == 0);
     }

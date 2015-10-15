@@ -61,6 +61,15 @@ int main(int argc, char** argv) {
 }
 
 
+
+bool block_has_title_stmt(const pdx::block& block) {
+    for (auto&& s : block.stmt_list)
+        if (s.key_eq("title"))
+            return true;
+    return false;
+}
+
+
 struct hist_record {
     pdx::date_t date;
     const char* cul;
@@ -152,6 +161,14 @@ void do_stuff_with_provinces(const default_map& dm,
         records.emplace_back(EPOCH);
         process_hist_record(&doc, records);
 
+        if (records.back().cul == nullptr && block_has_title_stmt(doc))
+            throw va_error("province %u lacks a top-level culture assignment: %s",
+                           id, prov_hist_file.c_str());
+
+        if (records.back().rel == nullptr && block_has_title_stmt(doc))
+            throw va_error("province %u lacks a top-level religion assignment: %s",
+                           id, prov_hist_file.c_str());
+
         /* scan history entries... */
 
         for (auto&& s : doc.stmt_list) {
@@ -161,6 +178,19 @@ void do_stuff_with_provinces(const default_map& dm,
             records.emplace_back( s.key.date() );
             process_hist_record(s.val.as_block(), records);
         }
+
+        std::sort(records.begin(), records.end(), [](const hist_record& a, const hist_record& b) {
+            if (a.date.y < b.date.y) return true;
+            if (b.date.y < a.date.y) return false;
+
+            if (a.date.m < b.date.m) return true;
+            if (b.date.m < a.date.m) return false;
+
+            if (a.date.d < b.date.d) return true;
+            if (b.date.d < a.date.d) return false;
+
+            return false;
+        });
     }
 }
 

@@ -297,14 +297,28 @@ namespace pdx {
 }
 
 
-void pdx::obj::store_date_from_str(char* s) {
+void pdx::obj::store_date_from_str(char* s, lexer* p_lex) {
   /* we already are guaranteed to have a well-formed date string due to the
    * lexer's recognition rules */
   char* s_y = strsep(&s, ".");
   char* s_m = strsep(&s, ".");
   char* s_d = strsep(&s, ".");
-  data.date.y = atoi(s_y);
-  data.date.m = atoi(s_m);
-  data.date.d = atoi(s_d);
-  assert( data.date.y > 0 && data.date.m > 0 && data.date.d > 0 );
+  const int y = atoi(s_y);
+  const int m = atoi(s_m);
+  const int d = atoi(s_d);
+
+  if (p_lex != nullptr) {
+    if ( y <= 0 || y >= (1<<16) )
+      throw va_error("Invalid year %d in date-type expression at %s:L%d", y, p_lex->filename(), p_lex->line());
+    if ( m <= 0 || m > 12 )
+      throw va_error("Invalid month %d in date-type expression at %s:L%d", m, p_lex->filename(), p_lex->line());
+    if ( d <= 0 || d > 31 )
+      throw va_error("Invalid day %d in date-type expression at %s:L%d", m, p_lex->filename(), p_lex->line());
+  }
+
+  data.date = {
+    static_cast<uint16_t>(y),
+    static_cast<uint8_t>(m),
+    static_cast<uint8_t>(d)
+  };
 }
