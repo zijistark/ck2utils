@@ -4,7 +4,7 @@
 #define _MDH_AN_PROVINCE_H_
 
 #include <cstdio>
-#include <list>
+#include <vector>
 #include <string>
 
 
@@ -18,7 +18,7 @@ public:
         bool has_temple;
     };
 
-    typedef std::list<hist_entry> hist_list_t;
+    typedef std::vector<hist_entry> hist_list_t;
 
 private:
 
@@ -26,6 +26,8 @@ private:
     hist_list_t _hist_list;
 
 public:
+
+    an_province(uint id) noexcept : _id(id) {}
 
     uint id() const noexcept { return _id; }
     hist_list_t& hist_list() noexcept { return _hist_list; }

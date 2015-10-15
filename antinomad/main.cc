@@ -78,19 +78,25 @@ struct hist_record {
 
     hist_record(pdx::date_t d)
         : date(d), cul(nullptr), rel(nullptr), is_holy(false) {}
+
+    bool operator<(const hist_record& e) const noexcept {
+        return date < e.date;
+    }
 };
 
 
-void process_hist_record(const pdx::block* p_block, std::vector<hist_record>& records) {
+bool process_hist_record(const pdx::block* p_block, std::vector<hist_record>& records) {
+
+    hist_record& r = records.back();
 
     for (auto&& s : p_block->stmt_list) {
         if (s.key.is_c_str()) {
             const char* key = s.key.c_str();
 
             if (strcasecmp(key, "culture") == 0)
-                records.back().cul = s.val.as_c_str();
+                r.cul = s.val.as_c_str();
             else if (strcasecmp(key, "religion") == 0)
-                records.back().rel = s.val.as_c_str();
+                r.rel = s.val.as_c_str();
         }
         else if (s.key.is_title()) {
             assert( pdx::title_tier(s.key.title()) == pdx::TIER_BARON );
@@ -102,12 +108,13 @@ void process_hist_record(const pdx::block* p_block, std::vector<hist_record>& re
             else {
                 const char* holding_type = s.val.as_c_str();
 
-                if (strcasecmp(holding_type, "temple") == 0) {
-                    records.back().is_holy = true;
-                }
+                if (strcasecmp(holding_type, "temple") == 0)
+                    r.is_holy = true;
             }
         }
     }
+
+    return (r.cul || r.rel || r.is_holy);
 }
 
 
@@ -138,17 +145,13 @@ void do_stuff_with_provinces(const default_map& dm,
         path prov_hist_file = prov_hist_root / filename;
 
         if (!exists(prov_hist_file)) {
-
             path prov_hist_vfile = prov_hist_vroot / filename;
 
             if (!exists(prov_hist_vfile))
-                throw va_error("could not find province history file: %s",
-                               filename);
+                throw va_error("could not find province history file: %s", filename);
             else
                 prov_hist_file = prov_hist_vfile;
         }
-
-        // an_province* p_prov = prov_map[id] = new an_province;
 
         pdx::plexer lex(prov_hist_file.c_str());
         pdx::block doc(lex, true);
@@ -157,15 +160,16 @@ void do_stuff_with_provinces(const default_map& dm,
         std::vector<hist_record> records;
 
         /* scan top-level... */
+
         static const pdx::date_t EPOCH = { 1, 1, 1 };
         records.emplace_back(EPOCH);
         process_hist_record(&doc, records);
 
-        if (records.back().cul == nullptr && block_has_title_stmt(doc))
+        if (!records.front().cul && block_has_title_stmt(doc))
             throw va_error("province %u lacks a top-level culture assignment: %s",
                            id, prov_hist_file.c_str());
 
-        if (records.back().rel == nullptr && block_has_title_stmt(doc))
+        if (!records.front().rel && block_has_title_stmt(doc))
             throw va_error("province %u lacks a top-level religion assignment: %s",
                            id, prov_hist_file.c_str());
 
@@ -176,21 +180,34 @@ void do_stuff_with_provinces(const default_map& dm,
                 continue;
 
             records.emplace_back( s.key.date() );
-            process_hist_record(s.val.as_block(), records);
+            if (!process_hist_record(s.val.as_block(), records))
+                records.pop_back(); // n/m, the entry didn't contain any relevant info
+
         }
 
-        std::sort(records.begin(), records.end(), [](const hist_record& a, const hist_record& b) {
-            if (a.date.y < b.date.y) return true;
-            if (b.date.y < a.date.y) return false;
+        // history records are possibly out-of-order, so fix that now.
+        std::sort(records.begin(), records.end());
 
-            if (a.date.m < b.date.m) return true;
-            if (b.date.m < a.date.m) return false;
+        /* build a merged (start year, culture, religion, has_temple) level table... */
 
-            if (a.date.d < b.date.d) return true;
-            if (b.date.d < a.date.d) return false;
+        an_province* p_prov = prov_map[id] = new an_province(id);
 
-            return false;
-        });
+        // ACTUALLY DO THE MERGE...
+
+        /* and some useful debugging output... */
+
+        printf("%u (%s):\n", id, r.name.c_str());
+
+        for (auto&& r : records) {
+            printf("  %hu.%hhu.%hhu:\n", r.date.y, r.date.m, r.date.d);
+
+            if (r.cul)
+                printf("    culture:  %s\n", r.cul);
+            if (r.rel)
+                printf("    religion: %s\n", r.rel);
+            if (r.is_holy)
+                printf("    HOLY\n");
+        }
     }
 }
 

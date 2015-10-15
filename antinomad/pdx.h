@@ -11,6 +11,8 @@
 
 #include <cstring>
 #include <cassert>
+#include <cstdint>
+
 
 namespace pdx {
 
@@ -21,7 +23,21 @@ namespace pdx {
     uint16_t y;
     uint8_t  m;
     uint8_t  d;
-  } __attribute__ ((packed));
+
+    bool operator<(const date_t e) const noexcept {
+      /* note that since our binary representation is simpy a 32-bit unsigned integer
+       * and since our fields are MSB to LSB, we could just compare date_t as a uint,
+       * but this is the more correct pattern for multi-field comparison, and I don't
+       * feel the need to optimize this. :) */
+      if (y < e.y) return true;
+      if (e.y < y) return false;
+      if (m < e.m) return true;
+      if (e.m < y) return false;
+      if (d < e.d) return true;
+      if (e.d < d) return false;
+      return false;
+    }
+  } __attribute__ ((packed)); // do indeed make a 32-bit POD out of this
 
   struct obj {
     uint type;
@@ -52,7 +68,7 @@ namespace pdx {
 
     obj() : type(STR) {}
 
-    /* more readable accessors (checked type) */
+    /* more readable accessors (silently-checked type) */
     char*  as_c_str()   const noexcept { assert(type == STR);   return data.s; }
     int    as_integer() const noexcept { assert(type == INT);   return data.i; }
     char*  as_title()   const noexcept { assert(type == TITLE); return data.s; }
@@ -68,7 +84,7 @@ namespace pdx {
     list*  list()    const noexcept { return data.p_list; }
     date_t date()    const noexcept { return data.date; }
 
-    /* type checkers */
+    /* type accessors */
     bool is_c_str()   const noexcept { return type == STR; }
     bool is_integer() const noexcept { return type == INT; }
     bool is_title()   const noexcept { return type == TITLE; }
