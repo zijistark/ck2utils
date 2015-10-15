@@ -297,16 +297,14 @@ namespace pdx {
 }
 
 
-void pdx::obj::store_date_from_str(char* str) {
-  char* s = str;
+void pdx::obj::store_date_from_str(char* s) {
+  /* we already are guaranteed to have a well-formed date string due to the
+   * lexer's recognition rules */
   char* s_y = strsep(&s, ".");
-  assert(*s_y && s != nullptr);
   char* s_m = strsep(&s, ".");
-  assert(*s_m && s != nullptr);
   char* s_d = strsep(&s, ".");
-  assert(*s_d && s == nullptr);
   data.date.y = atoi(s_y);
   data.date.m = atoi(s_m);
   data.date.d = atoi(s_d);
-  assert(data.date.y && data.date.m && data.date.d);
+  assert( data.date.y > 0 && data.date.m > 0 && data.date.d > 0 );
 }

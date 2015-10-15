@@ -10,6 +10,8 @@
 #include <cstdio>
 #include <cerrno>
 #include <cstring>
+#include <vector>
+#include <algorithm>
 
 using namespace boost::filesystem;
 
@@ -59,9 +61,52 @@ int main(int argc, char** argv) {
 }
 
 
+struct hist_record {
+    pdx::date_t date;
+    const char* cul;
+    const char* rel;
+    bool is_holy;
+
+    hist_record(pdx::date_t d)
+        : date(d), cul(nullptr), rel(nullptr), is_holy(false) {}
+};
+
+
+void process_hist_record(const pdx::block* p_block, std::vector<hist_record>& records) {
+
+    for (auto&& s : p_block->stmt_list) {
+        if (s.key.is_c_str()) {
+            const char* key = s.key.c_str();
+
+            if (strcasecmp(key, "culture") == 0)
+                records.back().cul = s.val.as_c_str();
+            else if (strcasecmp(key, "religion") == 0)
+                records.back().rel = s.val.as_c_str();
+        }
+        else if (s.key.is_title()) {
+            assert( pdx::title_tier(s.key.title()) == pdx::TIER_BARON );
+
+            if (s.val.is_integer()) {
+                // e.g., b_roma = 0
+                assert( s.val.integer() == 0 );
+            }
+            else {
+                const char* holding_type = s.val.as_c_str();
+
+                if (strcasecmp(holding_type, "temple") == 0) {
+                    records.back().is_holy = true;
+                }
+            }
+        }
+    }
+}
+
+
 void do_stuff_with_provinces(const default_map& dm,
                              const definitions_table& def_tbl,
                              an_province** prov_map) {
+
+    using namespace pdx;
 
     path prov_hist_root = ROOT_DIR / "history/provinces";
     path prov_hist_vroot = VROOT_DIR / "history/provinces";
@@ -94,17 +139,28 @@ void do_stuff_with_provinces(const default_map& dm,
                 prov_hist_file = prov_hist_vfile;
         }
 
-        an_province* p_prov = prov_map[id] = new an_province;
+        // an_province* p_prov = prov_map[id] = new an_province;
 
         pdx::plexer lex(prov_hist_file.c_str());
         pdx::block doc(lex, true);
 
-        for (auto&& s : doc.stmt_list) {
-            if (s.key.type == pdx::obj::DATE) {
-                printf("%hu/%hhu/%hhu\n", s.key.data.date.y, s.key.data.date.m, s.key.data.date.d);
-            }
-        }
 
+        std::vector<hist_record> records;
+
+        /* scan top-level... */
+        static const pdx::date_t EPOCH = { 1, 1, 1 };
+        records.emplace_back(EPOCH);
+        process_hist_record(&doc, records);
+
+        /* scan history entries... */
+
+        for (auto&& s : doc.stmt_list) {
+            if (!s.key.is_date())
+                continue;
+
+            records.emplace_back( s.key.date() );
+            process_hist_record(s.val.as_block(), records);
+        }
     }
 }
 
