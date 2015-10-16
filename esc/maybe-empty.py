@@ -30,7 +30,7 @@ def process_landed_titles(where):
                 titles.add(n.val)
                 recurse(v)
 
-    titles = {}
+    titles = set()
     for _, tree in ck2parser.parse_files('common/landed_titles/*', where):
         recurse(tree)
     return titles
