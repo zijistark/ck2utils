@@ -10,6 +10,7 @@
 #include <cstdio>
 #include <cerrno>
 #include <cstring>
+#include <cstdlib>
 #include <vector>
 #include <algorithm>
 
@@ -47,6 +48,15 @@ int main(int argc, char** argv) {
         uint prov_map_sz = dm.max_province_id() + 1;
         an_province** prov_map = new an_province*[prov_map_sz];
         for (uint i = 0; i < prov_map_sz; ++i) prov_map[i] = nullptr;
+
+        /* pull the province filter list from maybe-empty.py through stdin */
+        char buf[32];
+        while (fgets(&buf[0], sizeof(buf), stdin) != nullptr) {
+            int id = atoi(&buf[0]);
+            if (id <= 0)
+                throw va_error("malformed province filter list input from standard input: '%s'", &buf[0]);
+            prov_map[id] = reinterpret_cast<an_province*>(0x1); // we'll only process these in execute_province_history
+        }
 
         execute_province_history(dm, def_tbl, prov_map);
 
@@ -153,6 +163,11 @@ void execute_province_history(const default_map& dm,
 
     for (auto&& def : def_tbl.row_vec) {
         ++id;
+
+        if (prov_map[id] != reinterpret_cast<an_province*>(0x1))
+            continue;
+
+        prov_map[id] = nullptr;
 
         if (dm.id_is_seazone(id)) // sea | major river
             continue;
@@ -296,7 +311,7 @@ void write_main_event(FILE* f, an_province** prov_map, uint prov_map_sz) {
     fprintf(f, "# %u + <province ID> in this namespace.\n#\n", BASE_EVENT_ID);
     fprintf(f, "# NOTE: None of these province events actually execute unless they are\n");
     fprintf(f, "# actually found to be empty/nomadic at runtime, so while there may be\n");
-    fprintf(f, "# a lot of events here, very little of the code will actually be run for\n");
+    fprintf(f, "# a lot of events here, an extremely tiny portion of the events will run at\n");
     fprintf(f, "# any given start.\n#\n");
     fprintf(f, "# How these events were created: All event code following was generated\n");
     fprintf(f, "# automatically by a program which emulates CK2 history execution, written\n");
