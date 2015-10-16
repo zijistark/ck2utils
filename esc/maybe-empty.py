@@ -14,7 +14,17 @@ def get_modpath():
 def output(provinces):
     print(*provinces, sep='\n')
 
-def process_provinces(where):
+def get_start_interval(where):
+    dates = []
+    for _, tree in ck2parser.parse_files('common/bookmarks/*', where):
+        for n, v in tree:
+            dates.append(next(v2.val for n2, v2 in v if n2.val == 'date'))
+    tree = ck2parser.parse_file(where / 'common/defines.txt')
+    dates.append(next(v.val for n, v in tree if n.val == 'start_date'))
+    dates.append(next(v.val for n, v in tree if n.val == 'last_start_date'))
+    return min(dates), max(dates)
+
+def process_provinces(where, first_start, last_start):
     tree = ck2parser.parse_file(where / 'map/default.map')
     defs = next(v.val for n, v in tree if n.val == 'definitions')
     id_name = {}
@@ -32,50 +42,62 @@ def process_provinces(where):
             tree = ck2parser.parse_file(path)
             castles_and_cities = set()
             changes_by_date = collections.defaultdict(list)
+            changes_by_date[first_start] = []
             for n, v in tree:
                 if n.val == 'title':
                     province_id[v.val] = number
-                elif (isinstance(n, ck2parser.Date) and
-                      isinstance(v, ck2parser.Obj)):
-                    changes_by_date[n.val].extend(v.contents)
+                elif isinstance(v, ck2parser.Obj):
+                    changes_by_date[n.val].extend(v)
                 elif v.val == 'castle' or v.val == 'city':
                     castles_and_cities.add(n.val)
-            if not castles_and_cities:
-                no_castles_or_cities.add(number)
-                continue
-            for _, changes in sorted(changes_by_date.items()):
+            for date, changes in sorted(changes_by_date.items()):
                 for n, v in changes:
                     if n.val == 'remove_settlement':
                         castles_and_cities.discard(v.val)
                     elif v.val == 'castle' or v.val == 'city':
                         castles_and_cities.add(n.val)
-                if not castles_and_cities:
-                    no_castles_or_cities.add(number)
-                    break
+                if date >= first_start:
+                    if date > last_start:
+                        break
+                    if not castles_and_cities:
+                        no_castles_or_cities.add(number)
+                        break
     return province_id, no_castles_or_cities
 
-def process_titles(where):
+def process_titles(where, first_start, last_start):
     nomads = set()
     vassals = collections.defaultdict(set)
     for path in ck2parser.files('history/titles/*', where):
         title = path.stem
         if not title.startswith('b'):
             tree = ck2parser.parse_file(path)
+            changes_by_date = collections.defaultdict(list)
+            changes_by_date[first_start] = []
             for n, v in tree:
-                for n2, v2 in v:
-                    if isinstance(v2, ck2parser.String):
-                        if n2.val == 'liege':
-                            liege = v2.val
-                            if liege != title:
-                                vassals[v2.val].add(title)
-                        elif n2.val == 'historical_nomad' and v2.val == 'yes':
-                            nomads.add(title)
+                changes_by_date[n.val].extend(v)
+            liege = '0'
+            nomad = False
+            for date, changes in sorted(changes_by_date.items()):
+                for n, v in changes:
+                    if n.val == 'liege':
+                        liege = str(v.val) if v.val != title else '0'
+                    elif n.val == 'historical_nomad':
+                        nomad = True if v.val == 'yes' else False
+                if date >= first_start:
+                    if date > last_start:
+                        break
+                    if liege != '0':
+                        vassals[liege].add(title)
+                    if nomad:
+                        nomads.add(title)
     return nomads, vassals
 
 def main():
     modpath = get_modpath()
-    province_id, no_castles_or_cities = process_provinces(modpath)
-    nomads, vassals = process_titles(modpath)
+    first_start, last_start = get_start_interval(modpath)
+    province_id, no_castles_or_cities = process_provinces(modpath, first_start,
+                                                          last_start)
+    nomads, vassals = process_titles(modpath, first_start, last_start)
     maybe_empty = set()
 
     def check_nomad(title):
