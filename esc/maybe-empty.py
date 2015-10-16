@@ -17,16 +17,15 @@ def output(provinces):
 def get_start_interval(where):
     dates = []
     for _, tree in ck2parser.parse_files('common/bookmarks/*', where):
-        for n, v in tree:
-            dates.append(next(v2.val for n2, v2 in v if n2.val == 'date'))
+        dates.extend(v['date'].val for _, v in tree)
     tree = ck2parser.parse_file(where / 'common/defines.txt')
-    dates.append(next(v.val for n, v in tree if n.val == 'start_date'))
-    dates.append(next(v.val for n, v in tree if n.val == 'last_start_date'))
+    dates.append(tree['start_date'].val)
+    dates.append(tree['last_start_date'].val)
     return min(dates), max(dates)
 
 def process_provinces(where, first_start, last_start):
     tree = ck2parser.parse_file(where / 'map/default.map')
-    defs = next(v.val for n, v in tree if n.val == 'definitions')
+    defs = tree['definitions'].val
     id_name = {}
     for row in ck2parser.csv_rows(where / 'map' / defs):
         try:
@@ -40,13 +39,15 @@ def process_provinces(where, first_start, last_start):
         number = int(number)
         if id_name[number] == name:
             tree = ck2parser.parse_file(path)
+            try:
+                province_id[tree['title'].val] = number
+            except KeyError:
+                continue
             castles_and_cities = set()
             changes_by_date = collections.defaultdict(list)
             changes_by_date[first_start] = []
             for n, v in tree:
-                if n.val == 'title':
-                    province_id[v.val] = number
-                elif isinstance(v, ck2parser.Obj):
+                if isinstance(v, ck2parser.Obj):
                     changes_by_date[n.val].extend(v)
                 elif v.val == 'castle' or v.val == 'city':
                     castles_and_cities.add(n.val)

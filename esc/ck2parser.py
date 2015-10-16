@@ -142,6 +142,7 @@ class TopLevel(Stringifiable):
     def __init__(self, contents, post_comments):
         self.contents = contents
         self.post_comments = [Comment(s) for s in post_comments]
+        self._dictionary = None
         super().__init__()
 
     def __len__(self):
@@ -153,6 +154,9 @@ class TopLevel(Stringifiable):
     def __iter__(self):
         return iter(self.contents)
 
+    def __getitem__(self, key):
+        return self.dictionary[key]
+
     @property
     def indent(self):
         return self._indent
@@ -160,6 +164,12 @@ class TopLevel(Stringifiable):
     @property
     def has_pairs(self):
         return not self.contents or isinstance(self.contents[0], Pair)
+
+    @property
+    def dictionary(self):
+        if self._dictionary is None:
+            self._dictionary = {k.val: v for k, v in reversed(self.contents)}
+        return self._dictionary
 
     @indent.setter
     def indent(self, value):
@@ -368,6 +378,7 @@ class Obj(Stringifiable):
         self.kel = kel
         self.contents = contents
         self.ker = ker
+        self._dictionary = None
         super().__init__()
 
     @classmethod
@@ -383,9 +394,18 @@ class Obj(Stringifiable):
     def __iter__(self):
         return iter(self.contents)
 
+    def __getitem__(self, key):
+        return self.dictionary[key]
+
     @property
     def has_pairs(self):
         return not self.contents or isinstance(self.contents[0], Pair)
+
+    @property
+    def dictionary(self):
+        if self._dictionary is None:
+            self._dictionary = {k.val: v for k, v in reversed(self.contents)}
+        return self._dictionary
 
     @property
     def indent(self):
