@@ -31,13 +31,13 @@ def process_provinces(where):
         if id_name[number] == name:
             tree = ck2parser.parse_file(path)
             castles_and_cities = set()
-            changes_by_date = {}
+            changes_by_date = collections.defaultdict(list)
             for n, v in tree:
                 if n.val == 'title':
                     province_id[v.val] = number
                 elif (isinstance(n, ck2parser.Date) and
                       isinstance(v, ck2parser.Obj)):
-                    changes_by_date[n.val] = v.contents
+                    changes_by_date[n.val].extend(v.contents)
                 elif v.val == 'castle' or v.val == 'city':
                     castles_and_cities.add(n.val)
             if not castles_and_cities:
