@@ -317,7 +317,6 @@ void write_main_event(FILE* f, an_province** prov_map, uint prov_map_sz) {
                 id, BASE_EVENT_ID + id, prov_map[id]->name().c_str());
     }
 
-
     fprintf(f, "\t}\n}\n\n\n");
 
 }
