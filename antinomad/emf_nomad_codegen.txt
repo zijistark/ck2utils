@@ -260,8 +260,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = mari
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(401, 'Hlynov')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(401, '[Root.GetName]') => temple / mari / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -271,8 +271,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(401, 'Hlynov')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(401, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -299,8 +299,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = vepsian
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(402, 'Veliky Ustug')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(402, '[Root.GetName]') => tribal / vepsian / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -310,8 +310,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(402, 'Veliky Ustug')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(402, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -338,8 +338,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mari
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(407, 'Kostroma')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(407, '[Root.GetName]') => tribal / mari / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -349,8 +349,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(407, 'Kostroma')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(407, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -377,8 +377,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(410, 'Toropets')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(410, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -388,8 +388,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(410, 'Toropets')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(410, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -408,7 +408,7 @@ province_event = {
 
 	immediate = {
 		if = {
-			limit = { not = { year = 1066 } }
+			limit = { not = { year = 1253 } }
 			if = {
 				limit = { culture = polish religion = slavic_pagan }
 				break = yes # Not necessary to build a settlement
@@ -416,21 +416,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = polish
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(425, 'Podlasie')"
-			break = yes
-		}
-		if = {
-			limit = { not = { year = 1253 } }
-			if = {
-				limit = { culture = polish religion = catholic }
-				break = yes # Not necessary to build a settlement
-			}
-			build_holding = { type = temple }
-			culture  = polish
-			religion = catholic
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(425, 'Podlasie')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(425, '[Root.GetName]') => temple / polish / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -440,8 +427,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = polish
 		religion = catholic
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(425, 'Podlasie')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(425, '[Root.GetName]') => temple / polish / catholic"
 	}
 }
 
@@ -468,8 +455,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = bulgarian
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(511, 'Galaz')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(511, '[Root.GetName]') => tribal / bulgarian / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -481,8 +468,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = pecheneg
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(511, 'Galaz')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(511, '[Root.GetName]') => tribal / pecheneg / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -494,8 +481,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = romanian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(511, 'Galaz')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(511, '[Root.GetName]') => tribal / romanian / orthodox"
 			break = yes
 		}
 		if = {
@@ -505,8 +492,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(511, 'Galaz')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(511, '[Root.GetName]') => temple / romanian / orthodox"
 	}
 }
 
@@ -533,8 +520,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = bulgarian
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(512, 'Belgorod')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(512, '[Root.GetName]') => tribal / bulgarian / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -546,8 +533,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = pecheneg
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(512, 'Belgorod')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(512, '[Root.GetName]') => tribal / pecheneg / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -557,8 +544,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(512, 'Belgorod')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(512, '[Root.GetName]') => tribal / romanian / orthodox"
 	}
 }
 
@@ -585,8 +572,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = bulgarian
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(513, 'Birlad')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(513, '[Root.GetName]') => tribal / bulgarian / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -598,8 +585,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = pecheneg
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(513, 'Birlad')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(513, '[Root.GetName]') => tribal / pecheneg / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -611,8 +598,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = romanian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(513, 'Birlad')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(513, '[Root.GetName]') => tribal / romanian / orthodox"
 			break = yes
 		}
 		if = {
@@ -622,8 +609,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(513, 'Birlad')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(513, '[Root.GetName]') => temple / romanian / orthodox"
 	}
 }
 
@@ -650,8 +637,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = bulgarian
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(514, 'Turnu')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(514, '[Root.GetName]') => tribal / bulgarian / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -663,8 +650,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = pecheneg
 			religion = manichean
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(514, 'Turnu')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(514, '[Root.GetName]') => tribal / pecheneg / manichean"
 			break = yes
 		}
 		if = {
@@ -674,8 +661,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(514, 'Turnu')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(514, '[Root.GetName]') => tribal / romanian / orthodox"
 	}
 }
 
@@ -702,8 +689,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = romanian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(515, 'Tirgoviste')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(515, '[Root.GetName]') => tribal / romanian / orthodox"
 			break = yes
 		}
 		if = {
@@ -713,8 +700,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(515, 'Tirgoviste')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(515, '[Root.GetName]') => temple / romanian / orthodox"
 	}
 }
 
@@ -741,8 +728,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = romanian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(516, 'Severin')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(516, '[Root.GetName]') => tribal / romanian / orthodox"
 			break = yes
 		}
 		if = {
@@ -754,8 +741,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = pecheneg
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(516, 'Severin')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(516, '[Root.GetName]') => tribal / pecheneg / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -765,8 +752,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(516, 'Severin')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(516, '[Root.GetName]') => tribal / romanian / orthodox"
 	}
 }
 
@@ -793,8 +780,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = avar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(517, 'Temes')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(517, '[Root.GetName]') => tribal / avar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -804,8 +791,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = hungarian
 		religion = catholic
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(517, 'Temes')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(517, '[Root.GetName]') => tribal / hungarian / catholic"
 	}
 }
 
@@ -832,8 +819,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = romanian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(519, 'Feher')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(519, '[Root.GetName]') => tribal / romanian / orthodox"
 			break = yes
 		}
 		if = {
@@ -843,8 +830,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(519, 'Feher')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(519, '[Root.GetName]') => temple / romanian / orthodox"
 	}
 }
 
@@ -871,8 +858,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = avar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(520, 'Bihar')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(520, '[Root.GetName]') => tribal / avar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -882,8 +869,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = szekely
 		religion = catholic
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(520, 'Bihar')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(520, '[Root.GetName]') => temple / szekely / catholic"
 	}
 }
 
@@ -910,8 +897,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = avar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(521, 'Csanad')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(521, '[Root.GetName]') => temple / avar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -921,8 +908,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = hungarian
 		religion = catholic
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(521, 'Csanad')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(521, '[Root.GetName]') => temple / hungarian / catholic"
 	}
 }
 
@@ -949,8 +936,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = polish
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(534, 'Peremyshl')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(534, '[Root.GetName]') => temple / polish / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -960,8 +947,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(534, 'Peremyshl')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(534, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -988,8 +975,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(535, 'Vladimir Volynsky')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(535, '[Root.GetName]') => temple / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -999,8 +986,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(535, 'Vladimir Volynsky')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(535, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -1027,8 +1014,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(536, 'Galich')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(536, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -1038,8 +1025,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(536, 'Galich')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(536, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -1066,8 +1053,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = romanian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(540, 'Szekelyfold')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(540, '[Root.GetName]') => tribal / romanian / orthodox"
 			break = yes
 		}
 		if = {
@@ -1077,8 +1064,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = szekely
 		religion = catholic
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(540, 'Szekelyfold')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(540, '[Root.GetName]') => temple / szekely / catholic"
 	}
 }
 
@@ -1105,8 +1092,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(541, 'Peresechen')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(541, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -1116,8 +1103,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = oghuz
 		religion = tengri_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(541, 'Peresechen')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(541, '[Root.GetName]') => tribal / oghuz / tengri_pagan"
 	}
 }
 
@@ -1144,8 +1131,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = hungarian
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(542, 'Olvia')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(542, '[Root.GetName]') => tribal / hungarian / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -1157,8 +1144,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(542, 'Olvia')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(542, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -1168,8 +1155,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(542, 'Olvia')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(542, '[Root.GetName]') => tribal / romanian / orthodox"
 	}
 }
 
@@ -1196,8 +1183,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = hungarian
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(543, 'Oleshye')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(543, '[Root.GetName]') => tribal / hungarian / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -1207,8 +1194,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = cuman
 		religion = tengri_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(543, 'Oleshye')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(543, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 	}
 }
 
@@ -1235,8 +1222,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = hungarian
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(544, 'Korsun')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(544, '[Root.GetName]') => tribal / hungarian / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -1246,8 +1233,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = oghuz
 		religion = tengri_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(544, 'Korsun')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(544, '[Root.GetName]') => tribal / oghuz / tengri_pagan"
 	}
 }
 
@@ -1274,8 +1261,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(545, 'Torki')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(545, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -1287,8 +1274,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = romanian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(545, 'Torki')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(545, '[Root.GetName]') => tribal / romanian / orthodox"
 			break = yes
 		}
 		if = {
@@ -1298,8 +1285,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(545, 'Torki')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(545, '[Root.GetName]') => temple / romanian / orthodox"
 	}
 }
 
@@ -1326,8 +1313,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(546, 'Terebovl')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(546, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -1337,8 +1324,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(546, 'Terebovl')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(546, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -1365,8 +1352,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(549, 'Beresty')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(549, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -1376,8 +1363,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(549, 'Beresty')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(549, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -1404,8 +1391,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(551, 'Mstislavl')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(551, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -1415,8 +1402,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(551, 'Mstislavl')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(551, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -1443,8 +1430,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(552, 'Turov')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(552, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -1454,8 +1441,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(552, 'Turov')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(552, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -1482,8 +1469,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(553, 'Lyubech')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(553, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -1493,8 +1480,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(553, 'Lyubech')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(553, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -1521,8 +1508,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(554, 'Chernigov')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(554, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -1532,8 +1519,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(554, 'Chernigov')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(554, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -1560,8 +1547,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(555, 'Pereyaslavl')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(555, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -1571,8 +1558,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(555, 'Pereyaslavl')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(555, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -1599,8 +1586,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = hungarian
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(556, 'Chortitza')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(556, '[Root.GetName]') => tribal / hungarian / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -1612,8 +1599,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(556, 'Chortitza')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(556, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -1625,8 +1612,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(556, 'Chortitza')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(556, '[Root.GetName]') => tribal / cuman / sunni"
 			break = yes
 		}
 		if = {
@@ -1636,8 +1623,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(556, 'Chortitza')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(556, '[Root.GetName]') => tribal / mongol / sunni"
 	}
 }
 
@@ -1664,8 +1651,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = hungarian
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(557, 'Lukomorie')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(557, '[Root.GetName]') => tribal / hungarian / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -1677,8 +1664,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(557, 'Lukomorie')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(557, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -1690,8 +1677,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(557, 'Lukomorie')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(557, '[Root.GetName]') => tribal / cuman / sunni"
 			break = yes
 		}
 		if = {
@@ -1701,8 +1688,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(557, 'Lukomorie')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(557, '[Root.GetName]') => tribal / mongol / sunni"
 	}
 }
 
@@ -1729,8 +1716,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = khazar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(558, 'Lower Dniepr')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(558, '[Root.GetName]') => tribal / khazar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -1742,8 +1729,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(558, 'Lower Dniepr')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(558, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -1755,8 +1742,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(558, 'Lower Dniepr')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(558, '[Root.GetName]') => tribal / cuman / sunni"
 			break = yes
 		}
 		if = {
@@ -1766,8 +1753,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(558, 'Lower Dniepr')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(558, '[Root.GetName]') => tribal / mongol / sunni"
 	}
 }
 
@@ -1794,8 +1781,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = khazar
 			religion = jewish
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(559, 'Crimea')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(559, '[Root.GetName]') => tribal / khazar / jewish"
 			break = yes
 		}
 		if = {
@@ -1807,8 +1794,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(559, 'Crimea')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(559, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -1820,8 +1807,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(559, 'Crimea')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(559, '[Root.GetName]') => tribal / cuman / sunni"
 			break = yes
 		}
 		if = {
@@ -1831,8 +1818,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(559, 'Crimea')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(559, '[Root.GetName]') => tribal / mongol / sunni"
 	}
 }
 
@@ -1859,8 +1846,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = khazar
 			religion = jewish
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(562, 'Korchev')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(562, '[Root.GetName]') => tribal / khazar / jewish"
 			break = yes
 		}
 		if = {
@@ -1870,8 +1857,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = khazar
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(562, 'Korchev')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(562, '[Root.GetName]') => tribal / khazar / orthodox"
 	}
 }
 
@@ -1898,8 +1885,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = hungarian
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(563, 'Lower Don')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(563, '[Root.GetName]') => tribal / hungarian / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -1911,8 +1898,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(563, 'Lower Don')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(563, '[Root.GetName]') => tribal / oghuz / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -1924,8 +1911,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(563, 'Lower Don')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(563, '[Root.GetName]') => tribal / oghuz / sunni"
 			break = yes
 		}
 		if = {
@@ -1935,8 +1922,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(563, 'Lower Don')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(563, '[Root.GetName]') => tribal / mongol / sunni"
 	}
 }
 
@@ -1963,8 +1950,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = pecheneg
 			religion = manichean
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(564, 'Desht-i-Kipchak')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(564, '[Root.GetName]') => tribal / pecheneg / manichean"
 			break = yes
 		}
 		if = {
@@ -1976,8 +1963,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(564, 'Desht-i-Kipchak')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(564, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -1989,8 +1976,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(564, 'Desht-i-Kipchak')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(564, '[Root.GetName]') => tribal / russian / orthodox"
 			break = yes
 		}
 		if = {
@@ -2000,8 +1987,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = cuman
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(564, 'Desht-i-Kipchak')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(564, '[Root.GetName]') => tribal / cuman / sunni"
 	}
 }
 
@@ -2028,8 +2015,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = pecheneg
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(565, 'Sharukan')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(565, '[Root.GetName]') => tribal / pecheneg / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -2041,8 +2028,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(565, 'Sharukan')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(565, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -2054,8 +2041,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(565, 'Sharukan')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(565, '[Root.GetName]') => tribal / cuman / sunni"
 			break = yes
 		}
 		if = {
@@ -2065,8 +2052,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(565, 'Sharukan')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(565, '[Root.GetName]') => tribal / mongol / sunni"
 	}
 }
 
@@ -2093,8 +2080,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = pecheneg
 			religion = manichean
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(566, 'Sugrov')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(566, '[Root.GetName]') => temple / pecheneg / manichean"
 			break = yes
 		}
 		if = {
@@ -2106,8 +2093,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(566, 'Sugrov')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(566, '[Root.GetName]') => temple / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -2119,8 +2106,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = cuman
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(566, 'Sugrov')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(566, '[Root.GetName]') => temple / cuman / sunni"
 			break = yes
 		}
 		if = {
@@ -2130,8 +2117,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(566, 'Sugrov')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(566, '[Root.GetName]') => temple / mongol / sunni"
 	}
 }
 
@@ -2158,8 +2145,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(567, 'Novgorod Seversky')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(567, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -2169,8 +2156,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(567, 'Novgorod Seversky')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(567, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -2197,8 +2184,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(568, 'Smolensk')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(568, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -2208,8 +2195,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(568, 'Smolensk')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(568, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -2236,8 +2223,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = prussian
 			religion = baltic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(569, 'Vyazma')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(569, '[Root.GetName]') => temple / prussian / baltic_pagan"
 			break = yes
 		}
 		if = {
@@ -2249,8 +2236,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = prussian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(569, 'Vyazma')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(569, '[Root.GetName]') => temple / prussian / orthodox"
 			break = yes
 		}
 		if = {
@@ -2260,8 +2247,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = slavic_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(569, 'Vyazma')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(569, '[Root.GetName]') => temple / russian / slavic_pagan"
 	}
 }
 
@@ -2288,8 +2275,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(570, 'Tver')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(570, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -2299,8 +2286,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(570, 'Tver')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(570, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -2327,8 +2314,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mari
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(571, 'Uglich')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(571, '[Root.GetName]') => tribal / mari / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -2338,8 +2325,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(571, 'Uglich')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(571, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -2366,8 +2353,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mari
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(572, 'Yaroslavl')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(572, '[Root.GetName]') => tribal / mari / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -2377,8 +2364,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(572, 'Yaroslavl')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(572, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -2405,8 +2392,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mari
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(573, 'Pereyaslavl Zalessky')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(573, '[Root.GetName]') => tribal / mari / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -2416,8 +2403,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(573, 'Pereyaslavl Zalessky')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(573, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -2444,8 +2431,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mari
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(575, 'Moskva')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(575, '[Root.GetName]') => tribal / mari / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -2455,8 +2442,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(575, 'Moskva')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(575, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -2483,8 +2470,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(576, 'Bryansk')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(576, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -2494,8 +2481,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(576, 'Bryansk')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(576, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -2522,8 +2509,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mordvin
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(577, 'Pronsk')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(577, '[Root.GetName]') => tribal / mordvin / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -2533,8 +2520,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(577, 'Pronsk')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(577, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -2561,8 +2548,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mordvin
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(578, 'Kolomna')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(578, '[Root.GetName]') => tribal / mordvin / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -2572,8 +2559,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(578, 'Kolomna')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(578, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -2598,8 +2585,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mordvin
 		religion = finnish_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(579, 'Mordva')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(579, '[Root.GetName]') => tribal / mordvin / finnish_pagan"
 	}
 }
 
@@ -2618,19 +2605,6 @@ province_event = {
 
 	immediate = {
 		if = {
-			limit = { not = { year = 1066 } }
-			if = {
-				limit = { culture = mordvin religion = finnish_pagan }
-				break = yes # Not necessary to build a settlement
-			}
-			build_holding = { type = temple }
-			culture  = mordvin
-			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(580, 'Ryazan')"
-			break = yes
-		}
-		if = {
 			limit = { not = { year = 1110 } }
 			if = {
 				limit = { culture = mordvin religion = finnish_pagan }
@@ -2639,8 +2613,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = mordvin
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(580, 'Ryazan')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(580, '[Root.GetName]') => temple / mordvin / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -2652,8 +2626,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = mordvin
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(580, 'Ryazan')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(580, '[Root.GetName]') => temple / mordvin / orthodox"
 			break = yes
 		}
 		if = {
@@ -2663,8 +2637,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(580, 'Ryazan')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(580, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -2691,8 +2665,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mordvin
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(581, 'Murom')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(581, '[Root.GetName]') => tribal / mordvin / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -2704,8 +2678,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = mordvin
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(581, 'Murom')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(581, '[Root.GetName]') => temple / mordvin / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -2715,8 +2689,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(581, 'Murom')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(581, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -2735,7 +2709,7 @@ province_event = {
 
 	immediate = {
 		if = {
-			limit = { not = { year = 1066 } }
+			limit = { not = { year = 1299 } }
 			if = {
 				limit = { culture = mari religion = finnish_pagan }
 				break = yes # Not necessary to build a settlement
@@ -2743,21 +2717,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mari
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(582, 'Vladimir')"
-			break = yes
-		}
-		if = {
-			limit = { not = { year = 1299 } }
-			if = {
-				limit = { culture = russian religion = orthodox }
-				break = yes # Not necessary to build a settlement
-			}
-			build_holding = { type = temple }
-			culture  = russian
-			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(582, 'Vladimir')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(582, '[Root.GetName]') => tribal / mari / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -2767,8 +2728,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(582, 'Vladimir')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(582, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -2795,8 +2756,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mordvin
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(584, 'Nizhny Novgorod')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(584, '[Root.GetName]') => tribal / mordvin / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -2806,8 +2767,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(584, 'Nizhny Novgorod')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(584, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -2834,8 +2795,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mari
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(585, 'Gorodez')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(585, '[Root.GetName]') => tribal / mari / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -2845,8 +2806,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(585, 'Gorodez')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(585, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -2873,8 +2834,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mari
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(586, 'Galich Mersky')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(586, '[Root.GetName]') => tribal / mari / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -2884,8 +2845,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(586, 'Galich Mersky')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(586, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -2912,8 +2873,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(587, 'Mozhaysk')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(587, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -2923,8 +2884,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(587, 'Mozhaysk')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(587, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -2949,8 +2910,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mari
 		religion = finnish_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(588, 'Merya')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(588, '[Root.GetName]') => tribal / mari / finnish_pagan"
 	}
 }
 
@@ -2975,8 +2936,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mari
 		religion = finnish_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(589, 'Grassland Cheremisa')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(589, '[Root.GetName]') => tribal / mari / finnish_pagan"
 	}
 }
 
@@ -3001,8 +2962,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mordvin
 		religion = finnish_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(590, 'Chuvash')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(590, '[Root.GetName]') => tribal / mordvin / finnish_pagan"
 	}
 }
 
@@ -3027,8 +2988,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mordvin
 		religion = finnish_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(591, 'Mountain Cheremisa')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(591, '[Root.GetName]') => tribal / mordvin / finnish_pagan"
 	}
 }
 
@@ -3053,8 +3014,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mordvin
 		religion = finnish_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(592, 'Burtasy')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(592, '[Root.GetName]') => tribal / mordvin / finnish_pagan"
 	}
 }
 
@@ -3081,8 +3042,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = pecheneg
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(593, 'Khopyor')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(593, '[Root.GetName]') => tribal / pecheneg / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3094,8 +3055,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(593, 'Khopyor')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(593, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3105,8 +3066,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = cuman
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(593, 'Khopyor')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(593, '[Root.GetName]') => tribal / cuman / sunni"
 	}
 }
 
@@ -3133,8 +3094,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = khazar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(594, 'Sarkel')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(594, '[Root.GetName]') => temple / khazar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3146,8 +3107,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(594, 'Sarkel')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(594, '[Root.GetName]') => temple / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3159,8 +3120,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = cuman
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(594, 'Sarkel')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(594, '[Root.GetName]') => temple / cuman / sunni"
 			break = yes
 		}
 		if = {
@@ -3170,8 +3131,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(594, 'Sarkel')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(594, '[Root.GetName]') => temple / mongol / sunni"
 	}
 }
 
@@ -3198,8 +3159,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = pecheneg
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(596, 'Tana')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(596, '[Root.GetName]') => tribal / pecheneg / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3211,8 +3172,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(596, 'Tana')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(596, '[Root.GetName]') => tribal / oghuz / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3224,8 +3185,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(596, 'Tana')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(596, '[Root.GetName]') => tribal / oghuz / orthodox"
 			break = yes
 		}
 		if = {
@@ -3237,8 +3198,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(596, 'Tana')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(596, '[Root.GetName]') => tribal / cuman / orthodox"
 			break = yes
 		}
 		if = {
@@ -3248,8 +3209,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = cuman
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(596, 'Tana')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(596, '[Root.GetName]') => tribal / cuman / sunni"
 	}
 }
 
@@ -3276,8 +3237,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = khazar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(597, 'Azov')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(597, '[Root.GetName]') => tribal / khazar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3289,8 +3250,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(597, 'Azov')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(597, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3302,8 +3263,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(597, 'Azov')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(597, '[Root.GetName]') => tribal / cuman / sunni"
 			break = yes
 		}
 		if = {
@@ -3313,8 +3274,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(597, 'Azov')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(597, '[Root.GetName]') => tribal / mongol / sunni"
 	}
 }
 
@@ -3341,8 +3302,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = khazar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(598, 'Tmutarakan')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(598, '[Root.GetName]') => temple / khazar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3354,8 +3315,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = russian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(598, 'Tmutarakan')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(598, '[Root.GetName]') => temple / russian / orthodox"
 			break = yes
 		}
 		if = {
@@ -3367,8 +3328,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(598, 'Tmutarakan')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(598, '[Root.GetName]') => temple / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3378,8 +3339,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = cuman
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(598, 'Tmutarakan')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(598, '[Root.GetName]') => temple / cuman / orthodox"
 	}
 }
 
@@ -3406,8 +3367,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = kasogi
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(599, 'Kuban')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(599, '[Root.GetName]') => tribal / kasogi / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3417,8 +3378,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = kasogi
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(599, 'Kuban')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(599, '[Root.GetName]') => tribal / kasogi / sunni"
 	}
 }
 
@@ -3443,8 +3404,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = kasogi
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(602, 'Kasogs')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(602, '[Root.GetName]') => tribal / kasogi / orthodox"
 	}
 }
 
@@ -3471,8 +3432,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = khazar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(604, 'Kuma')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(604, '[Root.GetName]') => temple / khazar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3482,8 +3443,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = khazar
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(604, 'Kuma')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(604, '[Root.GetName]') => temple / khazar / sunni"
 	}
 }
 
@@ -3510,8 +3471,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = khazar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(605, 'Manych')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(605, '[Root.GetName]') => tribal / khazar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3523,8 +3484,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(605, 'Manych')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(605, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3534,8 +3495,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = cuman
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(605, 'Manych')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(605, '[Root.GetName]') => tribal / cuman / sunni"
 	}
 }
 
@@ -3562,8 +3523,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = alan
 			religion = zoroastrian
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(606, 'Yegorlyk')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(606, '[Root.GetName]') => tribal / alan / zoroastrian"
 			break = yes
 		}
 		if = {
@@ -3575,8 +3536,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = alan
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(606, 'Yegorlyk')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(606, '[Root.GetName]') => tribal / alan / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3588,8 +3549,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mongol
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(606, 'Yegorlyk')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(606, '[Root.GetName]') => tribal / mongol / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3599,8 +3560,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(606, 'Yegorlyk')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(606, '[Root.GetName]') => tribal / mongol / sunni"
 	}
 }
 
@@ -3627,8 +3588,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = khazar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(607, 'Sarpa')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(607, '[Root.GetName]') => tribal / khazar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3640,8 +3601,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(607, 'Sarpa')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(607, '[Root.GetName]') => tribal / oghuz / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3653,8 +3614,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(607, 'Sarpa')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(607, '[Root.GetName]') => tribal / oghuz / sunni"
 			break = yes
 		}
 		if = {
@@ -3664,8 +3625,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(607, 'Sarpa')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(607, '[Root.GetName]') => tribal / mongol / sunni"
 	}
 }
 
@@ -3692,8 +3653,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = pecheneg
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(608, 'Lower Volga')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(608, '[Root.GetName]') => tribal / pecheneg / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3705,8 +3666,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(608, 'Lower Volga')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(608, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3718,8 +3679,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(608, 'Lower Volga')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(608, '[Root.GetName]') => tribal / russian / orthodox"
 			break = yes
 		}
 		if = {
@@ -3729,8 +3690,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = cuman
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(608, 'Lower Volga')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(608, '[Root.GetName]') => tribal / cuman / orthodox"
 	}
 }
 
@@ -3757,8 +3718,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = bashkir
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(609, 'Syrt')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(609, '[Root.GetName]') => tribal / bashkir / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3768,8 +3729,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = bashkir
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(609, 'Syrt')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(609, '[Root.GetName]') => tribal / bashkir / sunni"
 	}
 }
 
@@ -3796,8 +3757,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = bolghar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(610, 'Bulgar')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(610, '[Root.GetName]') => temple / bolghar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3807,8 +3768,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = bolghar
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(610, 'Bulgar')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(610, '[Root.GetName]') => temple / bolghar / sunni"
 	}
 }
 
@@ -3835,8 +3796,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = bolghar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(611, 'Qazan')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(611, '[Root.GetName]') => temple / bolghar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3846,8 +3807,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = bolghar
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(611, 'Qazan')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(611, '[Root.GetName]') => temple / bolghar / sunni"
 	}
 }
 
@@ -3872,8 +3833,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mari
 		religion = finnish_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(612, 'Votyaki')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(612, '[Root.GetName]') => tribal / mari / finnish_pagan"
 	}
 }
 
@@ -3900,8 +3861,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = bolghar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(613, 'Bilyar')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(613, '[Root.GetName]') => tribal / bolghar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3911,8 +3872,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = bolghar
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(613, 'Bilyar')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(613, '[Root.GetName]') => tribal / bolghar / sunni"
 	}
 }
 
@@ -3939,8 +3900,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = bolghar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(614, 'Ashli')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(614, '[Root.GetName]') => tribal / bolghar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3950,8 +3911,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = bolghar
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(614, 'Ashli')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(614, '[Root.GetName]') => temple / bolghar / sunni"
 	}
 }
 
@@ -3978,8 +3939,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = pecheneg
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(617, 'Uzens')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(617, '[Root.GetName]') => tribal / pecheneg / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -3991,8 +3952,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(617, 'Uzens')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(617, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -4004,8 +3965,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(617, 'Uzens')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(617, '[Root.GetName]') => tribal / cuman / sunni"
 			break = yes
 		}
 		if = {
@@ -4015,8 +3976,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(617, 'Uzens')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(617, '[Root.GetName]') => temple / mongol / sunni"
 	}
 }
 
@@ -4043,8 +4004,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = pecheneg
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(618, 'Guryev')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(618, '[Root.GetName]') => temple / pecheneg / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -4056,8 +4017,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(618, 'Guryev')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(618, '[Root.GetName]') => temple / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -4069,8 +4030,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = cuman
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(618, 'Guryev')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(618, '[Root.GetName]') => temple / cuman / sunni"
 			break = yes
 		}
 		if = {
@@ -4080,8 +4041,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(618, 'Guryev')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(618, '[Root.GetName]') => temple / mongol / sunni"
 	}
 }
 
@@ -4108,8 +4069,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = zoroastrian
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(621, 'Buzachi')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(621, '[Root.GetName]') => tribal / oghuz / zoroastrian"
 			break = yes
 		}
 		if = {
@@ -4121,8 +4082,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(621, 'Buzachi')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(621, '[Root.GetName]') => tribal / oghuz / sunni"
 			break = yes
 		}
 		if = {
@@ -4132,8 +4093,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = turkmen
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(621, 'Buzachi')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(621, '[Root.GetName]') => tribal / turkmen / sunni"
 	}
 }
 
@@ -4160,8 +4121,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = khwarezmi
 			religion = zoroastrian
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(624, 'Mangyshlak')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(624, '[Root.GetName]') => tribal / khwarezmi / zoroastrian"
 			break = yes
 		}
 		if = {
@@ -4173,8 +4134,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(624, 'Mangyshlak')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(624, '[Root.GetName]') => tribal / oghuz / sunni"
 			break = yes
 		}
 		if = {
@@ -4184,8 +4145,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = turkmen
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(624, 'Mangyshlak')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(624, '[Root.GetName]') => tribal / turkmen / sunni"
 	}
 }
 
@@ -4212,8 +4173,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = khwarezmi
 			religion = zoroastrian
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(625, 'Ustyurt')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(625, '[Root.GetName]') => tribal / khwarezmi / zoroastrian"
 			break = yes
 		}
 		if = {
@@ -4225,8 +4186,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(625, 'Ustyurt')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(625, '[Root.GetName]') => tribal / oghuz / sunni"
 			break = yes
 		}
 		if = {
@@ -4236,8 +4197,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = turkmen
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(625, 'Ustyurt')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(625, '[Root.GetName]') => tribal / turkmen / sunni"
 	}
 }
 
@@ -4264,8 +4225,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = persian
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(675, 'Semender')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(675, '[Root.GetName]') => temple / persian / sunni"
 			break = yes
 		}
 		if = {
@@ -4275,8 +4236,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = caucasian_avar
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(675, 'Semender')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(675, '[Root.GetName]') => temple / caucasian_avar / sunni"
 	}
 }
 
@@ -4303,8 +4264,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = zanata
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(803, 'Quattara')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(803, '[Root.GetName]') => tribal / zanata / sunni"
 			break = yes
 		}
 		if = {
@@ -4314,8 +4275,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = bedouin_arabic
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(803, 'Quattara')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(803, '[Root.GetName]') => tribal / bedouin_arabic / sunni"
 	}
 }
 
@@ -4334,7 +4295,7 @@ province_event = {
 
 	immediate = {
 		if = {
-			limit = { not = { year = 1066 } }
+			limit = { not = { year = 1171 } }
 			if = {
 				limit = { culture = zanata religion = sunni }
 				break = yes # Not necessary to build a settlement
@@ -4342,21 +4303,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = zanata
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(807, 'Senoussi')"
-			break = yes
-		}
-		if = {
-			limit = { not = { year = 1171 } }
-			if = {
-				limit = { culture = bedouin_arabic religion = sunni }
-				break = yes # Not necessary to build a settlement
-			}
-			build_holding = { type = tribal }
-			culture  = bedouin_arabic
-			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(807, 'Senoussi')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(807, '[Root.GetName]') => tribal / zanata / sunni"
 			break = yes
 		}
 		if = {
@@ -4366,8 +4314,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = bedouin_arabic
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(807, 'Senoussi')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(807, '[Root.GetName]') => tribal / bedouin_arabic / sunni"
 	}
 }
 
@@ -4394,8 +4342,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = zanata
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(809, 'Syrte')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(809, '[Root.GetName]') => tribal / zanata / ibadi"
 			break = yes
 		}
 		if = {
@@ -4407,8 +4355,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = bedouin_arabic
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(809, 'Syrte')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(809, '[Root.GetName]') => tribal / bedouin_arabic / ibadi"
 			break = yes
 		}
 		if = {
@@ -4418,8 +4366,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = bedouin_arabic
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(809, 'Syrte')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(809, '[Root.GetName]') => tribal / bedouin_arabic / sunni"
 	}
 }
 
@@ -4444,8 +4392,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = sanhaja
 		religion = ibadi
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(828, 'Ouled Nail')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(828, '[Root.GetName]') => temple / sanhaja / ibadi"
 	}
 }
 
@@ -4470,8 +4418,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zanata
 		religion = ibadi
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(829, 'Mzab')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(829, '[Root.GetName]') => tribal / zanata / ibadi"
 	}
 }
 
@@ -4496,8 +4444,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zanata
 		religion = ibadi
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(837, 'Figuig')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(837, '[Root.GetName]') => tribal / zanata / ibadi"
 	}
 }
 
@@ -4522,8 +4470,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = bedouin_arabic
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(862, 'Halaban')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(862, '[Root.GetName]') => tribal / bedouin_arabic / sunni"
 	}
 }
 
@@ -4548,8 +4496,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = bedouin_arabic
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(863, 'Hajr')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(863, '[Root.GetName]') => tribal / bedouin_arabic / sunni"
 	}
 }
 
@@ -4574,8 +4522,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = levantine_arabic
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(864, 'Hail')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(864, '[Root.GetName]') => tribal / levantine_arabic / sunni"
 	}
 }
 
@@ -4600,8 +4548,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = levantine_arabic
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(865, 'Rafha')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(865, '[Root.GetName]') => tribal / levantine_arabic / sunni"
 	}
 }
 
@@ -4626,8 +4574,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = beja
 		religion = pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(877, 'Kassala')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(877, '[Root.GetName]') => tribal / beja / pagan"
 	}
 }
 
@@ -4652,8 +4600,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = beja
 		religion = miaphysite
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(878, 'Hayya')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(878, '[Root.GetName]') => tribal / beja / miaphysite"
 	}
 }
 
@@ -4680,8 +4628,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(887, 'Sarisu')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(887, '[Root.GetName]') => tribal / oghuz / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -4693,8 +4641,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(887, 'Sarisu')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(887, '[Root.GetName]') => tribal / cuman / sunni"
 			break = yes
 		}
 		if = {
@@ -4704,8 +4652,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(887, 'Sarisu')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(887, '[Root.GetName]') => tribal / mongol / sunni"
 	}
 }
 
@@ -4732,8 +4680,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = mordvin
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(890, 'Khantia')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(890, '[Root.GetName]') => temple / mordvin / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -4743,8 +4691,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = bolghar
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(890, 'Khantia')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(890, '[Root.GetName]') => temple / bolghar / sunni"
 	}
 }
 
@@ -4771,8 +4719,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = bolghar
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(891, 'Tyumen')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(891, '[Root.GetName]') => tribal / bolghar / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -4784,8 +4732,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = bolghar
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(891, 'Tyumen')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(891, '[Root.GetName]') => tribal / bolghar / sunni"
 			break = yes
 		}
 		if = {
@@ -4795,8 +4743,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = bolghar
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(891, 'Tyumen')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(891, '[Root.GetName]') => temple / bolghar / sunni"
 	}
 }
 
@@ -4823,8 +4771,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(893, 'Turgay')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(893, '[Root.GetName]') => tribal / oghuz / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -4836,8 +4784,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(893, 'Turgay')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(893, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -4847,8 +4795,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mongol
 		religion = tengri_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(893, 'Turgay')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(893, '[Root.GetName]') => tribal / mongol / tengri_pagan"
 	}
 }
 
@@ -4875,8 +4823,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = pecheneg
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(895, 'Yaik')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(895, '[Root.GetName]') => tribal / pecheneg / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -4888,8 +4836,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(895, 'Yaik')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(895, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -4901,8 +4849,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mongol
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(895, 'Yaik')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(895, '[Root.GetName]') => tribal / mongol / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -4912,8 +4860,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(895, 'Yaik')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(895, '[Root.GetName]') => tribal / mongol / sunni"
 	}
 }
 
@@ -4940,8 +4888,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = pecheneg
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(896, 'Aqtobe')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(896, '[Root.GetName]') => tribal / pecheneg / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -4953,8 +4901,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(896, 'Aqtobe')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(896, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -4966,8 +4914,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(896, 'Aqtobe')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(896, '[Root.GetName]') => tribal / cuman / sunni"
 			break = yes
 		}
 		if = {
@@ -4977,8 +4925,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(896, 'Aqtobe')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(896, '[Root.GetName]') => tribal / mongol / sunni"
 	}
 }
 
@@ -5005,8 +4953,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(897, 'Irgiz')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(897, '[Root.GetName]') => tribal / oghuz / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -5018,8 +4966,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(897, 'Irgiz')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(897, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -5029,8 +4977,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mongol
 		religion = tengri_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(897, 'Irgiz')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(897, '[Root.GetName]') => tribal / mongol / tengri_pagan"
 	}
 }
 
@@ -5057,8 +5005,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = cuman
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(898, 'Sibir')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(898, '[Root.GetName]') => temple / cuman / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -5068,8 +5016,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = mongol
 		religion = tengri_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(898, 'Sibir')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(898, '[Root.GetName]') => temple / mongol / tengri_pagan"
 	}
 }
 
@@ -5096,8 +5044,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = oghuz
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(900, 'Jand')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(900, '[Root.GetName]') => temple / oghuz / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -5109,8 +5057,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = turkmen
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(900, 'Jand')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(900, '[Root.GetName]') => temple / turkmen / sunni"
 			break = yes
 		}
 		if = {
@@ -5120,8 +5068,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = mongol
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(900, 'Jand')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(900, '[Root.GetName]') => temple / mongol / sunni"
 	}
 }
 
@@ -5148,8 +5096,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tagelmust
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(916, 'Taghaza')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(916, '[Root.GetName]') => tribal / tagelmust / ibadi"
 			break = yes
 		}
 		if = {
@@ -5159,8 +5107,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tagelmust
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(916, 'Taghaza')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(916, '[Root.GetName]') => tribal / tagelmust / sunni"
 	}
 }
 
@@ -5187,8 +5135,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tagelmust
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(917, 'Araouane')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(917, '[Root.GetName]') => tribal / tagelmust / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -5198,8 +5146,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tagelmust
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(917, 'Araouane')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(917, '[Root.GetName]') => tribal / tagelmust / sunni"
 	}
 }
 
@@ -5226,8 +5174,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tagelmust
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(921, 'Idjil')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(921, '[Root.GetName]') => tribal / tagelmust / ibadi"
 			break = yes
 		}
 		if = {
@@ -5237,8 +5185,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tagelmust
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(921, 'Idjil')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(921, '[Root.GetName]') => tribal / tagelmust / sunni"
 	}
 }
 
@@ -5265,8 +5213,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = songhai
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(922, 'Tadmekka')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(922, '[Root.GetName]') => tribal / songhai / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -5276,8 +5224,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tuareg
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(922, 'Tadmekka')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(922, '[Root.GetName]') => tribal / tuareg / sunni"
 	}
 }
 
@@ -5304,8 +5252,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(933, 'Roslavl')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(933, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -5315,8 +5263,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(933, 'Roslavl')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(933, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -5343,8 +5291,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(966, 'Vorotynsk')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(966, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -5354,8 +5302,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(966, 'Vorotynsk')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(966, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -5382,8 +5330,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = polish
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(991, 'Chelm')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(991, '[Root.GetName]') => temple / polish / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -5393,8 +5341,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(991, 'Chelm')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(991, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -5421,8 +5369,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(995, 'Gomel')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(995, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -5432,8 +5380,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(995, 'Gomel')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(995, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -5460,8 +5408,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = polish
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(996, 'Lublin')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(996, '[Root.GetName]') => tribal / polish / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -5471,8 +5419,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = polish
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(996, 'Lublin')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(996, '[Root.GetName]') => tribal / polish / orthodox"
 	}
 }
 
@@ -5499,8 +5447,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = bulgarian
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1000, 'Syrmia')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(1000, '[Root.GetName]') => temple / bulgarian / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -5512,8 +5460,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = bulgarian
 			religion = catholic
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1000, 'Syrmia')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(1000, '[Root.GetName]') => temple / bulgarian / catholic"
 			break = yes
 		}
 		if = {
@@ -5525,8 +5473,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = hungarian
 			religion = catholic
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1000, 'Syrmia')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(1000, '[Root.GetName]') => temple / hungarian / catholic"
 			break = yes
 		}
 		if = {
@@ -5536,8 +5484,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = serbian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1000, 'Syrmia')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1000, '[Root.GetName]') => temple / serbian / orthodox"
 	}
 }
 
@@ -5562,8 +5510,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1006, 'Krasso')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1006, '[Root.GetName]') => tribal / romanian / orthodox"
 	}
 }
 
@@ -5588,8 +5536,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = alan
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1089, 'Simsir')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1089, '[Root.GetName]') => tribal / alan / orthodox"
 	}
 }
 
@@ -5616,8 +5564,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1146, 'Iasi')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1146, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -5629,8 +5577,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1146, 'Iasi')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1146, '[Root.GetName]') => tribal / oghuz / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -5640,8 +5588,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1146, 'Iasi')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1146, '[Root.GetName]') => tribal / romanian / orthodox"
 	}
 }
 
@@ -5668,8 +5616,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = romanian
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1147, 'Bacau')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1147, '[Root.GetName]') => tribal / romanian / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -5681,8 +5629,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = romanian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1147, 'Bacau')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1147, '[Root.GetName]') => tribal / romanian / orthodox"
 			break = yes
 		}
 		if = {
@@ -5692,8 +5640,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1147, 'Bacau')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1147, '[Root.GetName]') => temple / romanian / orthodox"
 	}
 }
 
@@ -5720,8 +5668,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = romanian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1148, 'Targujiu')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1148, '[Root.GetName]') => tribal / romanian / orthodox"
 			break = yes
 		}
 		if = {
@@ -5731,8 +5679,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1148, 'Targujiu')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1148, '[Root.GetName]') => temple / romanian / orthodox"
 	}
 }
 
@@ -5757,8 +5705,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1149, 'Buzau')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1149, '[Root.GetName]') => tribal / romanian / orthodox"
 	}
 }
 
@@ -5783,8 +5731,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zanata
 		religion = ibadi
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1223, 'Ghadames')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1223, '[Root.GetName]') => tribal / zanata / ibadi"
 	}
 }
 
@@ -5811,8 +5759,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tuareg
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1225, 'Agades')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1225, '[Root.GetName]') => tribal / tuareg / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -5824,8 +5772,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tuareg
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1225, 'Agades')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1225, '[Root.GetName]') => tribal / tuareg / ibadi"
 			break = yes
 		}
 		if = {
@@ -5835,8 +5783,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tuareg
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1225, 'Agades')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1225, '[Root.GetName]') => tribal / tuareg / sunni"
 	}
 }
 
@@ -5861,8 +5809,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tuareg
 		religion = ibadi
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1226, 'Ghat')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1226, '[Root.GetName]') => tribal / tuareg / ibadi"
 	}
 }
 
@@ -5889,8 +5837,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tuareg
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1227, 'Bilma')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1227, '[Root.GetName]') => tribal / tuareg / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -5900,8 +5848,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tuareg
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1227, 'Bilma')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1227, '[Root.GetName]') => tribal / tuareg / sunni"
 	}
 }
 
@@ -5928,8 +5876,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = zaghawa
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1235, 'Roufra')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1235, '[Root.GetName]') => tribal / zaghawa / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -5939,8 +5887,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zaghawa
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1235, 'Roufra')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1235, '[Root.GetName]') => tribal / zaghawa / sunni"
 	}
 }
 
@@ -5967,8 +5915,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1272, 'Volokolamsk')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1272, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -5978,8 +5926,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1272, 'Volokolamsk')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1272, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -6006,8 +5954,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mordvin
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1273, 'Kadom')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1273, '[Root.GetName]') => tribal / mordvin / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -6017,8 +5965,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1273, 'Kadom')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1273, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -6045,8 +5993,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = mordvin
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1274, 'Kozelsk')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1274, '[Root.GetName]') => tribal / mordvin / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -6056,8 +6004,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1274, 'Kozelsk')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1274, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -6084,8 +6032,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1275, 'Novosil')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1275, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -6095,8 +6043,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1275, 'Novosil')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1275, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -6123,8 +6071,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1276, 'Tarusa')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1276, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -6134,8 +6082,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1276, 'Tarusa')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1276, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -6162,8 +6110,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1277, 'Karachev')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1277, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -6173,8 +6121,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1277, 'Karachev')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1277, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -6201,8 +6149,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1279, 'Zhytomyr')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1279, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -6212,8 +6160,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1279, 'Zhytomyr')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1279, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -6240,8 +6188,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1280, 'Iskorosten')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1280, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -6251,8 +6199,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1280, 'Iskorosten')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1280, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -6279,8 +6227,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1281, 'Romny Ukraine')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1281, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -6292,8 +6240,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1281, 'Romny Ukraine')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1281, '[Root.GetName]') => tribal / russian / orthodox"
 			break = yes
 		}
 		if = {
@@ -6303,8 +6251,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = pecheneg
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1281, 'Romny Ukraine')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1281, '[Root.GetName]') => tribal / pecheneg / orthodox"
 	}
 }
 
@@ -6331,8 +6279,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1283, 'Cern')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1283, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -6342,8 +6290,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1283, 'Cern')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1283, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -6370,8 +6318,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1284, 'Ostrog')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1284, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -6381,8 +6329,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1284, 'Ostrog')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1284, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -6409,8 +6357,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1285, 'Zvenyhorod')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(1285, '[Root.GetName]') => temple / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -6420,8 +6368,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1285, 'Zvenyhorod')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1285, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -6448,8 +6396,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1286, 'Kamyanetspodilsky')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1286, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -6459,8 +6407,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1286, 'Kamyanetspodilsky')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1286, '[Root.GetName]') => temple / russian / orthodox"
 	}
 }
 
@@ -6487,8 +6435,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = vepsian
 			religion = finnish_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1287, 'Mologa')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1287, '[Root.GetName]') => tribal / vepsian / finnish_pagan"
 			break = yes
 		}
 		if = {
@@ -6498,8 +6446,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1287, 'Mologa')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1287, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -6526,8 +6474,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = hungarian
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1288, 'Lubny')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1288, '[Root.GetName]') => tribal / hungarian / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -6539,8 +6487,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = oghuz
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1288, 'Lubny')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1288, '[Root.GetName]') => tribal / oghuz / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -6550,8 +6498,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = oghuz
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1288, 'Lubny')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1288, '[Root.GetName]') => tribal / oghuz / orthodox"
 	}
 }
 
@@ -6578,8 +6526,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1292, 'Kursk')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1292, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -6589,8 +6537,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1292, 'Kursk')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1292, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -6617,8 +6565,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = russian
 			religion = slavic_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1293, 'Rilsk')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1293, '[Root.GetName]') => tribal / russian / slavic_pagan"
 			break = yes
 		}
 		if = {
@@ -6628,8 +6576,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = russian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1293, 'Rilsk')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1293, '[Root.GetName]') => tribal / russian / orthodox"
 	}
 }
 
@@ -6654,8 +6602,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = kanuri
 		religion = west_african_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1329, 'Kanem')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1329, '[Root.GetName]') => temple / kanuri / west_african_pagan"
 	}
 }
 
@@ -6682,8 +6630,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = romanian
 			religion = orthodox
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1333, 'Burzenland')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1333, '[Root.GetName]') => tribal / romanian / orthodox"
 			break = yes
 		}
 		if = {
@@ -6695,8 +6643,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = low_german
 			religion = catholic
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1333, 'Burzenland')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1333, '[Root.GetName]') => tribal / low_german / catholic"
 			break = yes
 		}
 		if = {
@@ -6706,8 +6654,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = low_german
 		religion = catholic
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1333, 'Burzenland')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1333, '[Root.GetName]') => temple / low_german / catholic"
 	}
 }
 
@@ -6734,8 +6682,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = nubian
 			religion = miaphysite
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1341, 'Kharija')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1341, '[Root.GetName]') => tribal / nubian / miaphysite"
 			break = yes
 		}
 		if = {
@@ -6745,8 +6693,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = bedouin_arabic
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1341, 'Kharija')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1341, '[Root.GetName]') => tribal / bedouin_arabic / sunni"
 	}
 }
 
@@ -6773,8 +6721,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = zanata
 			religion = miaphysite
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1342, 'Dakhila')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1342, '[Root.GetName]') => tribal / zanata / miaphysite"
 			break = yes
 		}
 		if = {
@@ -6784,8 +6732,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zanata
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1342, 'Dakhila')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1342, '[Root.GetName]') => tribal / zanata / sunni"
 	}
 }
 
@@ -6812,8 +6760,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = zanata
 			religion = miaphysite
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1343, 'Bahriya')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1343, '[Root.GetName]') => tribal / zanata / miaphysite"
 			break = yes
 		}
 		if = {
@@ -6825,8 +6773,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = bedouin_arabic
 			religion = miaphysite
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1343, 'Bahriya')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1343, '[Root.GetName]') => tribal / bedouin_arabic / miaphysite"
 			break = yes
 		}
 		if = {
@@ -6836,8 +6784,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = bedouin_arabic
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1343, 'Bahriya')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1343, '[Root.GetName]') => tribal / bedouin_arabic / sunni"
 	}
 }
 
@@ -6862,8 +6810,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zanata
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1345, 'Ajadabiya')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1345, '[Root.GetName]') => tribal / zanata / sunni"
 	}
 }
 
@@ -6890,8 +6838,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = zanata
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1350, 'Zuwara')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1350, '[Root.GetName]') => tribal / zanata / sunni"
 			break = yes
 		}
 		if = {
@@ -6903,8 +6851,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = bedouin_arabic
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1350, 'Zuwara')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1350, '[Root.GetName]') => tribal / bedouin_arabic / sunni"
 			break = yes
 		}
 		if = {
@@ -6914,8 +6862,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = maghreb_arabic
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1350, 'Zuwara')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1350, '[Root.GetName]') => tribal / maghreb_arabic / sunni"
 	}
 }
 
@@ -6942,8 +6890,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = sanhaja
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1351, 'Nafzawa')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1351, '[Root.GetName]') => tribal / sanhaja / ibadi"
 			break = yes
 		}
 		if = {
@@ -6955,8 +6903,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = bedouin_arabic
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1351, 'Nafzawa')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1351, '[Root.GetName]') => tribal / bedouin_arabic / sunni"
 			break = yes
 		}
 		if = {
@@ -6966,8 +6914,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = maghreb_arabic
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1351, 'Nafzawa')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1351, '[Root.GetName]') => tribal / maghreb_arabic / sunni"
 	}
 }
 
@@ -6994,8 +6942,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = sanhaja
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1356, 'Arigh')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1356, '[Root.GetName]') => tribal / sanhaja / ibadi"
 			break = yes
 		}
 		if = {
@@ -7005,8 +6953,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = sanhaja
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1356, 'Arigh')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1356, '[Root.GetName]') => tribal / sanhaja / sunni"
 	}
 }
 
@@ -7033,8 +6981,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = tagelmust
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1363, 'Draa')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(1363, '[Root.GetName]') => temple / tagelmust / ibadi"
 			break = yes
 		}
 		if = {
@@ -7044,8 +6992,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = tagelmust
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1363, 'Draa')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1363, '[Root.GetName]') => temple / tagelmust / sunni"
 	}
 }
 
@@ -7072,8 +7020,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tagelmust
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1364, 'Tindouf')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1364, '[Root.GetName]') => tribal / tagelmust / ibadi"
 			break = yes
 		}
 		if = {
@@ -7083,8 +7031,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tagelmust
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1364, 'Tindouf')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1364, '[Root.GetName]') => tribal / tagelmust / sunni"
 	}
 }
 
@@ -7111,8 +7059,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tagelmust
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1366, 'Tassarahla')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1366, '[Root.GetName]') => tribal / tagelmust / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -7122,8 +7070,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tagelmust
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1366, 'Tassarahla')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1366, '[Root.GetName]') => tribal / tagelmust / sunni"
 	}
 }
 
@@ -7150,8 +7098,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tagelmust
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1367, 'Bir Umgrein')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1367, '[Root.GetName]') => tribal / tagelmust / ibadi"
 			break = yes
 		}
 		if = {
@@ -7161,8 +7109,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tagelmust
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1367, 'Bir Umgrein')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1367, '[Root.GetName]') => tribal / tagelmust / sunni"
 	}
 }
 
@@ -7189,8 +7137,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = wolof
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1368, 'Akjoujt')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1368, '[Root.GetName]') => tribal / wolof / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -7200,8 +7148,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tagelmust
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1368, 'Akjoujt')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1368, '[Root.GetName]') => tribal / tagelmust / sunni"
 	}
 }
 
@@ -7228,8 +7176,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = soninke
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1376, 'Awkar')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1376, '[Root.GetName]') => tribal / soninke / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -7239,8 +7187,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zanata
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1376, 'Awkar')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1376, '[Root.GetName]') => tribal / zanata / sunni"
 	}
 }
 
@@ -7267,8 +7215,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tuareg
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1380, 'Ilizi')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1380, '[Root.GetName]') => tribal / tuareg / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -7280,8 +7228,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tuareg
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1380, 'Ilizi')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1380, '[Root.GetName]') => tribal / tuareg / ibadi"
 			break = yes
 		}
 		if = {
@@ -7291,8 +7239,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tuareg
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1380, 'Ilizi')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1380, '[Root.GetName]') => tribal / tuareg / sunni"
 	}
 }
 
@@ -7317,8 +7265,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zanata
 		religion = ibadi
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1392, 'Wargla')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1392, '[Root.GetName]') => tribal / zanata / ibadi"
 	}
 }
 
@@ -7345,8 +7293,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tuareg
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1395, 'Wallen')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1395, '[Root.GetName]') => tribal / tuareg / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -7356,8 +7304,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tuareg
 		religion = ibadi
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1395, 'Wallen')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1395, '[Root.GetName]') => tribal / tuareg / ibadi"
 	}
 }
 
@@ -7384,8 +7332,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = sanhaja
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1396, 'Tuat')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1396, '[Root.GetName]') => tribal / sanhaja / ibadi"
 			break = yes
 		}
 		if = {
@@ -7395,8 +7343,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = sanhaja
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1396, 'Tuat')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1396, '[Root.GetName]') => tribal / sanhaja / sunni"
 	}
 }
 
@@ -7421,8 +7369,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zanata
 		religion = ibadi
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1397, 'El Golea')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1397, '[Root.GetName]') => tribal / zanata / ibadi"
 	}
 }
 
@@ -7449,8 +7397,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = zanata
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1398, 'Nafusa')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1398, '[Root.GetName]') => tribal / zanata / ibadi"
 			break = yes
 		}
 		if = {
@@ -7460,8 +7408,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zanata
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1398, 'Nafusa')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1398, '[Root.GetName]') => tribal / zanata / sunni"
 	}
 }
 
@@ -7486,8 +7434,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zanata
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1399, 'Waddan')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1399, '[Root.GetName]') => tribal / zanata / sunni"
 	}
 }
 
@@ -7514,8 +7462,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tuareg
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1401, 'Ain Azawa')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1401, '[Root.GetName]') => tribal / tuareg / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -7527,8 +7475,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tuareg
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1401, 'Ain Azawa')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1401, '[Root.GetName]') => tribal / tuareg / ibadi"
 			break = yes
 		}
 		if = {
@@ -7538,8 +7486,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tuareg
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1401, 'Ain Azawa')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1401, '[Root.GetName]') => tribal / tuareg / sunni"
 	}
 }
 
@@ -7566,8 +7514,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tuareg
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1402, 'Djanet')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1402, '[Root.GetName]') => tribal / tuareg / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -7579,8 +7527,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tuareg
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1402, 'Djanet')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1402, '[Root.GetName]') => tribal / tuareg / ibadi"
 			break = yes
 		}
 		if = {
@@ -7590,8 +7538,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tuareg
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1402, 'Djanet')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1402, '[Root.GetName]') => tribal / tuareg / sunni"
 	}
 }
 
@@ -7618,8 +7566,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tuareg
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1403, 'Hoggar')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1403, '[Root.GetName]') => tribal / tuareg / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -7631,8 +7579,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tuareg
 			religion = ibadi
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1403, 'Hoggar')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1403, '[Root.GetName]') => tribal / tuareg / ibadi"
 			break = yes
 		}
 		if = {
@@ -7642,8 +7590,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tuareg
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1403, 'Hoggar')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1403, '[Root.GetName]') => tribal / tuareg / sunni"
 	}
 }
 
@@ -7668,8 +7616,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tuareg
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1404, 'Murzuk')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1404, '[Root.GetName]') => tribal / tuareg / sunni"
 	}
 }
 
@@ -7694,8 +7642,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zanata
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1405, 'Zawila')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1405, '[Root.GetName]') => tribal / zanata / sunni"
 	}
 }
 
@@ -7720,8 +7668,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zanata
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1406, 'Tazerbo')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1406, '[Root.GetName]') => tribal / zanata / sunni"
 	}
 }
 
@@ -7748,8 +7696,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = zanata
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1407, 'Gherma')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1407, '[Root.GetName]') => tribal / zanata / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -7759,8 +7707,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zanata
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1407, 'Gherma')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1407, '[Root.GetName]') => tribal / zanata / sunni"
 	}
 }
 
@@ -7787,8 +7735,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = tuareg
 			religion = west_african_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1408, 'Tummo')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1408, '[Root.GetName]') => tribal / tuareg / west_african_pagan"
 			break = yes
 		}
 		if = {
@@ -7798,8 +7746,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = tuareg
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1408, 'Tummo')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1408, '[Root.GetName]') => tribal / tuareg / sunni"
 	}
 }
 
@@ -7824,8 +7772,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = kanuri
 		religion = west_african_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1478, 'Bagirmi')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1478, '[Root.GetName]') => tribal / kanuri / west_african_pagan"
 	}
 }
 
@@ -7850,8 +7798,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zaghawa
 		religion = west_african_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1480, 'Wadai')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1480, '[Root.GetName]') => tribal / zaghawa / west_african_pagan"
 	}
 }
 
@@ -7876,8 +7824,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = zaghawa
 		religion = west_african_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1482, 'Borkou')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1482, '[Root.GetName]') => tribal / zaghawa / west_african_pagan"
 	}
 }
 
@@ -7902,8 +7850,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = beja
 		religion = pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1489, 'Wolqayt')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1489, '[Root.GetName]') => tribal / beja / pagan"
 	}
 }
 
@@ -7928,8 +7876,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = nubian
 		religion = miaphysite
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1496, 'El Atrun')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1496, '[Root.GetName]') => tribal / nubian / miaphysite"
 	}
 }
 
@@ -7954,8 +7902,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = beja
 		religion = pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1502, 'Maikele Bahr')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1502, '[Root.GetName]') => tribal / beja / pagan"
 	}
 }
 
@@ -7980,8 +7928,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = beja
 		religion = miaphysite
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1507, 'Marya')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1507, '[Root.GetName]') => tribal / beja / miaphysite"
 	}
 }
 
@@ -8006,8 +7954,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = afar
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1517, 'Danakil')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1517, '[Root.GetName]') => tribal / afar / sunni"
 	}
 }
 
@@ -8032,8 +7980,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = afar
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1518, 'Assab')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1518, '[Root.GetName]') => tribal / afar / sunni"
 	}
 }
 
@@ -8058,8 +8006,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = somali
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1519, 'Mora')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1519, '[Root.GetName]') => temple / somali / sunni"
 	}
 }
 
@@ -8086,8 +8034,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = bulgarian
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1529, 'Ialomita')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1529, '[Root.GetName]') => tribal / bulgarian / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -8099,8 +8047,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = pecheneg
 			religion = manichean
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1529, 'Ialomita')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1529, '[Root.GetName]') => tribal / pecheneg / manichean"
 			break = yes
 		}
 		if = {
@@ -8110,8 +8058,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = romanian
 		religion = orthodox
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1529, 'Ialomita')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1529, '[Root.GetName]') => tribal / romanian / orthodox"
 	}
 }
 
@@ -8138,8 +8086,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = khorasani
 			religion = zoroastrian
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1530, 'Abivard')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1530, '[Root.GetName]') => tribal / khorasani / zoroastrian"
 			break = yes
 		}
 		if = {
@@ -8149,8 +8097,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = turkmen
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1530, 'Abivard')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1530, '[Root.GetName]') => tribal / turkmen / sunni"
 	}
 }
 
@@ -8177,8 +8125,8 @@ province_event = {
 			build_holding = { type = temple }
 			culture  = baloch
 			religion = sunni
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1533, 'Mafaza')"
+			emf_nomad_antinomad_temple_effect = yes
+			log = "emf_antinomad(1533, '[Root.GetName]') => temple / baloch / sunni"
 			break = yes
 		}
 		if = {
@@ -8188,8 +8136,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = persian
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1533, 'Mafaza')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1533, '[Root.GetName]') => temple / persian / sunni"
 	}
 }
 
@@ -8216,8 +8164,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = khwarezmi
 			religion = zoroastrian
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1549, 'Karasu')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1549, '[Root.GetName]') => tribal / khwarezmi / zoroastrian"
 			break = yes
 		}
 		if = {
@@ -8227,8 +8175,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = turkmen
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1549, 'Karasu')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1549, '[Root.GetName]') => tribal / turkmen / sunni"
 	}
 }
 
@@ -8255,8 +8203,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = karluk
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1563, 'Talas')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1563, '[Root.GetName]') => tribal / karluk / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -8266,8 +8214,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = karluk
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1563, 'Talas')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1563, '[Root.GetName]') => tribal / karluk / sunni"
 	}
 }
 
@@ -8294,8 +8242,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = karluk
 			religion = tengri_pagan
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1566, 'Naryn')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1566, '[Root.GetName]') => tribal / karluk / tengri_pagan"
 			break = yes
 		}
 		if = {
@@ -8305,8 +8253,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = karluk
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1566, 'Naryn')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1566, '[Root.GetName]') => tribal / karluk / sunni"
 	}
 }
 
@@ -8333,8 +8281,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = uyghur
 			religion = buddhist
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1568, 'Aqsu')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1568, '[Root.GetName]') => tribal / uyghur / buddhist"
 			break = yes
 		}
 		if = {
@@ -8346,8 +8294,8 @@ province_event = {
 			build_holding = { type = tribal }
 			culture  = karluk
 			religion = buddhist
-			emf_nomad_antinomad_effect = yes
-			log = "emf_antinomad(1568, 'Aqsu')"
+			emf_nomad_antinomad_tribal_effect = yes
+			log = "emf_antinomad(1568, '[Root.GetName]') => tribal / karluk / buddhist"
 			break = yes
 		}
 		if = {
@@ -8357,8 +8305,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = karluk
 		religion = sunni
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1568, 'Aqsu')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1568, '[Root.GetName]') => tribal / karluk / sunni"
 	}
 }
 
@@ -8383,8 +8331,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = uyghur
 		religion = tengri_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1571, 'Almaliq')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1571, '[Root.GetName]') => temple / uyghur / tengri_pagan"
 	}
 }
 
@@ -8409,8 +8357,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = karluk
 		religion = tengri_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1573, 'Yeti-su')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1573, '[Root.GetName]') => tribal / karluk / tengri_pagan"
 	}
 }
 
@@ -8435,8 +8383,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = kirghiz
 		religion = tengri_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1574, 'Emil')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1574, '[Root.GetName]') => tribal / kirghiz / tengri_pagan"
 	}
 }
 
@@ -8461,8 +8409,8 @@ province_event = {
 		build_holding = { type = temple }
 		culture  = kirghiz
 		religion = tengri_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1575, 'Zaysan')"
+		emf_nomad_antinomad_temple_effect = yes
+		log = "emf_antinomad(1575, '[Root.GetName]') => temple / kirghiz / tengri_pagan"
 	}
 }
 
@@ -8487,8 +8435,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = cuman
 		religion = tengri_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1576, 'Ayaguz')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1576, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 	}
 }
 
@@ -8513,8 +8461,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = karluk
 		religion = tengri_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1577, 'Barskhan')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1577, '[Root.GetName]') => tribal / karluk / tengri_pagan"
 	}
 }
 
@@ -8539,8 +8487,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = cuman
 		religion = tengri_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1579, 'Balkhash')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1579, '[Root.GetName]') => tribal / cuman / tengri_pagan"
 	}
 }
 
@@ -8565,8 +8513,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = beja
 		religion = pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1593, 'Naqis')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1593, '[Root.GetName]') => tribal / beja / pagan"
 	}
 }
 
@@ -8591,8 +8539,8 @@ province_event = {
 		build_holding = { type = tribal }
 		culture  = mari
 		religion = finnish_pagan
-		emf_nomad_antinomad_effect = yes
-		log = "emf_antinomad(1831, 'Kokshaga')"
+		emf_nomad_antinomad_tribal_effect = yes
+		log = "emf_antinomad(1831, '[Root.GetName]') => tribal / mari / finnish_pagan"
 	}
 }
 

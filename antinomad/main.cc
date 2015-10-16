@@ -24,7 +24,7 @@ const uint END_YEAR = 1337;
 const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 867}, {867, 1066}, };
 
 const path DEFAULT_OUTPUT_PATH("./emf_nomad_codegen.txt");
-const bool OUTPUT_HISTORY_DATA = true; // debugging data to stderr re: history execution
+const bool OUTPUT_HISTORY_DATA = false; // debugging data to stderr re: history execution
 const uint BASE_EVENT_ID = 1000;
 
 void execute_province_history(const default_map&, const definitions_table&, an_province**);
@@ -97,9 +97,10 @@ struct hist_record {
     const char* cul;
     const char* rel;
     bool is_holy;
+    bool ignore; // later used for skipping records found to be redundant
 
     hist_record(pdx::date_t d)
-        : date(d), cul(nullptr), rel(nullptr), is_holy(false) {}
+        : date(d), cul(nullptr), rel(nullptr), is_holy(false), ignore(false) {}
 
     bool operator<(const hist_record& e) const noexcept { return date < e.date; }
 };
@@ -253,17 +254,56 @@ void execute_province_history(const default_map& dm,
             }
         }
 
-        /* build a merged (start year, culture, religion, has_temple) level table... */
+        /* history records are possibly literally redundant (and the is_holy edge
+         * detection method may generate also redundant records), so ensure that
+         * all the levels are unique. */
 
-        uint cw_year = round_date_to_playable_year(records.front().date); // current working year
         const char* cul = nullptr;
         const char* rel = nullptr;
         bool is_holy = false;
+
+        for (auto&& r : records) {
+
+            if ( cul && rel && // culture and religion must already be defined (i.e., not the 1st, but all after)
+                 (!r.cul || strcmp(cul, r.cul) == 0) &&
+                 (!r.rel || strcmp(rel, r.rel) == 0) &&
+                 (!r.is_holy || is_holy) ) {
+
+                /* this history record adds no new relevant information, so
+                 * ignore it in the next pass. */
+
+                r.ignore = true;
+
+                if (OUTPUT_HISTORY_DATA)
+                    fprintf(stderr, "=> dropped a redundant history record at (%u.%u.%u)\n",
+                            r.date.year(), r.date.month(), r.date.day());
+
+                continue;
+            }
+
+            if (r.cul)
+                cul = r.cul;
+            if (r.rel)
+                rel = r.rel;
+            if (r.is_holy)
+                is_holy = true;
+        }
+
+        /* build a merged, minimized (start year, culture, religion, has_temple)
+         * level table... */
+
+        uint cw_year = round_date_to_playable_year(records.front().date); // current working year
+        cul = nullptr;
+        rel = nullptr;
+        is_holy = false;
 
         prov_map[id] = new an_province(id, def.name);
         an_province& prov = *prov_map[id];
 
         for (auto&& r : records) {
+            if (r.ignore)
+                continue;
+
             uint year = round_date_to_playable_year(r.date);
 
             if (year > cw_year) {
