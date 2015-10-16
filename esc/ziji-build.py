@@ -40,7 +40,7 @@ def make_outpath(outroot, inpath, *roots):
 
 def get_max_provs(where):
     tree = ck2parser.parse_file(where / 'map/default.map')
-    return next(int(v.val) for n, v in tree if n.val == 'max_provinces')
+    return int(tree['max_provinces'].val)
 
 def process_cultures(where, build):
     def update_obj(obj):
@@ -102,9 +102,8 @@ def get_governments(where):
             for n2, v2 in v:
                 governments.append(n2.val)
                 try:
-                    prefix = next(
-                        v3.val for n3, v3 in v2 if n3.val == 'title_prefix')
-                except StopIteration:
+                    prefix = v2['title_prefix'].val
+                except KeyError:
                     continue
                 if prefix not in prefixes:
                     prefixes.append(prefix)
