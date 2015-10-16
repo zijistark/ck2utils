@@ -19,6 +19,10 @@ public:
 
         hist_entry(uint y, const char* cul, const char* rel, bool is_holy)
             : year(y), culture(cul), religion(rel), has_temple(is_holy) {}
+
+        const char* holding_type() const noexcept {
+            return (has_temple) ? "temple" : "tribal";
+        }
     };
 
     typedef std::vector<hist_entry> hist_list_t;
