@@ -24,7 +24,7 @@ const uint END_YEAR = 1337;
 const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 867}, {867, 1066}, };
 
 const path DEFAULT_OUTPUT_PATH("./emf_nomad_codegen.txt");
-const bool OUTPUT_HISTORY_DATA = false; // debugging data to stderr re: history execution
+const bool OUTPUT_HISTORY_DATA = true; // debugging data to stderr re: history execution
 const uint BASE_EVENT_ID = 1000;
 
 void execute_province_history(const default_map&, const definitions_table&, an_province**);
@@ -242,14 +242,14 @@ void execute_province_history(const default_map& dm,
             fprintf(stderr, "ID %u (%s):\n", id, def.name.c_str());
 
             for (auto&& r : records) {
-                printf("  %hu.%hhu.%hhu:\n", r.date.y, r.date.m, r.date.d);
+                fprintf(stderr, "  %hu.%hhu.%hhu:\n", r.date.y, r.date.m, r.date.d);
 
                 if (r.cul)
-                    printf("    culture:  %s\n", r.cul);
+                    fprintf(stderr, "    culture:  %s\n", r.cul);
                 if (r.rel)
-                    printf("    religion: %s\n", r.rel);
+                    fprintf(stderr, "    religion: %s\n", r.rel);
                 if (r.is_holy)
-                    printf("    temple\n");
+                    fprintf(stderr, "    temple\n");
             }
         }
 
@@ -291,9 +291,9 @@ void execute_province_history(const default_map& dm,
             fprintf(stderr, "%4s | %17s | %18s | HOLY? |\n", "YEAR", "CULTURE", "RELIGION");
 
             for (auto&& e : prov.hist_list()) {
-                printf("%4u | %17s | %18s | %s     |\n",
-                       e.year, e.culture.c_str(), e.religion.c_str(),
-                       (e.has_temple) ? "Y" : "N");
+                fprintf(stderr, "%4u | %17s | %18s | %s     |\n",
+                                e.year, e.culture.c_str(), e.religion.c_str(),
+                                (e.has_temple) ? "Y" : "N");
             }
 
             fprintf(stderr, "------------------------------------------------------+\n\n\n");
@@ -303,6 +303,7 @@ void execute_province_history(const default_map& dm,
 
 
 void write_main_event(FILE* f, an_province** prov_map, uint prov_map_sz) {
+    fprintf(f, "namespace = emf_nomad\n\n");
     fprintf(f, "# emf_nomad.%u\n", BASE_EVENT_ID);
     fprintf(f, "#\n# Invoked on startup to build temples & tribes as necessary to preserve\n");
     fprintf(f, "# the culture+religion, as specified in province history, of each potentially\n");
@@ -321,7 +322,17 @@ void write_main_event(FILE* f, an_province** prov_map, uint prov_map_sz) {
     fprintf(f, "\tid = emf_nomad.%u\n", BASE_EVENT_ID);
     fprintf(f, "\thide_window = yes\n");
     fprintf(f, "\tis_triggered_only = yes\n\n");
-    fprintf(f, "\ttrigger = { has_dlc = \"Horse Lords\" }\n\n");
+    if (false) {
+        fprintf(f, "\ttrigger = { has_dlc = \"Horse Lords\" }\n\n");
+    }
+    else {
+        fprintf(f, "\tonly_independent = yes\n");
+        fprintf(f, "\tculture = hip_culture\n\n");
+        fprintf(f, "\ttrigger = {\n");
+        fprintf(f, "\t\thas_landed_title = e_hip\n");
+        fprintf(f, "\t\thas_dlc = \"Horse Lords\"\n");
+        fprintf(f, "\t}\n\n");
+    }
     fprintf(f, "\timmediate = {\n");
 
     for (uint id = 1; id < prov_map_sz; ++id) {

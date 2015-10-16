@@ -7,17 +7,22 @@ emf_nomad_antinomad_effect = {
 				holding_type = tribal
 			}
 		}
+		if = {
+			limit = { is_capital = yes }
+			revoke_capital_holding = yes
+		}
 		ROOT = {
 			owner = {
 				create_character = {
 					random_traits = yes
 					dynasty = random
 					female = no
-					religion = ROOT # Province
-					culture = ROOT # Province
+					religion = PREV # Province
+					culture = PREV # Province
 				}
 				new_character = {
 					grant_title_no_opinion = PREVPREVPREV # Holding
+					set_defacto_liege = PREV
 				}
 			}
 		}
