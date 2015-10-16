@@ -23,6 +23,18 @@ def get_start_interval(where):
     dates.append(tree['last_start_date'].val)
     return min(dates), max(dates)
 
+def process_landed_titles(where):
+    def recurse(tree):
+        for n, v in tree:
+            if ck2parser.is_codename(n.val):
+                titles.add(n.val)
+                recurse(v)
+
+    titles = {}
+    for _, tree in ck2parser.parse_files('common/bookmarks/*', where):
+        recurse(tree)
+    return titles
+
 def process_provinces(where, first_start, last_start):
     tree = ck2parser.parse_file(where / 'map/default.map')
     defs = tree['definitions'].val
@@ -65,12 +77,12 @@ def process_provinces(where, first_start, last_start):
                         break
     return province_id, no_castles_or_cities
 
-def process_titles(where, first_start, last_start):
+def process_titles(where, valid_titles, first_start, last_start):
     nomads = set()
     vassals = collections.defaultdict(set)
     for path in ck2parser.files('history/titles/*', where):
         title = path.stem
-        if not title.startswith('b'):
+        if title in valid_titles and not title.startswith('b'):
             tree = ck2parser.parse_file(path)
             changes_by_date = collections.defaultdict(list)
             changes_by_date[first_start] = []
@@ -95,10 +107,11 @@ def process_titles(where, first_start, last_start):
 
 def main():
     modpath = get_modpath()
+    titles = process_landed_titles(modpath)
     first_start, last_start = get_start_interval(modpath)
     province_id, no_castles_or_cities = process_provinces(modpath, first_start,
                                                           last_start)
-    nomads, vassals = process_titles(modpath, first_start, last_start)
+    nomads, vassals = process_titles(modpath, titles, first_start, last_start)
     maybe_empty = set()
 
     def check_nomad(title):
