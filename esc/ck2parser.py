@@ -564,7 +564,7 @@ def parse(s):
     return tree
 
 def parse_file(path, encoding='cp1252'):
-    with path.open(encoding=encoding) as f:
+    with path.open(encoding=encoding, errors='replace') as f:
         try:
             tree = parse(f.read())
         except:

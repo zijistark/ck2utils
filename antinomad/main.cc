@@ -17,14 +17,22 @@
 using namespace boost::filesystem;
 
 const path VROOT_DIR("D:/SteamLibrary/steamapps/common/Crusader Kings II");
-const path ROOT_DIR("D:/g/SWMH-BETA/SWMH");
-const uint END_YEAR = 1337;
-//const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 769}, {769, 867}, {867, 1000}, {1000, 1066}, };
-//const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 769}, {769, 867}, {867, 1066}, };
-const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 867}, {867, 1066}, };
 
-const path DEFAULT_OUTPUT_PATH("./emf_nomad_codegen.txt");
-const bool OUTPUT_HISTORY_DATA = false; // debugging data to stderr re: history execution
+//const path ROOT_DIR("D:/g/CK2Plus/CK2Plus");
+const path ROOT_DIR(VROOT_DIR);
+//const path ROOT_DIR("D:/g/SWMH-BETA/SWMH");
+
+//const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 769}, {769, 867}, {867, 1000}, {1000, 1066}, };
+const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 769}, {769, 867}, {867, 1066}, };
+//const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 867}, {867, 1066}, };
+
+//const path DEFAULT_OUTPUT_PATH("D:/g/CK2Plus/CK2Plus/events/emf_nomad_codegen_events.txt");
+const path DEFAULT_OUTPUT_PATH("D:/g/EMF/EMF/events/emf_nomad_codegen.txt");
+//const path DEFAULT_OUTPUT_PATH("D:/g/EMF/EMF+SWMH/events/emf_nomad_codegen.txt");
+
+const uint END_YEAR = 1337;
+const bool OUTPUT_HISTORY_DATA = true; // debugging data to stderr re: history execution
+const bool USE_PROVINCE_FILTER = true; // whether to use stdin as a province ID filter
 const uint BASE_EVENT_ID = 1000;
 
 void execute_province_history(const default_map&, const definitions_table&, an_province**);
@@ -49,14 +57,19 @@ int main(int argc, char** argv) {
         an_province** prov_map = new an_province*[prov_map_sz];
         for (uint i = 0; i < prov_map_sz; ++i) prov_map[i] = nullptr;
 
-        /* pull the province filter list from maybe-empty.py through stdin */
-        char buf[32];
-        while (fgets(&buf[0], sizeof(buf), stdin) != nullptr) {
-            int id = atoi(&buf[0]);
-            if (id <= 0)
-                throw va_error("malformed province filter list input from standard input: '%s'", &buf[0]);
-            prov_map[id] = reinterpret_cast<an_province*>(0x1); // we'll only process these in execute_province_history
+        if (USE_PROVINCE_FILTER) {
+            /* pull the province filter list from maybe-empty.py through stdin */
+            char buf[32];
+            while (fgets(&buf[0], sizeof(buf), stdin) != nullptr) {
+                int id = atoi(&buf[0]);
+                if (id <= 0)
+                    throw va_error("malformed province filter list input from standard input: '%s'", &buf[0]);
+                prov_map[id] = reinterpret_cast<an_province*>(0x1); // we'll only process these in execute_province_history
+            }
         }
+        else
+            for (uint i = 1; i < prov_map_sz; ++i)
+                prov_map[i] = reinterpret_cast<an_province*>(0x1);
 
         execute_province_history(dm, def_tbl, prov_map);
 
@@ -356,23 +369,13 @@ void write_main_event(FILE* f, an_province** prov_map, uint prov_map_sz) {
     fprintf(f, "# any given start.\n#\n");
     fprintf(f, "# How these events were created: All event code following was generated\n");
     fprintf(f, "# automatically by a program which emulates CK2 history execution, written\n");
-    fprintf(f, "# by secret ninjas. If in need, contact zijistark (azrinon@gmail.com) so that\n");
-    fprintf(f, "# he may relay your message to said ninjas and deliver their reply.\n");
+    fprintf(f, "# by a secret ninja order. If in need, contact zijistark (azrinon@gmail.com)\n");
+    fprintf(f, "# so that he may relay your message to said ninjas and deliver their reply.\n");
     fprintf(f, "character_event = {\n");
     fprintf(f, "\tid = emf_nomad.%u\n", BASE_EVENT_ID);
     fprintf(f, "\thide_window = yes\n");
     fprintf(f, "\tis_triggered_only = yes\n\n");
-    if (false) {
-        fprintf(f, "\ttrigger = { has_dlc = \"Horse Lords\" }\n\n");
-    }
-    else {
-        fprintf(f, "\tonly_independent = yes\n");
-        fprintf(f, "\tculture = hip_culture\n\n");
-        fprintf(f, "\ttrigger = {\n");
-        fprintf(f, "\t\thas_landed_title = e_hip\n");
-        fprintf(f, "\t\thas_dlc = \"Horse Lords\"\n");
-        fprintf(f, "\t}\n\n");
-    }
+    fprintf(f, "\ttrigger = { has_dlc = \"Horse Lords\" }\n\n");
     fprintf(f, "\timmediate = {\n");
 
     for (uint id = 1; id < prov_map_sz; ++id) {
