@@ -31,7 +31,7 @@ def process_landed_titles(where):
                 recurse(v)
 
     titles = {}
-    for _, tree in ck2parser.parse_files('common/bookmarks/*', where):
+    for _, tree in ck2parser.parse_files('common/landed_titles/*', where):
         recurse(tree)
     return titles
 
