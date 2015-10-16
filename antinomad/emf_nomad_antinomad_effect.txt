@@ -1,0 +1,26 @@
+
+emf_nomad_antinomad_effect = {
+	random_province_holding = {
+		limit = {
+			or = {
+				holding_type = temple
+				holding_type = tribal
+			}
+		}
+		ROOT = {
+			owner = {
+				create_character = {
+					random_traits = yes
+					dynasty = random
+					female = no
+					religion = ROOT # Province
+					culture = ROOT # Province
+				}
+				new_character = {
+					grant_title_no_opinion = PREVPREVPREV # Holding
+				}
+			}
+		}
+		refill_holding_levy = yes
+	}
+}

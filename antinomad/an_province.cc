@@ -23,7 +23,10 @@ void an_province::write_event(FILE* f, uint event_id) const {
 
         fprintf(f, "\t\t\t\tbreak = yes # Not necessary to build a settlement\n");
         fprintf(f, "\t\t\t}\n"); // END: if
-        fprintf(f, "\t\t\temf_nomad_autobuild_%s_effect = yes\n", (e.has_temple) ? "temple" : "tribal");
+        fprintf(f, "\t\t\tbuild_holding = { type = %s }\n", (e.has_temple) ? "temple" : "tribal");
+        fprintf(f, "\t\t\tculture  = %s\n", e.culture.c_str());
+        fprintf(f, "\t\t\treligion = %s\n", e.religion.c_str());
+        fprintf(f, "\t\t\temf_nomad_antinomad_effect = yes\n");
         fprintf(f, "\t\t\tbreak = yes\n");
         fprintf(f, "\t\t}\n"); // END: if
     }
