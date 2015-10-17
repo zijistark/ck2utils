@@ -9,9 +9,8 @@ Scans for:
 
 import re
 import ck2parser
-import localpaths
 
-rootpath = localpaths.rootpath
+rootpath = ck2parser.rootpath
 modpath = rootpath / 'CK2Plus/CK2Plus'
 
 def recurse_comments(comments):

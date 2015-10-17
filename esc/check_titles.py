@@ -8,11 +8,10 @@ import re
 import sys
 import shutil
 import tempfile
-import localpaths
 import ck2parser
 
-rootpath = localpaths.rootpath
-vanilladir = localpaths.vanilladir
+rootpath = ck2parser.rootpath
+vanilladir = ck2parser.vanilladir
 modpath = rootpath / 'SWMH-BETA/SWMH'
 
 results = {True: collections.defaultdict(list),

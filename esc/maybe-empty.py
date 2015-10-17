@@ -4,7 +4,6 @@ import collections
 import pathlib
 import sys
 import ck2parser
-import localpaths
 
 REPLACE_ENCODING_ERRORS = False
 
@@ -13,7 +12,7 @@ if REPLACE_ENCODING_ERRORS:
 
 def get_modpath():
     if len(sys.argv) <= 1:
-        return localpaths.rootpath / 'SWMH-BETA/SWMH'
+        return ck2parser.rootpath / 'SWMH-BETA/SWMH'
     return pathlib.Path(sys.argv[1])
 
 def output(provinces):

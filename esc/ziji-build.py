@@ -22,13 +22,12 @@ import re
 import sys
 import time
 import ck2parser
-import localpaths
 
 # if true, instead of removing localisation, write out a file listing broken
 # localisations expected to match one of the patterns to be removed
 AUDIT = False
 
-vanilladir = localpaths.vanilladir
+vanilladir = ck2parser.vanilladir
 
 def make_outpath(outroot, inpath, *roots):
     for i, root in enumerate(roots):
@@ -108,7 +107,7 @@ def get_unlanded_titles(where):
 def main():
     start_time = time.time()
     if len(sys.argv) <= 1:
-        modpath = localpaths.rootpath / 'SWMH-BETA/SWMH'
+        modpath = ck2parser.rootpath / 'SWMH-BETA/SWMH'
     else:
         modpath = pathlib.Path(sys.argv[1])
     if len(sys.argv) <= 2:
