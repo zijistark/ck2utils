@@ -17,6 +17,7 @@ TAB_WIDTH = 4 # minimum 2
 CHARS_PER_LINE = 120
 
 fq_keys = []
+errors_default = None
 
 def force_quote(key):
     global fq_keys
@@ -38,9 +39,10 @@ def files(glob, *moddirs, basedir=vanilladir):
     for _, p in sorted(result_paths.items(), key=lambda t: t[0].parts):
         yield p
 
-def parse_files(glob, *moddirs, basedir=vanilladir):
+def parse_files(glob, *moddirs, basedir=vanilladir, encoding='cp1252',
+                errors=errors_default):
     for path in files(glob, *moddirs, basedir=basedir):
-        yield path, parse_file(path)
+        yield path, parse_file(path, encoding, errors)
 
 def localisation(moddir=None, ordered=False):
     def process_csv(path):
@@ -559,8 +561,8 @@ def parse(s):
     #     raise
     return tree
 
-def parse_file(path, encoding='cp1252'):
-    with path.open(encoding=encoding, errors='replace') as f:
+def parse_file(path, encoding='cp1252', errors=errors_default):
+    with path.open(encoding=encoding, errors=errors) as f:
         try:
             tree = parse(f.read())
         except:

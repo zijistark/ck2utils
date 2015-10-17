@@ -6,6 +6,11 @@ import sys
 import ck2parser
 import localpaths
 
+REPLACE_ENCODING_ERRORS = False
+
+if REPLACE_ENCODING_ERRORS:
+    ck2parser.errors_default = 'replace'
+
 def get_modpath():
     if len(sys.argv) <= 1:
         return localpaths.rootpath / 'SWMH-BETA/SWMH'
