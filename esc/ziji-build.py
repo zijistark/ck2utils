@@ -83,17 +83,6 @@ def process_history(where, build, extra_keys=None):
                 with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
                     f.write(tree.str())
 
-def get_religions(where):
-    religions = []
-    religion_groups = []
-    for _, tree in ck2parser.parse_files('common/religions/*', where):
-        for n, v in tree:
-            religion_groups.append(n.val)
-            religions.extend(n2.val for n2, v2 in v
-                             if (isinstance(v2, ck2parser.Obj) and
-                                 n2.val not in ['male_names', 'female_names']))
-    return religions, religion_groups
-
 def get_governments(where):
     governments = []
     prefixes = []
@@ -137,7 +126,7 @@ def main():
 
     max_provs = get_max_provs(modpath)
     cultures, culture_groups = process_cultures(modpath, build)
-    religions, religion_groups = get_religions(modpath)
+    religions, religion_groups = ck2parser.religions(modpath)
     governments, gov_prefixes = get_governments(modpath)
     ul_titles = get_unlanded_titles(modpath)
     ck2parser.fq_keys = cultures

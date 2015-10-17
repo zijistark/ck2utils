@@ -15,26 +15,11 @@ rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH'
 # modpath = rootpath / 'CK2Plus/CK2Plus'
 
-cultures = []
-culture_groups = []
-for _, tree in ck2parser.parse_files('common/cultures/*', modpath):
-    for n, v in tree:
-        culture_groups.append(n.val)
-        cultures.extend(n2.val for n2, v2 in v
-                        if n2.val != 'graphical_cultures')
+cultures, culture_groups = ck2parser.cultures(modpath)
+religions, religion_groups = ck2parser.religions(modpath)
 if PRINT_CULTURES_RELIGIONS:
     pprint.pprint(cultures)
     pprint.pprint(culture_groups)
-
-religions = []
-religion_groups = []
-for _, tree in ck2parser.parse_files('common/religions/*', modpath):
-    for n, v in tree:
-        religion_groups.append(n.val)
-        religions.extend(n2.val for n2, v2 in v
-                         if (isinstance(v2, ck2parser.Obj) and
-                             n2.val not in ['male_names', 'female_names']))
-if PRINT_CULTURES_RELIGIONS:
     pprint.pprint(religions)
     pprint.pprint(religion_groups)
 

@@ -45,6 +45,27 @@ def parse_files(glob, *moddirs, basedir=vanilladir, encoding='cp1252',
     for path in files(glob, *moddirs, basedir=basedir):
         yield path, parse_file(path, encoding, errors)
 
+def cultures(*moddirs, groups=True):
+    cultures = []
+    culture_groups = []
+    for _, tree in ck2parser.parse_files('common/cultures/*', moddirs):
+        for n, v in tree:
+            culture_groups.append(n.val)
+            cultures.extend(n2.val for n2, v2 in v
+                            if n2.val != 'graphical_cultures')
+    return (cultures, culture_groups) if groups else cultures
+
+def religions(*moddirs, groups=True):
+    religions = []
+    religion_groups = []
+    for _, tree in ck2parser.parse_files('common/religions/*', moddirs):
+        for n, v in tree:
+            religion_groups.append(n.val)
+            religions.extend(n2.val for n2, v2 in v
+                             if (isinstance(v2, ck2parser.Obj) and
+                                 n2.val not in ['male_names', 'female_names']))
+    return (religions, religion_groups) if groups else religions
+
 def localisation(moddir=None, ordered=False):
     def process_csv(path):
         for row in csv_rows(path):

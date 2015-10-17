@@ -58,16 +58,6 @@ def get_province_id(where):
             province_title[prov_id] = title
     return province_id, province_title
 
-def get_cultures(where):
-    cultures = []
-    culture_groups = []
-    for _, tree in ck2parser.parse_files('common/cultures/*', modpath):
-        for n, v in tree:
-            culture_groups.append(n.val)
-            cultures.extend(n2.val for n2, v2 in v
-                            if n2.val != 'graphical_cultures')
-    return cultures, culture_groups
-
 def scan_landed_titles(where, cultures, loc_mod):
     dynamics = collections.defaultdict(dict)
     undef = collections.defaultdict(list)
@@ -94,7 +84,7 @@ def main():
     province_id, province_title = get_province_id(vanillapath)
     province_id.update(province_id_mod)
     province_title.update(province_title_mod)
-    cultures, cult_group = get_cultures(modpath)
+    cultures, cult_group = ck2parser.cultures(modpath)
     mod_loc, dupe_lines = get_locs(modpath, dupe_check=True)
     vanilla_loc = get_locs(vanillapath)
     # localisation = vanilla_loc.copy()
