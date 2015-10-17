@@ -1,14 +1,17 @@
+#!/usr/bin/env python3
+
 import collections
 import pathlib
 import string
 import sys
+import localpaths
 
-wd = pathlib.Path('C:/Users/Nicholas/Documents/CK2/SWMH-BETA')
-# wd = pathlib.Path('C:/Users/Nicholas/Documents/Paradox Interactive/'
-                  # 'Crusader Kings II/mod/modules')
+rootpath = localpaths.rootpath
+wd = rootpath / 'CK2Plus'
+
 glob = '**/*'
-out_path = pathlib.Path('out.txt')
-binary = ['.dds', '.tga', '.xac', '.bmp', '.db']
+out_path = rootpath / 'audit2.txt'
+binary = ['.dds', '.tga', '.xac', '.bmp', '.db', '.jpg', '.yml']
 suspicious = ['Â¡', 'Â¤', 'Â§', 'Â°', 'Â¿', 'Ã€', 'Ã', 'Ã‚', 'Ãƒ', 'Ã„', 'Ã…',
               'Ã†', 'Ã‡', 'Ãˆ', 'Ã‰', 'ÃŠ', 'Ã‹', 'ÃŒ', 'Ã', 'ÃŽ', 'Ã', 'Ã',
               'Ã‘', 'Ã’', 'Ã“', 'Ã”', 'Ã•', 'Ã–', 'Ã˜', 'Ã™', 'Ãš', 'Ãœ', 'Ãž',
