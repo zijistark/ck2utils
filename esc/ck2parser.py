@@ -1,6 +1,5 @@
 import collections
 import csv
-import datetime
 import operator
 import pathlib
 import re
@@ -268,13 +267,10 @@ class Number(Commented):
     
 class Date(Commented):
     def str_to_val(self, string):
-        # CKII appears to default to 0, not 1, but that's awkward to handle
-        # with datetime, and it only comes up for b_embriaco anyway
-        year, month, day = ((int(x) if x else 1) for x in string.split('.'))
-        return datetime.date(year, month, day)
+        return tuple((int(x) if x else 0) for x in string.split('.'))
 
     def val_inline_str(self, col):
-        s = '{0.year}.{0.month}.{0.day}'.format(self.val)
+        s = '{}.{}.{}'.format(*self.val)
         return s, col + chars(s)
     
 class Op(Commented):
