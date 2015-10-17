@@ -79,11 +79,11 @@ def province_id_name_map(where):
 
 def provinces(where):
     id_name = province_id_name_map(where)
-    for path in ck2parser.files('history/provinces/*', where):
+    for path in files('history/provinces/*', where):
         number, name = path.stem.split(' - ')
         number = int(number)
         if id_name[number] == name:
-            tree = ck2parser.parse_file(path)
+            tree = parse_file(path)
             try:
                 title = tree['title'].val
             except KeyError:

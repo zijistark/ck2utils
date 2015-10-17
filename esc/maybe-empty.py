@@ -5,9 +5,9 @@ import pathlib
 import sys
 import ck2parser
 
-REPLACE_ENCODING_ERRORS = False
+IGNORE_ENCODING_ERRORS = True
 
-if REPLACE_ENCODING_ERRORS:
+if IGNORE_ENCODING_ERRORS:
     ck2parser.errors_default = 'replace'
 
 def get_modpath():
