@@ -223,9 +223,8 @@ def main():
         with outpath.open('w', encoding='cp1252', newline='') as f:
             for inpath in inpaths:
                 for row in ck2parser.csv_rows(inpath):
-                    if len(row) >= 2 and '#' not in row[0]:
-                        if not check_key(row[0]):
-                            print(row[0], file=f)
+                    if not check_key(row[0]):
+                        print(row[0], file=f)
         raise SystemExit()
 
     # process localisation

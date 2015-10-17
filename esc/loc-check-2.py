@@ -12,7 +12,7 @@ import ck2parser
 import localpaths
 
 rootpath = localpaths.rootpath
-swmhpath = rootpath / 'SWMH-BETA/SWMH'
+swmhpath = rootpath / 'CK2Plus/CK2Plus'
 
 def recurse_comments(comments):
     if comments:
@@ -72,7 +72,7 @@ def main():
                 if match:
                     if match.group(1) not in cultures:
                         unrecognized_culture_keys.append(key)
-    with (rootpath / 'out.txt').open('w') as f:
+    with (rootpath / 'loc-check-2.txt').open('w') as f:
         if unlocalised_noncounty_titles:
             print('Unlocalised non-county titles:',
                   *unlocalised_noncounty_titles, sep='\n\t', file=f)

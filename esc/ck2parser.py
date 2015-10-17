@@ -7,6 +7,7 @@ from funcparserlib import lexer
 from funcparserlib import parser
 import localpaths
 
+rootpath = localpaths.rootpath
 vanilladir = localpaths.vanilladir
 
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
@@ -23,13 +24,13 @@ def force_quote(key):
     global fq_keys
     return isinstance(key, String) and key.val in fq_keys
 
-def csv_rows(path):
-    try:
-        with path.open(newline='', encoding='cp1252', errors='replace') as f:
-            yield from csv.reader(f, dialect='ckii')
-    except AttributeError:
-        with open(path, newline='', encoding='cp1252', errors='replace') as f:
-            yield from csv.reader(f, dialect='ckii')
+def csv_rows(path, linenum=False, comments=False):
+    with open(str(path), newline='', encoding='cp1252', errors='replace') as f:
+        gen = ((r, i + 1) if linenum else r
+               for i, r in enumerate(csv.reader(f, dialect='ckii'))
+               if (len(r) > 1 and r[0] and
+                   (comments or not r[0].startswith('#'))))
+        yield from gen
 
 # give mod dirs in descending lexicographical order of mod name (Z-A),
 # modified for dependencies as necessary.

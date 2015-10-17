@@ -57,9 +57,10 @@ def process_provinces(where, first_start, last_start):
         if id_name[number] == name:
             tree = ck2parser.parse_file(path)
             try:
-                province_id[tree['title'].val] = number
+                title = tree['title'].val
             except KeyError:
                 continue
+            province_id[title] = number
             castles_and_cities = set()
             changes_by_date = collections.defaultdict(list)
             changes_by_date[first_start] = []
