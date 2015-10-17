@@ -84,22 +84,12 @@ def check_regions(titles, titles_de_jure):
     recurse(tree)
     return bad_titles
 
-
 def check_province_history(titles):
-    tree = ck2parser.parse_file(modpath / 'map/default.map')
-    defs = next(v.val for n, v in tree if n.val == 'definitions')
-    id_name = {}
-    with (modpath / 'map' / defs).open(newline='',
-                                        encoding='cp1252') as csvfile:
-        for row in csv.reader(csvfile, dialect='ckii'):
-            try:
-                id_name[int(row[0])] = row[4]
-            except (IndexError, ValueError):
-                continue
-    for path in ck2parser.files('history/provinces/*.txt', modpath):
+    id_name = ck2parser.province_id_name_map(modpath)
+    for path in ck2parser.files('history/provinces/*', modpath):
         number, name = path.stem.split(' - ')
-        id_number = int(number)
-        if id_name[id_number] == name:
+        number = int(number)
+        if id_name[number] == name:
             check_titles(path, titles)
 
 def process_landed_titles():
@@ -123,7 +113,7 @@ def process_landed_titles():
                         parent_is_titular = False
         return parent_is_titular
 
-    for path in ck2parser.files('common/landed_titles/*.txt', modpath):
+    for path in ck2parser.files('common/landed_titles/*', modpath):
         recurse(ck2parser.parse_file(path))
     # print('{} titles, {} de jure'.format(len(titles), len(titles_de_jure)))
     return titles, titles_de_jure

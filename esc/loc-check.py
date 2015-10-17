@@ -34,28 +34,12 @@ def get_locs(where, dupe_check=False):
     return locs
 
 def get_province_id(where):
-    tree = ck2parser.parse_file(where / 'map/default.map')
-    defs = tree['definitions'].val
-    id_name = {}
-    for row in ck2parser.csv_rows(where / 'map' / defs):
-        try:
-            id_name[int(row[0])] = row[4]
-        except (IndexError, ValueError):
-            continue
     province_id = {}
     province_title = {}
-    for path in ck2parser.files('history/provinces/*', where):
-        number, name = path.stem.split(' - ')
-        number = int(number)
-        if id_name[number] == name:
-            tree = ck2parser.parse_file(path)
-            try:
-                title = tree['title'].val
-            except KeyError:
-                continue
-            prov_id = 'PROV{}'.format(number)
-            province_id[title] = prov_id
-            province_title[prov_id] = title
+    for number, title, tree in ck2parser.provinces(where):
+        prov_id = 'PROV{}'.format(number)
+        province_id[title] = prov_id
+        province_title[prov_id] = title
     return province_id, province_title
 
 def scan_landed_titles(where, cultures, loc_mod):

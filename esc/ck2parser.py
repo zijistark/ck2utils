@@ -48,7 +48,7 @@ def parse_files(glob, *moddirs, basedir=vanilladir, encoding='cp1252',
 def cultures(*moddirs, groups=True):
     cultures = []
     culture_groups = []
-    for _, tree in ck2parser.parse_files('common/cultures/*', moddirs):
+    for _, tree in parse_files('common/cultures/*', moddirs):
         for n, v in tree:
             culture_groups.append(n.val)
             cultures.extend(n2.val for n2, v2 in v
@@ -58,13 +58,37 @@ def cultures(*moddirs, groups=True):
 def religions(*moddirs, groups=True):
     religions = []
     religion_groups = []
-    for _, tree in ck2parser.parse_files('common/religions/*', moddirs):
+    for _, tree in parse_files('common/religions/*', moddirs):
         for n, v in tree:
             religion_groups.append(n.val)
             religions.extend(n2.val for n2, v2 in v
-                             if (isinstance(v2, ck2parser.Obj) and
-                                 n2.val not in ['male_names', 'female_names']))
+                             if (isinstance(v2, Obj) and
+                                 n2.val not in ('male_names', 'female_names')))
     return (religions, religion_groups) if groups else religions
+
+def province_id_name_map(where):
+    tree = parse_file(where / 'map/default.map')
+    defs = tree['definitions'].val
+    id_name = {}
+    for row in csv_rows(where / 'map' / defs):
+        try:
+            id_name[int(row[0])] = row[4]
+        except (IndexError, ValueError):
+            continue
+    return id_name
+
+def provinces(where):
+    id_name = province_id_name_map(where)
+    for path in ck2parser.files('history/provinces/*', where):
+        number, name = path.stem.split(' - ')
+        number = int(number)
+        if id_name[number] == name:
+            tree = ck2parser.parse_file(path)
+            try:
+                title = tree['title'].val
+            except KeyError:
+                continue
+            yield number, title, tree
 
 def localisation(moddir=None, ordered=False):
     def process_csv(path):

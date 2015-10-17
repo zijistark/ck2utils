@@ -40,46 +40,30 @@ def process_landed_titles(where):
     return titles
 
 def process_provinces(where, first_start, last_start):
-    tree = ck2parser.parse_file(where / 'map/default.map')
-    defs = tree['definitions'].val
-    id_name = {}
-    for row in ck2parser.csv_rows(where / 'map' / defs):
-        try:
-            id_name[int(row[0])] = row[4]
-        except (IndexError, ValueError):
-            continue
     province_id = {}
     no_castles_or_cities = set()
-    for path in ck2parser.files('history/provinces/*', where):
-        number, name = path.stem.split(' - ')
-        number = int(number)
-        if id_name[number] == name:
-            tree = ck2parser.parse_file(path)
-            try:
-                title = tree['title'].val
-            except KeyError:
-                continue
-            province_id[title] = number
-            castles_and_cities = set()
-            changes_by_date = collections.defaultdict(list)
-            changes_by_date[first_start] = []
-            for n, v in tree:
-                if isinstance(v, ck2parser.Obj):
-                    changes_by_date[n.val].extend(v)
+    for number, title, tree in ck2parser.provinces(where):
+        province_id[title] = number
+        castles_and_cities = set()
+        changes_by_date = collections.defaultdict(list)
+        changes_by_date[first_start] = []
+        for n, v in tree:
+            if isinstance(v, ck2parser.Obj):
+                changes_by_date[n.val].extend(v)
+            elif v.val == 'castle' or v.val == 'city':
+                castles_and_cities.add(n.val)
+        for date, changes in sorted(changes_by_date.items()):
+            for n, v in changes:
+                if n.val == 'remove_settlement':
+                    castles_and_cities.discard(v.val)
                 elif v.val == 'castle' or v.val == 'city':
                     castles_and_cities.add(n.val)
-            for date, changes in sorted(changes_by_date.items()):
-                for n, v in changes:
-                    if n.val == 'remove_settlement':
-                        castles_and_cities.discard(v.val)
-                    elif v.val == 'castle' or v.val == 'city':
-                        castles_and_cities.add(n.val)
-                if date >= first_start:
-                    if date > last_start:
-                        break
-                    if not castles_and_cities:
-                        no_castles_or_cities.add(number)
-                        break
+            if date >= first_start:
+                if date > last_start:
+                    break
+                if not castles_and_cities:
+                    no_castles_or_cities.add(number)
+                    break
     return province_id, no_castles_or_cities
 
 def process_titles(where, valid_titles, first_start, last_start):

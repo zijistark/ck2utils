@@ -22,51 +22,24 @@ def process_province_history(where):
         except AttributeError:
             pass
 
-    tree = ck2parser.parse_file(where / 'map/default.map')
-    defs = tree['definitions'].val
-    id_name = {}
-    for row in ck2parser.csv_rows(where / 'map' / defs):
-        try:
-            id_name[int(row[0])] = row[4]
-        except (IndexError, ValueError):
-            continue
+    id_name = ck2parser.province_id_name_map(where)
     province_id = {}
     used_baronies = collections.defaultdict(set)
     max_settlements = {}
-    for path in ck2parser.files('history/provinces/*', where):
-        try:
-            number, name = path.stem.split(' - ')
-            number = int(number)
-            if id_name[number] == name:
-                tree = ck2parser.parse_file(path)
-                # if number == 79:
-                #     import pprint
-                #     for n, v in tree:
-                #         try:
-                #             pprint.pprint(n.val)
-                #         except AttributeError:
-                #             pass
-                #     raise SystemExit()
-                try:
-                    title = tree['title'].val
-                except KeyError:
-                    continue
-                province_id[title] = number
-                max_settlements[title] = int(tree['max_settlements'].val)
-                for n, v in tree:
-                    mark_barony(n, used_baronies[title])
-                    mark_barony(v, used_baronies[title])
-                    if isinstance(v, ck2parser.Obj):
-                        if v.has_pairs:
-                            for n2, v2 in v:
-                                mark_barony(n2, used_baronies[title])
-                                mark_barony(v2, used_baronies[title])
-                        else:
-                            for v2 in v:
-                                mark_barony(v2, used_baronies[title])
-        except:
-            print(path)
-            raise
+    for number, title, tree in ck2parser.provinces(where):
+        province_id[title] = number
+        max_settlements[title] = int(tree['max_settlements'].val)
+        for n, v in tree:
+            mark_barony(n, used_baronies[title])
+            mark_barony(v, used_baronies[title])
+            if isinstance(v, ck2parser.Obj):
+                if v.has_pairs:
+                    for n2, v2 in v:
+                        mark_barony(n2, used_baronies[title])
+                        mark_barony(v2, used_baronies[title])
+                else:
+                    for v2 in v:
+                        mark_barony(v2, used_baronies[title])
     return province_id, used_baronies, max_settlements
 
 def prepend_post_comment(item, s):
