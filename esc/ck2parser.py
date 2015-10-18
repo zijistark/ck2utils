@@ -1,5 +1,6 @@
 import collections
 import csv
+import functools
 import operator
 import pathlib
 import re
@@ -19,6 +20,8 @@ CHARS_PER_LINE = 120
 
 fq_keys = []
 errors_default = None
+
+memoize = functools.lru_cache(maxsize=None)
 
 def force_quote(key):
     global fq_keys
@@ -45,20 +48,22 @@ def parse_files(glob, *moddirs, basedir=vanilladir, encoding='cp1252',
     for path in files(glob, *moddirs, basedir=basedir):
         yield path, parse_file(path, encoding, errors)
 
+@memoize
 def cultures(*moddirs, groups=True):
     cultures = []
     culture_groups = []
-    for _, tree in parse_files('common/cultures/*', moddirs):
+    for _, tree in parse_files('common/cultures/*', *moddirs):
         for n, v in tree:
             culture_groups.append(n.val)
             cultures.extend(n2.val for n2, v2 in v
                             if n2.val != 'graphical_cultures')
     return (cultures, culture_groups) if groups else cultures
 
+@memoize
 def religions(*moddirs, groups=True):
     religions = []
     religion_groups = []
-    for _, tree in parse_files('common/religions/*', moddirs):
+    for _, tree in parse_files('common/religions/*', *moddirs):
         for n, v in tree:
             religion_groups.append(n.val)
             religions.extend(n2.val for n2, v2 in v
@@ -66,16 +71,26 @@ def religions(*moddirs, groups=True):
                                  n2.val not in ('male_names', 'female_names')))
     return (religions, religion_groups) if groups else religions
 
+_max_provinces = None
+
+@memoize
 def province_id_name_map(where):
+    global _max_provinces
     tree = parse_file(where / 'map/default.map')
     defs = tree['definitions'].val
-    id_name = {}
+    _max_provinces = int(tree['max_provinces'].val)
+    id_name_map = {}
     for row in csv_rows(where / 'map' / defs):
         try:
-            id_name[int(row[0])] = row[4]
+            id_name_map[int(row[0])] = row[4]
         except (IndexError, ValueError):
             continue
-    return id_name
+    return id_name_map
+
+def max_provinces(where):
+    if _max_provinces is None:
+        province_id_name_map(where)
+    return _max_provinces
 
 def provinces(where):
     id_name = province_id_name_map(where)
