@@ -38,7 +38,10 @@ def make_outpath(outroot, inpath, *roots):
                 raise
 
 def get_max_provs(where):
-    tree = ck2parser.parse_file(where / 'map/default.map')
+    path = where / 'map/default.map'
+    if not path.exists():
+        path = vanilladir / 'map/default.map'
+    tree = ck2parser.parse_file(path)
     return int(tree['max_provinces'].val)
 
 def process_cultures(where, build):
