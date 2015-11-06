@@ -105,7 +105,7 @@ def provinces(where):
                 continue
             yield number, title, tree
 
-def localisation(moddir=None, ordered=False):
+def localisation(moddir=None, basedir=vanilladir, ordered=False):
     def process_csv(path):
         for row in csv_rows(path):
             try:
@@ -121,7 +121,7 @@ def localisation(moddir=None, ordered=False):
         for path in files(loc_glob, basedir=moddir):
             process_csv(path)
             mod_files.add(path.name)
-    for path in files(loc_glob):
+    for path in files(loc_glob, basedir=basedir):
         if path.name not in mod_files:
             process_csv(path)
     return locs
