@@ -126,6 +126,11 @@ def localisation(moddir=None, basedir=vanilladir, ordered=False):
             process_csv(path)
     return locs
 
+def prepend_post_comment(item, s):
+    if item.post_comment:
+        s += ' ' + str(item.post_comment)
+    item.post_comment = Comment(s)
+
 def is_codename(string):
     try:
         return re.match(r'[ekdcb]_', string) is not None
