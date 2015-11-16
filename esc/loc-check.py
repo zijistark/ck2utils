@@ -10,8 +10,8 @@ import ck2parser
 
 rootpath = ck2parser.rootpath
 vanillapath = ck2parser.vanilladir
-# modpath = rootpath / 'SWMH-BETA/SWMH'
-modpath = rootpath / 'CK2Plus/CK2Plus'
+modpath = rootpath / 'SWMH-BETA/SWMH'
+# modpath = rootpath / 'CK2Plus/CK2Plus'
 # outpath = rootpath / 'SWMH-BETA/metadata'
 
 def get_locs(where, dupe_check=False):

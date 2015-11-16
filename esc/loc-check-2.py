@@ -11,7 +11,8 @@ import re
 import ck2parser
 
 rootpath = ck2parser.rootpath
-modpath = rootpath / 'CK2Plus/CK2Plus'
+modpath = rootpath / 'SWMH-BETA/SWMH'
+# modpath = rootpath / 'CK2Plus/CK2Plus'
 
 def recurse_comments(comments):
     if comments:
@@ -40,7 +41,8 @@ def recurse(tree, comment=False):
 
 def main():
     cultures, cult_groups = ck2parser.cultures(modpath)
-    cultures = set(cultures).update(cult_groups)
+    cultures = set(cultures)
+    cultures.update(cult_groups)
     defined_titles = []
     commented_out_titles = []
     for _, tree in ck2parser.parse_files('common/landed_titles/*', modpath):

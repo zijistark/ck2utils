@@ -7,6 +7,7 @@ import re
 import shutil
 import tempfile
 import ck2parser
+from ck2parser import prepend_post_comment
 
 rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH-Caucasus-Beta'
@@ -41,11 +42,6 @@ def process_province_history(where):
                     for v2 in v:
                         mark_barony(v2, used_baronies[title])
     return province_id, used_baronies, max_settlements
-
-def prepend_post_comment(item, s):
-    if item.post_comment:
-        s += ' ' + str(item.post_comment)
-    item.post_comment = ck2parser.Comment(s)
 
 def main():
     lt = modpath / 'common/landed_titles'
