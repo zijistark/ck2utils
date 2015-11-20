@@ -6,11 +6,12 @@ import pathlib
 import re
 import shutil
 import tempfile
+import time
 import ck2parser
-from ck2parser import prepend_post_comment
+from ck2parser import is_codename, prepend_post_comment
 
 rootpath = ck2parser.rootpath
-modpath = rootpath / 'SWMH-BETA/SWMH-Caucasus-Beta'
+modpath = rootpath / 'SWMH-BETA/SWMH'
 
 # templar castles referenced by vanilla events
 mod_titles_to_keep = ['b_beitdejan', 'b_lafeve']
@@ -44,113 +45,129 @@ def process_province_history(where):
     return province_id, used_baronies, max_settlements
 
 def main():
+    start_time = time.time()
     lt = modpath / 'common/landed_titles'
-    # province_id, used_baronies, max_settlements = process_province_history()
-    # localisation = ck2parser.localisation(modpath)
+    province_id, used_baronies, max_settlements = process_province_history(
+        modpath)
+    localisation = ck2parser.localisation(modpath)
     cultures = ck2parser.cultures(modpath, groups=False)
     ck2parser.fq_keys = cultures
-    # historical_baronies = []
+    historical_baronies = []
 
-    def update_tree(tree):
+    def update_tree(tree, is_def=True):
         for n, v in tree:
-            if ck2parser.is_codename(n.val):
-                # for n2, v2 in v:
-                #     if n2.val == 'capital':
-                #         prov_key = 'PROV{}'.format(v2.val)
-                #         capital_name = localisation[prov_key]
-                #         if v2.post_comment.val.strip() == capital_name:
-                #             v2.post_comment = None
-                #         prepend_post_comment(v2, capital_name)
-                #         # elif capital_name != v2.post_comment.val:
-                #         #     print('{},{},{}'.format(v2.val,
-                #         #           v2.post_comment.val, capital_name))
-                #         break
-                # v.ker.post_comment = None
-                # _, (nl, _) = v.inline_str(0)
-                # if nl >= 36:
-                #     comment = 'end ' + n.val
-                #     prepend_post_comment(v.ker, comment)
-                # # if re.match(r'[ekd]_', n.val):
-                # #     try:
-                # #         prepend_post_comment(v.kel, localisation[n.val])
-                # #     except KeyError:
-                # #         print('@@@ ' + n.val)
-                # baronies_to_remove = []
-                # if n.val.startswith('c_'):
-                #     # if v.kel.post_comment:
-                #     #     print('c   ' + v.kel.post_comment.val)
-                #     if (not v.kel.post_comment or
-                #         re.search(r'\(?\d+\)?', v.kel.post_comment.val)):
-                #         prev_1 = None
-                #         prev_2 = None
-                #         if v.kel.post_comment is not None:
-                #             match = re.fullmatch(
-                #                 r'([^(]+)\(\d+\)[^#]*(?:#(.+))?',
-                #                 v.kel.post_comment.val)
-                #             if match:
-                #                 prev_1, prev_2 = match.groups()
-                #             v.kel.post_comment = None
-                #         try:
-                #             prov_id = province_id[n.val]
-                #             name = localisation['PROV{}'.format(prov_id)]
-                #             comment = '{} ({})'.format(name, prov_id)
-                #             if prev_1:
-                #                 prev_1 = prev_1.strip()
-                #                 if prev_1 != name:
-                #                     prepend_post_comment(v.kel, prev_1)
-                #             if prev_2:
-                #                 prev_2 = prev_2.strip()
-                #                 if prev_2 != name:
-                #                     prepend_post_comment(v.kel, prev_2)
-                #             prepend_post_comment(v.kel, comment)
-                #         except KeyError:
-                #             print('!!! ' + n.val)
-                #     num_baronies = 0
-                #     for child in v.contents:
-                #         if child.key.val.startswith('b_'):
-                #             if (child.key.val in historical_baronies or
-                #                 child.key.val in used_baronies[n.val] or
-                #                 child.key.val in mod_titles_to_keep):
-                #                 num_baronies += 1
-                #             else:
-                #                 baronies_to_remove.append(child)
-                #     if (num_baronies + len(baronies_to_remove) <
-                #         max_settlements[n.val]):
-                #         print(('{} has {} subholdings '
-                #                'but {} max_settlements!').format(n.val,
-                #                num_baronies + len(baronies_to_remove),
-                #                max_settlements[n.val]))
-                #     keep = max(0, max_settlements[n.val] - num_baronies)
-                #     del baronies_to_remove[:keep]
-                #     v.contents[:] = [v2 for v2 in v.contents
-                #                       if v2 not in baronies_to_remove]
-                allow_block = None
+            if is_codename(n.val) and is_def:
+                try:
+                    cap = v['capital']
+                    prov_key = 'PROV{}'.format(cap.val)
+                    capital_name = localisation[prov_key]
+                    prepend_post_comment(cap, capital_name)
+                    # if '#' in cap.post_comment.val:
+                        # if not any(is_codename(n2.val) for n2, _ in v):
+                            # prepend_post_comment(cap, 'XXX')
+                            # print('??? ' + n.val)
+                        # elif cap.post_comment.val.count('#') > 1:
+                            # prepend_post_comment(cap, 'XXX')
+                            # print('*** ' + n.val)
+                    # elif capital_name != cap.post_comment.val:
+                    #     print('{},{},{}'.format(cap.val,
+                    #           cap.post_comment.val, capital_name))
+                except KeyError:
+                    pass
+                v.ker.post_comment = None
+                _, (nl, _) = v.inline_str(0)
+                if nl >= 36:
+                    comment = 'end ' + n.val
+                    prepend_post_comment(v.ker, comment)
+                if re.match(r'[ekd]_', n.val):
+                    try:
+                        prepend_post_comment(v.kel, localisation[n.val])
+                    except KeyError:
+                        print('@@@ ' + n.val)
+                baronies_to_remove = []
+                if n.val.startswith('c_'):
+                    # if v.kel.post_comment:
+                    #     print('c   ' + v.kel.post_comment.val)
+                    if (not v.kel.post_comment or
+                        re.search(r'\(?\d+\)?', v.kel.post_comment.val)):
+                        prev_1 = None
+                        prev_2 = None
+                        if v.kel.post_comment is not None:
+                            match = re.fullmatch(
+                                r'([^(]+)\(\d+\)[^#]*(?:#(.+))?',
+                                v.kel.post_comment.val)
+                            if match:
+                                prev_1, prev_2 = match.groups()
+                            v.kel.post_comment = None
+                        try:
+                            prov_id = province_id[n.val]
+                            name = localisation['PROV{}'.format(prov_id)]
+                            comment = '{} ({})'.format(name, prov_id)
+                            if prev_1:
+                                prev_1 = prev_1.strip()
+                                if prev_1 != name:
+                                    prepend_post_comment(v.kel, prev_1)
+                            if prev_2:
+                                prev_2 = prev_2.strip()
+                                if prev_2 != name:
+                                    prepend_post_comment(v.kel, prev_2)
+                            prepend_post_comment(v.kel, comment)
+                        except KeyError:
+                            print('!!! ' + n.val)
+                    num_baronies = 0
+                    for child in v.contents:
+                        if child.key.val.startswith('b_'):
+                            if (child.key.val in historical_baronies or
+                                child.key.val in used_baronies[n.val] or
+                                child.key.val in mod_titles_to_keep):
+                                num_baronies += 1
+                            else:
+                                baronies_to_remove.append(child)
+                    if (num_baronies + len(baronies_to_remove) <
+                        max_settlements[n.val]):
+                        # print(num_baronies, baronies_to_remove,
+                        #       len(v.contents))
+                        print(('{} has {} subholdings '
+                               'but {} max_settlements!').format(n.val,
+                               num_baronies + len(baronies_to_remove),
+                               max_settlements[n.val]))
+                    keep = max(0, max_settlements[n.val] - num_baronies)
+                    del baronies_to_remove[:keep]
+                    v.contents[:] = [v2 for v2 in v.contents
+                                     if v2 not in baronies_to_remove]
+                allow_pair = None
                 for child in v.contents:
                     if child.key.val == 'allow':
-                        allow_block = child
+                        allow_pair = child
                         break
-                if allow_block:
-                    if v.contents[-1] != allow_block:
-                        v.contents.remove(allow_block)
-                        v.contents.append(allow_block)
-                    post_barony_block = allow_block
-                # else:
-                #     post_barony_block = v.ker
-                # for barony in reversed(baronies_to_remove):
-                #     b_is, _ = barony.inline_str(0)
-                #     comments = [ck2parser.Comment(s)
-                #                 for s in b_is.split('\n')]
-                #     post_barony_block.pre_comments[0:0] = comments
-            n_lower = n.val.lower()
-            if any(n_lower == s
-                   for s in ('not', 'or', 'and', 'nand', 'nor')):
-                n.val = n_lower
+                if allow_pair:
+                    if v.contents[-1] != allow_pair:
+                        v.contents.remove(allow_pair)
+                        v.contents.append(allow_pair)
+                    post_barony_pair = allow_pair
+                else:
+                    post_barony_pair = v.ker
+                for barony in reversed(baronies_to_remove):
+                    b_is, _ = barony.inline_str(0)
+                    comments = [ck2parser.Comment(s)
+                                for s in b_is.split('\n')]
+                    post_barony_pair.pre_comments[0:0] = comments
+                is_def_children = True
+            else:
+                is_def_children = False
+            try:
+                n_lower = n.val.lower()
+                if any(n_lower == s
+                       for s in ('not', 'or', 'and', 'nand', 'nor')):
+                    n.val = n_lower
+            except AttributeError:
+                pass
             if isinstance(v, ck2parser.Obj) and v.has_pairs:
-                update_tree(v)
+                update_tree(v, is_def_children)
 
-    # for inpath in ck2parser.files('history/titles/*.txt', modpath):
-    #     if inpath.stem.startswith('b_'):
-    #         historical_baronies.append(inpath.stem)
+    for inpath in ck2parser.files('history/titles/*.txt', modpath):
+        if inpath.stem.startswith('b_'):
+            historical_baronies.append(inpath.stem)
 
     with tempfile.TemporaryDirectory() as td:
         lt_t = pathlib.Path(td)
@@ -158,13 +175,16 @@ def main():
                                                   modpath):
             outpath = lt_t / inpath.name
             tree = ck2parser.parse_file(inpath)
-            # update_tree(tree)
-            # with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
-            #     f.write(tree.str())
-        # while lt.exists():
-        #     print('Removing old landed_titles...')
-        #     shutil.rmtree(str(lt), ignore_errors=True)
-        # shutil.copytree(str(lt_t), str(lt))
+            update_tree(tree)
+            with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
+                f.write(tree.str())
+        while lt.exists():
+            print('Removing old landed_titles...')
+            shutil.rmtree(str(lt), ignore_errors=True)
+        shutil.copytree(str(lt_t), str(lt))
+
+    end_time = time.time()
+    print('Time: {} s'.format(end_time - start_time))
 
 if __name__ == '__main__':
     main()

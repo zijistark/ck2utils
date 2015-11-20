@@ -8,6 +8,7 @@ import re
 import sys
 import shutil
 import tempfile
+import time
 import ck2parser
 
 rootpath = ck2parser.rootpath
@@ -120,6 +121,7 @@ def process_landed_titles():
 
 def main():
     global modpath
+    start_time = time.time()
     if len(sys.argv) > 1:
         modpath = pathlib.Path(sys.argv[1])
     titles, titles_de_jure = process_landed_titles()
@@ -153,7 +155,7 @@ def main():
     for glob in globs:
         for path in ck2parser.files(glob, modpath):
             check_titles(path, titles)
-    with (rootpath / 'out.txt').open('w', encoding='cp1252') as fp:
+    with (rootpath / 'check_titles.txt').open('w', encoding='cp1252') as fp:
         if bad_region_titles:
             print('Invalid or titular titles in regions:\n\t', end='', file=fp)
             print(*bad_region_titles, sep=' ', file=fp)
@@ -171,6 +173,8 @@ def main():
                         rel_path = '<vanilla>' / path.relative_to(vanilladir)
                     print('\t' + str(rel_path), *titles, sep='\n\t\t', file=fp)
 
+    end_time = time.time()
+    print('Time: {} s'.format(end_time - start_time))
 
 if __name__ == '__main__':
     main()
