@@ -2,16 +2,18 @@
 
 import collections
 import pathlib
+import re
 import string
 import sys
 import localpaths
 
 rootpath = localpaths.rootpath
-wd = rootpath / 'CK2Plus'
+# wd = rootpath / 'CK2Plus'
+wd = pathlib.Path('C:/Users/Nicholas/Documents/Paradox Interactive/Crusader Kings II/mod/modules')
 
 glob = '**/*'
 out_path = rootpath / 'audit2.txt'
-binary = ['.dds', '.tga', '.xac', '.bmp', '.db', '.jpg', '.yml']
+binary = ['.dds', '.tga', '.xac', '.bmp', '.db', '.jpg', '.yml', '.xlsx']
 suspicious = ['Â¡', 'Â¤', 'Â§', 'Â°', 'Â¿', 'Ã€', 'Ã', 'Ã‚', 'Ãƒ', 'Ã„', 'Ã…',
               'Ã†', 'Ã‡', 'Ãˆ', 'Ã‰', 'ÃŠ', 'Ã‹', 'ÃŒ', 'Ã', 'ÃŽ', 'Ã', 'Ã',
               'Ã‘', 'Ã’', 'Ã“', 'Ã”', 'Ã•', 'Ã–', 'Ã˜', 'Ã™', 'Ãš', 'Ãœ', 'Ãž',
@@ -37,11 +39,22 @@ encoding_exception = {
 #        'utf-8' #XXX
 }
 
-def audit_file(fp):
+crlfs = []
+lfs = []
+
+def audit_file(fp, path):
     fs = fp.read()
+    crlf = '\r\n' in fs
+    lf = bool(re.search(r'[^\r]\n', fs))
+    if crlf and not lf:
+        crlfs.append(path)
+    if not crlf and lf:
+        lfs.append(path)
+    if crlf and lf:
+        yield 'Error: Inconsistent line endings'
     for string in somewhat_suspicious:
         if string in fs:
-            yield string
+            yield repr(string)
 
 audit = collections.defaultdict(list)
 for path in sorted(wd.glob(glob)):
@@ -49,11 +62,21 @@ for path in sorted(wd.glob(glob)):
         if (path.is_file() and path.suffix not in binary and
             '.git' not in path.parts):
             encoding = encoding_exception.get(path, 'cp1252')
-            with path.open(encoding=encoding) as fp:
-                audit[path].extend(audit_file(fp))
+            with path.open(encoding=encoding, newline='') as fp:
+                path = path.relative_to(wd)
+                audit[path].extend(audit_file(fp, path))
     except:
         audit[path].append(str(sys.exc_info()[1]))
+print('{} CRLF files'.format(len(crlfs)))
+print('{} LF files'.format(len(lfs)))
+if len(crlfs) > len(lfs):
+    kind = 'LF'
+    files = lfs
+else:
+    kind = 'CRLF'
+    files = crlfs
 with out_path.open('w', encoding='cp1252') as fp:
+    print(kind + ' files', *files, sep='\n\t', file=fp)
     for path, results in sorted(audit.items()):
         if results:
-            print(path.relative_to(wd), *results, sep='\n\t', file=fp)
+            print(path, *results, sep='\n\t', file=fp)
