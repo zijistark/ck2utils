@@ -126,10 +126,16 @@ def localisation(moddir=None, basedir=vanilladir, ordered=False):
             process_csv(path)
     return locs
 
-def prepend_post_comment(item, s):
+def first_post_comment(item):
     if item.post_comment:
-        s += ' ' + str(item.post_comment)
-    item.post_comment = Comment(s)
+        return item.post_comment.val.split('#', 1)[0].strip()
+    return None
+
+def prepend_post_comment(item, s, force=False):
+    if force or first_post_comment(item) != s:
+        if item.post_comment:
+            s += ' ' + str(item.post_comment)
+        item.post_comment = Comment(s)
 
 def is_codename(string):
     try:
