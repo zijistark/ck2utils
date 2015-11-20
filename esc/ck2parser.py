@@ -167,13 +167,18 @@ useless = ['whitespace']
 tokenize = lexer.make_tokenizer(token_specs)
 
 def comments_to_str(comments, indent):
+    if not comments:
+        return ''
     sep = '\n' + indent * '\t'
     try:
         tree = parse('\n'.join(c.val for c in comments))
         if not tree.contents:
             raise ValueError()
     except (parser.NoParseError, ValueError):
-        return sep.join(str(c) for c in comments) + '\n'
+        butlast = comments_to_str(comments[:-1], indent)
+        if butlast:
+            butlast += indent * '\t'
+        return butlast + str(comments[-1]) + '\n'
     tree.indent = indent
     s = ''
     for p in tree:
