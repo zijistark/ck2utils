@@ -27,6 +27,9 @@ import ck2parser
 # localisations expected to match one of the patterns to be removed
 AUDIT = False
 
+# if true, blank ALL localisations
+NUKE_IT_FROM_ORBIT = False
+
 vanilladir = ck2parser.vanilladir
 
 def make_outpath(outroot, inpath, *roots):
@@ -49,24 +52,27 @@ def process_cultures(where, build):
         for p in reversed(obj.contents):
             if p.key.val == 'dynasty_title_names':
                 obj.contents.remove(p)
+                return True
+        return False
 
     cultures = []
     culture_groups = []
     for inpath, tree in ck2parser.parse_files('common/cultures/*', where):
+        mutated = False
         for n, v in tree:
             culture_groups.append(n.val)
             for n2, v2 in v:
                 if n2.val != 'graphical_cultures':
                     cultures.append(n2.val)
-                    update_obj(v2)
-            update_obj(v)
-        if not AUDIT:
+                    mutated |= update_obj(v2)
+            mutated |= update_obj(v)
+        if not AUDIT and mutated:
             outpath = make_outpath(build, inpath, where, vanilladir)
             with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
                 f.write(tree.str())
     return cultures, culture_groups
 
-def process_history(where, build, extra_keys=None):
+def process_history(where, build, extra_keys):
     for glob in ['history/provinces/*', 'history/titles/*']:
         for inpath, tree in ck2parser.parse_files(glob, where):
             mutated = False
@@ -108,7 +114,6 @@ def get_unlanded_titles(where):
     return ul_titles
 
 def main():
-    start_time = time.time()
     if len(sys.argv) <= 1:
         modpath = ck2parser.rootpath / 'SWMH-BETA/SWMH'
     else:
@@ -128,9 +133,10 @@ def main():
 
     max_provs = get_max_provs(modpath)
     cultures, culture_groups = process_cultures(modpath, build)
-    religions, religion_groups = ck2parser.religions(modpath)
-    governments, gov_prefixes = get_governments(modpath)
-    ul_titles = get_unlanded_titles(modpath)
+    if not NUKE_IT_FROM_ORBIT:
+        religions, religion_groups = ck2parser.religions(modpath)
+        governments, gov_prefixes = get_governments(modpath)
+        ul_titles = get_unlanded_titles(modpath)
     ck2parser.fq_keys = cultures
     lt_keys_to_remove = [
         'title', 'title_female', 'foa', 'title_prefix', 'short_name',
@@ -161,6 +167,20 @@ def main():
             with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
                 f.write(tree.str())
 
+    # process history
+    process_history(modpath, build, extra_keys)
+
+    if NUKE_IT_FROM_ORBIT:
+        outrows = [[''] * 15]
+        outrows[0][:6] = ['#CODE', 'ENGLISH', 'FRENCH', 'GERMAN', '', 'SPANISH']
+        outrows[0][-1] = 'x'
+        inpaths = list(ck2parser.files('localisation/*', modpath))
+        for inpath in inpaths:
+            outpath = build / 'localisation' / inpath.name
+            with outpath.open('w', encoding='cp1252', newline='') as csvfile:
+                csv.writer(csvfile, dialect='ckii').writerows(outrows)
+        raise SystemExit()
+
     type_re = '|'.join(['family_palace_', 'vice_royalty_'] + gov_prefixes)
     title_re = '|'.join(ul_titles)
     culture_re = '|'.join(cultures + culture_groups)
@@ -169,11 +189,8 @@ def main():
     misc_regex = culture_re + '|' + religion_re + '|' + govs_re
     noble_regex = ('(({})?((baron|count|duke|king|emperor)|'
                    '((barony|county|duchy|kingdom|empire)(_of)?))_?)?({})?'
-                   '(_female)?(_({}|{}))?').format(type_re, title_re, culture_re,
-                                                religion_re)
-
-    # process history
-    process_history(modpath, build, extra_keys)
+                   '(_female)?(_({}|{}))?').format(type_re, title_re,
+                                                   culture_re, religion_re)
 
     def check_key(key):
         lt_match = re.match(r'[ekdcb]_((?!_adj($|_)).)*', key)
@@ -235,8 +252,11 @@ def main():
     outpath = build / 'localisation' / 'A AAA testing override.csv'
     with outpath.open('w', encoding='cp1252', newline='') as csvfile:
         csv.writer(csvfile, dialect='ckii').writerows(outrows)
-    end_time = time.time()
-    print('Time: {} s'.format(end_time - start_time))
 
 if __name__ == '__main__':
-    main()
+    start_time = time.time()
+    try:
+        main()
+    finally:
+        end_time = time.time()
+        print('Time: {} s'.format(end_time - start_time))
