@@ -40,13 +40,6 @@ def make_outpath(outroot, inpath, *roots):
             if i == len(roots) - 1:
                 raise
 
-def get_max_provs(where):
-    path = where / 'map/default.map'
-    if not path.exists():
-        path = vanilladir / 'map/default.map'
-    tree = ck2parser.parse_file(path)
-    return int(tree['max_provinces'].val)
-
 def process_cultures(where, build):
     def update_obj(obj):
         for p in reversed(obj.contents):
@@ -73,6 +66,8 @@ def process_cultures(where, build):
     return cultures, culture_groups
 
 def process_history(where, build, extra_keys):
+    prov_title = {}
+    id_name = ck2parser.province_id_name_map(where)
     for glob in ['history/provinces/*', 'history/titles/*']:
         for inpath, tree in ck2parser.parse_files(glob, where):
             mutated = False
@@ -86,10 +81,16 @@ def process_history(where, build, extra_keys):
                                 v.contents.remove(p2)
                             elif n2.val in ['name', 'adjective']:
                                 extra_keys.add(v2.val)
+                if glob == 'history/provinces/*' and n.val == 'title':
+                    number, name = inpath.stem.split(' - ')
+                    number = int(number)
+                    if id_name[number] == name:
+                        prov_title[number] = v.val
             if mutated:
                 outpath = make_outpath(build, inpath, where, vanilladir)
                 with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
                     f.write(tree.str())
+    return prov_title
 
 def get_governments(where):
     governments = []
@@ -131,7 +132,7 @@ def main():
         except FileExistsError: # pls cygwin gib 3.5
             pass
 
-    max_provs = get_max_provs(modpath)
+    max_provs = ck2parser.max_provinces(modpath)
     cultures, culture_groups = process_cultures(modpath, build)
     if not NUKE_IT_FROM_ORBIT:
         religions, religion_groups = ck2parser.religions(modpath)
@@ -168,7 +169,7 @@ def main():
                 f.write(tree.str())
 
     # process history
-    process_history(modpath, build, extra_keys)
+    prov_title = process_history(modpath, build, extra_keys)
 
     if NUKE_IT_FROM_ORBIT:
         outrows = [[''] * 15]
@@ -193,6 +194,9 @@ def main():
                                                    culture_re, religion_re)
 
     def check_key(key):
+        outrow = [''] * 15
+        outrow[0] = key
+        outrow[-1] = 'x'
         lt_match = re.match(r'[ekdcb]_((?!_adj($|_)).)*', key)
         prov_match = re.fullmatch(r'PROV(\d+)', key)
         if lt_match:
@@ -205,6 +209,7 @@ def main():
             prov_id = int(prov_match.group(1))
             if not (0 < prov_id < max_provs):
                 return None
+            outrow[1] = prov_title.get(key, '')
         elif re.fullmatch(misc_regex, key):
             pass
         elif re.fullmatch(noble_regex, key):
@@ -213,9 +218,6 @@ def main():
             pass
         else:
             return None
-        outrow = [''] * 15
-        outrow[0] = key
-        outrow[-1] = 'x'
         return outrow
 
     if AUDIT:
