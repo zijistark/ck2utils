@@ -18,12 +18,6 @@ $ARCHIVE_DIR_DEFAULT = undef unless -d $ARCHIVE_DIR_DEFAULT;
 my $USER_DIR_DEFAULT = File::Spec->catdir($home_doc_dir, 'Paradox Interactive', 'Crusader Kings II');
 $USER_DIR_DEFAULT = undef unless -d $USER_DIR_DEFAULT;
 
-if ($USER_DIR_DEFAULT) {
-	
-}
-
-my $MOD_USER_DIR_DEFAULT = File::Spec->catdir($home_doc_dir, 'Paradox Interactive', 'Crusader Kings II')
-
 
 my $opt_archive_dir = $ARCHIVE_DIR_DEFAULT;
 my $opt_user_dir = $USER_DIR_DEFAULT;
@@ -48,7 +42,7 @@ GetOptions(
 	'ctd|resume-ctd' => sub { $opt_resume_reason = 'CTD' },
 	'normal|resume-normal' => sub { $opt_resume_reason = 'Normal' },
 	'no-compression' => sub { $opt_compress = 0 },
-	'no-save-archiving' => sub = { $opt_archive = 0 },
+	'no-save-archiving' => sub { $opt_archive = 0 },
 ) or croak;
 
 $opt_continue = 1 if $opt_resume_reason;
@@ -88,7 +82,7 @@ unless (-d $save_dir) {
 }
 
 unless (-d $gamelog_dir) {
-	mkdir $gamelog_dir or croak "folder creation failed: $!: $game_log_dir";
+	mkdir $gamelog_dir or croak "folder creation failed: $!: $gamelog_dir";
 }
 
 if (-e $pid_file) {
@@ -184,7 +178,7 @@ while (1) {
 		my $gl_new_size;
 
 		unless (defined $gl_st) {
-			print STDERR "WARNING: could not stat game.log when rotating save: $!"
+			print STDERR "WARNING: could not stat game.log when rotating save: $!\n";
 			$gl_new_size = 0;
 		}
 		else {
@@ -208,6 +202,9 @@ while (1) {
 			$glf->print($gl_new_data);
 			$glf->close;
 		}
+		elsif ($gl_bytes_grown < 0) {
+			print STDERR "WARNING: game.log was truncated, implying restart of CK2: excluding this autosave's timing\n";
+		}
 		
 		$gl_size = $gl_new_size;
 		
@@ -228,13 +225,13 @@ while (1) {
 			$reason_for_no_timing = 'Unknown';
 		}
 		else {
-			$elapsed = $st->mtime-$as_mtime;
-			$bf->print($counter, ';', $st->mtime-$as_mtime, ';', $size_mb, ';;', "\n");
+			$elapsed = $st->mtime - $as_mtime;
 		}
+		
+		$as_mtime = $st->mtime; # rotate the previous mtime
 		
 		$bf->print($counter, ';', $elapsed, ';', $size_mb, ';', $reason_for_no_timing, ';', "\n");
 		$bf->flush;
-		$as_mtime = $st->mtime; # rotate the previous mtime
 		
 		# and we now update the series index (for benchmark purposes, an interval of
 		# a year is assumed, and the offsets start at 0; hence, only updating now)
@@ -246,7 +243,9 @@ while (1) {
 		my $dest_file = "$opt_name.$counter.ck2";
 		File::Copy::move($autosave_file, "$archive_dir/$dest_file") or croak $!;
 		
-		print STDERR "archived: $dest_file (".($now-$time_last)."s)\n";
+		print STDERR "archived: $dest_file";
+		print STDERR " (${elapsed}sec)" if $elapsed;
+		print STDERR "\n";
 		$time_last = time();
 	}
 	
