@@ -134,20 +134,20 @@ else {
 	mkdir $archive_dir or croak "folder creation failed: $!: $archive_dir";
 	update_counter_file();
 	open($bf, '>', $bench_file) or croak "file open failed: $!: $bench_file";
-	$bf->print("Relative Year;Duration (seconds);File Size (MB);Resume Reason;Comment\n");
+	$bf->print("Sample ID;Date;Duration (seconds);File Size (MB);Resume Reason;Comment\n");
 }
 
 my $as_mtime = (-f $autosave_file) ? stat($autosave_file)->mtime : 0;
 my $gl_size = 0;
-my $waiting = 1;
+my $waiting = 0;
 
 while (1) {
 
-	if ($waiting) {
+	if ($waiting % 10 == 0) {
 		print STDERR "Waiting for first autosave (start the game)...\n";
-		$waiting = 0; # only print this reminder at the start
+		++$waiting; # only print this reminder every 10sec
 		
-		if ($opt_daemon) {
+		if ($opt_daemon && $waiting == 0) {
 			my $pid = daemonize();
 
 			if ($pid) {
@@ -168,6 +168,8 @@ while (1) {
 	if (defined $st && $st->mtime > $as_mtime) {
 		# autosave file is present and its mtime is newer than previously recorded
 		
+		$waiting = -1;
+		
 		# sleep an extra 10 seconds to allow for the game to do a slow write-out
 		# of a very large save.  we may otherwise catch the file in the middle of
 		# being written.
@@ -178,7 +180,7 @@ while (1) {
 		my $gl_new_size;
 
 		unless (defined $gl_st) {
-			print STDERR "WARNING: could not stat game.log when rotating save: $!\n";
+			print STDERR "ERROR: could not stat game.log when rotating save: $!\n";
 			$gl_new_size = 0;
 		}
 		else {
@@ -203,7 +205,7 @@ while (1) {
 			$glf->close;
 		}
 		elsif ($gl_bytes_grown < 0) {
-			print STDERR "WARNING: game.log was truncated, implying restart of CK2: excluding this autosave's timing\n";
+			print STDERR "WARNING: game.log was truncated, implying restart of CK2: excluding autosave's timing...\n";
 		}
 		
 		$gl_size = $gl_new_size;
@@ -212,11 +214,19 @@ while (1) {
 		# (and, if benchmarking, we want the exact time between the end-of-write
 		# of autosaves)
 		$st = stat($autosave_file);
+		my $date = parse_savegame_date($autosave_file);
 		
-		my $size_mb = sprintf('%0.1f', $st->size / 1_000_000);
-	
 		my $elapsed = '';
 		my $reason_for_no_timing = '';
+		my $sdate = '';
+		my $size_mb = sprintf('%0.1f', $st->size / 1_000_000);
+		
+		unless ($date) {
+			print STDERR "ERROR: could not extract date from autosave!\n";
+		}
+		else = {
+			$sdate = sprintf("%04d.%02d.%02d", @$date);
+		}
 	
 		if ($counter == $counter_start) { # the first save in a run can't be clocked
 			$reason_for_no_timing = ($counter) ? $opt_resume_reason : '';
@@ -230,7 +240,7 @@ while (1) {
 		
 		$as_mtime = $st->mtime; # rotate the previous mtime
 		
-		$bf->print($counter, ';', $elapsed, ';', $size_mb, ';', $reason_for_no_timing, ';', "\n");
+		$bf->print($counter, ';', $sdate, ';', $elapsed, ';', $size_mb, ';', $reason_for_no_timing, ';', "\n");
 		$bf->flush;
 		
 		# and we now update the series index (for benchmark purposes, an interval of
@@ -240,7 +250,7 @@ while (1) {
 		
 		# now move the save to the head of our archive series
 
-		my $dest_file = "$opt_name.$counter.ck2";
+		my $dest_file = "$opt_name.$sdate.ck2.gz";
 		File::Copy::move($autosave_file, "$archive_dir/$dest_file") or croak $!;
 		
 		print STDERR "archived: $dest_file";
@@ -286,3 +296,20 @@ sub detach {
 	$pf->print($$);
 	$pf->close;
 }
+
+sub parse_savegame_date {
+	my $filename = shift;
+	my $date = undef;
+	
+	open(my $sf, '<', $filename) or croak "failed to open savegame file: $!: $filename";
+	
+	while (<$sf>) {
+		next unless /^\tdate="(\d{3,4})\.(\d{1,2})\.(\d{1,2})"/;
+		$date = [0+$1, 0+$2, 0+$3];
+		last;
+	}
+	
+	$sf->close;
+	return $date;
+}
+
