@@ -15,6 +15,8 @@ while (<>) {
 		next;
 	}
 	
+	$msg = "\a$msg" if ($msg =~ 'ASSERT' || $msg =~ 'SERIOUS' || $msg =~ 'ERROR');
+	
 	if ($ml) {
 		print "> $msg\n";
 	}
