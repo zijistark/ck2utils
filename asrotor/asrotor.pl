@@ -225,11 +225,11 @@ while (1) {
 			print STDERR "ERROR: could not extract date from autosave!\n";
 		}
 		else = {
-			$sdate = sprintf("%04d.%02d.%02d", @$date);
+			$sdate = sprintf("%04d-%02d-%02d", @$date);
 		}
 	
 		if ($counter == $counter_start) { # the first save in a run can't be clocked
-			$reason_for_no_timing = ($counter) ? $opt_resume_reason : '';
+			$reason_for_no_timing = $opt_resume_reason if $counter;
 		}
 		elsif ($gl_bytes_grown < 0) {
 			$reason_for_no_timing = 'Unknown';
@@ -243,18 +243,28 @@ while (1) {
 		$bf->print($counter, ';', $sdate, ';', $elapsed, ';', $size_mb, ';', $reason_for_no_timing, ';', "\n");
 		$bf->flush;
 		
-		# and we now update the series index (for benchmark purposes, an interval of
-		# a year is assumed, and the offsets start at 0; hence, only updating now)
 		++$counter;
 		update_counter_file();
 		
-		# now move the save to the head of our archive series
+		# now move the save to the head of our archive series, if archiving
 
-		my $dest_file = "$opt_name.$sdate.ck2.gz";
-		File::Copy::move($autosave_file, "$archive_dir/$dest_file") or croak $!;
+		if ($opt_archive) {
+			if ($opt_compress) {
+				my $dest_file = "$sdate.ck2.gz";
+				# TODO: actually fork() and redirect STDIN/STDOUT and exec gzip, as this won't allow series
+				# to have names with apostrophes, for one thing.
+				(system("gzip < '$autosave_file' > '$archive_dir/$dest_file'") == 0)
+					or croak "ERROR: failed to gzip save: $!";
+			}
+			else {
+				my $dest_file = "$sdate.ck2";
+				File::Copy::move($autosave_file, "$archive_dir/$dest_file") or croak $!;
+			}
+		}
+
 		
-		print STDERR "archived: $dest_file";
-		print STDERR " (${elapsed}sec)" if $elapsed;
+		print STDERR "processed save (date: $sdate)";
+		print STDERR " in ${elapsed}sec" if $elapsed;
 		print STDERR "\n";
 		$time_last = time();
 	}
