@@ -224,7 +224,7 @@ while (1) {
 		unless ($date) {
 			print STDERR "ERROR: could not extract date from autosave!\n";
 		}
-		else = {
+		else {
 			$sdate = sprintf("%04d-%02d-%02d", @$date);
 		}
 	
