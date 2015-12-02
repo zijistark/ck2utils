@@ -194,10 +194,8 @@ while (1) {
 			
 			open(my $glf, '<', $gamelog_file) or croak "file open failed: $!: $gamelog_file";
 			$glf->seek($gl_size, 0);
-			
 			($glf->read($gl_new_data, $gl_bytes_grown) == $gl_bytes_grown)
 				or croak "read of $gl_bytes_grown bytes failed: $!: $gamelog_file";
-			
 			$glf->close;
 			
 			open($glf, '>>', $log_file) or croak "file open failed: $!: $log_file";
@@ -206,6 +204,20 @@ while (1) {
 		}
 		elsif ($gl_bytes_grown < 0) {
 			print STDERR "WARNING: game.log was truncated, implying restart of CK2: excluding autosave's timing...\n";
+			
+			my $gl_new_data;
+			
+			if ($gl_new_size) {
+				open(my $glf, '<', $gamelog_file) or croak "file open failed: $!: $gamelog_file";
+				($glf->read($gl_new_data, $gl_new_size) == $gl_new_size)
+					or croak "read of $gl_new_size bytes failed: $!: $gamelog_file";
+				$glf->close;
+			}
+				
+			open($glf, '>>', $log_file) or croak "file open failed: $!: $log_file";
+			$glf->print("=" x 72, "\n", "==== GAME.LOG TRUNCATED!\n", "=" x 72, "\n");
+			$glf->print($gl_new_data) if $gl_new_data;
+			$glf->close;
 		}
 		
 		$gl_size = $gl_new_size;
