@@ -214,7 +214,7 @@ while (1) {
 				$glf->close;
 			}
 				
-			open($glf, '>>', $log_file) or croak "file open failed: $!: $log_file";
+			open(my $glf, '>>', $log_file) or croak "file open failed: $!: $log_file";
 			$glf->print("=" x 72, "\n", "==== GAME.LOG TRUNCATED!\n", "=" x 72, "\n");
 			$glf->print($gl_new_data) if $gl_new_data;
 			$glf->close;
