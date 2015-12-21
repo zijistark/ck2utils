@@ -18,7 +18,7 @@ using namespace boost::filesystem;
 /* TODO: use Boost::ProgramOptions (or just a config file), and end this nonsense */
 const path VROOT_DIR("D:/SteamLibrary/steamapps/common/Crusader Kings II");
 const path ROOT_DIR("D:/g/SWMH-BETA/SWMH");
-const path OUT_ROOT_DIR("D:/g/minswmh/minswmh");
+const path OUT_ROOT_DIR("D:/g/MiniSWMH/MiniSWMH");
 const path TITLES_PATH("common/landed_titles/swmh_landed_titles.txt"); // only uses this landed_titles file
 
 void print_block(int indent, const pdx::block*);
