@@ -121,7 +121,6 @@ def process_landed_titles():
 
 def main():
     global modpath
-    start_time = time.time()
     if len(sys.argv) > 1:
         modpath = pathlib.Path(sys.argv[1])
     titles, titles_de_jure = process_landed_titles()
@@ -138,6 +137,8 @@ def main():
                       '<vanilla>' / path.relative_to(vanilladir)))
             else:
                 check_titles(path, titles)
+    for _ in ck2parser.parse_files('history/characters/*.txt', modpath, minipath):
+        pass # just parse it to see if it parses
     globs = [
         'events/*.txt',
         'decisions/*.txt',
@@ -173,8 +174,10 @@ def main():
                         rel_path = '<vanilla>' / path.relative_to(vanilladir)
                     print('\t' + str(rel_path), *titles, sep='\n\t\t', file=fp)
 
-    end_time = time.time()
-    print('Time: {} s'.format(end_time - start_time))
-
 if __name__ == '__main__':
-    main()
+    start_time = time.time()
+    try:
+        main()
+    finally:
+        end_time = time.time()
+        print('Time: {} s'.format(end_time - start_time))
