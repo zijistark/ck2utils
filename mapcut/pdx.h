@@ -12,6 +12,7 @@
 #include <cstring>
 #include <cassert>
 #include <cstdint>
+#include <cstdio>
 
 
 namespace pdx {
@@ -97,6 +98,8 @@ namespace pdx {
     bool is_list()    const noexcept { return type == LIST; }
     bool is_date()    const noexcept { return type == DATE; }
 
+    void print(FILE*, uint indent = 0);
+
     void store_date_from_str(char* str, lexer* p_lex = nullptr);
   };
 
@@ -108,6 +111,8 @@ namespace pdx {
       return (key.type == obj::STR
               && strcmp(key.data.s, s) == 0);
     }
+
+    void print(FILE*, uint indent = 0);
   };
 
   struct plexer : public lexer {
@@ -146,6 +151,8 @@ namespace pdx {
 
     block() { }
     block(plexer&, bool is_root = false, bool is_save = false);
+
+    void print(FILE*, uint indent = 0);
 
   protected:
     static block EMPTY_BLOCK;

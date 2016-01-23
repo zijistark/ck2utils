@@ -21,10 +21,6 @@ const path ROOT_DIR("D:/g/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("D:/g/MiniSWMH/MiniSWMH");
 const path TITLES_PATH("common/landed_titles/swmh_landed_titles.txt"); // only uses this landed_titles file
 
-void print_block(int indent, const pdx::block*);
-void print_stmt(int indent, const pdx::stmt&);
-void print_obj(int indent, const pdx::obj&);
-
 typedef std::vector<std::string> strvec_t;
 typedef std::unordered_map<std::string, uint> str2id_map_t;
 
@@ -294,67 +290,6 @@ void blank_title_history(const strvec_t& deleted_titles) {
             fclose(f);
             ++g_stats.n_title_hist_blanked;
         }
-    }
-}
-
-
-void print_block(int indent, const pdx::block* p_b) {
-    for (auto&& s : p_b->stmt_list)
-        print_stmt(indent, s);
-}
-
-
-void print_stmt(int indent, const pdx::stmt& s) {
-    printf("%*s", indent, "");
-    print_obj(indent, s.key);
-    printf(" = ");
-    print_obj(indent, s.val);
-    printf("\n");
-}
-
-
-void print_obj(int indent, const pdx::obj& o) {
-
-    using namespace pdx;
-
-    if (o.type == obj::STR) {
-        if (!strchr(o.data.s, ' ')) // not the only time to quote, but whatever
-            printf("%s", o.data.s);
-        else
-            printf("\"%s\"", o.data.s);
-    }
-    else if (o.type == obj::INT) {
-        printf("%d", o.data.i);
-    }
-    else if (o.type == obj::DECIMAL) {
-        printf("%s", o.data.s);
-    }
-    else if (o.type == obj::DATE) {
-        printf("%s", o.data.s);
-    }
-    else if (o.type == obj::TITLE) {
-        printf("%s", o.data.s);
-    }
-    else if (o.type == obj::BLOCK) {
-        printf("{\n");
-        print_block(indent+4, o.data.p_block);
-        printf("%*s}", indent, "");
-    }
-    else if (o.type == obj::LIST) {
-        printf("{ ");
-
-        for (auto&& i : o.data.p_list->obj_list) {
-            print_obj(indent, i);
-            printf(" ");
-        }
-
-        printf("}");
-    }
-    else if (o.type == obj::COLOR) {
-        printf("{ %u %u %u }", o.data.color.r, o.data.color.g, o.data.color.b);
-    }
-    else {
-        assert(false);
     }
 }
 
