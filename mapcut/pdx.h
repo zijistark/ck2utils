@@ -11,11 +11,38 @@
 
 #include <cstring>
 #include <cassert>
+#include <cstdint>
+
 
 namespace pdx {
 
   struct block;
   struct list;
+
+  struct date_t {
+    uint16_t y;
+    uint8_t  m;
+    uint8_t  d;
+
+    bool operator<(const date_t e) const noexcept {
+      /* note that since our binary representation is simpy a 32-bit unsigned integer
+       * and since our fields are MSB to LSB, we could just compare date_t as a uint,
+       * but this is the more correct pattern for multi-field comparison, and I don't
+       * feel the need to optimize this. :) */
+      if (y < e.y) return true;
+      if (e.y < y) return false;
+      if (m < e.m) return true;
+      if (e.m < y) return false;
+      if (d < e.d) return true;
+      if (e.d < d) return false;
+      return false;
+    }
+
+    uint16_t year()  const noexcept { return y; }
+    uint8_t  month() const noexcept { return m; }
+    uint8_t  day()   const noexcept { return d; }
+
+  } __attribute__ ((packed)); // do indeed make a 32-bit POD out of this
 
   struct obj {
     uint type;
@@ -31,6 +58,7 @@ namespace pdx {
         uint8_t g;
         uint8_t b;
       } color;
+      date_t date;
     } data;
 
     static const uint STR     = 0;
@@ -45,12 +73,13 @@ namespace pdx {
 
     obj() : type(STR) {}
 
-    /* more readable accessors (checked type) */
-    char*  as_c_str()   const noexcept { assert(type == STR); return data.s; }
-    int    as_integer() const noexcept { assert(type == INT); return data.i; }
+    /* more readable accessors (silently-checked type) */
+    char*  as_c_str()   const noexcept { assert(type == STR);   return data.s; }
+    int    as_integer() const noexcept { assert(type == INT);   return data.i; }
     char*  as_title()   const noexcept { assert(type == TITLE); return data.s; }
     block* as_block()   const noexcept { assert(type == BLOCK); return data.p_block; }
-    list*  as_list()    const noexcept { assert(type == LIST); return data.p_list; }
+    list*  as_list()    const noexcept { assert(type == LIST);  return data.p_list; }
+    date_t as_date()    const noexcept { assert(type == DATE);  return data.date; }
 
     /* more readable accessors (unchecked type) */
     char*  c_str()   const noexcept { return data.s; }
@@ -58,13 +87,24 @@ namespace pdx {
     char*  title()   const noexcept { return data.s; }
     block* block()   const noexcept { return data.p_block; }
     list*  list()    const noexcept { return data.p_list; }
+    date_t date()    const noexcept { return data.date; }
+
+    /* type accessors */
+    bool is_c_str()   const noexcept { return type == STR; }
+    bool is_integer() const noexcept { return type == INT; }
+    bool is_title()   const noexcept { return type == TITLE; }
+    bool is_block()   const noexcept { return type == BLOCK; }
+    bool is_list()    const noexcept { return type == LIST; }
+    bool is_date()    const noexcept { return type == DATE; }
+
+    void store_date_from_str(char* str, lexer* p_lex = nullptr);
   };
 
   struct stmt {
     obj key;
     obj val;
 
-    bool key_eq(const char* s) {
+    bool key_eq(const char* s) const noexcept {
       return (key.type == obj::STR
               && strcmp(key.data.s, s) == 0);
     }
