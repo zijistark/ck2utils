@@ -14,6 +14,11 @@ import ck2parser
 rootpath = ck2parser.rootpath
 vanilladir = ck2parser.vanilladir
 modpath = rootpath / 'SWMH-BETA/SWMH'
+minipath = rootpath / 'MiniSWMH/MiniSWMH'
+
+MINISWMH = False
+
+source_paths = (modpath, minipath) if MINISWMH else (modpath,)
 
 results = {True: collections.defaultdict(list),
            False: collections.defaultdict(list)}
@@ -80,17 +85,26 @@ def check_regions(titles, titles_de_jure):
                 check_title(v, path, titles, line=v)
                 check_region(v)
 
-    path = modpath / 'map/geographical_region.txt'
+    path = (minipath if MINISWMH else modpath) / 'map/geographical_region.txt'
     tree = ck2parser.parse_file(path)
     recurse(tree)
     return bad_titles
 
 def check_province_history(titles):
-    id_name = ck2parser.province_id_name_map(modpath)
-    for path in ck2parser.files('history/provinces/*', modpath):
+    tree = ck2parser.parse_file(modpath / 'map/default.map')
+    defs = tree['definitions'].val
+    _max_provinces = int(tree['max_provinces'].val)
+    id_name_map = {}
+    for row in ck2parser.csv_rows(
+        (minipath if MINIPATH else modpath) / 'map' / defs):
+        try:
+            id_name_map[int(row[0])] = row[4]
+        except (IndexError, ValueError):
+            continue
+    for path in ck2parser.files('history/provinces/*', *source_paths):
         number, name = path.stem.split(' - ')
         number = int(number)
-        if id_name[number] == name:
+        if id_name_map[number] == name:
             check_titles(path, titles)
 
 def process_landed_titles():
@@ -114,7 +128,7 @@ def process_landed_titles():
                         parent_is_titular = False
         return parent_is_titular
 
-    for path in ck2parser.files('common/landed_titles/*', modpath):
+    for path in ck2parser.files('common/landed_titles/*', *source_paths):
         recurse(ck2parser.parse_file(path))
     # print('{} titles, {} de jure'.format(len(titles), len(titles_de_jure)))
     return titles, titles_de_jure
@@ -126,11 +140,13 @@ def main():
     titles, titles_de_jure = process_landed_titles()
     check_province_history(titles)
     bad_region_titles = check_regions(titles, titles_de_jure)
-    for path in ck2parser.files('history/titles/*.txt', modpath):
+    for path in ck2parser.files('history/titles/*.txt', *source_paths):
         tree = ck2parser.parse_file(path)
         if tree.contents:
             good = check_title(path.stem, path, titles)
-            if not good and modpath not in path.parents:
+            if (not good and
+                modpath not in path.parents and
+                not (MINISWMH and minipath in path.parents)):
                 newpath = modpath / 'history/titles' / path.name
                 # newpath.open('w').close()
                 print('Should override {} with blank file'.format(
@@ -154,7 +170,7 @@ def main():
         'common/achievements.txt'
         ]
     for glob in globs:
-        for path in ck2parser.files(glob, modpath):
+        for path in ck2parser.files(glob, *source_paths):
             check_titles(path, titles)
     with (rootpath / 'check_titles.txt').open('w', encoding='cp1252') as fp:
         if bad_region_titles:
@@ -170,6 +186,8 @@ def main():
                 if titles:
                     if modpath in path.parents:
                         rel_path = '<mod>' / path.relative_to(modpath)
+                    elif MINISWMH and minipath in path.parents:
+                        rel_path = '<mod>' / path.relative_to(minipath)
                     else:
                         rel_path = '<vanilla>' / path.relative_to(vanilladir)
                     print('\t' + str(rel_path), *titles, sep='\n\t\t', file=fp)

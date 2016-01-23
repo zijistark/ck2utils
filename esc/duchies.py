@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Ioannes Barbarus
 # nicholas.escalona@gmail.com
 
@@ -16,6 +18,7 @@ import operator
 import pathlib
 import re
 import statistics
+import time
 import funcparserlib
 import funcparserlib.lexer
 import funcparserlib.parser
@@ -24,9 +27,9 @@ import numpy
 import PIL
 import PIL.Image
 import tabulate
+import localpaths
 
-CKII_DIR = pathlib.Path(
-    'C:/Program Files (x86)/Steam/SteamApps/common/Crusader Kings II')
+CKII_DIR = localpaths.vanilladir
 
 OUTPUT_FILE = pathlib.Path('C:/Users/Nicholas/Desktop/table.txt')
 BORDERS_PATH = pathlib.Path('C:/Users/Nicholas/Pictures/CKII/borderlayer.png')
@@ -43,7 +46,7 @@ class Interval:
             return False
 
 class Title:
-    instances = {}
+    instances = collections.OrderedDict()
     id_title_map = {}
     id_name_map = {}
     rgb_id_map = {}
@@ -51,6 +54,7 @@ class Title:
     rivers = set()
     # seas = set()
     province_graph = networkx.Graph()
+    duchy_graph = networkx.Graph()
     kingdom_graph = networkx.Graph()
 
     @classmethod
@@ -83,7 +87,7 @@ class Title:
         if not Title.valid_codename(title):
             raise ValueError('Invalid title {}'.format(title))
         if create_if_missing and title not in Title.instances:
-            Title.instances[title] = Title(title)
+            Title(title)
         return Title.instances[title]
 
     def __init__(self, codename):
@@ -104,7 +108,7 @@ class Title:
                              self.codename, province_id))
         self.id = province_id
         Title.id_title_map[province_id] = self
-        if self.name == self.codename:
+        if self.codename.startswith('c_'):
             key = 'PROV{}'.format(self.id)
             self.set_name(localisation.get(key, self.codename))
 
@@ -316,7 +320,11 @@ def process_titles(titles_txts):
 
 def parse_csvs(paths, row_func):
     for path in paths:
-        parse_csv(path, row_func)
+        try:
+            parse_csv(path, row_func)
+        except:
+            print(path)
+            raise
 
 def parse_csv(path, row_func):
     with path.open(encoding='latin-1', newline='') as csvfile:
@@ -325,9 +333,10 @@ def parse_csv(path, row_func):
             row_func(row)
 
 def process_localisation_row(row):
-    key, value, *_ = row
-    if key not in localisation:
-        localisation[key] = value
+    if row:
+        key, value, *_ = row
+        if key not in localisation:
+            localisation[key] = value
 
 # pre: process_provinces
 def process_default_map(default_map):
@@ -526,6 +535,60 @@ def duchy_stats():
     print('mean: {}'.format(mean))
     print('median: {}'.format(median))
 
+def provinces_info():
+    start = datetime.date(769, 1, 1)
+    holdings_freqs = collections.defaultdict(int)
+    k_g4 = collections.defaultdict(int)
+    k_holdings = collections.defaultdict(int)
+    fives = []
+    for c in Title.counties():
+        kingdom = c.liege(start).liege(start)
+        empire = kingdom.liege(start)
+        k_holdings[kingdom] += 1
+        k_holdings[empire] += 1
+        if c.max_holdings > 4:
+            k_g4[kingdom] += 1
+            # k_g4[empire] += 1
+            if c.max_holdings == 5:
+                fives.append(c.name)
+        holdings_freqs[c.max_holdings] += 1
+    kingdom_g4_excess = [(4 * k_g4[k] - k_holdings[k], k.name) for k in k_g4]
+    # kingdom_g4_excess = [(k_g4[k] / k_holdings[k], k.name) for k in k_g4]
+    print(holdings_freqs)
+    # print('\n'.join('{0: 3}  {1}'.format(*x) for x in sorted(kingdom_g4_excess)))
+    # print('\n'.join('{:4%}\t{}'.format(*x) for x in sorted(kingdom_g4_excess)))
+    # print(sum(x for x, _ in sorted(kingdom_g4_excess)))
+    print('\n'.join(fives[:-43:-1]))
+
+def check_nomads():
+    start = datetime.date(769, 1, 1)
+    county_of_name = {}
+    crash = False
+    for c in Title.counties():
+        names = c.other_names + [c.name]
+        for name in names:
+            if c.codename == 'c_lothian' and name == 'Lut':
+                continue # only case of dumb duplicate
+            if name in county_of_name:
+                print('duplicate name ' + name)
+                crash = True
+            county_of_name[name] = c
+    if crash:
+        raise SystemExit()
+    ruler_provs = [county_of_name[name] for name in ruler_prov_names]
+    clan_provs = [c for c in Title.counties() if c not in ruler_provs]
+    holdings = collections.defaultdict(list)
+    for c in ruler_provs:
+        holdings[c.max_holdings].append(c)
+    print('ruler provs: {}'.format(len(ruler_provs)))
+    print('clan provs: {}'.format(len(clan_provs)))
+    print('ruler proportion: {:%}'.format(
+          len(ruler_provs) / (len(ruler_provs) + len(clan_provs))))
+    print('ruler holding frequencies: {}'.format(
+          [(k, len(v)) for k, v in holdings.items()]))
+    wrong = sum((holdings[k] for k in holdings if k < 5), [])
+    print('wrong holdings: {}'.format([c.name for c in wrong]))
+
 def format_other_provs_table():
     def rows():    
         # dunno why broken , temp fix
@@ -590,6 +653,62 @@ def format_other_provs_table():
 #         Title.kingdom_graph.node[u]['color'] = color
 #         print(color, u)
 
+def duchy_path():
+    from pprint import pprint
+    west_europe = {
+        'd_northumberland', 'd_lancaster', 'd_york', 'd_norfolk', 'd_bedford',
+        'd_hereford', 'd_gloucester', 'd_canterbury','d_somerset', 'd_gwynedd',
+        'd_powys', 'd_deheubarth', 'd_cornwall', 'd_the_isles', 'd_galloway',
+        'd_western_isles', 'd_lothian', 'd_albany', 'd_moray', 'd_ulster',
+        'd_connacht', 'd_meath', 'd_leinster', 'd_munster', 'd_upper_burgundy',
+        'd_savoie', 'd_holland', 'd_gelre', 'd_luxembourg', 'd_upper_lorraine',
+        'd_lower_lorraine', 'd_alsace', 'd_bavaria', 'd_osterreich', 'd_tyrol',
+        'd_brunswick', 'd_thuringia', 'd_koln', 'd_franconia', 'd_baden',
+        'd_swabia', 'd_mecklemburg', 'd_pommerania', 'd_pomeralia', 'd_saxony',
+        'd_brandenburg', 'd_meissen', 'd_bohemia', 'd_moravia', 'd_berry',
+        'd_anjou', 'd_normandy', 'd_orleans', 'd_champagne', 'd_valois',
+        'd_burgundy', 'd_aquitaine', 'd_toulouse', 'd_gascogne', 'd_poitou',
+        'd_auvergne', 'd_bourbon', 'd_brittany', 'd_provence', 'd_dauphine',
+        'd_brabant', 'd_flanders', 'd_castilla', 'd_aragon', 'd_barcelona',
+        'd_valencia', 'd_mallorca', 'd_navarra', 'd_asturias', 'd_leon',
+        'd_galicia', 'd_porto', 'd_beja', 'd_algarve', 'd_cordoba', 'd_murcia',
+        'd_granada', 'd_sevilla', 'd_badajoz', 'd_toledo'
+    }
+    east_steppe = {
+        'd_zhetysu', 'd_kirghiz', 'd_kumul', 'd_altay', 'd_otuken',
+        'd_khangai', 'd_ikh_bogd'
+    }
+    when = datetime.date(769, 1, 1)
+    for u, v in Title.province_graph.edges_iter():
+        try:
+            d_u = Title.id_title_map[u].liege(when).codename
+            d_v = Title.id_title_map[v].liege(when).codename
+        except KeyError:
+            continue
+        if d_u in west_europe:
+            d_u = 'world_europe_west'
+        if d_u in east_steppe:
+            d_u = 'world_steppe_east'
+        if d_v in west_europe:
+            d_v = 'world_europe_west'
+        if d_v in east_steppe:
+            d_v = 'world_steppe_east'
+        if d_u is not d_v:
+            Title.duchy_graph.add_edge(d_u, d_v)
+    paths = list(networkx.all_shortest_paths(Title.duchy_graph,
+                                             'world_europe_west',
+                                             'world_steppe_east'))
+    pprint(paths)
+    # [['world_europe_west',
+    #   'd_prussia',
+    #   'd_lithuanians',
+    #   'd_vitebsk',
+    #   'd_novgorod',
+    #   'd_beloozero',
+    #   'd_hlynov',
+    #   'd_perm',
+    #   'd_yugra',
+    #   'world_steppe_east']]
 
 # TODO: refactor stuff
 def main():
@@ -612,11 +731,15 @@ def main():
     parse_csv(map_adjacencies, process_map_adjacencies_row)
 
     # duchy_stats()
-    # output = format_duchies_table()
+    # provinces_info()
+    # duchy_path()
+    # check_nomads()
+
+    output = format_duchies_table()
 
     # output = format_counties_table()
 
-    output = format_other_provs_table()
+    # output = format_other_provs_table()
 
     output = re.sub(r' {2,}', ' ', output)
     with OUTPUT_FILE.open('w') as f:
@@ -632,4 +755,9 @@ def main():
 #     parse_map_provinces(CKII_DIR / 'map/provinces_test.bmp')
 
 if __name__ == '__main__':
-    main()
+    start_time = time.time()
+    try:
+        main()
+    finally:
+        end_time = time.time()
+        print('Time: {:g} s'.format(end_time - start_time))
