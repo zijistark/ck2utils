@@ -20,7 +20,7 @@ struct bmp_file_header {
     int32_t  n_height; // if negative, bitmap uses top-to-bottom scan order rather than bottom-to-top
     uint16_t n_planes; // should be 1
     uint16_t n_bpp; // in our case, should be 24
-    uint16_t compression_type; // should be 0 for BI_RGB (no compression)
+    uint32_t compression_type; // should be 0 for BI_RGB (no compression)
     uint32_t n_bitmap_size; // 0 or size of raw bitmap image data section
     int32_t  x_resolution; // horizontal resolution (pixels/meter)
     int32_t  y_resolution; // vertical resolution (pixels/meter)

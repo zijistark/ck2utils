@@ -51,21 +51,20 @@ int main(int argc, char** argv) {
         bf_hdr.n_planes = 1;
         bf_hdr.n_bpp = 8;
         bf_hdr.compression_type = 0;
-        bf_hdr.n_bitmap_size = 131072;
-        bf_hdr.x_resolution = 185729120;
-        bf_hdr.y_resolution = 185729024;
+        bf_hdr.n_bitmap_size = pm.width()*pm.height();
+        bf_hdr.x_resolution = 0;
+        bf_hdr.y_resolution = 0;
         bf_hdr.n_colors = 0;
         bf_hdr.n_important_colors = 0;
 
         uint bitmap_offset = static_cast<uint>(sizeof(bf_hdr) + 256*4);
-        assert(bitmap_offset % 4 == 0);
 
         bf_hdr.n_file_size = bitmap_offset + pm.width() * pm.height();
         bf_hdr.n_bitmap_offset = bitmap_offset;
 
         printf("width: %u\n", pm.width());
         printf("height: %u\n", pm.height());
-        printf("header size: %u\n", bf_hdr.n_bitmap_offset);
+        printf("header size: %lu\n", sizeof(bf_hdr));
         printf("bitmap offset: %u\n", bf_hdr.n_bitmap_offset);
         printf("file size: %u\n", bf_hdr.n_file_size);
 

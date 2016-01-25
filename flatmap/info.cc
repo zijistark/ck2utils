@@ -33,6 +33,7 @@ int main(int argc, char** argv) {
         if ( fread(&bf_hdr, sizeof(bf_hdr), 1, f) < 1 )
             throw va_error("failed to read bitmap file header: %s: %s", strerror(errno), path);
 
+        assert( bf_hdr.magic == BMP_MAGIC );
         printf("file size:        %u\n", bf_hdr.n_file_size);
         printf("bitmap offset:    %u (0x%04X)\n", bf_hdr.n_bitmap_offset, bf_hdr.n_bitmap_offset);
         printf("DIB header size:  %u\n", bf_hdr.n_header_size);
