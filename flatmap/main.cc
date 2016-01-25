@@ -14,8 +14,8 @@
 
 using namespace boost::filesystem;
 
-const path ROOT_PATH("D:/SteamLibrary/steamapps/common/Crusader Kings II");
-//const path ROOT_PATH("D:/g/SWMH-BETA/SWMH");
+//const path ROOT_PATH("D:/SteamLibrary/steamapps/common/Crusader Kings II");
+const path ROOT_PATH("D:/g/SWMH-BETA/SWMH");
 //const path OUT_PATH("D:/SteamLibrary/steamapps/common/Crusader Kings II/map/topology.bmp");
 //const path HEIGHTMAP_PATH("D:/g/SWMH-BETA/SWMH/map/topology.bmp");
 const path OUT_PATH("topology.bmp");
@@ -83,14 +83,17 @@ int main(int argc, char** argv) {
                 throw va_error("failed to write bitmap color index %u: %s: %s", i, strerror(errno), path);
         }
 
-        uint8_t row[pm.width()];
-
-        for (int x = 0; x < (signed)pm.width(); ++x)
-            row[x] = 0x7F;
+        const uint16_t* pm_map = pm.map();
+        uint8_t topo_row[pm.width()];
 
         for (int y = pm.height()-1; y >= 0; --y) {
 
-            if ( fwrite(&row, sizeof(row), 1, f) < 1 )
+            const uint16_t* pm_row = &pm_map[ y*pm.width() ];
+
+            for (int x = 0; x < (signed)pm.width(); ++x)
+                topo_row[x] = (pm_row[x] == province_map::TYPE_OCEAN || dm.id_is_seazone(pm_row[x])) ? 93 : 95;
+
+            if ( fwrite(&topo_row, sizeof(topo_row), 1, f) < 1 )
                 throw va_error("failed to write row y=%d of pixel array: %s: %s", y, strerror(errno), path);
         }
 

@@ -36,6 +36,8 @@ public:
     uint16_t at(uint x, uint y) const noexcept {
         return _p_map[ y*_n_width + x ];
     }
+
+    uint16_t* map() const noexcept { return _p_map; }
 };
 
 
