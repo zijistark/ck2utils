@@ -27,7 +27,6 @@ province_map::province_map(const default_map& dm)
         throw va_error("could not open file: %s: %s", strerror(errno), path);
 
     bmp_file_header bf_hdr;
-    bmp_info_header bi_hdr;
     errno = 0;
 
     if ( fread(&bf_hdr, sizeof(bf_hdr), 1, f) < 1 ) {
@@ -37,34 +36,27 @@ province_map::province_map(const default_map& dm)
             throw va_error("unexpected EOF: %s", path);
     }
 
-    if ( fread(&bi_hdr, sizeof(bi_hdr), 1, f) < 1 ) {
-        if (errno)
-            throw va_error("failed to read bitmap info header: %s: %s", strerror(errno), path);
-        else
-            throw va_error("unexpected EOF after bitmap file header: %s", path);
-    }
-
     if (bf_hdr.magic != BMP_MAGIC)
         throw va_error("unsupported bitmap file type (magic=%04x): %s", bf_hdr.magic, path);
 
-    assert( bi_hdr.n_header_size >= sizeof(bi_hdr) );
-    assert( bi_hdr.n_width > 0 );
-    assert( bi_hdr.n_height > 0 ); // TODO (though not sure if game supports top-to-bottom scan order)
-    assert( bi_hdr.n_planes == 1 );
-    assert( bi_hdr.n_bpp == 24 );
-    assert( bi_hdr.compression_type == 0 );
-    assert( bi_hdr.n_colors == 0 );
-    assert( bi_hdr.n_important_colors == 0 );
+    assert( bf_hdr.n_header_size >= 40 );
+    assert( bf_hdr.n_width > 0 );
+    assert( bf_hdr.n_height > 0 ); // TODO (though not sure if game supports top-to-bottom scan order)
+    assert( bf_hdr.n_planes == 1 );
+    assert( bf_hdr.n_bpp == 24 );
+    assert( bf_hdr.compression_type == 0 );
+    assert( bf_hdr.n_colors == 0 );
+    assert( bf_hdr.n_important_colors == 0 );
 
-    _n_width = bi_hdr.n_width;
-    _n_height = bi_hdr.n_height;
+    _n_width = bf_hdr.n_width;
+    _n_height = bf_hdr.n_height;
 
     /* calculate row size with 32-bit alignment padding */
-    uint n_row_sz = (bi_hdr.n_bpp * _n_width + 31) / 32;
+    uint n_row_sz = (bf_hdr.n_bpp * _n_width + 31) / 32;
     n_row_sz *= 4;
 
-    if (bi_hdr.n_bitmap_size)
-        assert( bi_hdr.n_bitmap_size == n_row_sz * _n_height );
+    if (bf_hdr.n_bitmap_size)
+        assert( bf_hdr.n_bitmap_size == n_row_sz * _n_height );
 
     /* allocate ID map */
     _p_map = new uint16_t[_n_width * _n_height];

@@ -1,0 +1,10 @@
+# -*- python -*-
+
+env = Environment()
+env.Append(CXXFLAGS="-Wall -Wextra -Wno-unused-function -Wno-unused-parameter -g0 -s -O3 --std=c++11")
+
+sources = ["main.cc", "province_map.cc", "default_map.cc", "lexer.cc", "pdx.cc", "token.cc"]
+sources += env.CXXFile('scanner.ll')
+
+env.Program('flatmap', sources, LIBS=["boost_filesystem", "boost_system"])
+env.Program('bmpinfo', ['info.cc'], LIBS=["boost_filesystem", "boost_system"])
