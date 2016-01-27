@@ -2,6 +2,7 @@
 #ifndef _MDH_PROVINCE_MAP_H_
 #define _MDH_PROVINCE_MAP_H_
 
+#include "definitions_table.h"
 #include "default_map.h"
 
 #include <string>
@@ -15,7 +16,7 @@ class province_map {
     uint _n_height;
 
     typedef std::unordered_map<uint32_t, uint16_t> color2id_map_t;
-    void fill_color2id_map(color2id_map_t&, const default_map&);
+    void fill_color2id_map(color2id_map_t&, const definitions_table&);
 
     template<typename T>
     static uint32_t make_color(T r, T g, T b) noexcept {
@@ -25,7 +26,7 @@ class province_map {
     }
 
 public:
-    province_map(const default_map&);
+    province_map(const default_map&, const definitions_table&);
 
     static const uint16_t TYPE_OCEAN = (1<<16)-1;
     static const uint16_t TYPE_IMPASSABLE = (1<<16)-2;
@@ -37,7 +38,7 @@ public:
         return _p_map[ y*_n_width + x ];
     }
 
-    uint16_t* map() const noexcept { return _p_map; }
+    const uint16_t* map() const noexcept { return _p_map; }
 };
 
 

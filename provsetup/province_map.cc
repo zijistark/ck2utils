@@ -1,5 +1,4 @@
 
-#include "bmp_format.h"
 #include "province_map.h"
 #include "error.h"
 #include "bmp_format.h"
@@ -11,13 +10,13 @@
 #include <cassert>
 
 
-province_map::province_map(const default_map& dm)
+province_map::province_map(const default_map& dm, const definitions_table& def_tbl)
     : _p_map(nullptr),
       _n_width(0),
       _n_height(0) {
 
     color2id_map_t color2id_map;
-    fill_color2id_map(color2id_map, dm);
+    fill_color2id_map(color2id_map, def_tbl);
 
     const fs::path p = dm.root_path() / "map" / dm.provinces_path();
     const char* path = p.c_str();
@@ -84,10 +83,10 @@ province_map::province_map(const default_map& dm)
         const uint y = _n_height-1 - row;
 
         /* cache previous pixel's value & province ID */
-        uint8_t  prev_b;
-        uint8_t  prev_g;
-        uint8_t  prev_r;
-        uint16_t prev_id;
+        uint8_t  prev_b = 0;
+        uint8_t  prev_g = 0;
+        uint8_t  prev_r = 0;
+        uint16_t prev_id = 0;
 
         for (uint x = 0; x < _n_width; ++x) {
             const auto p = &row_buf[3*x];
@@ -122,52 +121,12 @@ province_map::province_map(const default_map& dm)
 }
 
 
-void province_map::fill_color2id_map(color2id_map_t& m, const default_map& dm) {
+void province_map::fill_color2id_map(color2id_map_t& m, const definitions_table& def_tbl) {
 
-    const fs::path p = dm.root_path() / "map" / dm.definitions_path();
-    const char* path = p.c_str();
-    FILE* f;
+    uint16_t id = 0;
 
-    if ( (f = fopen(path, "rb")) == nullptr )
-        throw va_error("could not open file: %s: %s", strerror(errno), path);
-
-    char buf[128];
-    uint n_line = 0;
-
-    if ( fgets(&buf[0], sizeof(buf), f) == nullptr ) // consume CSV header
-        throw va_error("definitions file lacks at least 1 line of text: %s", path);
-
-    while ( fgets(&buf[0], sizeof(buf), f) != nullptr ) {
-
-        ++n_line;
-
-        char* p = &buf[0];
-
-        if (*p == '#')
-            continue;
-
-        char* n_str[4];
-        n_str[0] = strtok(p, ";");
-
-        for (uint x = 1; x < 4; ++x)
-            n_str[x] = strtok(nullptr, ";");
-
-        uint n[4];
-        char* p_end;
-
-        for (uint x = 0; x < 4; ++x) {
-            n[x] = strtol(n_str[x], &p_end, 10);
-            assert( *p_end == '\0' );
-        }
-
-        m.emplace( make_color(n[1], n[2], n[3]), static_cast<uint16_t>(n[0]) );
-
-        if (n[0] == dm.max_province_id())
-            break;
+    for (auto&& r : def_tbl.row_vec) {
+        ++id;
+        m.emplace(make_color(r.red, r.green, r.blue), id);
     }
-
-    fclose(f);
-
-    if (m.empty())
-        throw va_error("definitions file lacked any data: %s", path);
 }

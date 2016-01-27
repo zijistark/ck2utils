@@ -28,7 +28,8 @@ int main(int argc, char** argv) {
 
     try {
         default_map dm(ROOT_PATH);
-        province_map pm(dm);
+        definitions_table def_tbl(dm);
+        province_map pm(dm, def_tbl);
     }
     catch (std::exception& e) {
         fprintf(stderr, "fatal: %s\n", e.what());
