@@ -1,9 +1,10 @@
 
+#include "bmp_format.h"
 #include "error.h"
 #include "default_map.h"
 #include "province_map.h"
+#include "terrain.h"
 #include "pdx.h"
-#include "bmp_format.h"
 
 #include <boost/filesystem.hpp>
 
@@ -30,9 +31,12 @@ struct province {
     int terrain_id; // before automatic terrain assignment, -1 for implicit
 
     // array of terrain-type pixel counts, indexed by terrain type ID
-    uint* p_terrain_px_array;
+    uint terrain_px_array[NUM_TERRAIN];
 
-    province(uint _id) : id(_id), max_settlements(-1), terrain_id(-1), p_terrain_px_array(nullptr) { }
+    province(uint _id)
+    : id(_id), max_settlements(-1), terrain_id(-1) {
+        memset( &terrain_px_array[0], 0, sizeof(terrain_px_array) );
+    }
 };
 
 
@@ -83,8 +87,10 @@ void read_province_history(const default_map& dm,
 
         if (def.name.empty()) // wasteland | external
             continue;
-        if (dm.id_is_seazone(id)) // sea | major river
+        if (dm.id_is_seazone(id)) {
+            pr.terrain_id = TERRAIN_ID_WATER;
             continue;
+        }
 
         sprintf(filename, "%u - %s.txt", id, def.name.c_str());
 
@@ -100,26 +106,41 @@ void read_province_history(const default_map& dm,
         }
 
         const char* county = nullptr;
+        const char* terrain = nullptr;
+        int max_settlements = -1;
+
 
         pdx::plexer lex(hist_file.c_str());
         pdx::block doc(lex, true);
 
         for (auto&& s : doc.stmt_list) {
-            if (s.key_eq("title")) {
+            if (s.key_eq("title"))
                 county = s.val.as_title();
-                assert( pdx::title_tier(county) == pdx::TIER_COUNT );
-            }
+            else if (s.key_eq("terrain"))
+                terrain = s.val.as_c_str();
+            else if (s.key_eq("max_settlements"))
+                max_settlements = s.val.as_integer();
         }
 
-        if (county == nullptr) {
-            /* history file contained no title assignment.  it was probably
-               blank (for a wasteland or something). we may want to warn the
-               user about this, although the behavior of CK2's error.log
-               would suggest that empty history files ought be used for
-               wasteland (which is incorrect, causing confusion). */
-            continue;
+        assert( !( county && (max_settlements < 0 || max_settlements > 7) ) );
+
+        if (county) {
+            assert( pdx::title_tier(county) == pdx::TIER_COUNT );
+
+            pr.county = county;
+            pr.max_settlements = max_settlements;
         }
 
-        // TO BE CONTINUED...
+        if (terrain) {
+            for (int i = 0; i < NUM_TERRAIN; ++i)
+                if (TERRAIN[i].name == terrain) {
+                    pr.terrain_id = i;
+                    break;
+                }
+
+            if (pr.terrain_id < 0)
+                throw va_error("unknown terrain type '%s' in province history file: %s",
+                               terrain, hist_file.c_str());
+        }
     }
 }
