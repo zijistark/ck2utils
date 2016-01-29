@@ -12,7 +12,7 @@
 
 definitions_table::definitions_table(const default_map& dm) {
 
-    const char* path = fs::path( dm.root_path() / "map" / dm.definitions_path() ).c_str();
+    const char* path = dm.definitions_path().c_str();
     FILE* f;
 
     if ( (f = fopen(path, "rb")) == nullptr )

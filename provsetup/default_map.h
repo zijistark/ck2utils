@@ -21,6 +21,7 @@ class default_map {
     fs::path      _root_path;
     fs::path      _definitions_path;
     fs::path      _provinces_path;
+    fs::path      _terrain_path;
     id_pair_vec_t _seazone_vec;
     id_set_t      _major_river_set;
 
@@ -32,6 +33,7 @@ public:
     const fs::path& root_path()        const noexcept { return _root_path; }
     const fs::path& definitions_path() const noexcept { return _definitions_path; }
     const fs::path& provinces_path()   const noexcept { return _provinces_path; }
+    const fs::path& terrain_path()     const noexcept { return _terrain_path; }
     const id_pair_vec_t& seazone_vec() const noexcept { return _seazone_vec; }
     const id_set_t& major_river_set()  const noexcept { return _major_river_set; }
 

@@ -18,8 +18,7 @@ province_map::province_map(const default_map& dm, const definitions_table& def_t
     color2id_map_t color2id_map;
     fill_color2id_map(color2id_map, def_tbl);
 
-    const fs::path p = dm.root_path() / "map" / dm.provinces_path();
-    const char* path = p.c_str();
+    const char* path = dm.provinces_path().c_str();
     FILE* f;
 
     if ( (f = fopen(path, "rb")) == nullptr )

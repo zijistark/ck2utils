@@ -22,12 +22,12 @@ default_map::default_map(const fs::path& root_path)
             assert( max_provinces > 1 );
             _max_province_id = max_provinces - 1;
         }
-        else if (s.key_eq("definitions")) {
-            _definitions_path = s.val.as_c_str();
-        }
-        else if (s.key_eq("provinces")) {
-            _provinces_path = s.val.as_c_str();
-        }
+        else if (s.key_eq("definitions"))
+            _definitions_path = root_path / "map" / s.val.as_c_str();
+        else if (s.key_eq("provinces"))
+            _provinces_path = root_path / "map" / s.val.as_c_str();
+        else if (s.key_eq("terrain"))
+            _terrain_path = root_path / "map" / s.val.as_c_str();
         else if (s.key_eq("sea_zones")) {
             auto&& obj_list = s.val.as_list()->obj_list;
             assert( obj_list.size() == 2 );

@@ -35,7 +35,7 @@ struct province {
 
     province(uint _id)
     : id(_id), max_settlements(-1), terrain_id(-1) {
-        memset( &terrain_px_array[0], 0, sizeof(terrain_px_array) );
+        for (auto&& c : terrain_px_array) c = 0;
     }
 };
 
@@ -53,12 +53,62 @@ int main(int argc, char** argv) {
     try {
         default_map dm(ROOT_PATH);
         definitions_table def_tbl(dm);
-        province_map pm(dm, def_tbl);
 
         std::vector<province> pr_tbl;
         pr_tbl.reserve( def_tbl.row_vec.size() );
-
         read_province_history(dm, def_tbl, pr_tbl);
+
+        // province_map pm(dm, def_tbl);
+
+        const char* path = dm.terrain_path().c_str();
+        FILE* f;
+
+        if ( (f = fopen(path, "rb")) == nullptr )
+            throw va_error("could not open file: %s: %s", strerror(errno), path);
+
+        bmp_file_header bf_hdr;
+        errno = 0;
+
+        if ( fread(&bf_hdr, sizeof(bf_hdr), 1, f) < 1 ) {
+            if (errno)
+                throw va_error("failed to read bitmap header: %s: %s", strerror(errno), path);
+            else
+                throw va_error("unexpected EOF while reading bitmap header: %s", path);
+        }
+
+        assert(bf_hdr.magic == BMP_MAGIC);
+        assert(bf_hdr.n_header_size >= 40); // at least a BITMAPINFOHEADER (v3)
+        assert(bf_hdr.n_width > 0 && bf_hdr.n_width % 4 == 0);
+        assert(bf_hdr.n_height > 0);
+        assert(bf_hdr.n_planes == 1);
+        assert(bf_hdr.n_bpp == 8);
+        assert(bf_hdr.compression_type == 0);
+
+        uint palette_offset = bf_hdr.n_header_size + sizeof(bf_hdr) - 40;
+        uint n_colors = (bf_hdr.n_colors) ? bf_hdr.n_colors : (1 << 8);
+
+        if ( fseek(f, palette_offset, SEEK_SET) != 0 )
+            throw va_error("failed to seek to color table (offset=%u): %s: %s",
+                           palette_offset,
+                           strerror(errno),
+                           path);
+
+        for (uint i = 0; i < n_colors; ++i) {
+            uint8_t bgra[4];
+
+            if ( fread(&bgra[0], sizeof(bgra), 1, f) < 1 ) {
+                if (errno)
+                    throw va_error("failed to read color index %u from color table: %s: %s",
+                                   i, strerror(errno), path);
+                else
+                    throw va_error("unexpected EOF while reading color index %u from color table: %s",
+                                   i, path);
+            }
+
+            printf("%03u: (%hhu, %hhu, %hhu)\n", i, bgra[2], bgra[1], bgra[0]);
+        }
+
+        fclose(f);
     }
     catch (std::exception& e) {
         fprintf(stderr, "fatal: %s\n", e.what());
