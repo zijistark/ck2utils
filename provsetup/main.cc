@@ -11,6 +11,8 @@
 #include <cerrno>
 #include <cstring>
 #include <cassert>
+#include <vector>
+
 
 using namespace boost::filesystem;
 
@@ -25,11 +27,12 @@ struct province {
     uint id;
     std::string county; // empty when N/A (sea zones, wasteland, etc.)
     int max_settlements; // -1 for undefined
-    int terrain_id; // before automatic terrain assignment, -1 for no explicit terrain
+    int terrain_id; // before automatic terrain assignment, -1 for implicit
 
-    uint* p_terrain_px_array; // array of terrain-type pixel counts, indexed by terrain type ID
+    // array of terrain-type pixel counts, indexed by terrain type ID
+    uint* p_terrain_px_array;
 
-    province() : id(0), max_settlements(-1), terrain_id(-1), p_terrain_px_array(nullptr) { }
+    province(uint _id) : id(_id), max_settlements(-1), terrain_id(-1), p_terrain_px_array(nullptr) { }
 };
 
 
@@ -47,6 +50,11 @@ int main(int argc, char** argv) {
         default_map dm(ROOT_PATH);
         definitions_table def_tbl(dm);
         province_map pm(dm, def_tbl);
+
+        std::vector<province> pr_tbl;
+        pr_tbl.reserve( def_tbl.row_vec.size() );
+
+        read_province_history(dm, def_tbl, pr_tbl);
     }
     catch (std::exception& e) {
         fprintf(stderr, "fatal: %s\n", e.what());
@@ -57,7 +65,9 @@ int main(int argc, char** argv) {
 }
 
 
-void read_province_history(const default_map& dm, const definitions_table& def_tbl, std::vector<province>& pr_vec) {
+void read_province_history(const default_map& dm,
+                           const definitions_table& def_tbl,
+                           std::vector<province>& pr_tbl) {
 
     path hist_root = ROOT_PATH / "history/provinces";
     path hist_vroot = VROOT_PATH / "history/provinces";
@@ -67,6 +77,9 @@ void read_province_history(const default_map& dm, const definitions_table& def_t
 
     for (auto&& def : def_tbl.row_vec) {
         ++id;
+
+        pr_tbl.emplace_back(id);
+        province& pr = pr_tbl.back();
 
         if (def.name.empty()) // wasteland | external
             continue;
