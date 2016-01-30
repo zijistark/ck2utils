@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
         pr_tbl.reserve( def_tbl.row_vec.size() );
         read_province_history(dm, def_tbl, pr_tbl);
 
-        // province_map pm(dm, def_tbl);
+        province_map pm(dm, def_tbl);
 
         const char* path = dm.terrain_path().c_str();
         FILE* f;
@@ -84,6 +84,10 @@ int main(int argc, char** argv) {
         assert(bf_hdr.n_bpp == 8);
         assert(bf_hdr.compression_type == 0);
 
+        /* we don't even need to read the color table, as the indices are all we need for our purposes,
+         * but it's nice to see that the correct colors are indeed in the table, so we'll print them
+         * for the user */
+
         uint palette_offset = bf_hdr.n_header_size + sizeof(bf_hdr) - 40;
 
         /* the "minus one" below is because, apparently, the final terrain texture type (forest)
@@ -99,6 +103,8 @@ int main(int argc, char** argv) {
                            strerror(errno),
                            path);
 
+        printf("relevant color table entries in terrain bitmap:\n");
+
         for (uint i = 0; i < n_colors; ++i) {
             uint8_t bgra[4];
 
@@ -111,7 +117,8 @@ int main(int argc, char** argv) {
                                    i, path);
             }
 
-            printf("%03u: (%hhu, %hhu, %hhu)\n", i, bgra[2], bgra[1], bgra[0]);
+            const char* name = TERRAIN[ TERRAIN_COLOR_TO_ID[i] ].name.c_str();
+            printf("%2u: RGB(%3hhu, %3hhu, %3hhu): %s\n", i, bgra[2], bgra[1], bgra[0], name);
         }
 
         if ( fseek(f, bf_hdr.n_bitmap_offset, SEEK_SET) != 0 )
