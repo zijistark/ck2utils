@@ -87,6 +87,13 @@ int main(int argc, char** argv) {
         uint palette_offset = bf_hdr.n_header_size + sizeof(bf_hdr) - 40;
         uint n_colors = (bf_hdr.n_colors) ? bf_hdr.n_colors : (1 << 8);
 
+        /* the "minus one" below is because, apparently, the final terrain texture type (forest)
+         * does not actually get any representation in the color table. this is vaguely correlated
+         * with the inflection of some old Swedish comment next to it in terrain.txt */
+        const uint n_colors = NUM_TERRAIN_COLORS-1;
+
+        assert( !( bf_hdr.n_colors && bf_hdr.n_colors < n_colors ) ); // we expect at least enough colors for our terrain
+
         if ( fseek(f, palette_offset, SEEK_SET) != 0 )
             throw va_error("failed to seek to color table (offset=%u): %s: %s",
                            palette_offset,
@@ -107,6 +114,12 @@ int main(int argc, char** argv) {
 
             printf("%03u: (%hhu, %hhu, %hhu)\n", i, bgra[2], bgra[1], bgra[0]);
         }
+
+        if ( fseek(f, bf_hdr.n_bitmap_offset, SEEK_SET) != 0 )
+            throw va_error("failed to seek to raw bitmap data (offset=%u): %s: %s",
+                           bf_hdr.n_bitmap_offset,
+                           strerror(errno),
+                           path);
 
         fclose(f);
     }
