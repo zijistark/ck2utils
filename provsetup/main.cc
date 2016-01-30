@@ -85,7 +85,6 @@ int main(int argc, char** argv) {
         assert(bf_hdr.compression_type == 0);
 
         uint palette_offset = bf_hdr.n_header_size + sizeof(bf_hdr) - 40;
-        uint n_colors = (bf_hdr.n_colors) ? bf_hdr.n_colors : (1 << 8);
 
         /* the "minus one" below is because, apparently, the final terrain texture type (forest)
          * does not actually get any representation in the color table. this is vaguely correlated
