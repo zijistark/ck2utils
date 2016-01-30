@@ -109,7 +109,7 @@ int main(int argc, char** argv) {
                            strerror(errno),
                            path);
 
-        printf("relevant color table entries in terrain bitmap:\n");
+        fprintf(stderr, "relevant color table entries in terrain bitmap:\n");
 
         for (uint i = 0; i < n_colors; ++i) {
             uint8_t bgra[4];
@@ -124,7 +124,7 @@ int main(int argc, char** argv) {
             }
 
             const char* name = TERRAIN[ TERRAIN_COLOR_TO_ID[i] ].name.c_str();
-            printf("%2u: RGB(%3hhu, %3hhu, %3hhu): %s\n", i, bgra[2], bgra[1], bgra[0], name);
+            fprintf(stderr, "%2u: RGB(%3hhu, %3hhu, %3hhu): %s\n", i, bgra[2], bgra[1], bgra[0], name);
         }
 
         if ( fseek(f, bf_hdr.n_bitmap_offset, SEEK_SET) != 0 )
@@ -167,13 +167,17 @@ int main(int argc, char** argv) {
         }
 
         for (auto&& pr : pr_tbl) {
-            if (pr.terrain_id >= 0)
-                continue; // already assigned
+            if (pr.terrain_id < 0) // not already assigned terrain
+                pr.terrain_id = std::max_element(pr.terrain_px_array,
+                                                 pr.terrain_px_array + NUM_TERRAIN) - pr.terrain_px_array;
 
-            pr.terrain_id = std::max_element(pr.terrain_px_array, pr.terrain_px_array + NUM_TERRAIN) - pr.terrain_px_array;
-            assert( pr.terrain_id >= 0 && pr.terrain_id < NUM_TERRAIN );
+            printf("%u = {\n", pr.id);
 
-            printf("%4u: %u\n", pr.id, pr.terrain_id);
+            if (!pr.county.empty())
+                printf("   title=%s\n", pr.county.c_str());
+
+            printf("   max_settlements=%d\n", (pr.max_settlements < 0) ? 7 : pr.max_settlements);
+            printf("   terrain=%s\n}\n", TERRAIN[ pr.terrain_id ].name.c_str());
         }
 
         fclose(f);
