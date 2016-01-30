@@ -13,6 +13,7 @@
 #include <cstring>
 #include <cassert>
 #include <vector>
+#include <algorithm>
 
 
 using namespace boost::filesystem;
@@ -76,6 +77,7 @@ int main(int argc, char** argv) {
                 throw va_error("unexpected EOF while reading bitmap header: %s", path);
         }
 
+        /* format stuff */
         assert(bf_hdr.magic == BMP_MAGIC);
         assert(bf_hdr.n_header_size >= 40); // at least a BITMAPINFOHEADER (v3)
         assert(bf_hdr.n_width > 0 && bf_hdr.n_width % 4 == 0);
@@ -83,6 +85,10 @@ int main(int argc, char** argv) {
         assert(bf_hdr.n_planes == 1);
         assert(bf_hdr.n_bpp == 8);
         assert(bf_hdr.compression_type == 0);
+
+        /* higher-level asserts */
+        assert( (unsigned)bf_hdr.n_width == pm.width());
+        assert( (unsigned)bf_hdr.n_height == pm.height());
 
         /* we don't even need to read the color table, as the indices are all we need for our purposes,
          * but it's nice to see that the correct colors are indeed in the table, so we'll print them
@@ -126,6 +132,49 @@ int main(int argc, char** argv) {
                            bf_hdr.n_bitmap_offset,
                            strerror(errno),
                            path);
+
+        const int width = pm.width();
+        const int height = pm.height();
+        uint8_t row[width];
+        const uint16_t* pm_map = pm.map();
+
+        for (int y = height-1; y >= 0; --y) {
+
+            if ( fread(row, 1, width, f) < (unsigned)width ) {
+                if (errno)
+                    throw va_error("failed to read pixel array row (y=%d): %s: %s", y, strerror(errno), path);
+                else
+                    throw va_error("unexpected EOF while reading row in pixel array (y=%d): %s", y, path);
+            }
+
+            const uint16_t* pm_row = &pm_map[y * width];
+
+            for (int x = 0; x < width; ++x) {
+                if (pm_row[x] == province_map::TYPE_OCEAN || pm_row[x] == province_map::TYPE_IMPASSABLE)
+                    continue; // pixel belongs to no province
+
+                province& pr = pr_tbl[ pm_row[x] ];
+
+                if (pr.terrain_id >= 0)
+                    continue; // terrain has already been assigned
+
+                if (row[x] >= n_colors)
+                    throw va_error("unexpected color index %hhu in terrain bitmap at (x,y)=(%d, %d): %s",
+                                   row[x], x, y, path);
+
+                ++pr.terrain_px_array[ TERRAIN_COLOR_TO_ID[ row[x] ] ];
+            }
+        }
+
+        for (auto&& pr : pr_tbl) {
+            if (pr.terrain_id >= 0)
+                continue; // already assigned
+
+            pr.terrain_id = std::max_element(pr.terrain_px_array, pr.terrain_px_array + NUM_TERRAIN) - pr.terrain_px_array;
+            assert( pr.terrain_id >= 0 && pr.terrain_id < NUM_TERRAIN );
+
+            printf("%4u: %u\n", pr.id, pr.terrain_id);
+        }
 
         fclose(f);
     }

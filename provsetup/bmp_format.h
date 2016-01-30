@@ -28,6 +28,4 @@ struct bmp_file_header {
     uint32_t n_important_colors; // should be 0
 } __attribute__ ((packed));
 
-
-
 #endif
