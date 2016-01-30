@@ -25,6 +25,9 @@ import ck2parser
 
 # if true, instead of removing localisation, write out a file listing broken
 # localisations expected to match one of the patterns to be removed
+#
+# This option assumes SWMH localisation filenames. If necessary it can be made
+# more general
 AUDIT = False
 
 # if true, blank ALL localisations
@@ -69,7 +72,9 @@ def process_history(where, build, extra_keys):
     prov_title = {}
     id_name = ck2parser.province_id_name_map(where)
     for glob in ['history/provinces/*', 'history/titles/*']:
-        for inpath, tree in ck2parser.parse_files(glob, where):
+        # replace errors: vanilla history has some UTF-8 bytes
+        for inpath, tree in ck2parser.parse_files(glob, where,
+                                                  errors='replace'):
             mutated = False
             for n, v in tree:
                 if isinstance(n, ck2parser.Date):

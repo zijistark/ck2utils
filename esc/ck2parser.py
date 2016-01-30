@@ -76,11 +76,12 @@ _max_provinces = None
 @memoize
 def province_id_name_map(where):
     global _max_provinces
-    tree = parse_file(where / 'map/default.map')
+    _, tree = next(parse_files('map/default.map', where))
     defs = tree['definitions'].val
     _max_provinces = int(tree['max_provinces'].val)
     id_name_map = {}
-    for row in csv_rows(where / 'map' / defs):
+    defs_path = next(files('map' / defs, where))
+    for row in csv_rows(defs_path):
         try:
             id_name_map[int(row[0])] = row[4]
         except (IndexError, ValueError):
