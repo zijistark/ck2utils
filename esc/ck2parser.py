@@ -80,7 +80,7 @@ def province_id_name_map(where):
     defs = tree['definitions'].val
     _max_provinces = int(tree['max_provinces'].val)
     id_name_map = {}
-    defs_path = next(files('map' / defs, where))
+    defs_path = next(files('map/' + defs, where))
     for row in csv_rows(defs_path):
         try:
             id_name_map[int(row[0])] = row[4]
