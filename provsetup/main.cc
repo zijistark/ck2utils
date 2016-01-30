@@ -20,9 +20,8 @@ using namespace boost::filesystem;
 
 
 const path VROOT_PATH("D:/SteamLibrary/steamapps/common/Crusader Kings II");
-const path ROOT_PATH(VROOT_PATH);
-//const path ROOT_PATH("D:/g/SWMH-BETA/SWMH");
-const path OUT_PATH("00_province_setup.txt");
+//const path ROOT_PATH(VROOT_PATH);
+const path ROOT_PATH("D:/g/SWMH-BETA/SWMH");
 
 
 struct province {
@@ -42,14 +41,10 @@ struct province {
 
 
 void read_province_history(const default_map&, const definitions_table&, std::vector<province>&);
+int terrain_name_to_id(const char*);
 
 
 int main(int argc, char** argv) {
-
-    path output_path = OUT_PATH;
-
-    if (argc >= 2)
-        output_path = path(argv[1]);
 
     try {
         default_map dm(ROOT_PATH);
@@ -58,6 +53,27 @@ int main(int argc, char** argv) {
         std::vector<province> pr_tbl;
         pr_tbl.reserve( def_tbl.row_vec.size() );
         read_province_history(dm, def_tbl, pr_tbl);
+
+        char buf[64];
+
+        while (fgets(&buf[0], sizeof(buf), stdin) != nullptr) {
+            char* s = strchr(buf, '=');
+            assert(s);
+            *s = '\0';
+            const char* terrain = s+1;
+            s = strchr(terrain, '\n');
+            assert(s);
+            *s = '\0';
+
+            int id = atoi(buf);
+            assert(id > 0);
+            int terrain_id = terrain_name_to_id(terrain);
+
+            if (terrain_id < 0)
+                throw va_error("unrecognized terrain type from standard input: '%s'", terrain);
+
+            pr_tbl[id-1].terrain_id = terrain_id;
+        }
 
         province_map pm(dm, def_tbl);
 
@@ -153,7 +169,7 @@ int main(int argc, char** argv) {
                 if (pm_row[x] == province_map::TYPE_OCEAN || pm_row[x] == province_map::TYPE_IMPASSABLE)
                     continue; // pixel belongs to no province
 
-                province& pr = pr_tbl[ pm_row[x] ];
+                province& pr = pr_tbl[ pm_row[x] - 1 ];
 
                 if (pr.terrain_id >= 0)
                     continue; // terrain has already been assigned
@@ -254,15 +270,20 @@ void read_province_history(const default_map& dm,
         }
 
         if (terrain) {
-            for (int i = 0; i < NUM_TERRAIN; ++i)
-                if (TERRAIN[i].name == terrain) {
-                    pr.terrain_id = i;
-                    break;
-                }
+            pr.terrain_id = terrain_name_to_id(terrain);
 
             if (pr.terrain_id < 0)
                 throw va_error("unknown terrain type '%s' in province history file: %s",
                                terrain, hist_file.c_str());
         }
     }
+}
+
+
+int terrain_name_to_id(const char* name) {
+    for (int i = 0; i < NUM_TERRAIN; ++i)
+        if (TERRAIN[i].name == name)
+            return i;
+
+    return -1;
 }
