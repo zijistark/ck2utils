@@ -4,6 +4,7 @@ import functools
 import operator
 import pathlib
 import re
+import sys
 from funcparserlib import lexer
 from funcparserlib import parser
 import localpaths
@@ -137,7 +138,11 @@ def is_codename(string):
         return False
 
 def chars(line):
-    line = str(line).splitlines()[-1]
+    line = str(line)
+    try:
+        line = line.splitlines()[-1]
+    except IndexError: # empty string
+        pass
     col = 0
     for char in line:
         if char == '\t':
@@ -326,7 +331,7 @@ class String(Commented):
 
     def val_inline_str(self, col):
         s = self.val
-        if self.force_quote or re.search(r'\s', s):
+        if self.force_quote or not re.fullmatch(r'\S+', s):
             s = '"{}"'.format(s)
         return s, col + chars(s)
 
@@ -635,7 +640,11 @@ def parse_file(path, encoding='cp1252', errors=errors_default):
     with path.open(encoding=encoding, errors=errors) as f:
         try:
             tree = parse(f.read())
+            return tree
+        except parser.NoParseError as e:
+            print(path)
+            print(sys.exc_info())
+            return e
         except:
             print(path)
             raise
-    return tree

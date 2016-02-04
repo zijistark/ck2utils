@@ -71,10 +71,14 @@ def process_cultures(where, build):
 def process_history(where, build, extra_keys):
     prov_title = {}
     id_name = ck2parser.province_id_name_map(where)
+    # critical_error = False
     for glob in ['history/provinces/*', 'history/titles/*']:
         # replace errors: vanilla history has some UTF-8 bytes
         for inpath, tree in ck2parser.parse_files(glob, where,
                                                   errors='replace'):
+            # if isinstance(tree, Exception):
+            #     critical_error = True
+            #     continue
             mutated = False
             for n, v in tree:
                 if isinstance(n, ck2parser.Date):
@@ -95,6 +99,8 @@ def process_history(where, build, extra_keys):
                 outpath = make_outpath(build, inpath, where, vanilladir)
                 with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
                     f.write(tree.str())
+    # if critical_error:
+    #     raise SystemExit()
     return prov_title
 
 def get_governments(where):
@@ -267,4 +273,4 @@ if __name__ == '__main__':
         main()
     finally:
         end_time = time.time()
-        print('Time: {} s'.format(end_time - start_time))
+        print('Time: {:g} s'.format(end_time - start_time))
