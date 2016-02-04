@@ -6,43 +6,48 @@ import pathlib
 import re
 import shutil
 import tempfile
+import time
 import ck2parser
 
 rootpath = ck2parser.rootpath
 vanillapath = ck2parser.vanilladir
 modpath = rootpath / 'SWMH-BETA/SWMH'
+# modpath = rootpath / 'EMF/EMF'
 # modpath = rootpath / 'CK2Plus/CK2Plus'
 # outpath = rootpath / 'SWMH-BETA/metadata'
 
-def get_locs(where, dupe_check=False):
+def abbrev_path(path):
+    prefix = '<vanilla>' if vanillapath in path.parents else '<mod>'
+    return prefix + '/' + path.name
+
+def get_locs():
     locs = collections.OrderedDict()
     dupe_lines = []
-    for path in ck2parser.files('localisation/*.csv', basedir=where):
+    for path in ck2parser.files('localisation/*', modpath, reverse=True):
+        vanilla = modpath not in path.parents
         for row, linenum in ck2parser.csv_rows(path, linenum=True):
             if row[0] in locs:
-                if dupe_check:
+                # don't care about overriding vanilla
+                if not vanilla:
                     line = ('{0!r} localisation at {1[1]!r}:{1[2]} '
                         'overrides {2!r}:{3}\n'.format(row[0],
-                        locs[row[0]], path.name, linenum))
+                        locs[row[0]], abbrev_path(path), linenum))
                     dupe_lines.append(line)
             else:
-                locs[row[0]] = ((row[1], path.name, linenum) if dupe_check
-                                else row[1])
-    if dupe_check:
-        locs = collections.OrderedDict((k, v[0]) for k, v in locs.items())
-        return locs, dupe_lines
-    return locs
+                locs[row[0]] = row[1], abbrev_path(path), linenum
+    locs = collections.OrderedDict((k, v[0]) for k, v in locs.items())
+    return locs, dupe_lines
 
-def get_province_id(where):
-    province_id = {}
-    province_title = {}
-    for number, title, tree in ck2parser.provinces(where):
-        prov_id = 'PROV{}'.format(number)
-        province_id[title] = prov_id
-        province_title[prov_id] = title
-    return province_id, province_title
+# def get_province_id(where):
+#     province_id = {}
+#     province_title = {}
+#     for number, title, tree in ck2parser.provinces(where):
+#         prov_id = 'PROV{}'.format(number)
+#         province_id[title] = prov_id
+#         province_title[prov_id] = title
+#     return province_id, province_title
 
-def scan_landed_titles(where, cultures, loc_mod):
+def scan_landed_titles(cultures, loc_mod):
     dynamics = collections.defaultdict(dict)
     undef = collections.defaultdict(list)
 
@@ -58,22 +63,22 @@ def scan_landed_titles(where, cultures, loc_mod):
                         undef[v2.val].append((n.val, n2.val))
                 recurse(v)
 
-    for path, tree in ck2parser.parse_files('common/landed_titles/*', where):
+    for path, tree in ck2parser.parse_files('common/landed_titles/*', modpath):
         print(path)
         recurse(tree)
     return dynamics, undef
 
 def main():
-    province_id_mod, province_title_mod = get_province_id(modpath)
-    province_id, province_title = get_province_id(vanillapath)
-    province_id.update(province_id_mod)
-    province_title.update(province_title_mod)
+    # province_id_mod, province_title_mod = get_province_id(modpath)
+    # province_id, province_title = get_province_id(vanillapath)
+    # province_id.update(province_id_mod)
+    # province_title.update(province_title_mod)
     cultures, cult_group = ck2parser.cultures(modpath)
-    mod_loc, dupe_lines = get_locs(modpath, dupe_check=True)
-    vanilla_loc = get_locs(vanillapath)
+    mod_loc, dupe_lines = get_locs()
+    vanilla_loc = ck2parser.localisation()
     # localisation = vanilla_loc.copy()
     # localisation.update(mod_loc)
-    dynamics, undef = scan_landed_titles(modpath, cultures, mod_loc)
+    dynamics, undef = scan_landed_titles(cultures, mod_loc)
 
     # if not outpath.exists():
     #     outpath.mkdir()
@@ -225,4 +230,9 @@ def main():
         writer.writerows(results_ekdc)
 
 if __name__ == '__main__':
-    main()
+    start_time = time.time()
+    try:
+        main()
+    finally:
+        end_time = time.time()
+        print('Time: {:g} s'.format(end_time - start_time))

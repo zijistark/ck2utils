@@ -37,10 +37,11 @@ def csv_rows(path, linenum=False, comments=False):
 
 # give mod dirs in descending lexicographical order of mod name (Z-A),
 # modified for dependencies as necessary.
-def files(glob, *moddirs, basedir=vanilladir):
+def files(glob, *moddirs, basedir=vanilladir, reverse=False):
     result_paths = {p.relative_to(d): p
                     for d in (basedir,) + moddirs for p in d.glob(glob)}
-    for _, p in sorted(result_paths.items(), key=lambda t: t[0].parts):
+    for _, p in sorted(result_paths.items(), key=lambda t: t[0].parts,
+                       reverse=reverse):
         yield p
 
 def parse_files(glob, *moddirs, basedir=vanilladir, encoding='cp1252',
@@ -106,25 +107,16 @@ def provinces(where):
                 continue
             yield number, title, tree
 
-def localisation(moddir=None, basedir=vanilladir, ordered=False):
-    def process_csv(path):
+def localisation(*moddirs, basedir=vanilladir, ordered=False):
+    locs = collections.OrderedDict() if ordered else {}
+    loc_glob = 'localisation/*'
+    for path in files(loc_glob, *moddirs, basedir=basedir, reverse=True):
         for row in csv_rows(path):
             try:
                 if row[0] not in locs:
                     locs[row[0]] = row[1]
             except IndexError:
                 continue
-
-    locs = collections.OrderedDict() if ordered else {}
-    loc_glob = 'localisation/*'
-    mod_files = set()
-    if moddir:
-        for path in files(loc_glob, basedir=moddir):
-            process_csv(path)
-            mod_files.add(path.name)
-    for path in files(loc_glob, basedir=basedir):
-        if path.name not in mod_files:
-            process_csv(path)
     return locs
 
 def first_post_comment(item):

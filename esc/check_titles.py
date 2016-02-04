@@ -96,7 +96,7 @@ def check_province_history(titles):
     _max_provinces = int(tree['max_provinces'].val)
     id_name_map = {}
     for row in ck2parser.csv_rows(
-        (minipath if MINIPATH else modpath) / 'map' / defs):
+        (minipath if MINISWMH else modpath) / 'map' / defs):
         try:
             id_name_map[int(row[0])] = row[4]
         except (IndexError, ValueError):
@@ -198,4 +198,4 @@ if __name__ == '__main__':
         main()
     finally:
         end_time = time.time()
-        print('Time: {} s'.format(end_time - start_time))
+        print('Time: {:g} s'.format(end_time - start_time))

@@ -8,6 +8,7 @@ Scans for:
 '''
 
 import re
+import time
 import ck2parser
 
 rootpath = ck2parser.rootpath
@@ -56,7 +57,7 @@ def main():
     unrecognized_nonbarony_keys = []
     unrecognized_barony_keys = []
     unrecognized_culture_keys = []
-    for path in ck2parser.files('localisation/*.csv', basedir=modpath):
+    for path in ck2parser.files('localisation/*', basedir=modpath):
         for key, *_ in ck2parser.csv_rows(path):
             match = re.match(r'[ekdcb]_((?!_adj).)*', key)
             if match:
@@ -84,4 +85,9 @@ def main():
                   *unrecognized_culture_keys, sep='\n\t', file=f)
 
 if __name__ == '__main__':
-    main()
+    start_time = time.time()
+    try:
+        main()
+    finally:
+        end_time = time.time()
+        print('Time: {:g} s'.format(end_time - start_time))

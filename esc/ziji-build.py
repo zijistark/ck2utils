@@ -229,11 +229,12 @@ def main():
         # import pprint
         # pprint.pprint(noble_regex)
         inpaths = [modpath / 'localisation' / name for name in [
-            'A Cultures.csv', 'A DuchiesKingdomsandEmpires de jure.csv',
-            'A DuchiesKingdomsandEmpires titular.csv',
-            'A Jobs and minor titles.csv', 'A Mercs.csv', 'A Nobletitles.csv',
-            'A Religions.csv', 'A SWMHbaronies.csv', 'A SWMHcounties.csv',
-            'A SWMHnewprovinces.csv', 'A SWMHprovinces.csv']]
+            'zz Cultures.csv', 'zz DuchiesKingdomsandEmpires de jure.csv',
+            'zz DuchiesKingdomsandEmpires titular.csv',
+            'zz Jobs and minor titles.csv', 'zz Mercs.csv',
+            'zz Nobletitles.csv', 'zz Religions.csv', 'zz SWMHbaronies.csv',
+            'zz SWMHcounties.csv', 'zz SWMHnewprovinces.csv',
+            'zz SWMHprovinces.csv']]
         outpath = modpath / 'out.txt'
         with outpath.open('w', encoding='cp1252', newline='') as f:
             for inpath in inpaths:
@@ -256,7 +257,7 @@ def main():
                 if outrow:
                     outrows.append(outrow)
 
-    outpath = build / 'localisation' / 'A AAA testing override.csv'
+    outpath = build / 'localisation' / 'zzz testing override.csv'
     with outpath.open('w', encoding='cp1252', newline='') as csvfile:
         csv.writer(csvfile, dialect='ckii').writerows(outrows)
 

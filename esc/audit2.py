@@ -9,6 +9,8 @@ import localpaths
 
 rootpath = localpaths.rootpath
 # wd = rootpath / 'CK2Plus'
+# wd = rootpath / 'SWMH-BETA'
+# wd = rootpath / 'EMF'
 wd = pathlib.Path('C:/Users/Nicholas/Documents/Paradox Interactive/Crusader Kings II/mod/modules')
 
 glob = '**/*'
