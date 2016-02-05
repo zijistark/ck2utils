@@ -233,6 +233,10 @@ class TopLevel(Stringifiable):
     def __getitem__(self, key):
         return self.dictionary[key]
 
+    # assumes keys occur at most once
+    def has_pair(self, key_val, val_val):
+        return key_val in self.dictionary and self[key_val].val == val_val
+
     @property
     def indent(self):
         return self._indent
@@ -469,6 +473,10 @@ class Obj(Stringifiable):
 
     def __getitem__(self, key):
         return self.dictionary[key]
+
+    # assumes keys occur at most once
+    def has_pair(self, key_val, val_val):
+        return key_val in self.dictionary and self[key_val].val == val_val
 
     @property
     def has_pairs(self):
