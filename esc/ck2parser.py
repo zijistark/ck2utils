@@ -47,7 +47,7 @@ def files(glob, *moddirs, basedir=vanilladir, reverse=False):
         yield p
 
 def parse_files(glob, *moddirs, basedir=vanilladir, encoding='cp1252',
-                errors=errors_default, cache=True):
+                errors=errors_default, cache=False):
     for path in files(glob, *moddirs, basedir=basedir):
         yield path, parse_file(path, encoding, errors, cache)
 
@@ -652,7 +652,7 @@ def parse(s):
     #     raise
     return tree
 
-def parse_file(path, encoding='cp1252', errors=errors_default, cache=True):
+def parse_file(path, encoding='cp1252', errors=errors_default, cache=False):
     global _parse_tree_cache
     if cache and path in _parse_tree_cache:
         #and os.path.getmtime(str(path)) <= _parse_tree_cache[path].mtime):
@@ -661,7 +661,8 @@ def parse_file(path, encoding='cp1252', errors=errors_default, cache=True):
         try:
             tree = parse(f.read())
             #tree.mtime = time.time()
-            _parse_tree_cache[path] = tree
+            if cache:
+                _parse_tree_cache[path] = tree
             return tree
         except parser.NoParseError as e:
             print(path)
