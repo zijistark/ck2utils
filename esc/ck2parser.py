@@ -108,7 +108,7 @@ def provinces(where):
     for path in files('history/provinces/*', where):
         number, name = path.stem.split(' - ')
         number = int(number)
-        if id_name[number] == name:
+        if number in id_name and id_name[number] == name:
             tree = parse_file(path)
             try:
                 title = tree['title'].val
@@ -654,7 +654,7 @@ def parse(s):
 
 def parse_file(path, encoding='cp1252', errors=errors_default, cache=False):
     global _parse_tree_cache
-    if cache and path in _parse_tree_cache:
+    if path in _parse_tree_cache:
         #and os.path.getmtime(str(path)) <= _parse_tree_cache[path].mtime):
         return _parse_tree_cache[path]
     with path.open(encoding=encoding, errors=errors) as f:
@@ -664,7 +664,7 @@ def parse_file(path, encoding='cp1252', errors=errors_default, cache=False):
             if cache:
                 _parse_tree_cache[path] = tree
             return tree
-        except parser.NoParseError as e:
+        except (lexer.LexerError, parser.NoParseError) as e:
             print(path)
             print(sys.exc_info())
             return e

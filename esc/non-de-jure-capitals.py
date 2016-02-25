@@ -14,6 +14,7 @@ def process_landed_titles(where, prov_title):
                 yield n.val
             elif re.match('[ekd]_', n.val):
                 de_jure_counties = tuple(recurse(v))
+                error = False
                 try:
                     cap_prov = v['capital'].val
                     try:
@@ -22,11 +23,17 @@ def process_landed_titles(where, prov_title):
                             cap_title not in de_jure_counties):
                             print('Title {} capital {} ({}) is not de jure'
                                   .format(n.val, cap_title, cap_prov))
+                            error = True
                     except KeyError:
                         print('Title {} has invalid capital {}'
                               .format(n.val, cap_prov))
+                        error = True
                 except KeyError:
                     print('Title {} missing a capital'.format(n.val))
+                    error = True
+                if error:
+                    if len(de_jure_counties) == 1:
+                        print('\tMust be {}' .format(de_jure_counties[0]))
                 yield from de_jure_counties
 
     for _, tree in ck2parser.parse_files('common/landed_titles/*', modpath):
