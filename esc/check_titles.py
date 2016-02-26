@@ -118,6 +118,9 @@ def process_landed_titles():
                 if n.val in titles:
                     print('Duplicate title {}'.format(n.val))
                 titles.add(n.val)
+                if ('title' in v.dictionary and
+                    'title_female' not in v.dictionary):
+                    print('{} missing title_female'.format(n.val))
                 if n.val.startswith('b_'):
                     titles_de_jure.add(n.val)
                     parent_is_titular = False
