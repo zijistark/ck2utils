@@ -18,6 +18,8 @@ minipath = rootpath / 'MiniSWMH/MiniSWMH'
 
 MINISWMH = False
 
+VANILLA_HISTORY_WARN = True
+
 source_paths = (modpath, minipath) if MINISWMH else (modpath,)
 
 results = {True: collections.defaultdict(list),
@@ -55,11 +57,7 @@ def check_titles(path, titles):
             for v in tree:
                 check_title(v, path, titles, line=v)
 
-    try:
-        recurse(ck2parser.parse_file(path))
-    except:
-        print(path)
-        raise
+    recurse(ck2parser.parse_file(path, errors='replace'))
 
 def check_regions(titles, titles_de_jure):
     bad_titles = []
@@ -104,7 +102,7 @@ def check_province_history(titles):
     for path in ck2parser.files('history/provinces/*', *source_paths):
         number, name = path.stem.split(' - ')
         number = int(number)
-        if id_name_map[number] == name:
+        if number in id_name_map and id_name_map[number] == name:
             check_titles(path, titles)
 
 def process_landed_titles():
@@ -143,11 +141,12 @@ def main():
     titles, titles_de_jure = process_landed_titles()
     check_province_history(titles)
     bad_region_titles = check_regions(titles, titles_de_jure)
-    for path in ck2parser.files('history/titles/*.txt', *source_paths):
-        tree = ck2parser.parse_file(path)
+    for path, tree in ck2parser.parse_files('history/titles/*.txt',
+                                            *source_paths, errors='replace',
+                                            cache=True):
         if tree.contents:
             good = check_title(path.stem, path, titles)
-            if (not good and
+            if (VANILLA_HISTORY_WARN and not good and
                 modpath not in path.parents and
                 not (MINISWMH and minipath in path.parents)):
                 newpath = modpath / 'history/titles' / path.name
@@ -156,7 +155,9 @@ def main():
                       '<vanilla>' / path.relative_to(vanilladir)))
             else:
                 check_titles(path, titles)
-    for _ in ck2parser.parse_files('history/characters/*.txt', modpath, minipath):
+        ck2parser.flush(path)
+    for _ in ck2parser.parse_files('history/characters/*.txt', modpath,
+                                   minipath):
         pass # just parse it to see if it parses
     globs = [
         'events/*.txt',
