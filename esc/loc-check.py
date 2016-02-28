@@ -6,8 +6,8 @@ import pathlib
 import re
 import shutil
 import tempfile
-import time
 import ck2parser
+from print_time import print_time
 
 rootpath = ck2parser.rootpath
 vanillapath = ck2parser.vanilladir
@@ -68,6 +68,7 @@ def scan_landed_titles(cultures, loc_mod):
         recurse(tree)
     return dynamics, undef
 
+@print_time
 def main():
     # province_id_mod, province_title_mod = get_province_id(modpath)
     # province_id, province_title = get_province_id(vanillapath)
@@ -230,9 +231,4 @@ def main():
         writer.writerows(results_ekdc)
 
 if __name__ == '__main__':
-    start_time = time.time()
-    try:
-        main()
-    finally:
-        end_time = time.time()
-        print('Time: {:g} s'.format(end_time - start_time))
+    main()

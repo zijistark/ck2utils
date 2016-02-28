@@ -9,6 +9,7 @@ import tempfile
 import time
 import ck2parser
 from ck2parser import is_codename, prepend_post_comment
+from print_time import print_time
 
 rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH'
@@ -44,8 +45,8 @@ def process_province_history(where):
                         mark_barony(v2, used_baronies[title])
     return province_id, used_baronies, max_settlements
 
+@print_time
 def main():
-    start_time = time.time()
     lt = modpath / 'common/landed_titles'
     province_id, used_baronies, max_settlements = process_province_history(
         modpath)
@@ -182,9 +183,6 @@ def main():
             print('Removing old landed_titles...')
             shutil.rmtree(str(lt), ignore_errors=True)
         shutil.copytree(str(lt_t), str(lt))
-
-    end_time = time.time()
-    print('Time: {} s'.format(end_time - start_time))
 
 if __name__ == '__main__':
     main()

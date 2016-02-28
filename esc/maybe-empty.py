@@ -4,6 +4,7 @@ import collections
 import pathlib
 import sys
 import ck2parser
+from print_time import print_time
 
 IGNORE_ENCODING_ERRORS = True
 
@@ -94,6 +95,7 @@ def process_titles(where, valid_titles, first_start, last_start):
                         nomads.add(title)
     return nomads, vassals
 
+@print_time
 def main():
     modpath = get_modpath()
     titles = process_landed_titles(modpath)

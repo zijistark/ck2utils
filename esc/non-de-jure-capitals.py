@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import re
-import time
 import ck2parser
+from print_time import print_time
 
 rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH'
@@ -40,15 +40,11 @@ def process_landed_titles(where, prov_title):
         for _ in recurse(tree):
             pass
 
+@print_time
 def main():
-    start_time = time.time()
-
     province_title = {prov: title
                       for prov, title, _ in ck2parser.provinces(modpath)}
     process_landed_titles(modpath, province_title)
-
-    end_time = time.time()
-    print('Time: {} s'.format(end_time - start_time))
 
 if __name__ == '__main__':
     main()

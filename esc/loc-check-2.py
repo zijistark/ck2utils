@@ -8,8 +8,8 @@ Scans for:
 '''
 
 import re
-import time
 import ck2parser
+from print_time import print_time
 
 rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH'
@@ -40,6 +40,7 @@ def recurse(tree, comment=False):
         except AttributeError:
             pass
 
+@print_time
 def main():
     cultures, cult_groups = ck2parser.cultures(modpath)
     cultures = set(cultures)
@@ -85,9 +86,4 @@ def main():
                   *unrecognized_culture_keys, sep='\n\t', file=f)
 
 if __name__ == '__main__':
-    start_time = time.time()
-    try:
-        main()
-    finally:
-        end_time = time.time()
-        print('Time: {:g} s'.format(end_time - start_time))
+    main()

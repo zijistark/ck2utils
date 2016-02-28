@@ -8,8 +8,8 @@ import re
 import sys
 import shutil
 import tempfile
-import time
 import ck2parser
+from print_time import print_time
 
 rootpath = ck2parser.rootpath
 vanilladir = ck2parser.vanilladir
@@ -134,6 +134,7 @@ def process_landed_titles():
     # print('{} titles, {} de jure'.format(len(titles), len(titles_de_jure)))
     return titles, titles_de_jure
 
+@print_time
 def main():
     global modpath
     if len(sys.argv) > 1:
@@ -197,9 +198,4 @@ def main():
                     print('\t' + str(rel_path), *titles, sep='\n\t\t', file=fp)
 
 if __name__ == '__main__':
-    start_time = time.time()
-    try:
-        main()
-    finally:
-        end_time = time.time()
-        print('Time: {:g} s'.format(end_time - start_time))
+    main()

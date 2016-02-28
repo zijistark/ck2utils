@@ -20,8 +20,8 @@ import csv
 import pathlib
 import re
 import sys
-import time
 import ck2parser
+from print_time import print_time
 
 # if true, instead of removing localisation, write out a file listing broken
 # localisations expected to match one of the patterns to be removed
@@ -125,6 +125,7 @@ def get_unlanded_titles(where):
             ul_titles.extend(n.val for n, v in tree)
     return ul_titles
 
+@print_time
 def main():
     if len(sys.argv) <= 1:
         modpath = ck2parser.rootpath / 'SWMH-BETA/SWMH'
@@ -268,9 +269,4 @@ def main():
         csv.writer(csvfile, dialect='ckii').writerows(outrows)
 
 if __name__ == '__main__':
-    start_time = time.time()
-    try:
-        main()
-    finally:
-        end_time = time.time()
-        print('Time: {:g} s'.format(end_time - start_time))
+    main()
