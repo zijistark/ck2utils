@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 educators = [
     'ambitious cruel shy envious slothful charitable',
 
