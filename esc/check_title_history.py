@@ -8,6 +8,8 @@ from print_time import print_time
 rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH'
 
+INSPECT_LIST = []
+
 @print_time
 def main():
     title_holder_dates = {}
@@ -37,7 +39,7 @@ def main():
                         liege = 0 if v2.val in ('0', title) else v2.val
                         liege_dates.insert(i, date)
                         lieges.insert(i, liege)
-        if title in ['k_byzantium', 'k_turkestan_east']:
+        if title in INSPECT_LIST:
             pprint(title)
             pprint(list(zip(holder_dates, holders)))
             pprint(list(zip(liege_dates, lieges)))
@@ -55,10 +57,10 @@ def main():
                 k = bisect.bisect_left(liege_dates, end_date)
             else:
                 k = len(lieges)
-            if (k < len(lieges) and lieges[k] != 0 and
+            if (0 < k < len(lieges) and lieges[k - 1] != 0 and
                 liege_dates[k] != end_date):
                 liege_dates[j:k] = [start_date, end_date]
-                lieges[j:k] = [0, lieges[k]]
+                lieges[j:k] = [0, lieges[k - 1]]
             else:
                 liege_dates[j:k] = [start_date]
                 lieges[j:k] = [0]
@@ -66,7 +68,7 @@ def main():
             if i > 0 and lieges[i - 1] == lieges[i]:
                 del liege_dates[i]
                 del lieges[i]
-        if title in ['k_byzantium', 'k_turkestan_east']:
+        if title in INSPECT_LIST:
             pprint(title)
             pprint(list(zip(holder_dates, holders)))
             pprint(list(zip(liege_dates, lieges)))
@@ -92,7 +94,7 @@ def main():
             holder_start = bisect.bisect(holder_dates, start_date) - 1
             if i < len(lieges) - 1:
                 end_date = liege_dates[i + 1]
-                holder_end = bisect.bisect(holder_dates, end_date)
+                holder_end = bisect.bisect_left(holder_dates, end_date)
             else:
                 end_date = None
                 holder_end = len(holders)
