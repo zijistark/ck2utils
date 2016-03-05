@@ -71,7 +71,7 @@ def main():
                 if match:
                     if match.group(1) not in cultures:
                         unrecognized_culture_keys.append(key)
-    with (rootpath / 'loc-check-2.txt').open('w') as f:
+    with (rootpath / 'loc_check_2.txt').open('w') as f:
         if unlocalised_noncounty_titles:
             print('Unlocalised non-county titles:',
                   *unlocalised_noncounty_titles, sep='\n\t', file=f)
