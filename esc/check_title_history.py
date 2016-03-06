@@ -8,10 +8,11 @@ from print_time import print_time
 rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH'
 
-DEBUG_INSPECT_LIST = []#'b_stenkyrka']
+#DEBUG_INSPECT_LIST = ['b_stenkyrka']
 
-LANDED_TITLES_ORDER = True # if false, date order
+LANDED_TITLES_ORDER = False # if false, date order
 PRUNE_IMPOSSIBLE_STARTS = True
+PRUNE_NONBOOKMARK_STARTS = True # implies PRUNE_IMPOSSIBLE_STARTS
 
 @print_time
 def main():
@@ -23,19 +24,23 @@ def main():
                 recurse(v)
     for _, tree in ck2parser.parse_files('common/landed_titles/*', modpath):
         recurse(tree)
-    if PRUNE_IMPOSSIBLE_STARTS:
-        def next_day(day):
-            next_day = day[0], day[1], day[2] + 1
-            if (day[2] == 28 and day[1] == 2 or
-                day[2] == 30 and day[1] in (4, 6, 9, 11) or
-                day[2] == 31 and day[1] in (1, 3, 5, 7, 8, 10, 12)):
-                next_day = next_day[0], next_day[1] + 1, 1
-            if next_day[1] == 13:
-                next_day = next_day[0] + 1, 1, next_day[2]
-            return next_day
-        _, defines = next(ck2parser.parse_files('common/defines.txt', modpath))
-        playables = [(defines['start_date'].val,
-                      next_day(defines['last_start_date'].val))]
+    def next_day(day):
+        next_day = day[0], day[1], day[2] + 1
+        if (day[2] == 28 and day[1] == 2 or
+            day[2] == 30 and day[1] in (4, 6, 9, 11) or
+            day[2] == 31 and day[1] in (1, 3, 5, 7, 8, 10, 12)):
+            next_day = next_day[0], next_day[1] + 1, 1
+        if next_day[1] == 13:
+            next_day = next_day[0] + 1, 1, next_day[2]
+        return next_day
+    if PRUNE_IMPOSSIBLE_STARTS or PRUNE_NONBOOKMARK_STARTS:
+        if PRUNE_NONBOOKMARK_STARTS:
+            playables = []
+        else:
+            _, defines = next(ck2parser.parse_files('common/defines.txt',
+                                                    modpath))
+            playables = [(defines['start_date'].val,
+                          next_day(defines['last_start_date'].val))]
         for _, tree in ck2parser.parse_files('common/bookmarks/*', modpath):
             for _, v in tree:
                 date = v['date'].val
@@ -74,10 +79,10 @@ def main():
                         liege = 0 if v2.val in ('0', title) else v2.val
                         liege_dates.insert(i, date)
                         lieges.insert(i, liege)
-        if title in DEBUG_INSPECT_LIST:
-            pprint(title)
-            pprint(list(zip(holder_dates, holders)))
-            pprint(list(zip(liege_dates, lieges)))
+        #if title in DEBUG_INSPECT_LIST:
+        #    pprint(title)
+        #    pprint(list(zip(holder_dates, holders)))
+        #    pprint(list(zip(liege_dates, lieges)))
         for i in range(len(holders) - 1, -1, -1):
             if i > 0 and holders[i - 1] == holders[i]:
                 del holder_dates[i]
@@ -103,10 +108,10 @@ def main():
             if lieges[i - 1] == lieges[i]:
                 del liege_dates[i]
                 del lieges[i]
-        if title in DEBUG_INSPECT_LIST:
-            pprint(title)
-            pprint(list(zip(holder_dates, holders)))
-            pprint(list(zip(liege_dates, lieges)))
+        #if title in DEBUG_INSPECT_LIST:
+        #    pprint(title)
+        #    pprint(list(zip(holder_dates, holders)))
+        #    pprint(list(zip(liege_dates, lieges)))
         title_holder_dates[title] = holder_dates
         title_holders[title] = holders
         title_liege_dates[title] = liege_dates
@@ -151,9 +156,9 @@ def main():
                         errors.append((error_start, error_end))
         if errors:
             title_errors.append((title, errors))
-        if title in DEBUG_INSPECT_LIST:
-            pprint(title)
-            pprint(errors)
+        #if title in DEBUG_INSPECT_LIST:
+        #    pprint(title)
+        #    pprint(errors)
     if PRUNE_IMPOSSIBLE_STARTS:
         for title, errors in reversed(title_errors):
             for i in range(len(errors) - 1, -1, -1):
@@ -162,19 +167,15 @@ def main():
                 start, end = errors[i]
                 intersection = []
                 for a, b in playables:
-                    if start <= b and (end is None or a <= end):
+                    if start < b and (end is None or a < end):
                         intersection.append((max(start, a),
                                              min(end, b) if end else b))
-                #if title in DEBUG_INSPECT_LIST and i == 0:
-                #    pprint(title)
-                #    pprint(errors[i:i + 1])
-                #    pprint(intersection)
                 errors[i:i + 1] = intersection
             if not errors:
                 title_errors.remove((title, errors))
-            if title in DEBUG_INSPECT_LIST:
-                pprint(title)
-                pprint(errors)
+            #if title in DEBUG_INSPECT_LIST:
+            #    pprint(title)
+            #    pprint(errors)
     if LANDED_TITLES_ORDER:
         title_errors.sort(key=lambda x: titles.index(x[0]))
     else:
@@ -184,12 +185,13 @@ def main():
             line = title + ': '
             for i, error in enumerate(errors):
                 line += '{}.{}.{}'.format(*error[0])
-                if error[1] is None:
-                    line += ' on'
-                else:
-                    line += ' to {}.{}.{}'.format(*error[1])
-                    if i < len(errors) - 1:
-                        line += ', '
+                if error[1] != next_day(error[0]):
+                    if error[1] is None:
+                        line += ' on'
+                    else:
+                        line += ' to {}.{}.{}'.format(*error[1])
+                if i < len(errors) - 1:
+                    line += ', '
             print(line, file=fp)
 
 if __name__ == '__main__':
