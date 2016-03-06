@@ -7,7 +7,7 @@ from print_time import print_time
 rootpath = ck2parser.rootpath
 vanilladir = ck2parser.vanilladir
 modpath = rootpath / 'SWMH-BETA/SWMH'
-epoch = 1066, 12, 16
+epoch = 1066, 9, 15
 
 def get_crsdr_grp_map():
     crsdr_grp_map = {}

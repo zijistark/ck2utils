@@ -24,8 +24,28 @@ def main():
     for _, tree in ck2parser.parse_files('common/landed_titles/*', modpath):
         recurse(tree)
     if PRUNE_IMPOSSIBLE_STARTS:
-        playables = [] # TODO fill this. should be:
-        # [((867, 1, 1), (867, 1, 2)), ((1066, 9, 15), (1337, 1, 1))]
+        def next_day(day):
+            next_day = date[0], date[1], date[2] + 1
+            if (date[2] == 28 and date[1] == 2 or
+                date[2] == 30 and date[1] in (4, 6, 9, 11) or
+                date[2] == 31 and date[1] in (1, 3, 5, 7, 8, 10, 12)):
+                next_day = next_day[0], next_day[1] + 1, 1
+            if next_day[1] == 13:
+                next_day = next_day[0] + 1, 1, next_day[2]
+        _, defines = next(ck2parser.parse_files('common/defines.txt', modpath))
+        playables = [(defines['start_date'].val,
+                      next_day(defines['last_start_date'].val))]
+        for _, tree in ck2parser.parse_files('common/bookmarks/*', modpath):
+            for _, v in tree:
+                date = v['date'].val
+                if not any(a <= date < b for a, b in playables):
+                    interval = date, next_day(date)
+                    bisect.insort(playables, interval)
+        for i in range(len(playables) - 1, 0, -1):
+            if playables[i - 1][1] == playables[i][0]:
+                playables[i - 1] = playables[i - 1][0], playables[i][1]
+                del playables[i]
+        # e.g. [((867, 1, 1), (867, 1, 2)), ((1066, 9, 15), (1337, 1, 2))]
     title_holder_dates = {}
     title_holders = {}
     title_liege_dates = {}
@@ -78,8 +98,8 @@ def main():
             else:
                 liege_dates[j:k] = [start_date]
                 lieges[j:k] = [0]
-        for i in range(len(lieges) - 1, -1, -1):
-            if i > 0 and lieges[i - 1] == lieges[i]:
+        for i in range(len(lieges) - 1, 0, -1):
+            if lieges[i - 1] == lieges[i]:
                 del liege_dates[i]
                 del lieges[i]
         if title in DEBUG_INSPECT_LIST:
@@ -131,15 +151,19 @@ def main():
                         errors.append(error_end)
         if errors:
             title_errors.append((title, errors))
-    if PRUNE_IMPOSSIBLE_STARTS:
+    if PRUNE_IMPOSSIBLE_STARTS: # TODO finish implementing
         for item in reversed(title_errors):
             title, errors = item
-            i = 0
-            while i < len(errors):
+            for i in range(len(errors) - 1, 0, -1):
                 # intersect this interval with the playable intervals,
                 # and update, split, or remove errors[i] as necessary,
                 # updating i as necessary
-                pass # TODO finish implementing
+                start, end = errors[i]
+                intersection = []
+                for i, (a, b) in enumerate(playables):
+                    if start <= b and a <= end:
+                        intersection.append((max(start, a), min(end, b)))
+                errors[i:i + 1] = intersection
             if not errors:
                 title_errors.remove(item)
     if LANDED_TITLES_ORDER:
