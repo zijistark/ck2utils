@@ -8,10 +8,10 @@ from print_time import print_time
 rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH'
 
-DEBUG_INSPECT_LIST = []
+DEBUG_INSPECT_LIST = []#'b_stenkyrka']
 
 LANDED_TITLES_ORDER = True # if false, date order
-PRUNE_IMPOSSIBLE_STARTS = False # TODO finish implementing
+PRUNE_IMPOSSIBLE_STARTS = True
 
 @print_time
 def main():
@@ -25,13 +25,14 @@ def main():
         recurse(tree)
     if PRUNE_IMPOSSIBLE_STARTS:
         def next_day(day):
-            next_day = date[0], date[1], date[2] + 1
-            if (date[2] == 28 and date[1] == 2 or
-                date[2] == 30 and date[1] in (4, 6, 9, 11) or
-                date[2] == 31 and date[1] in (1, 3, 5, 7, 8, 10, 12)):
+            next_day = day[0], day[1], day[2] + 1
+            if (day[2] == 28 and day[1] == 2 or
+                day[2] == 30 and day[1] in (4, 6, 9, 11) or
+                day[2] == 31 and day[1] in (1, 3, 5, 7, 8, 10, 12)):
                 next_day = next_day[0], next_day[1] + 1, 1
             if next_day[1] == 13:
                 next_day = next_day[0] + 1, 1, next_day[2]
+            return next_day
         _, defines = next(ck2parser.parse_files('common/defines.txt', modpath))
         playables = [(defines['start_date'].val,
                       next_day(defines['last_start_date'].val))]
@@ -144,28 +145,36 @@ def main():
                             error_end = min(end_date, error_end)
                     else:
                         error_end = end_date
-                    if errors and errors[-1] == error_start:
-                        errors[-1] = error_end
+                    if errors and errors[-1][1] == error_start:
+                        errors[-1] = errors[-1][0], error_end
                     else:
-                        errors.append(error_start)
-                        errors.append(error_end)
+                        errors.append((error_start, error_end))
         if errors:
             title_errors.append((title, errors))
-    if PRUNE_IMPOSSIBLE_STARTS: # TODO finish implementing
-        for item in reversed(title_errors):
-            title, errors = item
-            for i in range(len(errors) - 1, 0, -1):
+        if title in DEBUG_INSPECT_LIST:
+            pprint(title)
+            pprint(errors)
+    if PRUNE_IMPOSSIBLE_STARTS:
+        for title, errors in reversed(title_errors):
+            for i in range(len(errors) - 1, -1, -1):
                 # intersect this interval with the playable intervals,
-                # and update, split, or remove errors[i] as necessary,
-                # updating i as necessary
+                # and update, split, or remove errors[i] as necessary
                 start, end = errors[i]
                 intersection = []
-                for i, (a, b) in enumerate(playables):
-                    if start <= b and a <= end:
-                        intersection.append((max(start, a), min(end, b)))
+                for a, b in playables:
+                    if start <= b and (end is None or a <= end):
+                        intersection.append((max(start, a),
+                                             min(end, b) if end else b))
+                #if title in DEBUG_INSPECT_LIST and i == 0:
+                #    pprint(title)
+                #    pprint(errors[i:i + 1])
+                #    pprint(intersection)
                 errors[i:i + 1] = intersection
             if not errors:
-                title_errors.remove(item)
+                title_errors.remove((title, errors))
+            if title in DEBUG_INSPECT_LIST:
+                pprint(title)
+                pprint(errors)
     if LANDED_TITLES_ORDER:
         title_errors.sort(key=lambda x: titles.index(x[0]))
     else:
@@ -173,13 +182,13 @@ def main():
     with (rootpath / 'check_title_history.txt').open('w') as fp:
         for title, errors in title_errors:
             line = title + ': '
-            for i in range(0, len(errors), 2):
-                line += '{}.{}.{}'.format(*errors[i])
-                if errors[i + 1] is None:
+            for i, error in enumerate(errors):
+                line += '{}.{}.{}'.format(*error[0])
+                if error[1] is None:
                     line += ' on'
                 else:
-                    line += ' to {}.{}.{}'.format(*errors[i + 1])
-                    if i + 2 < len(errors):
+                    line += ' to {}.{}.{}'.format(*error[1])
+                    if i < len(errors) - 1:
                         line += ', '
             print(line, file=fp)
 
