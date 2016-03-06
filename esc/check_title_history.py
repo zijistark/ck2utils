@@ -8,10 +8,24 @@ from print_time import print_time
 rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH'
 
-INSPECT_LIST = []
+DEBUG_INSPECT_LIST = []
+
+LANDED_TITLES_ORDER = True # if false, date order
+PRUNE_IMPOSSIBLE_STARTS = False # TODO finish implementing
 
 @print_time
 def main():
+    titles = []
+    def recurse(tree):
+        for n, v in tree:
+            if ck2parser.is_codename(n.val):
+                titles.append(n.val)
+                recurse(v)
+    for _, tree in ck2parser.parse_files('common/landed_titles/*', modpath):
+        recurse(tree)
+    if PRUNE_IMPOSSIBLE_STARTS:
+        playables = [] # TODO fill this. should be:
+        # [((867, 1, 1), (867, 1, 2)), ((1066, 9, 15), (1337, 1, 1))]
     title_holder_dates = {}
     title_holders = {}
     title_liege_dates = {}
@@ -39,7 +53,7 @@ def main():
                         liege = 0 if v2.val in ('0', title) else v2.val
                         liege_dates.insert(i, date)
                         lieges.insert(i, liege)
-        if title in INSPECT_LIST:
+        if title in DEBUG_INSPECT_LIST:
             pprint(title)
             pprint(list(zip(holder_dates, holders)))
             pprint(list(zip(liege_dates, lieges)))
@@ -68,7 +82,7 @@ def main():
             if i > 0 and lieges[i - 1] == lieges[i]:
                 del liege_dates[i]
                 del lieges[i]
-        if title in INSPECT_LIST:
+        if title in DEBUG_INSPECT_LIST:
             pprint(title)
             pprint(list(zip(holder_dates, holders)))
             pprint(list(zip(liege_dates, lieges)))
@@ -106,6 +120,8 @@ def main():
                         error_start = holder_dates[j]
                     if j < len(holders) - 1:
                         error_end = holder_dates[j + 1]
+                        if end_date is not None:
+                            error_end = min(end_date, error_end)
                     else:
                         error_end = end_date
                     if errors and errors[-1] == error_start:
@@ -115,6 +131,21 @@ def main():
                         errors.append(error_end)
         if errors:
             title_errors.append((title, errors))
+    if PRUNE_IMPOSSIBLE_STARTS:
+        for item in reversed(title_errors):
+            title, errors = item
+            i = 0
+            while i < len(errors):
+                # intersect this interval with the playable intervals,
+                # and update, split, or remove errors[i] as necessary,
+                # updating i as necessary
+                pass # TODO finish implementing
+            if not errors:
+                title_errors.remove(item)
+    if LANDED_TITLES_ORDER:
+        title_errors.sort(key=lambda x: titles.index(x[0]))
+    else:
+        title_errors.sort(key=lambda x: (x[1][0][0], titles.index(x[0])))
     with (rootpath / 'check_title_history.txt').open('w') as fp:
         for title, errors in title_errors:
             line = title + ': '
