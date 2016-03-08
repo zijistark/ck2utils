@@ -11,8 +11,8 @@ modpath = rootpath / 'SWMH-BETA/SWMH'
 #DEBUG_INSPECT_LIST = ['b_stenkyrka']
 
 LANDED_TITLES_ORDER = False # if false, date order
-PRUNE_IMPOSSIBLE_STARTS = True
-PRUNE_NONBOOKMARK_STARTS = True # implies PRUNE_IMPOSSIBLE_STARTS
+PRUNE_IMPOSSIBLE_STARTS = False
+PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
 
 @print_time
 def main():

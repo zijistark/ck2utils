@@ -14,6 +14,9 @@ from print_time import print_time
 rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH'
 
+PRUNE_BARONIES = False
+FORMAT_ONLY = False # don't alter code, just format. overrides PRUNE_BARONIES
+
 # templar castles referenced by vanilla events
 mod_titles_to_keep = ['b_beitdejan', 'b_lafeve']
 
@@ -57,7 +60,7 @@ def main():
 
     def update_tree(tree, is_def=True):
         for n, v in tree:
-            if is_codename(n.val) and is_def:
+            if is_codename(n.val) and is_def and not FORMAT_ONLY:
                 try:
                     cap = v['capital']
                     prov_key = 'PROV{}'.format(cap.val)
@@ -115,27 +118,28 @@ def main():
                             prepend_post_comment(v.kel, comment)
                         except KeyError:
                             print('!!! ' + n.val)
-                    num_baronies = 0
-                    for child in v.contents:
-                        if child.key.val.startswith('b_'):
-                            if (child.key.val in historical_baronies or
-                                child.key.val in used_baronies[n.val] or
-                                child.key.val in mod_titles_to_keep):
-                                num_baronies += 1
-                            else:
-                                baronies_to_remove.append(child)
-                    if (num_baronies + len(baronies_to_remove) <
-                        max_settlements[n.val]):
-                        # print(num_baronies, baronies_to_remove,
-                        #       len(v.contents))
-                        print(('{} has {} subholdings '
-                               'but {} max_settlements!').format(n.val,
-                               num_baronies + len(baronies_to_remove),
-                               max_settlements[n.val]))
-                    keep = max(0, max_settlements[n.val] - num_baronies)
-                    del baronies_to_remove[:keep]
-                    v.contents[:] = [v2 for v2 in v.contents
-                                     if v2 not in baronies_to_remove]
+                    if PRUNE_BARONIES:
+                        num_baronies = 0
+                        for child in v.contents:
+                            if child.key.val.startswith('b_'):
+                                if (child.key.val in historical_baronies or
+                                    child.key.val in used_baronies[n.val] or
+                                    child.key.val in mod_titles_to_keep):
+                                    num_baronies += 1
+                                else:
+                                    baronies_to_remove.append(child)
+                        if (num_baronies + len(baronies_to_remove) <
+                            max_settlements[n.val]):
+                            # print(num_baronies, baronies_to_remove,
+                            #       len(v.contents))
+                            print(('{} has {} subholdings '
+                                   'but {} max_settlements!').format(n.val,
+                                   num_baronies + len(baronies_to_remove),
+                                   max_settlements[n.val]))
+                        keep = max(0, max_settlements[n.val] - num_baronies)
+                        del baronies_to_remove[:keep]
+                        v.contents[:] = [v2 for v2 in v.contents
+                                         if v2 not in baronies_to_remove]
                 allow_pair = None
                 for child in v.contents:
                     if child.key.val == 'allow':
@@ -148,19 +152,20 @@ def main():
                     post_barony_pair = allow_pair
                 else:
                     post_barony_pair = v.ker
-                for barony in reversed(baronies_to_remove):
-                    b_is, _ = barony.inline_str(0)
-                    comments = [ck2parser.Comment(s)
-                                for s in b_is.split('\n')]
-                    post_barony_pair.pre_comments[0:0] = comments
+                if PRUNE_BARONIES:
+                    for barony in reversed(baronies_to_remove):
+                        b_is, _ = barony.inline_str(0)
+                        comments = [ck2parser.Comment(s)
+                                    for s in b_is.split('\n')]
+                        post_barony_pair.pre_comments[0:0] = comments
                 is_def_children = True
             else:
                 is_def_children = False
             try:
-                n_lower = n.val.lower()
-                if any(n_lower == s
-                       for s in ('not', 'or', 'and', 'nand', 'nor')):
-                    n.val = n_lower
+                n_upper = n.val.upper()
+                if any(n_upper == s
+                       for s in ('NOT', 'OR', 'AND', 'NAND', 'NOR')):
+                    n.val = n_upper
             except AttributeError:
                 pass
             if isinstance(v, ck2parser.Obj) and v.has_pairs:
