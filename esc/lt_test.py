@@ -7,7 +7,7 @@ Printing '0' means no anomalies found under present definitions.
 '''
 
 import pprint
-import ck2parser
+import ck2p as ck2parser
 
 PRINT_CULTURES_RELIGIONS = False
 

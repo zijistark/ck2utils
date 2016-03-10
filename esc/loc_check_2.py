@@ -8,7 +8,7 @@ Scans for:
 '''
 
 import re
-import ck2parser
+import ck2p as ck2parser
 from print_time import print_time
 
 rootpath = ck2parser.rootpath

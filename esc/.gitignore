@@ -1,2 +1,3 @@
 localpaths.py
+*.tokens
 /__pycache__

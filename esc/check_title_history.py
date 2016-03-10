@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import bisect
-import ck2parser
+import ck2p as ck2parser
 from pprint import pprint
 from print_time import print_time
 

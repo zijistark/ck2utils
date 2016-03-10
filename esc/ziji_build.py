@@ -20,7 +20,7 @@ import csv
 import pathlib
 import re
 import sys
-import ck2parser
+import ck2p as ck2parser
 from print_time import print_time
 
 # if true, instead of removing localisation, write out a file listing broken

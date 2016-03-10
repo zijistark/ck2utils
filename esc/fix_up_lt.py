@@ -7,7 +7,7 @@ import re
 import shutil
 import tempfile
 import time
-import ck2parser
+import ck2p as ck2parser
 from ck2parser import is_codename, prepend_post_comment
 from print_time import print_time
 

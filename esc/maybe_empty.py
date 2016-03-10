@@ -3,7 +3,7 @@
 import collections
 import pathlib
 import sys
-import ck2parser
+import ck2p as ck2parser
 from print_time import print_time
 
 IGNORE_ENCODING_ERRORS = True

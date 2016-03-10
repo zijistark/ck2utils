@@ -5,7 +5,7 @@ import csv
 import pathlib
 import re
 import shutil
-import ck2parser
+import ck2p as ck2parser
 
 rootpath = pathlib.Path('C:/Users/Nicholas/Documents/CK2')
 swmhpath = rootpath / 'SWMH-BETA/SWMH'
