@@ -3,6 +3,10 @@ from antlr4 import *
 from io import StringIO
 
 
+import re
+import ck2classes as ck2c
+
+
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\2\n")

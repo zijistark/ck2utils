@@ -3,6 +3,10 @@
 from antlr4 import *
 from io import StringIO
 
+
+import re
+import ck2classes as ck2c
+
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\n")
@@ -93,9 +97,6 @@ class CK2Parser ( Parser ):
 
 
 
-    import re
-    import ck2classes as ck2c
-
     def resolve(self, value):
         if re.fullmatch(r'\d*\.\d*\.\d*', value):
             return ck2c.Date
@@ -157,7 +158,7 @@ class CK2Parser ( Parser ):
             localctx.b = self.comments()
             self.state = 25
             self.match(CK2Parser.EOF)
-             localctx.v = ck2c.TopLevel([x.v for x in localctx.a], localctx.b.v) 
+            localctx.v = ck2c.TopLevel([x.v for x in localctx.a], localctx.b.v)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -210,7 +211,7 @@ class CK2Parser ( Parser ):
                 localctx.c = self.match(CK2Parser.COMMENT)
 
 
-             localctx.v = self.resolve(localctx.b)(localctx.a.v, localctx.b, localctx.c) 
+            localctx.v = self.resolve((None if localctx.b is None else localctx.b.text))(localctx.a.v, (None if localctx.b is None else localctx.b.text), (None if localctx.c is None else localctx.c.text) if localctx.c else None)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -265,14 +266,14 @@ class CK2Parser ( Parser ):
                 self.enterOuterAlt(localctx, 1)
                 self.state = 35
                 localctx.a = self.obj()
-                 localctx.v = localctx.a.v 
+                localctx.v = localctx.a.v
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 38
                 localctx.a = self.key()
-                 localctx.v = localctx.a.v 
+                localctx.v = localctx.a.v
                 pass
 
             elif la_ == 3:
@@ -289,7 +290,7 @@ class CK2Parser ( Parser ):
                     localctx.c = self.match(CK2Parser.COMMENT)
 
 
-                 localctx.v = ck2c.String(%a.v, localctx.b[1:-1], localctx.c) 
+                localctx.v = ck2c.String(localctx.a.v, (None if localctx.b is None else localctx.b.text)[1:-1], (None if localctx.c is None else localctx.c.text) if localctx.c else None)
                 pass
 
 
@@ -341,7 +342,7 @@ class CK2Parser ( Parser ):
             localctx.b = self.tis()
             self.state = 52
             localctx.c = self.value()
-             localctx.v = ck2c.Pair(localctx.a.v, localctx.b.v, localctx.c.v) 
+            localctx.v = ck2c.Pair(localctx.a.v, localctx.b.v, localctx.c.v)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -416,7 +417,7 @@ class CK2Parser ( Parser ):
 
                 self.state = 62
                 localctx.c = self.ker()
-                 localctx.v = ck2c.Obj(localctx.a.v, [x.v for x in localctx.b], localctx.c.v) 
+                localctx.v = ck2c.Obj(localctx.a.v, [x.v for x in localctx.b], localctx.c.v)
                 pass
 
             elif la_ == 2:
@@ -437,7 +438,7 @@ class CK2Parser ( Parser ):
 
                 self.state = 72
                 localctx.c = self.ker()
-                 localctx.v = ck2c.Obj(localctx.a.v, [x.v for x in localctx.b], localctx.c.v) 
+                localctx.v = ck2c.Obj(localctx.a.v, [x.v for x in localctx.b], localctx.c.v)
                 pass
 
 
@@ -493,7 +494,7 @@ class CK2Parser ( Parser ):
                 localctx.c = self.match(CK2Parser.COMMENT)
 
 
-             localctx.v = ck2c.Op(localctx.a.v, localctx.b, localctx.c) 
+            localctx.v = ck2c.Op(localctx.a.v, (None if localctx.b is None else localctx.b.text), (None if localctx.c is None else localctx.c.text) if localctx.c else None)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -546,7 +547,7 @@ class CK2Parser ( Parser ):
                 localctx.c = self.match(CK2Parser.COMMENT)
 
 
-             localctx.v = ck2c.Op(localctx.a.v, localctx.b, localctx.c) 
+            localctx.v = ck2c.Op(localctx.a.v, (None if localctx.b is None else localctx.b.text), (None if localctx.c is None else localctx.c.text) if localctx.c else None)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -599,7 +600,7 @@ class CK2Parser ( Parser ):
                 localctx.c = self.match(CK2Parser.COMMENT)
 
 
-             localctx.v = ck2c.Op(localctx.a.v, localctx.b, localctx.c) 
+            localctx.v = ck2c.Op(localctx.a.v, (None if localctx.b is None else localctx.b.text), (None if localctx.c is None else localctx.c.text) if localctx.c else None)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -674,7 +675,7 @@ class CK2Parser ( Parser ):
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
-             localctx.v = localctx.a 
+            localctx.v = [x.text if x else None for x in localctx.a]
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)

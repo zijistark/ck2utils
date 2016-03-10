@@ -164,7 +164,7 @@ def parse_file(path, encoding='cp1252', errors=errors_default, cache=None):
     lexer = CK2Lexer(filestream)
     stream = CommonTokenStream(lexer)
     parser = CK2Parser(stream)
-    tree = parser.StartRule()
+    tree = parser.toplevel().v
     if cache:
         _parse_tree_cache[path] = tree
     return tree

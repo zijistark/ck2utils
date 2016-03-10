@@ -46,8 +46,8 @@ def comments_to_str(comments, indent):
     return s
 
 def force_quote(key):
-    global fq_keys
-    return isinstance(key, String) and key.val in fq_keys
+    global _fq_keys
+    return isinstance(key, String) and key.val in _fq_keys
 
 class Comment(object):
     def __init__(self, string):
