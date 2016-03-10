@@ -8,21 +8,26 @@ from print_time import print_time
 rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH'
 
-#DEBUG_INSPECT_LIST = ['b_stenkyrka']
+#DEBUG_INSPECT_LIST = ['d_aswan']
 
 LANDED_TITLES_ORDER = True # if false, date order
 PRUNE_IMPOSSIBLE_STARTS = True
 PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
-CHECK_DEAD_HOLDERS = True # not useful without setting PRUNE_IMPOSSIBLE_STARTS
+CHECK_DEAD_HOLDERS = True # slow; not useful without PRUNE_IMPOSSIBLE_STARTS
 
 @print_time
 def main():
     titles = []
-    def recurse(tree):
+    title_regions = {}
+    def recurse(tree, region='titular'):
         for n, v in tree:
             if ck2parser.is_codename(n.val):
                 titles.append(n.val)
-                recurse(v)
+                child_region = region if region != 'e_null' else n.val
+                title_regions[n.val] = child_region
+                if region == 'titular':
+                    child_region = n.val
+                recurse(v, region=child_region)
     for _, tree in ck2parser.parse_files('common/landed_titles/*', modpath):
         recurse(tree)
     def next_day(day):
@@ -61,14 +66,12 @@ def main():
         char_death = {}
         for _, tree in ck2parser.parse_files('history/characters/*', modpath):
             for n, v in tree:
-                char, death = n.val, None
-                conflict = False
-                for n2, v2 in v:
-                    if isinstance(n2, ck2parser.Date):
-                        if 'death' in v2:
-                            death = n2.val
-                if death is not None:
-                    char_death[char] = death
+                try:
+                    char_death[n.val] = next(n2.val for n2, v2 in v
+                        if isinstance(n2, ck2parser.Date) and
+                        'death' in v2.dictionary)
+                except StopIteration:
+                    pass
     for path, tree in ck2parser.parse_files('history/titles/*', modpath):
         title = path.stem
         if not len(tree) > 0:
@@ -134,24 +137,26 @@ def main():
         for title, holder_dates in sorted(title_holder_dates.items()):
             dead_holders = []
             holders = title_holders[title]
-            for i in range(len(holders)):
-                start_date = holder_dates[i]
-                holder = holders[i]
+            for i, holder in enumerate(holders):
                 if holder == 0 or holder not in char_death:
                     continue
                 death = char_death[holder]
                 if i + 1 < len(holders):
                     if death < holder_dates[i + 1]:
                         dead_holders.append((death, holder_dates[i + 1]))
+                else:
+                    dead_holders.append((death, None))
             if dead_holders:
                 title_dead_holders.append((title, dead_holders))
+            #if title in DEBUG_INSPECT_LIST:
+            #    pprint(title)
+            #    pprint(dead_holders)
     title_liege_errors = []
     for title, liege_dates in sorted(title_liege_dates.items()):
         errors = []
         lieges = title_lieges[title]
-        for i in range(len(lieges)):
+        for i, liege in enumerate(lieges):
             start_date = liege_dates[i]
-            liege = lieges[i]
             if liege == 0:
                 continue
             if liege in title_holders:
@@ -217,6 +222,9 @@ def main():
                     dead_holders[i:i + 1] = intersection
                 if not dead_holders:
                     title_dead_holders.remove((title, dead_holders))
+                #if title in DEBUG_INSPECT_LIST:
+                #    pprint(title)
+                #    pprint(dead_holders)
     if LANDED_TITLES_ORDER:
         title_liege_errors.sort(key=lambda x: titles.index(x[0]))
         if CHECK_DEAD_HOLDERS:
@@ -229,7 +237,13 @@ def main():
 
     with (rootpath / 'check_title_history.txt').open('w') as fp:
         print('Liege has no holder:', file=fp)
+        if not title_liege_errors:
+            print('\t(none)', file=fp)
+        prev_region = None
         for title, errors in title_liege_errors:
+            region = title_regions[title]
+            if LANDED_TITLES_ORDER and region != prev_region:
+                print('\t# {}'.format(region), file=fp)
             line = '\t{}: '.format(title)
             for i, error in enumerate(errors):
                 line += '{}.{}.{}'.format(*error[0])
@@ -241,9 +255,16 @@ def main():
                 if i < len(errors) - 1:
                     line += ', '
             print(line, file=fp)
+            prev_region = region
         if CHECK_DEAD_HOLDERS:
             print('Holder is dead:', file=fp)
+            if not title_dead_holders:
+                print('\t(none)', file=fp)
+            prev_region = None
             for title, dead_holders in title_dead_holders:
+                region = title_regions[title]
+                if LANDED_TITLES_ORDER and region != prev_region:
+                    print('\t# {}'.format(region), file=fp)
                 line = '\t{}: '.format(title)
                 for i, dead_holder in enumerate(dead_holders):
                     line += '{}.{}.{}'.format(*dead_holder[0])
@@ -255,6 +276,7 @@ def main():
                     if i < len(dead_holders) - 1:
                         line += ', '
                 print(line, file=fp)
+                prev_region = region
 
 if __name__ == '__main__':
     main()
