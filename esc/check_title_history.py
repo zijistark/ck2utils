@@ -23,7 +23,10 @@ def main():
         for n, v in tree:
             if ck2parser.is_codename(n.val):
                 titles.append(n.val)
-                child_region = region if region != 'e_null' else n.val
+                child_region = region
+                if region == 'e_null' or (region == 'titular' and
+                    any(ck2parser.is_codename(n2.val) for n2, _ in v)):
+                    child_region = n.val
                 title_regions[n.val] = child_region
                 if region == 'titular':
                     child_region = n.val
