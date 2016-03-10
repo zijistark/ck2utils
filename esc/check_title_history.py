@@ -10,9 +10,10 @@ modpath = rootpath / 'SWMH-BETA/SWMH'
 
 #DEBUG_INSPECT_LIST = ['b_stenkyrka']
 
-LANDED_TITLES_ORDER = False # if false, date order
-PRUNE_IMPOSSIBLE_STARTS = False
+LANDED_TITLES_ORDER = True # if false, date order
+PRUNE_IMPOSSIBLE_STARTS = True
 PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
+CHECK_DEAD_HOLDERS = True # not useful without setting PRUNE_IMPOSSIBLE_STARTS
 
 @print_time
 def main():
@@ -56,6 +57,18 @@ def main():
     title_holders = {}
     title_liege_dates = {}
     title_lieges = {}
+    if CHECK_DEAD_HOLDERS:
+        char_death = {}
+        for _, tree in ck2parser.parse_files('history/characters/*', modpath):
+            for n, v in tree:
+                char, death = n.val, None
+                conflict = False
+                for n2, v2 in v:
+                    if isinstance(n2, ck2parser.Date):
+                        if 'death' in v2:
+                            death = n2.val
+                if death is not None:
+                    char_death[char] = death
     for path, tree in ck2parser.parse_files('history/titles/*', modpath):
         title = path.stem
         if not len(tree) > 0:
@@ -116,7 +129,23 @@ def main():
         title_holders[title] = holders
         title_liege_dates[title] = liege_dates
         title_lieges[title] = lieges
-    title_errors = []
+    if CHECK_DEAD_HOLDERS:
+        title_dead_holders = []
+        for title, holder_dates in sorted(title_holder_dates.items()):
+            dead_holders = []
+            holders = title_holders[title]
+            for i in range(len(holders)):
+                start_date = holder_dates[i]
+                holder = holders[i]
+                if holder == 0 or holder not in char_death:
+                    continue
+                death = char_death[holder]
+                if i + 1 < len(holders):
+                    if death < holder_dates[i + 1]:
+                        dead_holders.append((death, holder_dates[i + 1]))
+            if dead_holders:
+                title_dead_holders.append((title, dead_holders))
+    title_liege_errors = []
     for title, liege_dates in sorted(title_liege_dates.items()):
         errors = []
         lieges = title_lieges[title]
@@ -155,12 +184,12 @@ def main():
                     else:
                         errors.append((error_start, error_end))
         if errors:
-            title_errors.append((title, errors))
+            title_liege_errors.append((title, errors))
         #if title in DEBUG_INSPECT_LIST:
         #    pprint(title)
         #    pprint(errors)
     if PRUNE_IMPOSSIBLE_STARTS:
-        for title, errors in reversed(title_errors):
+        for title, errors in reversed(title_liege_errors):
             for i in range(len(errors) - 1, -1, -1):
                 # intersect this interval with the playable intervals,
                 # and update, split, or remove errors[i] as necessary
@@ -172,17 +201,36 @@ def main():
                                              min(end, b) if end else b))
                 errors[i:i + 1] = intersection
             if not errors:
-                title_errors.remove((title, errors))
+                title_liege_errors.remove((title, errors))
             #if title in DEBUG_INSPECT_LIST:
             #    pprint(title)
             #    pprint(errors)
+        if CHECK_DEAD_HOLDERS:
+            for title, dead_holders in reversed(title_dead_holders):
+                for i in range(len(dead_holders) - 1, -1, -1):
+                    start, end = dead_holders[i]
+                    intersection = []
+                    for a, b in playables:
+                        if start < b and (end is None or a < end):
+                            intersection.append((max(start, a),
+                                                 min(end, b) if end else b))
+                    dead_holders[i:i + 1] = intersection
+                if not dead_holders:
+                    title_dead_holders.remove((title, dead_holders))
     if LANDED_TITLES_ORDER:
-        title_errors.sort(key=lambda x: titles.index(x[0]))
+        title_liege_errors.sort(key=lambda x: titles.index(x[0]))
+        if CHECK_DEAD_HOLDERS:
+            title_dead_holders.sort(key=lambda x: titles.index(x[0]))
     else:
-        title_errors.sort(key=lambda x: (x[1][0][0], titles.index(x[0])))
+        title_liege_errors.sort(key=lambda x: (x[1][0][0], titles.index(x[0])))
+        if CHECK_DEAD_HOLDERS:
+            title_dead_holders.sort(key=lambda x: (x[1][0][0],
+                                                   titles.index(x[0])))
+
     with (rootpath / 'check_title_history.txt').open('w') as fp:
-        for title, errors in title_errors:
-            line = title + ': '
+        print('Liege has no holder:', file=fp)
+        for title, errors in title_liege_errors:
+            line = '\t{}: '.format(title)
             for i, error in enumerate(errors):
                 line += '{}.{}.{}'.format(*error[0])
                 if error[1] != next_day(error[0]):
@@ -193,6 +241,19 @@ def main():
                 if i < len(errors) - 1:
                     line += ', '
             print(line, file=fp)
+        if CHECK_DEAD_HOLDERS:
+            for title, dead_holders in title_dead_holders:
+                line = '\t{}: '.format(title)
+                for i, dead_holder in enumerate(dead_holders):
+                    line += '{}.{}.{}'.format(*dead_holder[0])
+                    if dead_holder[1] != next_day(dead_holder[0]):
+                        if dead_holder[1] is None:
+                            line += ' on'
+                        else:
+                            line += ' to {}.{}.{}'.format(*dead_holder[1])
+                    if i < len(dead_holders) - 1:
+                        line += ', '
+                print(line, file=fp)
 
 if __name__ == '__main__':
     main()
