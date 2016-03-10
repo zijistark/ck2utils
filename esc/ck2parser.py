@@ -23,6 +23,7 @@ CHARS_PER_LINE = 120
 
 fq_keys = []
 errors_default = None
+cache_default = False
 _parse_tree_cache = {}
 
 memoize = functools.lru_cache(maxsize=None)
@@ -49,7 +50,9 @@ def files(glob, *moddirs, basedir=vanilladir, reverse=False):
         yield p
 
 def parse_files(glob, *moddirs, basedir=vanilladir, encoding='cp1252',
-                errors=errors_default, cache=False):
+                errors=errors_default, cache=None):
+    if cache is None:
+        cache = cache_default
     for path in files(glob, *moddirs, basedir=basedir):
         yield path, parse_file(path, encoding, errors, cache)
 
@@ -654,8 +657,10 @@ def parse(s):
     #     raise
     return tree
 
-def parse_file(path, encoding='cp1252', errors=errors_default, cache=False):
+def parse_file(path, encoding='cp1252', errors=errors_default, cache=None):
     global _parse_tree_cache
+    if cache is None:
+        cache = cache_default
     if path in _parse_tree_cache:
         #and os.path.getmtime(str(path)) <= _parse_tree_cache[path].mtime):
         return _parse_tree_cache[path]
