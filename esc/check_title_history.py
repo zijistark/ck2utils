@@ -242,6 +242,7 @@ def main():
                     line += ', '
             print(line, file=fp)
         if CHECK_DEAD_HOLDERS:
+            print('Holder is dead:', file=fp)
             for title, dead_holders in title_dead_holders:
                 line = '\t{}: '.format(title)
                 for i, dead_holder in enumerate(dead_holders):
