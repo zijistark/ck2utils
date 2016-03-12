@@ -17,7 +17,7 @@ from grako.parsing import graken, Parser
 from grako.util import re, RE_FLAGS, generic_main  # noqa
 
 
-__version__ = (2016, 3, 12, 0, 46, 54, 5)
+__version__ = (2016, 3, 12, 5, 6, 7, 5)
 
 __all__ = [
     'CK2SimpleParser',
@@ -99,7 +99,7 @@ class CK2SimpleParser(Parser):
                         self._item_()
                     self._positive_closure(block2)
                 with self._option():
-                    pass
+                    self._empty_closure()
                 self._error('no available options')
         self.ast['@'] = self.last_node
         self._token('}')
