@@ -7,9 +7,9 @@ import operator
 import pathlib
 import re
 import sys
-from funcparserlib import lexer
-from funcparserlib import parser
 import localpaths
+import ck2_simple_parser
+#import ck2_full_parser
 
 rootpath = localpaths.rootpath
 vanilladir = localpaths.vanilladir
@@ -22,7 +22,6 @@ TAB_WIDTH = 4 # minimum 2
 CHARS_PER_LINE = 120
 
 fq_keys = []
-errors_default = None
 cache_default = False
 _parse_tree_cache = {}
 
@@ -49,12 +48,12 @@ def files(glob, *moddirs, basedir=vanilladir, reverse=False):
                        reverse=reverse):
         yield p
 
-def parse_files(glob, *moddirs, basedir=vanilladir, encoding='cp1252',
-                errors=errors_default, cache=None):
-    if cache is None:
-        cache = cache_default
+def parse_files_full(*args, **kwargs):
+    yield from parse_files(*args, parser='full', **kwargs)
+
+def parse_files(glob, *moddirs, basedir=vanilladir, **kwargs):
     for path in files(glob, *moddirs, basedir=basedir):
-        yield path, parse_file(path, encoding, errors, cache)
+        yield path, parse_file(path, **kwargs)
 
 def flush(path=None):
     global _parse_tree_cache
@@ -164,19 +163,6 @@ def chars(line):
             col += 1
     return col
 
-token_specs = [
-    ('comment', (r'#(.*\S)?',)),
-    ('whitespace', (r'[ \t]+',)),
-    ('newline', (r'\r?\n',)),
-    ('op', (r'[={}]',)),
-    ('date', (r'\d*\.\d*\.\d*',)),
-    ('number', (r'\d+(\.\d+)?(?!\w)',)),
-    ('quoted_string', (r'"[^"#\r\n]*"',)),
-    ('unquoted_string', (r'[^\s"#={}]+',))
-]
-useless = ['whitespace']
-tokenize = lexer.make_tokenizer(token_specs)
-
 def comments_to_str(comments, indent):
     if not comments:
         return ''
@@ -227,8 +213,8 @@ class Stringifiable(object):
     def indent_col(self):
         return self.indent * TAB_WIDTH
 
-class TopLevel(Stringifiable):
-    def __init__(self, contents, post_comments):
+class File(Stringifiable):
+    def __init__(self, contents, post_comments=[]):
         self.contents = contents
         self.post_comments = [Comment(s) for s in post_comments]
         self._dictionary = None
@@ -278,9 +264,9 @@ class TopLevel(Stringifiable):
         return s
 
 class Commented(Stringifiable):
-    def __init__(self, pre_comments, string, post_comment):
-        self.pre_comments = [Comment(s) for s in pre_comments]
+    def __init__(self, string, pre_comments=[], post_comment=None):
         self.val = self.str_to_val(string)
+        self.pre_comments = [Comment(s) for s in pre_comments]
         self.post_comment = Comment(post_comment) if post_comment else None
         super().__init__()
 
@@ -614,51 +600,78 @@ class Obj(Stringifiable):
         col = col_ker
         return s, (nl, col)
 
-def unquote(string):
-    return string[1:-1]
+#
+#def some(tok_type):
+#    return (parser.some(lambda tok: tok.type == tok_type) >>
+#            (lambda tok: tok.value)).named(str(tok_type))
 
-def some(tok_type):
-    return (parser.some(lambda tok: tok.type == tok_type) >>
-            (lambda tok: tok.value)).named(str(tok_type))
+# unarg = lambda f: lambda x: f(*x)
+# many = parser.many
+# maybe = parser.maybe
+# skip = parser.skip
+# fwd = parser.with_forward_decls
 
-unarg = lambda f: lambda x: f(*x)
-many = parser.many
-maybe = parser.maybe
-skip = parser.skip
-fwd = parser.with_forward_decls
+# nl = skip(many(some('newline')))
+# end = nl + skip(parser.finished)
+# comment = some('comment')
+# commented = lambda x: (many(nl + comment) + nl + x + maybe(comment))
 
-nl = skip(many(some('newline')))
-end = nl + skip(parser.finished)
-comment = some('comment')
-commented = lambda x: (many(nl + comment) + nl + x + maybe(comment))
+# def op(s):
+#     return (commented(parser.a(lexer.Token('op', s)) >>
+#             (lambda tok: tok.value)) >> unarg(Op))
 
-def op(s):
-    return (commented(parser.a(lexer.Token('op', s)) >>
-            (lambda tok: tok.value)) >> unarg(Op))
+# unquoted_string = commented(some('unquoted_string')) >> unarg(String)
+# quoted_string = commented(some('quoted_string') >> unquote) >> unarg(String)
+# number = commented(some('number')) >> unarg(Number)
+# date = commented(some('date')) >> unarg(Date)
 
-unquoted_string = commented(some('unquoted_string')) >> unarg(String)
-quoted_string = commented(some('quoted_string') >> unquote) >> unarg(String)
-number = commented(some('number')) >> unarg(Number)
-date = commented(some('date')) >> unarg(Date)
+# key = unquoted_string | date | number
+# value = fwd(lambda: obj | key | quoted_string)
+# pair = key + op('=') + value >> unarg(Pair)
+# obj = op('{') + (many(pair | value)) + op('}') >> unarg(Obj)
+# toplevel = many(pair) + many(nl + comment) + end >> unarg(TopLevel)
 
-key = unquoted_string | date | number
-value = fwd(lambda: obj | key | quoted_string)
-pair = key + op('=') + value >> unarg(Pair)
-obj = op('{') + (many(pair | value)) + op('}') >> unarg(Obj)
-toplevel = many(pair) + many(nl + comment) + end >> unarg(TopLevel)
+#optimization thoughts:
+#add ~ cut to pair
+# collapse date,number,name to key, and split in semantics
+#delete item
 
-def parse(s):
-    tokens = [t for t in tokenize(s) if t.type not in useless]
-    # try:
-    tree = toplevel.parse(tokens)
-    # except parser.NoParseError:
-    #     from pprint import pprint
-    #     pprint(list(enumerate(tokens[:20])))
-    #     raise
-    return tree
+class CK2SimpleSemantics(object):
+    def file(self, ast):
+        return File(ast)
 
-def parse_file(path, encoding='cp1252', errors=errors_default, cache=None):
-    global _parse_tree_cache
+    def pair(self, ast):
+        return Pair(ast.key, Op('='), ast.value)
+
+    def object(self, ast):
+        return Obj(Op('{'), ast, Op('}'))
+
+    def string(self, ast):
+        return String(ast[1:-1])
+
+    def name(self, ast):
+        return String(ast)
+
+    def number(self, ast):
+        return Number(ast)
+
+    def date(self, ast):
+        return Date(ast)
+
+class CK2FullSemantics(object):
+    pass
+
+_simple_parser = ck2_simple_parser.CK2SimpleParser(
+    semantics=CK2SimpleSemantics())
+_full_parser = None
+# _full_parser = ck2_full_parser.CK2FullParser(
+#     semantics=CK2FullSemantics())
+
+def parse_file_full(path, **kwargs):
+    return parse_file(path, parser='full', **kwargs)
+
+def parse_file(path, full=False, cache=None, encoding='cp1252', errors=None):
+    parser = _full_parser if full else _simple_parser
     if cache is None:
         cache = cache_default
     if path in _parse_tree_cache:
@@ -666,15 +679,11 @@ def parse_file(path, encoding='cp1252', errors=errors_default, cache=None):
         return _parse_tree_cache[path]
     with path.open(encoding=encoding, errors=errors) as f:
         try:
-            tree = parse(f.read())
+            tree = parser.parse(f.read(), rule_name='file')
             #tree.mtime = time.time()
             if cache:
                 _parse_tree_cache[path] = tree
             return tree
-        except (lexer.LexerError, parser.NoParseError) as e:
-            print(path)
-            print(sys.exc_info())
-            return e
         except:
             print(path)
             raise

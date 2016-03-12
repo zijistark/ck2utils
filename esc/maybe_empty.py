@@ -6,11 +6,6 @@ import sys
 import ck2parser
 from print_time import print_time
 
-IGNORE_ENCODING_ERRORS = True
-
-if IGNORE_ENCODING_ERRORS:
-    ck2parser.errors_default = 'replace'
-
 def get_modpath():
     if len(sys.argv) <= 1:
         return ck2parser.rootpath / 'SWMH-BETA/SWMH'

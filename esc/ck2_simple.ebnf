@@ -1,0 +1,54 @@
+@@comments :: /#.*$/
+
+file
+    =
+    {pair} $
+    ;
+
+
+pair
+    =
+    key:key '=' value:(object | item)
+    ;
+
+
+key
+    =
+    date | number | name
+    ;
+
+
+object
+    =
+    '{' @:({pair}+ | {item}+ | {}) '}'
+    ;
+
+
+item
+    =
+    string | key
+    ;
+
+
+string
+    =
+    /".*?"/
+    ;
+
+
+name
+    =
+    /[^\s"#={}]+/
+    ;
+
+
+number
+    =
+    /\d+(\.\d+)?(?![^\s"#={}])/
+    ;
+
+
+date
+    =
+    /\d*\.\d*\.\d*(?![^\s"#={}])/
+    ;
