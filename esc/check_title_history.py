@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
 import bisect
-import ck2parser
+from ck2parser import rootpath, is_codename, Date, SimpleParser, FullParser
 from pprint import pprint
 from print_time import print_time
 
-rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH'
 
 #DEBUG_INSPECT_LIST = ['d_aswan']
@@ -17,21 +16,22 @@ CHECK_DEAD_HOLDERS = True # slow; not useful without PRUNE_IMPOSSIBLE_STARTS
 
 @print_time
 def main():
+    parser = SimpleParser()
     titles = []
     title_regions = {}
     def recurse(tree, region='titular'):
         for n, v in tree:
-            if ck2parser.is_codename(n.val):
+            if is_codename(n.val):
                 titles.append(n.val)
                 child_region = region
                 if region == 'e_null' or (region == 'titular' and
-                    any(ck2parser.is_codename(n2.val) for n2, _ in v)):
+                    any(is_codename(n2.val) for n2, _ in v)):
                     child_region = n.val
                 title_regions[n.val] = child_region
                 if region == 'titular':
                     child_region = n.val
                 recurse(v, region=child_region)
-    for _, tree in ck2parser.parse_files('common/landed_titles/*', modpath):
+    for _, tree in parser.parse_files('common/landed_titles/*', modpath):
         recurse(tree)
     def next_day(day):
         next_day = day[0], day[1], day[2] + 1
@@ -46,11 +46,11 @@ def main():
         if PRUNE_NONBOOKMARK_STARTS:
             playables = []
         else:
-            _, defines = next(ck2parser.parse_files('common/defines.txt',
-                                                    modpath))
+            _, defines = next(parser.parse_files('common/defines.txt',
+                                                 modpath))
             playables = [(defines['start_date'].val,
                           next_day(defines['last_start_date'].val))]
-        for _, tree in ck2parser.parse_files('common/bookmarks/*', modpath):
+        for _, tree in parser.parse_files('common/bookmarks/*', modpath):
             for _, v in tree:
                 date = v['date'].val
                 if not any(a <= date < b for a, b in playables):
@@ -67,15 +67,15 @@ def main():
     title_lieges = {}
     if CHECK_DEAD_HOLDERS:
         char_death = {}
-        for _, tree in ck2parser.parse_files('history/characters/*', modpath):
+        for _, tree in parser.parse_files('history/characters/*', modpath):
             for n, v in tree:
                 try:
                     char_death[n.val] = next(n2.val for n2, v2 in v
-                        if isinstance(n2, ck2parser.Date) and
+                        if isinstance(n2, Date) and
                         'death' in v2.dictionary)
                 except StopIteration:
                     pass
-    for path, tree in ck2parser.parse_files('history/titles/*', modpath):
+    for path, tree in parser.parse_files('history/titles/*', modpath):
         title = path.stem
         if not len(tree) > 0:
             continue

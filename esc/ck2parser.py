@@ -7,8 +7,9 @@ import operator
 import pathlib
 import re
 import sys
-from funcparserlib import lexer
-from funcparserlib import parser
+from funcparserlib.lexer import make_tokenizer, Token
+from funcparserlib.parser import (some, a, maybe, many, finished, skip,
+                                  oneplus, forward_decl, NoParseError)
 import localpaths
 
 rootpath = localpaths.rootpath
@@ -22,9 +23,6 @@ TAB_WIDTH = 4 # minimum 2
 CHARS_PER_LINE = 120
 
 fq_keys = []
-errors_default = None
-cache_default = False
-_parse_tree_cache = {}
 
 memoize = functools.lru_cache(maxsize=None)
 
@@ -49,19 +47,6 @@ def files(glob, *moddirs, basedir=vanilladir, reverse=False):
                        reverse=reverse):
         yield p
 
-def parse_files(glob, *moddirs, basedir=vanilladir, encoding='cp1252',
-                errors=errors_default, cache=None):
-    if cache is None:
-        cache = cache_default
-    for path in files(glob, *moddirs, basedir=basedir):
-        yield path, parse_file(path, encoding, errors, cache)
-
-def flush(path=None):
-    global _parse_tree_cache
-    if path is None:
-        _parse_tree_cache = {}
-    else:
-        del _parse_tree_cache[path]
 
 @memoize
 def cultures(*moddirs, groups=True):
@@ -74,6 +59,7 @@ def cultures(*moddirs, groups=True):
                             if n2.val != 'graphical_cultures')
     return (cultures, culture_groups) if groups else cultures
 
+
 @memoize
 def religions(*moddirs, groups=True):
     religions = []
@@ -85,6 +71,7 @@ def religions(*moddirs, groups=True):
                              if (isinstance(v2, Obj) and
                                  n2.val not in ('male_names', 'female_names')))
     return (religions, religion_groups) if groups else religions
+
 
 _max_provinces = None
 
@@ -103,10 +90,12 @@ def province_id_name_map(where):
             continue
     return id_name_map
 
+
 def max_provinces(where):
     if _max_provinces is None:
         province_id_name_map(where)
     return _max_provinces
+
 
 def provinces(where):
     id_name = province_id_name_map(where)
@@ -121,6 +110,7 @@ def provinces(where):
                 continue
             yield number, title, tree
 
+
 def localisation(*moddirs, basedir=vanilladir, ordered=False):
     locs = collections.OrderedDict() if ordered else {}
     loc_glob = 'localisation/*'
@@ -133,10 +123,12 @@ def localisation(*moddirs, basedir=vanilladir, ordered=False):
                 continue
     return locs
 
+
 def first_post_comment(item):
     if item.post_comment:
         return item.post_comment.val.split('#', 1)[0].strip()
     return None
+
 
 def prepend_post_comment(item, s, force=False):
     if force or first_post_comment(item) != s:
@@ -144,11 +136,13 @@ def prepend_post_comment(item, s, force=False):
             s += ' ' + str(item.post_comment)
         item.post_comment = Comment(s)
 
+
 def is_codename(string):
     try:
         return re.match(r'[ekdcb]_', string) is not None
     except TypeError:
         return False
+
 
 def chars(line):
     line = str(line)
@@ -164,18 +158,6 @@ def chars(line):
             col += 1
     return col
 
-token_specs = [
-    ('comment', (r'#(.*\S)?',)),
-    ('whitespace', (r'[ \t]+',)),
-    ('newline', (r'\r?\n',)),
-    ('op', (r'[={}]',)),
-    ('date', (r'\d*\.\d*\.\d*',)),
-    ('number', (r'\d+(\.\d+)?(?!\w)',)),
-    ('quoted_string', (r'"[^"#\r\n]*"',)),
-    ('unquoted_string', (r'[^\s"#={}]+',))
-]
-useless = ['whitespace']
-tokenize = lexer.make_tokenizer(token_specs)
 
 def comments_to_str(comments, indent):
     if not comments:
@@ -185,7 +167,7 @@ def comments_to_str(comments, indent):
         tree = parse('\n'.join(c.val for c in comments))
         if not tree.contents:
             raise ValueError()
-    except (parser.NoParseError, ValueError):
+    except (NoParseError, ValueError):
         butlast = comments_to_str(comments[:-1], indent)
         if butlast:
             butlast += indent * '\t'
@@ -202,7 +184,8 @@ def comments_to_str(comments, indent):
     s = s.rstrip('\t')
     return s
 
-class Comment(object):
+
+class Comment:
     def __init__(self, string):
         if string[0] == '#':
             string = string[1:]
@@ -211,7 +194,8 @@ class Comment(object):
     def __str__(self):
         return ('# ' if self.val and self.val[0] != '#' else '#') + self.val
 
-class Stringifiable(object):
+
+class Stringifiable:
     def __init__(self):
         self.indent = 0
 
@@ -227,10 +211,15 @@ class Stringifiable(object):
     def indent_col(self):
         return self.indent * TAB_WIDTH
 
+
 class TopLevel(Stringifiable):
-    def __init__(self, contents, post_comments):
+
+    def __init__(self, contents, post_comments=None):
         self.contents = contents
-        self.post_comments = [Comment(s) for s in post_comments]
+        if post_comments is None:
+            self.post_comments = []
+        else:
+            self.post_comments = [Comment(s) for s in post_comments]
         self._dictionary = None
         super().__init__()
 
@@ -277,11 +266,18 @@ class TopLevel(Stringifiable):
             s += comments_to_str(self.post_comments, self.indent)
         return s
 
+
 class Commented(Stringifiable):
-    def __init__(self, pre_comments, string, post_comment):
-        self.pre_comments = [Comment(s) for s in pre_comments]
-        self.val = self.str_to_val(string)
-        self.post_comment = Comment(post_comment) if post_comment else None
+
+    def __init__(self, *args):
+        if len(args) == 1:
+            self.pre_comments = []
+            self.val = self.str_to_val(args[0])
+            self.post_comment = None
+        else:
+            self.pre_comments = [Comment(s) for s in args[0]]
+            self.val = self.str_to_val(args[1])
+            self.post_comment = Comment(args[2]) if args[2] else None
         super().__init__()
 
     @classmethod
@@ -341,7 +337,9 @@ class Commented(Stringifiable):
             col = self.indent_col
         return s, (nl, col)
 
+
 class String(Commented):
+
     def __init__(self, *args):
         super().__init__(*args)
         self.force_quote = False
@@ -352,25 +350,32 @@ class String(Commented):
             s = '"{}"'.format(s)
         return s, col + chars(s)
 
+
 class Number(Commented):
+
     def str_to_val(self, string):
         try:
             return int(string)
         except ValueError:
             return float(string)
     
+
 class Date(Commented):
+
     def str_to_val(self, string):
         return tuple((int(x) if x else 0) for x in string.split('.'))
 
     def val_inline_str(self, col):
         s = '{}.{}.{}'.format(*self.val)
         return s, col + chars(s)
-    
+
+
 class Op(Commented):
     pass
 
+
 class Pair(Stringifiable):
+
     def __init__(self, key, tis, value):
         self.key = key
         self.tis = tis
@@ -463,7 +468,9 @@ class Pair(Stringifiable):
             col = col_val
         return s, (nl, col)
 
+
 class Obj(Stringifiable):
+
     def __init__(self, kel, contents, ker):
         self.kel = kel
         self.contents = contents
@@ -614,67 +621,143 @@ class Obj(Stringifiable):
         col = col_ker
         return s, (nl, col)
 
-def unquote(string):
-    return string[1:-1]
 
-def some(tok_type):
-    return (parser.some(lambda tok: tok.type == tok_type) >>
-            (lambda tok: tok.value)).named(str(tok_type))
+class SimpleTokenizer:
 
-unarg = lambda f: lambda x: f(*x)
-many = parser.many
-maybe = parser.maybe
-skip = parser.skip
-fwd = parser.with_forward_decls
+    @classmethod
+    def tokenize(cls, string):
+        for x in cls.t(string):
+            if x.type not in cls.useless:
+                if x.type == 'Key':
+                    if re.fullmatch(r'\d*\.\d*\.\d*', x.value):
+                        x.type = 'Date'
+                    elif re.fullmatch(r'\d+(\.\d+)?', x.value):
+                        x.type = 'Number'
+                    else:
+                        x.type = 'Name'
+                yield x
 
-nl = skip(many(some('newline')))
-end = nl + skip(parser.finished)
-comment = some('comment')
-commented = lambda x: (many(nl + comment) + nl + x + maybe(comment))
+    specs = [
+        ('Comment', (r'#.*',)),
+        ('Space', (r'\s+',)),
+        ('Op', (r'[={}]',)),
+        ('String', (r'".*?"',)),
+        ('Key', (r'[^\s"#={}]+',))
+    ]
+    useless = ['Comment', 'Space']
+    t = staticmethod(make_tokenizer(specs))
 
-def op(s):
-    return (commented(parser.a(lexer.Token('op', s)) >>
-            (lambda tok: tok.value)) >> unarg(Op))
 
-unquoted_string = commented(some('unquoted_string')) >> unarg(String)
-quoted_string = commented(some('quoted_string') >> unquote) >> unarg(String)
-number = commented(some('number')) >> unarg(Number)
-date = commented(some('date')) >> unarg(Date)
+class FullTokenizer(SimpleTokenizer):
 
-key = unquoted_string | date | number
-value = fwd(lambda: obj | key | quoted_string)
-pair = key + op('=') + value >> unarg(Pair)
-obj = op('{') + (many(pair | value)) + op('}') >> unarg(Obj)
-toplevel = many(pair) + many(nl + comment) + end >> unarg(TopLevel)
+    #specs = [
+    #    ('Comment', (r'#(.*\S)?',)),
+    #    ('Space', (r'[ \t]+',)),
+    #    ('NL', (r'\r?\n',)),
+    #    ('Op', (r'[={}]',)),
+    #    ('String', (r'".*?"',)),
+    #    ('Key', (r'[^\s"#={}]+',))
+    #]
+    specs = [
+        ('comment', (r'#(.*\S)?',)),
+        ('whitespace', (r'[ \t]+',)),
+        ('newline', (r'\r?\n',)),
+        ('op', (r'[={}]',)),
+        ('date', (r'\d*\.\d*\.\d*',)),
+        ('number', (r'\d+(\.\d+)?(?!\w)',)),
+        ('quoted_string', (r'"[^"#\r\n]*"',)),
+        ('unquoted_string', (r'[^\s"#={}]+',))
+    ]
+    useless = ['whitespace']
+    t = staticmethod(make_tokenizer(specs))
 
-def parse(s):
-    tokens = [t for t in tokenize(s) if t.type not in useless]
-    # try:
-    tree = toplevel.parse(tokens)
-    # except parser.NoParseError:
-    #     from pprint import pprint
-    #     pprint(list(enumerate(tokens[:20])))
-    #     raise
-    return tree
 
-def parse_file(path, encoding='cp1252', errors=errors_default, cache=None):
-    global _parse_tree_cache
-    if cache is None:
-        cache = cache_default
-    if path in _parse_tree_cache:
-        #and os.path.getmtime(str(path)) <= _parse_tree_cache[path].mtime):
-        return _parse_tree_cache[path]
-    with path.open(encoding=encoding, errors=errors) as f:
+class SimpleParser:
+
+    def __init__(self, tag=None):
+        self.tag = tag
+        self.parse_tree_cache = {}
+        self.cache_default = False
+        self.tokenizer = SimpleTokenizer
+        unarg = lambda f: lambda x: f(*x)
+        const = lambda x: lambda _: x
+        tokval = lambda x: x.value
+        toktype = lambda t: some(lambda x: x.type == t) >> tokval
+        op = lambda s: a(Token('Op', s)) >> tokval >> Op
+        unquote = lambda s: s[1:-1]
+        number = toktype('Number') >> Number
+        date = toktype('Date') >> Date
+        name = toktype('Name') >> String
+        string = toktype('String') >> unquote >> String
+        key = date | number | name
+        pair = forward_decl()
+        obj = (op('{') + many(pair | string | key) + op('}') >>
+               unarg(Obj))
+        pair.define(key + op('=') + (obj | string | key) >> unarg(Pair))
+        self.toplevel = many(pair) + skip(finished) >> TopLevel
+
+    def flush(self, path=None):
+        if path is None:
+            self.parse_tree_cache = {}
+        else:
+            del self.parse_tree_cache[path]
+
+    def parse_files(self, glob, *moddirs, basedir=vanilladir, **kwargs):
+        for path in files(glob, *moddirs, basedir=basedir):
+            yield path, self.parse_file(path, **kwargs)
+
+    def parse_file(self, path, encoding='cp1252', errors=None, cache=None):
+        if cache is None:
+            cache = self.cache_default
+        if path in self.parse_tree_cache:
+            #and os.path.getmtime(str(path)) <= self.parse_tree_cache[path].mtime):
+            return self.parse_tree_cache[path]
+        with path.open(encoding=encoding, errors=errors) as f:
+            try:
+                tree = self.parse(f.read())
+                #tree.mtime = time.time()
+                if cache:
+                    self.parse_tree_cache[path] = tree
+                return tree
+            except:
+                print(path)
+                raise
+
+    def parse(self, string):
+        tokens = list(self.tokenizer.tokenize(string))
         try:
-            tree = parse(f.read())
-            #tree.mtime = time.time()
-            if cache:
-                _parse_tree_cache[path] = tree
-            return tree
-        except (lexer.LexerError, parser.NoParseError) as e:
-            print(path)
-            print(sys.exc_info())
-            return e
+            tree = self.toplevel.parse(tokens)
         except:
-            print(path)
+            from pprint import pprint
+            pprint(list(enumerate(tokens[:20])))
             raise
+        return tree
+
+
+class FullParser(SimpleParser):
+
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.tokenizer = FullTokenizer()
+        unarg = lambda f: lambda x: f(*x)
+        unquote = lambda s: s[1:-1]
+        tokval = lambda x: x.value
+        toktype = lambda t: some(lambda x: x.type == t) >> tokval
+        op = lambda s: commented(a(Token('op', s)) >> tokval) >> unarg(Op)
+        nl = skip(many(toktype('newline')))
+        end = nl + skip(finished)
+        comment = toktype('comment')
+        commented = lambda x: (many(nl + comment) + nl + x + maybe(comment))
+        unquoted_string = (commented(toktype( 'unquoted_string')) >>
+                           unarg(String))
+        quoted_string = (commented(toktype('quoted_string') >> unquote) >>
+                         unarg(String))
+        number = commented(toktype('number')) >> unarg(Number)
+        date = commented(toktype('date')) >> unarg(Date)
+        key = unquoted_string | date | number
+        value = forward_decl()
+        pair = key + op('=') + value >> unarg(Pair)
+        obj = op('{') + (many(pair | value)) + op('}') >> unarg(Obj)
+        value.define(obj | key | quoted_string)
+        self.toplevel = (many(pair) + many(nl + comment) + end >>
+                         unarg(TopLevel))
