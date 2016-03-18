@@ -20,7 +20,7 @@ import csv
 import pathlib
 import re
 import sys
-from ck2parser import (rootpath, vanilladir, fq_keys, csv_rows, files,
+from ck2parser import (rootpath, vanilladir, csv_rows, files,
                        get_max_provinces, get_religions,
                        get_province_id_name_map, is_codename, Date, String,
                        SimpleParser)
@@ -128,7 +128,6 @@ def get_unlanded_titles(parser, where):
 
 @print_time
 def main():
-    global fq_keys
     parser = SimpleParser()
     if len(sys.argv) <= 1:
         modpath = rootpath / 'SWMH-BETA/SWMH'
@@ -153,7 +152,7 @@ def main():
         religions, religion_groups = get_religions(parser, modpath)
         governments, gov_prefixes = get_governments(parser, modpath)
         ul_titles = get_unlanded_titles(parser, modpath)
-    fq_keys = cultures
+    parser.fq_keys = cultures
     lt_keys_to_remove = [
         'title', 'title_female', 'foa', 'title_prefix', 'short_name',
         'name_tier', 'location_ruler_title', 'dynasty_title_names'] + cultures

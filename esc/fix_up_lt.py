@@ -7,10 +7,9 @@ import re
 import shutil
 import tempfile
 import time
-from ck2parser import (rootpath, is_codename, fq_keys,
-                       get_province_id_name_map, get_provinces,
-                       get_localisation, get_cultures, prepend_post_comment,
-                       Obj, Comment, FullParser)
+from ck2parser import (rootpath, is_codename, get_province_id_name_map,
+                       get_provinces, get_localisation, get_cultures,
+                       prepend_post_comment, Obj, Comment, FullParser)
 from print_time import print_time
 
 modpath = rootpath / 'SWMH-BETA/SWMH'
@@ -51,7 +50,6 @@ def process_province_history(parser, where):
 
 @print_time
 def main():
-    global fq_keys
     simple_parser = SimpleParser()
     full_parser = FullParser()
     lt = modpath / 'common/landed_titles'
@@ -59,7 +57,7 @@ def main():
         simple_parser, modpath)
     localisation = get_localisation(modpath)
     cultures = get_cultures(simple_parser, modpath, groups=False)
-    fq_keys = cultures
+    full_parser.fq_keys = cultures
     historical_baronies = []
 
     def update_tree(tree, is_def=True):

@@ -19,13 +19,8 @@ csv.register_dialect('ckii', delimiter=';', doublequote=False,
 TAB_WIDTH = 4 # minimum 2
 CHARS_PER_LINE = 120
 
-fq_keys = []
-
 memoize = functools.lru_cache(maxsize=None)
 
-def force_quote(key):
-    global fq_keys
-    return isinstance(key, String) and key.val in fq_keys
 
 def csv_rows(path, linenum=False, comments=False):
     with open(str(path), newline='', encoding='cp1252', errors='replace') as f:
@@ -34,6 +29,7 @@ def csv_rows(path, linenum=False, comments=False):
                if (len(r) > 1 and r[0] and
                    (comments or not r[0].startswith('#'))))
         yield from gen
+
 
 # give mod dirs in descending lexicographical order of mod name (Z-A),
 # modified for dependencies as necessary.
@@ -75,7 +71,7 @@ _max_provinces = None
 @memoize
 def get_province_id_name_map(parser, where):
     global _max_provinces
-    _, tree = next(parse_files('map/default.map', where))
+    _, tree = next(parser.parse_files('map/default.map', where))
     defs = tree['definitions'].val
     _max_provinces = int(tree['max_provinces'].val)
     id_name_map = {}
@@ -90,12 +86,12 @@ def get_province_id_name_map(parser, where):
 
 def get_max_provinces(parser, where):
     if _max_provinces is None:
-        province_id_name_map(parser, where)
+        get_province_id_name_map(parser, where)
     return _max_provinces
 
 
 def get_provinces(parser, where):
-    id_name = province_id_name_map(parser, where)
+    id_name = get_province_id_name_map(parser, where)
     for path in files('history/provinces/*', where):
         number, name = path.stem.split(' - ')
         number = int(number)
@@ -156,16 +152,19 @@ def chars(line):
     return col
 
 
-def comments_to_str(comments, indent):
+def comments_to_str(parser, comments, indent):
     if not comments:
         return ''
     sep = '\n' + indent * '\t'
+    comments_str = '\n'.join(c.val for c in comments)
+    if comments_str == '':
+        return ''
     try:
-        tree = parse('\n'.join(c.val for c in comments))
+        tree = parser.parse(comments_str)
         if not tree.contents:
             raise ValueError()
     except (NoParseError, ValueError):
-        butlast = comments_to_str(comments[:-1], indent)
+        butlast = comments_to_str(parser, comments[:-1], indent)
         if butlast:
             butlast += indent * '\t'
         return butlast + str(comments[-1]) + '\n'
@@ -177,7 +176,7 @@ def comments_to_str(comments, indent):
         s += '#' + p_is_lines[0] + sep
         s += ''.join('#' + line[indent:] + sep for line in p_is_lines[1:])
     if tree.post_comments:
-        s += comments_to_str(tree.post_comments, indent)
+        s += comments_to_str(parser, tree.post_comments, indent)
     s = s.rstrip('\t')
     return s
 
@@ -194,7 +193,16 @@ class Comment:
 
 class Stringifiable:
     def __init__(self):
-        self.indent = 0
+        self._indent = 0
+        self._parser = None
+
+    @property
+    def parser(self):
+        return self._parser
+    
+    @parser.setter
+    def parser(self, value):
+        self._parser = value
 
     @property
     def indent(self):
@@ -212,13 +220,14 @@ class Stringifiable:
 class TopLevel(Stringifiable):
 
     def __init__(self, contents, post_comments=None):
+        super().__init__()
         self.contents = contents
         if post_comments is None:
             self.post_comments = []
         else:
             self.post_comments = [Comment(s) for s in post_comments]
         self._dictionary = None
-        super().__init__()
+        self.indent = self.indent
 
     def __len__(self):
         return len(self.contents)
@@ -237,10 +246,6 @@ class TopLevel(Stringifiable):
         return key_val in self.dictionary and self[key_val].val == val_val
 
     @property
-    def indent(self):
-        return self._indent
-
-    @property
     def has_pairs(self):
         return not self.contents or isinstance(self.contents[0], Pair)
 
@@ -250,7 +255,13 @@ class TopLevel(Stringifiable):
             self._dictionary = {k.val: v for k, v in reversed(self.contents)}
         return self._dictionary
 
-    @indent.setter
+    @Stringifiable.parser.setter
+    def parser(self, value):
+        self._parser = value
+        for item in self:
+            item.parser = value
+
+    @Stringifiable.indent.setter
     def indent(self, value):
         self._indent = value
         for item in self:
@@ -260,13 +271,14 @@ class TopLevel(Stringifiable):
         s = ''.join(x.str() for x in self)
         if self.post_comments:
             s += self.indent * '\t'
-            s += comments_to_str(self.post_comments, self.indent)
+            s += comments_to_str(self.parser, self.post_comments, self.indent)
         return s
 
 
 class Commented(Stringifiable):
 
     def __init__(self, *args):
+        super().__init__()
         if len(args) == 1:
             self.pre_comments = []
             self.val = self.str_to_val(args[0])
@@ -275,7 +287,6 @@ class Commented(Stringifiable):
             self.pre_comments = [Comment(s) for s in args[0]]
             self.val = self.str_to_val(args[1])
             self.post_comment = Comment(args[2]) if args[2] else None
-        super().__init__()
 
     @classmethod
     def from_str(cls, string):
@@ -299,7 +310,7 @@ class Commented(Stringifiable):
         s = ''
         if self.pre_comments:
             s += self.indent * '\t'
-            s += comments_to_str(self.pre_comments, self.indent)
+            s += comments_to_str(self.parser, self.pre_comments, self.indent)
         s += self.indent * '\t' + self.val_str()
         if self.post_comment:
             s += ' ' + str(self.post_comment)
@@ -321,7 +332,8 @@ class Commented(Stringifiable):
                 pre_indent = self.indent
             # I can't tell the difference if I'm just after, say, "nor = { "
             # with TAB_WIDTH == 8, but whatever.
-            c_s = comments_to_str(self.pre_comments, pre_indent) + sep[1:]
+            c_s = comments_to_str(self.parser, self.pre_comments,
+                                  pre_indent) + sep[1:]
             s += c_s
             nl += c_s.count('\n')
             col = self.indent_col
@@ -374,12 +386,10 @@ class Op(Commented):
 class Pair(Stringifiable):
 
     def __init__(self, key, tis, value):
+        super().__init__()
         self.key = key
         self.tis = tis
         self.value = value
-        if force_quote(self.key):
-            self.value.force_quote = True
-        super().__init__()
 
     @classmethod
     def from_kv(cls, key, value):
@@ -397,16 +407,19 @@ class Pair(Stringifiable):
     def has_comments(self):
         return any(x.has_comments for x in [self.key, self.tis, self.value])
 
-    @property
-    def indent(self):
-        return self._indent
-
-    @indent.setter
+    @Stringifiable.indent.setter
     def indent(self, value):
         self._indent = value
         self.key.indent = value
         self.tis.indent = value
         self.value.indent = value
+
+    @Stringifiable.parser.setter
+    def parser(self, value):
+        self._parser = value
+        self.key.parser = value
+        self.tis.parser = value
+        self.value.parser = value
 
     def str(self):
         s = self.indent * '\t'
@@ -421,6 +434,9 @@ class Pair(Stringifiable):
         return s
 
     def inline_str(self, col):
+        if (isinstance(self.key, String) and
+            self.key.val in self.parser.fq_keys):
+            self.value.force_quote = True
         s = ''
         nl = 0
         key_is, (nl_key, col_key) = self.key.inline_str(col)
@@ -469,11 +485,11 @@ class Pair(Stringifiable):
 class Obj(Stringifiable):
 
     def __init__(self, kel, contents, ker):
+        super().__init__()
         self.kel = kel
         self.contents = contents
         self.ker = ker
         self._dictionary = None
-        super().__init__()
 
     @classmethod
     def from_iter(cls, contents):
@@ -506,10 +522,6 @@ class Obj(Stringifiable):
         return self._dictionary
 
     @property
-    def indent(self):
-        return self._indent
-
-    @property
     def post_comment(self):
         return self.ker.post_comment
 
@@ -518,13 +530,21 @@ class Obj(Stringifiable):
         return (self.kel.has_comments or self.ker.has_comments or
                 any(x.has_comments for x in self))
 
-    @indent.setter
+    @Stringifiable.indent.setter
     def indent(self, value):
         self._indent = value
         self.kel.indent = value
         for item in self:
             item.indent = value + 1
         self.ker.indent = value
+
+    @Stringifiable.parser.setter
+    def parser(self, value):
+        self._parser = value
+        self.kel.parser = value
+        for item in self:
+            item.parser = value
+        self.ker.parser = value
 
     def str(self):
         s = self.indent * '\t'
@@ -675,21 +695,21 @@ class SimpleParser:
         self.tag = tag
         self.parse_tree_cache = {}
         self.cache_default = False
-        self.tokenizer = SimpleTokenizer
+        self.fq_keys = []
+        self.setup_parser()
+
+    def setup_parser(self):
         unarg = lambda f: lambda x: f(*x)
-        const = lambda x: lambda _: x
         tokval = lambda x: x.value
         toktype = lambda t: some(lambda x: x.type == t) >> tokval
         op = lambda s: a(Token('Op', s)) >> tokval >> Op
-        unquote = lambda s: s[1:-1]
         number = toktype('Number') >> Number
         date = toktype('Date') >> Date
         name = toktype('Name') >> String
-        string = toktype('String') >> unquote >> String
+        string = toktype('String') >> (lambda s: s[1:-1]) >> String
         key = date | number | name
         pair = forward_decl()
-        obj = (op('{') + many(pair | string | key) + op('}') >>
-               unarg(Obj))
+        obj = op('{') + many(pair | string | key) + op('}') >> unarg(Obj)
         pair.define(key + op('=') + (obj | string | key) >> unarg(Pair))
         self.toplevel = many(pair) + skip(finished) >> TopLevel
 
@@ -722,20 +742,21 @@ class SimpleParser:
 
     def parse(self, string):
         tokens = list(self.tokenizer.tokenize(string))
-        try:
-            tree = self.toplevel.parse(tokens)
-        except:
-            from pprint import pprint
-            pprint(list(enumerate(tokens[:20])))
-            raise
+        # try:
+        tree = self.toplevel.parse(tokens)
+        # except:
+        #     from pprint import pprint
+        #     pprint(list(enumerate(tokens[:20])))
+        #     raise
+        tree.parser = self
         return tree
+
+    tokenizer = SimpleTokenizer
 
 
 class FullParser(SimpleParser):
 
-    def __init__(self, *args):
-        super().__init__(*args)
-        self.tokenizer = FullTokenizer()
+    def setup_parser(self):
         unarg = lambda f: lambda x: f(*x)
         unquote = lambda s: s[1:-1]
         tokval = lambda x: x.value
@@ -758,3 +779,5 @@ class FullParser(SimpleParser):
         value.define(obj | key | quoted_string)
         self.toplevel = (many(pair) + many(nl + comment) + end >>
                          unarg(TopLevel))
+
+    tokenizer = FullTokenizer
