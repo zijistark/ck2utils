@@ -10,10 +10,7 @@ import sys
 from funcparserlib.lexer import make_tokenizer, Token
 from funcparserlib.parser import (some, a, maybe, many, finished, skip,
                                   oneplus, forward_decl, NoParseError)
-import localpaths
-
-rootpath = localpaths.rootpath
-vanilladir = localpaths.vanilladir
+from localpaths import rootpath, vanilladir
 
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
                      quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
@@ -49,10 +46,10 @@ def files(glob, *moddirs, basedir=vanilladir, reverse=False):
 
 
 @memoize
-def cultures(*moddirs, groups=True):
+def get_cultures(parser, *moddirs, groups=True):
     cultures = []
     culture_groups = []
-    for _, tree in parse_files('common/cultures/*', *moddirs):
+    for _, tree in parser.parse_files('common/cultures/*', *moddirs):
         for n, v in tree:
             culture_groups.append(n.val)
             cultures.extend(n2.val for n2, v2 in v
@@ -61,10 +58,10 @@ def cultures(*moddirs, groups=True):
 
 
 @memoize
-def religions(*moddirs, groups=True):
+def get_religions(parser, *moddirs, groups=True):
     religions = []
     religion_groups = []
-    for _, tree in parse_files('common/religions/*', *moddirs):
+    for _, tree in parser.parse_files('common/religions/*', *moddirs):
         for n, v in tree:
             religion_groups.append(n.val)
             religions.extend(n2.val for n2, v2 in v
@@ -76,7 +73,7 @@ def religions(*moddirs, groups=True):
 _max_provinces = None
 
 @memoize
-def province_id_name_map(where):
+def get_province_id_name_map(parser, where):
     global _max_provinces
     _, tree = next(parse_files('map/default.map', where))
     defs = tree['definitions'].val
@@ -91,19 +88,19 @@ def province_id_name_map(where):
     return id_name_map
 
 
-def max_provinces(where):
+def get_max_provinces(parser, where):
     if _max_provinces is None:
-        province_id_name_map(where)
+        province_id_name_map(parser, where)
     return _max_provinces
 
 
-def provinces(where):
-    id_name = province_id_name_map(where)
+def get_provinces(parser, where):
+    id_name = province_id_name_map(parser, where)
     for path in files('history/provinces/*', where):
         number, name = path.stem.split(' - ')
         number = int(number)
         if number in id_name and id_name[number] == name:
-            tree = parse_file(path)
+            tree = parser.parse_file(path)
             try:
                 title = tree['title'].val
             except KeyError:
@@ -111,7 +108,7 @@ def provinces(where):
             yield number, title, tree
 
 
-def localisation(*moddirs, basedir=vanilladir, ordered=False):
+def get_localisation(*moddirs, basedir=vanilladir, ordered=False):
     locs = collections.OrderedDict() if ordered else {}
     loc_glob = 'localisation/*'
     for path in files(loc_glob, *moddirs, basedir=basedir, reverse=True):

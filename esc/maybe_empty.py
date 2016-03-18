@@ -3,53 +3,55 @@
 import collections
 import pathlib
 import sys
-import ck2parser
+from ck2parser import rootpath, get_provinces, is_codename, Obj, SimpleParser
 from print_time import print_time
 
 IGNORE_ENCODING_ERRORS = True
 
 if IGNORE_ENCODING_ERRORS:
-    ck2parser.errors_default = 'replace'
+    errors = 'replace'
+else:
+    errors = None
 
 def get_modpath():
     if len(sys.argv) <= 1:
-        return ck2parser.rootpath / 'SWMH-BETA/SWMH'
+        return rootpath / 'SWMH-BETA/SWMH'
     return pathlib.Path(sys.argv[1])
 
 def output(provinces):
     print(*provinces, sep='\n')
 
-def get_start_interval(where):
+def get_start_interval(parser, where):
     dates = []
-    for _, tree in ck2parser.parse_files('common/bookmarks/*', where):
+    for _, tree in parser.parse_files('common/bookmarks/*', where):
         dates.extend(v['date'].val for _, v in tree)
-    tree = ck2parser.parse_file(where / 'common/defines.txt')
+    tree = parser.parse_file(where / 'common/defines.txt')
     dates.append(tree['start_date'].val)
     dates.append(tree['last_start_date'].val)
     return min(dates), max(dates)
 
-def process_landed_titles(where):
+def process_landed_titles(parser, where):
     def recurse(tree):
         for n, v in tree:
-            if ck2parser.is_codename(n.val):
+            if is_codename(n.val):
                 titles.add(n.val)
                 recurse(v)
 
     titles = set()
-    for _, tree in ck2parser.parse_files('common/landed_titles/*', where):
+    for _, tree in parser.parse_files('common/landed_titles/*', where):
         recurse(tree)
     return titles
 
-def process_provinces(where, first_start, last_start):
+def process_provinces(parser, where, first_start, last_start):
     province_id = {}
     no_castles_or_cities = set()
-    for number, title, tree in ck2parser.provinces(where):
+    for number, title, tree in get_provinces(parser, where):
         province_id[title] = number
         castles_and_cities = set()
         changes_by_date = collections.defaultdict(list)
         changes_by_date[first_start] = []
         for n, v in tree:
-            if isinstance(v, ck2parser.Obj):
+            if isinstance(v, Obj):
                 changes_by_date[n.val].extend(v)
             elif v.val == 'castle' or v.val == 'city':
                 castles_and_cities.add(n.val)
@@ -67,13 +69,13 @@ def process_provinces(where, first_start, last_start):
                     break
     return province_id, no_castles_or_cities
 
-def process_titles(where, valid_titles, first_start, last_start):
+def process_titles(parser, where, valid_titles, first_start, last_start):
     nomads = set()
     vassals = collections.defaultdict(set)
-    for path in ck2parser.files('history/titles/*', where):
+    for path in files('history/titles/*', where):
         title = path.stem
         if title in valid_titles and not title.startswith('b'):
-            tree = ck2parser.parse_file(path)
+            tree = parser.parse_file(path)
             changes_by_date = collections.defaultdict(list)
             changes_by_date[first_start] = []
             for n, v in tree:
@@ -97,12 +99,14 @@ def process_titles(where, valid_titles, first_start, last_start):
 
 @print_time
 def main():
+    parser = SimpleParser()
     modpath = get_modpath()
-    titles = process_landed_titles(modpath)
-    first_start, last_start = get_start_interval(modpath)
-    province_id, no_castles_or_cities = process_provinces(modpath, first_start,
-                                                          last_start)
-    nomads, vassals = process_titles(modpath, titles, first_start, last_start)
+    titles = process_landed_titles(parser, modpath)
+    first_start, last_start = get_start_interval(parser, modpath)
+    province_id, no_castles_or_cities = process_provinces(
+        parser, modpath, first_start, last_start)
+    nomads, vassals = process_titles(parser, modpath, titles, first_start,
+                                     last_start)
     maybe_empty = set()
 
     def check_nomad(title):

@@ -7,11 +7,12 @@ import re
 import shutil
 import tempfile
 import time
-import ck2parser
-from ck2parser import is_codename, prepend_post_comment
+from ck2parser import (rootpath, is_codename, fq_keys,
+                       get_province_id_name_map, get_provinces,
+                       get_localisation, get_cultures, prepend_post_comment,
+                       Obj, Comment, FullParser)
 from print_time import print_time
 
-rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH'
 
 PRUNE_BARONIES = False
@@ -20,7 +21,7 @@ FORMAT_ONLY = False # don't alter code, just format. overrides PRUNE_BARONIES
 # templar castles referenced by vanilla events
 mod_titles_to_keep = ['b_beitdejan', 'b_lafeve']
 
-def process_province_history(where):
+def process_province_history(parser, where):
     def mark_barony(barony, county_set):
         try:
             if barony.val.startswith('b_'):
@@ -28,17 +29,17 @@ def process_province_history(where):
         except AttributeError:
             pass
 
-    id_name = ck2parser.province_id_name_map(where)
+    id_name = get_province_id_name_map(parser, where)
     province_id = {}
     used_baronies = collections.defaultdict(set)
     max_settlements = {}
-    for number, title, tree in ck2parser.provinces(where):
+    for number, title, tree in get_provinces(parser, where):
         province_id[title] = number
         max_settlements[title] = int(tree['max_settlements'].val)
         for n, v in tree:
             mark_barony(n, used_baronies[title])
             mark_barony(v, used_baronies[title])
-            if isinstance(v, ck2parser.Obj):
+            if isinstance(v, Obj):
                 if v.has_pairs:
                     for n2, v2 in v:
                         mark_barony(n2, used_baronies[title])
@@ -50,12 +51,15 @@ def process_province_history(where):
 
 @print_time
 def main():
+    global fq_keys
+    simple_parser = SimpleParser()
+    full_parser = FullParser()
     lt = modpath / 'common/landed_titles'
     province_id, used_baronies, max_settlements = process_province_history(
-        modpath)
-    localisation = ck2parser.localisation(modpath)
-    cultures = ck2parser.cultures(modpath, groups=False)
-    ck2parser.fq_keys = cultures
+        simple_parser, modpath)
+    localisation = get_localisation(modpath)
+    cultures = get_cultures(simple_parser, modpath, groups=False)
+    fq_keys = cultures
     historical_baronies = []
 
     def update_tree(tree, is_def=True):
@@ -155,8 +159,7 @@ def main():
                 if PRUNE_BARONIES:
                     for barony in reversed(baronies_to_remove):
                         b_is, _ = barony.inline_str(0)
-                        comments = [ck2parser.Comment(s)
-                                    for s in b_is.split('\n')]
+                        comments = [Comment(s) for s in b_is.split('\n')]
                         post_barony_pair.pre_comments[0:0] = comments
                 is_def_children = True
             else:
@@ -168,19 +171,18 @@ def main():
                     n.val = n_upper
             except AttributeError:
                 pass
-            if isinstance(v, ck2parser.Obj) and v.has_pairs:
+            if isinstance(v, Obj) and v.has_pairs:
                 update_tree(v, is_def_children)
 
-    for inpath in ck2parser.files('history/titles/*.txt', modpath):
+    for inpath in files('history/titles/*.txt', modpath):
         if inpath.stem.startswith('b_'):
             historical_baronies.append(inpath.stem)
 
     with tempfile.TemporaryDirectory() as td:
         lt_t = pathlib.Path(td)
-        for inpath, tree in ck2parser.parse_files('common/landed_titles/*',
-                                                  modpath):
+        for inpath, tree in full_parser.parse_files('common/landed_titles/*',
+                                                    modpath):
             outpath = lt_t / inpath.name
-            tree = ck2parser.parse_file(inpath)
             update_tree(tree)
             with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
                 f.write(tree.str())

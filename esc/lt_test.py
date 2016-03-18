@@ -6,22 +6,22 @@ Meant to be modified while checking output each time.
 Printing '0' means no anomalies found under present definitions.
 '''
 
-import pprint
-import ck2parser
+from pprint import pprint
+from ck2parser import (rootpath, get_cultures, get_religions, is_codename,
+                       SimpleParser)
+from print_time import print_time
 
 PRINT_CULTURES_RELIGIONS = False
 
-rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH'
-# modpath = rootpath / 'CK2Plus/CK2Plus'
 
-cultures, culture_groups = ck2parser.cultures(modpath)
-religions, religion_groups = ck2parser.religions(modpath)
+cultures, culture_groups = get_cultures(modpath)
+religions, religion_groups = get_religions(modpath)
 if PRINT_CULTURES_RELIGIONS:
-    pprint.pprint(cultures)
-    pprint.pprint(culture_groups)
-    pprint.pprint(religions)
-    pprint.pprint(religion_groups)
+    pprint(cultures)
+    pprint(culture_groups)
+    pprint(religions)
+    pprint(religion_groups)
 
 interesting = [
     'title', 'title_female', 'foa', 'title_prefix', 'short_name', 'name_tier',
@@ -34,7 +34,7 @@ interesting = [
 results = set()
 
 def exclude(n, v):
-    return (ck2parser.is_codename(n) or n in [
+    return (is_codename(n) or n in [
         'religion', 'culture', 'color', 'color2', 'capital', 'coat_of_arms',
         'allow', 'controls_religion', 'dignity', 'creation_requires_capital',
         'rebel', 'landless', 'primary', 'pirate', 'tribe', 'mercenary_type',
@@ -51,7 +51,7 @@ def exclude(n, v):
 def recurse(tree):
     # global count
     for n, v in tree:
-        if ck2parser.is_codename(n):
+        if is_codename(n):
             for p2 in v:
                 n2, v2 = p2
                 # count += 1
@@ -62,7 +62,7 @@ def recurse(tree):
                 if not exclude(n2, v2):
                     # try:
                     results.add(p2.inline_str(0).split('\n', 1)[0])
-                    # print(ck2parser.to_string((n2, v2)))
+                    # print(parser.to_string((n2, v2)))
                     # except TypeError:
                         # print(n2, v2)
             recurse(v1, n1)
@@ -76,11 +76,17 @@ def recurse(tree):
 # print(repr(religious_groups))
 # raise SystemExit
 
-for path, tree in ck2parser.parse_files('common/landed_titles/*', modpath):
-    print(path)
-    recurse(tree)
+@print_time
+def main():
+    parser = SimpleParser()
+    for path, tree in parser.parse_files('common/landed_titles/*', modpath):
+        print(path)
+        recurse(tree)
 
-print(len(results))
+    print(len(results))
 
-with (rootpath / 'lt_lest.txt').open('w') as f:
-    print(sorted(results), sep='\n', file=f)
+    with (rootpath / 'lt_lest.txt').open('w') as f:
+        print(sorted(results), sep='\n', file=f)
+
+if __name__ == '__main__':
+    main()

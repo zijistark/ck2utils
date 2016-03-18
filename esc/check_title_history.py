@@ -12,7 +12,7 @@ modpath = rootpath / 'SWMH-BETA/SWMH'
 LANDED_TITLES_ORDER = True # if false, date order
 PRUNE_IMPOSSIBLE_STARTS = True
 PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
-CHECK_DEAD_HOLDERS = True # slow; not useful without PRUNE_IMPOSSIBLE_STARTS
+CHECK_DEAD_HOLDERS = False # slow; not useful without PRUNE_IMPOSSIBLE_STARTS
 
 @print_time
 def main():

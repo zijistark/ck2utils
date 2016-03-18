@@ -6,26 +6,23 @@ import pathlib
 import re
 import shutil
 import tempfile
-import ck2parser
+from ck2parser import (rootpath, vanilladir, csv_rows, files, is_codename,
+                       SimpleParser)
 from print_time import print_time
 
-rootpath = ck2parser.rootpath
-vanillapath = ck2parser.vanilladir
 modpath = rootpath / 'SWMH-BETA/SWMH'
 # modpath = rootpath / 'EMF/EMF'
-# modpath = rootpath / 'CK2Plus/CK2Plus'
-# outpath = rootpath / 'SWMH-BETA/metadata'
 
 def abbrev_path(path):
-    prefix = '<vanilla>' if vanillapath in path.parents else '<mod>'
+    prefix = '<vanilla>' if vanilladir in path.parents else '<mod>'
     return prefix + '/' + path.name
 
 def get_locs():
     locs = collections.OrderedDict()
     dupe_lines = []
-    for path in ck2parser.files('localisation/*', modpath, reverse=True):
+    for path in files('localisation/*', modpath, reverse=True):
         vanilla = modpath not in path.parents
-        for row, linenum in ck2parser.csv_rows(path, linenum=True):
+        for row, linenum in csv_rows(path, linenum=True):
             if row[0] in locs:
                 # don't care about overriding vanilla
                 if not vanilla:
@@ -38,22 +35,13 @@ def get_locs():
     locs = collections.OrderedDict((k, v[0]) for k, v in locs.items())
     return locs, dupe_lines
 
-# def get_province_id(where):
-#     province_id = {}
-#     province_title = {}
-#     for number, title, tree in ck2parser.provinces(where):
-#         prov_id = 'PROV{}'.format(number)
-#         province_id[title] = prov_id
-#         province_title[prov_id] = title
-#     return province_id, province_title
-
-def scan_landed_titles(cultures, loc_mod):
+def scan_landed_titles(parser, cultures, loc_mod):
     dynamics = collections.defaultdict(dict)
     undef = collections.defaultdict(list)
 
     def recurse(tree):
         for n, v in tree:
-            if ck2parser.is_codename(n.val):
+            if is_codename(n.val):
                 for n2, v2 in v:
                     if n2.val in cultures:
                         dynamics[n.val][n2.val] = v2.val
@@ -63,23 +51,24 @@ def scan_landed_titles(cultures, loc_mod):
                         undef[v2.val].append((n.val, n2.val))
                 recurse(v)
 
-    for path, tree in ck2parser.parse_files('common/landed_titles/*', modpath):
+    for path, tree in parser.parse_files('common/landed_titles/*', modpath):
         print(path)
         recurse(tree)
     return dynamics, undef
 
 @print_time
 def main():
+    parser = SimpleParser()
     # province_id_mod, province_title_mod = get_province_id(modpath)
-    # province_id, province_title = get_province_id(vanillapath)
+    # province_id, province_title = get_province_id(vanilladir)
     # province_id.update(province_id_mod)
     # province_title.update(province_title_mod)
-    cultures, cult_group = ck2parser.cultures(modpath)
+    cultures, cult_group = get_cultures(parser, modpath)
     mod_loc, dupe_lines = get_locs()
-    vanilla_loc = ck2parser.localisation()
+    vanilla_loc = get_localisation()
     # localisation = vanilla_loc.copy()
     # localisation.update(mod_loc)
-    dynamics, undef = scan_landed_titles(cultures, mod_loc)
+    dynamics, undef = scan_landed_titles(parser, cultures, mod_loc)
 
     # if not outpath.exists():
     #     outpath.mkdir()
@@ -138,7 +127,7 @@ def main():
     for key in mod_loc:
         if key.endswith('_adj'):
             title = key[:-4]
-            if ck2parser.is_codename(title):
+            if is_codename(title):
                 # static_adjs.add(title)
                 if (title not in mod_loc and
                     not (title in province_id and
@@ -155,7 +144,7 @@ def main():
                         add_result(key, 'static noun', title, 'key')
         elif '_adj_' in key:
             title, culture = key.split('_adj_', maxsplit=1)
-            if ck2parser.is_codename(title):
+            if is_codename(title):
                 if culture not in cultures:
                     print('Undefined culture "{}"'.format(culture))
                     continue
@@ -176,8 +165,8 @@ def main():
                                    'vanilla static noun')
                     else:
                         add_result(key, 'dyn. noun', title, 'key')
-        elif ck2parser.is_codename(key) or key in province_title:
-            title = key if ck2parser.is_codename(key) else province_title[key]
+        elif is_codename(key) or key in province_title:
+            title = key if is_codename(key) else province_title[key]
             # if key in static_nouns:
             #     print('Multiple localisations for {} ({})'.format(
             #           key, province_id[key]))

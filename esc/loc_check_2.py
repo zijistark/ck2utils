@@ -8,58 +8,59 @@ Scans for:
 '''
 
 import re
-import ck2parser
+from ck2parser import (rootpath, files, csv_rows, get_cultures,
+                       get_localisation, SimpleParser, NoParseError)
 from print_time import print_time
 
-rootpath = ck2parser.rootpath
 modpath = rootpath / 'SWMH-BETA/SWMH'
-# modpath = rootpath / 'CK2Plus/CK2Plus'
 
-def recurse_comments(comments):
+def recurse_comments(parser, comments):
     if comments:
         try:
-            tree = ck2parser.parse('\n'.join(c.val for c in comments))
-            yield from recurse(tree, comment=True)
-        except ck2parser.parser.NoParseError:
+            tree = parser.parse('\n'.join(c.val for c in comments))
+            yield from recurse(parser, tree, comment=True)
+        except NoParseError:
             pass
 
-def recurse(tree, comment=False):
+def recurse(parser, tree, comment=False):
     try:
         for n, v in tree:
-            yield from recurse_comments(n.pre_comments)
-            if ck2parser.is_codename(n.val):
+            yield from recurse_comments(parser, n.pre_comments)
+            if is_codename(n.val):
                 yield n.val, not comment
-                yield from recurse(v)
+                yield from recurse(parser, v)
     except ValueError:
         pass
     try:
-        yield from recurse_comments(tree.ker.pre_comments)
+        yield from recurse_comments(parser, tree.ker.pre_comments)
     except AttributeError:
         try:
-            yield from recurse_comments(tree.post_comments)
+            yield from recurse_comments(parser, tree.post_comments)
         except AttributeError:
             pass
 
 @print_time
 def main():
-    cultures, cult_groups = ck2parser.cultures(modpath)
+    simple_parser = SimpleParser()
+    full_parser = FullParser()
+    cultures, cult_groups = get_cultures(simple_parser, modpath)
     cultures = set(cultures)
     cultures.update(cult_groups)
     defined_titles = []
     commented_out_titles = []
-    for _, tree in ck2parser.parse_files('common/landed_titles/*', modpath):
-        for title, defined in recurse(tree):
+    for _, tree in full_parser.parse_files('common/landed_titles/*', modpath):
+        for title, defined in recurse(simple_parser, tree):
             (defined_titles if defined else commented_out_titles).append(title)
     titles = set(defined_titles) | set(commented_out_titles)
-    localisation = ck2parser.localisation(modpath)
+    localisation = get_localisation(modpath)
     unlocalised_noncounty_titles = [
         t for t in defined_titles
         if not t.startswith('c') and t not in localisation and t != 'e_null']
     unrecognized_nonbarony_keys = []
     unrecognized_barony_keys = []
     unrecognized_culture_keys = []
-    for path in ck2parser.files('localisation/*', basedir=modpath):
-        for key, *_ in ck2parser.csv_rows(path):
+    for path in files('localisation/*', basedir=modpath):
+        for key, *_ in csv_rows(path):
             match = re.match(r'[ekdcb]_((?!_adj).)*', key)
             if match:
                 if match.group() not in titles:

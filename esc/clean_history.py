@@ -4,16 +4,17 @@ import collections
 import csv
 import os
 import shutil
-from ck2parser import csv_rows, files, parse_files, parse_file, provinces
-from ck2parser import rootpath, vanilladir, is_codename
+from ck2parser import (rootpath, vanilladir, is_codename, csv_rows, files,
+                       SimpleParser)
 from print_time import print_time
 
 modpath = rootpath / 'SWMH-BETA/SWMH'
 
 @print_time
 def main():
+    parser = SimpleParser()
     # scan all named provinces in definitions.csv for province history
-    _, default_map = next(parse_files('map/default.map', modpath))
+    _, default_map = next(parser.parse_files('map/default.map', modpath))
     defs_name = default_map['definitions'].val
     # max_provinces = int(default_map['max_provinces'].val)
     prov_num_name_map = {}
@@ -39,7 +40,7 @@ def main():
             print('Copying to ' + str(modpath / rel_path))
             shutil.copy2(str(hist_path), str(modpath / rel_path))
             hist_path = modpath / rel_path
-        hist = parse_file(hist_path)
+        hist = parser.parse_file(hist_path)
         if len(hist) > 0:
             # if it isn't blank, but has no `title`, note it.
             if 'title' not in hist.dictionary:
@@ -78,7 +79,7 @@ def main():
             if is_codename(n.val):
                 titles.add(n.val)
                 recurse(v)
-    for _, tree in parse_files('common/landed_titles/*', modpath):
+    for _, tree in parser.parse_files('common/landed_titles/*', modpath):
         recurse(tree)
     # delete all title history in mod not matching a title definition
     for path in files('history/titles/*', basedir=modpath):

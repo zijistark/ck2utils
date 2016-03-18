@@ -8,11 +8,10 @@ import re
 import sys
 import shutil
 import tempfile
-import ck2parser
+from ck2parser import (rootpath, vanilladir, is_codename, files, Obj, csv_rows,
+                       SimpleParser)
 from print_time import print_time
 
-rootpath = ck2parser.rootpath
-vanilladir = ck2parser.vanilladir
 modpath = rootpath / 'SWMH-BETA/SWMH'
 minipath = rootpath / 'MiniSWMH/MiniSWMH'
 
@@ -30,7 +29,7 @@ def check_title(v, path, titles, lhs=False, line=None):
         v_str = v
     else:
         v_str = v.val
-    if ck2parser.is_codename(v_str) and v_str not in titles:
+    if is_codename(v_str) and v_str not in titles:
         if line is None:
             line = '<file>'
         else:
@@ -42,12 +41,12 @@ def check_title(v, path, titles, lhs=False, line=None):
         return False
     return True
 
-def check_titles(path, titles):
+def check_titles(parser, path, titles):
     def recurse(tree):
         if tree.has_pairs:
             for p in tree:
                 n, v = p
-                v_is_obj = isinstance(v, ck2parser.Obj)
+                v_is_obj = isinstance(v, Obj)
                 check_title(n, path, titles, v_is_obj, p)
                 if v_is_obj:
                     recurse(v)
@@ -57,19 +56,19 @@ def check_titles(path, titles):
             for v in tree:
                 check_title(v, path, titles, line=v)
 
-    recurse(ck2parser.parse_file(path, errors='replace'))
+    recurse(parser.parse_file(path, errors='replace'))
 
-def check_regions(titles, titles_de_jure, duchies_de_jure):
+def check_regions(parser, titles, titles_de_jure, duchies_de_jure):
     bad_titles = []
     missing_duchies = list(duchies_de_jure)
 
     path = (minipath if MINISWMH else modpath) / 'map/geographical_region.txt'
-    tree = ck2parser.parse_file(path)
+    tree = parser.parse_file(path)
     for n, v in tree:
         world = n.val.startswith('world_')
         for n2, v2 in v:
             for v3 in v2:
-                if ck2parser.is_codename(v3.val):
+                if is_codename(v3.val):
                     check_title(v3, path, titles, line=v3)
                     if v3.val not in titles_de_jure:
                         bad_titles.append(v3.val)
@@ -78,24 +77,23 @@ def check_regions(titles, titles_de_jure, duchies_de_jure):
 
     return bad_titles, missing_duchies
 
-def check_province_history(titles):
-    tree = ck2parser.parse_file(modpath / 'map/default.map')
+def check_province_history(parser, titles):
+    tree = parser.parse_file(modpath / 'map/default.map')
     defs = tree['definitions'].val
     _max_provinces = int(tree['max_provinces'].val)
     id_name_map = {}
-    for row in ck2parser.csv_rows(
-        (minipath if MINISWMH else modpath) / 'map' / defs):
+    for row in csv_rows((minipath if MINISWMH else modpath) / 'map' / defs):
         try:
             id_name_map[int(row[0])] = row[4]
         except (IndexError, ValueError):
             continue
-    for path in ck2parser.files('history/provinces/*', *source_paths):
+    for path in files('history/provinces/*', *source_paths):
         number, name = path.stem.split(' - ')
         number = int(number)
         if number in id_name_map and id_name_map[number] == name:
-            check_titles(path, titles)
+            check_titles(parser, path, titles)
 
-def process_landed_titles():
+def process_landed_titles(parser):
     titles = set()
     titles_de_jure = []
     misogyny = []
@@ -103,7 +101,7 @@ def process_landed_titles():
     def recurse(tree):
         parent_is_titular = True
         for n, v in tree:
-            if ck2parser.is_codename(n.val):
+            if is_codename(n.val):
                 if n.val in titles:
                     print('Duplicate title {}'.format(n.val))
                 titles.add(n.val)
@@ -120,8 +118,8 @@ def process_landed_titles():
                         parent_is_titular = False
         return parent_is_titular
 
-    for path in ck2parser.files('common/landed_titles/*', *source_paths):
-        recurse(ck2parser.parse_file(path))
+    for path in files('common/landed_titles/*', *source_paths):
+        recurse(parser.parse_file(path))
     # print('{} titles, {} de jure'.format(len(titles), len(titles_de_jure)))
     return titles, titles_de_jure, misogyny
 
@@ -130,14 +128,15 @@ def main():
     global modpath
     if len(sys.argv) > 1:
         modpath = pathlib.Path(sys.argv[1])
-    titles, titles_de_jure, misogyny = process_landed_titles()
+        parser = SimpleParser()
+    titles, titles_de_jure, misogyny = process_landed_titles(parser)
     duchies_de_jure = [t for t in titles_de_jure if t.startswith('d_')]
-    check_province_history(titles)
+    check_province_history(parser, titles)
     bad_region_titles, missing_duchies = check_regions(
-        titles, titles_de_jure, duchies_de_jure)
-    for path, tree in ck2parser.parse_files('history/titles/*.txt',
-                                            *source_paths, errors='replace',
-                                            cache=True):
+        parser, titles, titles_de_jure, duchies_de_jure)
+    for path, tree in parser.parse_files('history/titles/*.txt',
+                                         *source_paths, errors='replace',
+                                         cache=True):
         if tree.contents:
             good = check_title(path.stem, path, titles)
             if (VANILLA_HISTORY_WARN and not good and
@@ -148,10 +147,9 @@ def main():
                 print('Should override {} with blank file'.format(
                       '<vanilla>' / path.relative_to(vanilladir)))
             else:
-                check_titles(path, titles)
-        ck2parser.flush(path)
-    for _ in ck2parser.parse_files('history/characters/*.txt', modpath,
-                                   minipath):
+                check_titles(parser, path, titles)
+        parser.flush(path)
+    for _ in parser.parse_files('history/characters/*.txt', *source_paths):
         pass # just parse it to see if it parses
     globs = [
         'events/*.txt',
@@ -168,8 +166,8 @@ def main():
         'common/achievements.txt'
         ]
     for glob in globs:
-        for path in ck2parser.files(glob, *source_paths):
-            check_titles(path, titles)
+        for path in parser.files(glob, *source_paths):
+            check_titles(parser, path, titles)
     with (rootpath / 'check_titles.txt').open('w', encoding='cp1252') as fp:
         if bad_region_titles:
             print('Invalid or titular titles in regions:\n\t', end='', file=fp)
