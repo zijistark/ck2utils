@@ -29,6 +29,12 @@ import PIL.Image
 import tabulate
 import localpaths
 
+modpaths = []
+# modpaths = [localpaths.rootpath / 'SWMH-BETA/SWMH']
+
+csv.register_dialect('ckii', delimiter=';', doublequote=False,
+                     quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
+
 CKII_DIR = localpaths.vanilladir
 
 OUTPUT_FILE = pathlib.Path('C:/Users/Nicholas/Desktop/table.txt')
@@ -238,13 +244,22 @@ def parse(tokens):
     return toplevel.parse(list(tokens))
 
 def parse_files(glob):
-    return ((path.stem, parse_file(path)) for path in
-            pathlib.Path(CKII_DIR).glob(glob))
+    for path in files(glob, *modpaths):
+        yield path.stem, parse_file(path)
 
 def parse_file(path):
-    with path.open(encoding='latin-1') as f:
+    with path.open(encoding='cp1252', errors='ignore') as f:
         s = f.read()
     return parse(tokenize(s))
+
+# give mod dirs in descending lexicographical order of mod name (Z-A),
+# modified for dependencies as necessary.
+def files(glob, *moddirs, basedir=CKII_DIR, reverse=False):
+    result_paths = {p.relative_to(d): p
+                    for d in (basedir,) + moddirs for p in d.glob(glob)}
+    for _, p in sorted(result_paths.items(), key=lambda t: t[0].parts,
+                       reverse=reverse):
+        yield p
 
 def process_cultures(cultures_txts):
     for _, v in cultures_txts:
@@ -272,10 +287,25 @@ def process_landed_titles(landed_titles_txts):
 
 # pre: process_landed_titles
 def process_provinces(provinces_txts):
+    _, tree = next(parse_files('map/default.map'))
+    tree = dict(tree)
+    defs = tree['definitions']
+    max_provinces = int(tree['max_provinces'])
+    id_name_map = {}
+    defs_path = next(files('map/' + defs, *modpaths))
+    def row_func(row):
+        try:
+            id_name_map[int(row[0])] = row[4]
+        except (IndexError, ValueError):
+            pass
+    parse_csv(defs_path, row_func)
     for n, v in provinces_txts:
+        id_str, name = n.split(' - ')
+        num = int(id_str)
+        if num not in id_name_map or id_name_map[num] != name:
+            continue
         v_dict = dict(v)
         title = Title.get(v_dict['title'])
-        id_str, name = n.split(' - ')
         title.set_id(int(id_str))
         if title.name == title.codename:
             title.set_name(name)
@@ -307,7 +337,10 @@ def process_provinces(provinces_txts):
 
 def process_titles(titles_txts):
     for n, v in titles_txts:
-        title = Title.get(n)
+        try:
+            title = Title.get(n)
+        except KeyError:
+            continue
         for n1, v1 in v:
             if isinstance(n1, datetime.date):
                 v1_dict = dict(v1)
@@ -327,7 +360,7 @@ def parse_csvs(paths, row_func):
             raise
 
 def parse_csv(path, row_func):
-    with path.open(encoding='latin-1', newline='') as csvfile:
+    with path.open(encoding='cp1252', errors='ignore') as csvfile:
         reader = csv.reader(csvfile, dialect='ckii')
         for row in reader:
             row_func(row)
@@ -349,7 +382,7 @@ def process_default_map(default_map):
     for n, v in default_map:
         if n == 'major_rivers':
             Title.rivers.update(map(int, v))
-    return tuple(CKII_DIR / 'map' / v_dict[key] for key in
+    return tuple(next(files('map' / v_dict[key], *modpaths)) for key in
                  ['definitions', 'provinces', 'adjacencies'])
 
 # pre: process default_map, provinces
@@ -446,9 +479,8 @@ def process_map_adjacencies_row(row):
 # TODO: write secondary table for british duchies in 769
 def format_duchies_table():
     def rows():
-        starts = [datetime.date(769, 1, 1), datetime.date(867, 1, 1),
-                  datetime.date(1066, 9, 15)]
-        start_1066 = starts[2]
+        starts = [datetime.date(867, 1, 1), datetime.date(1066, 9, 15)]
+        start_1066 = starts[1]
         for duchy in Title.duchies():
             if not duchy.vassal_intvls:
                 # skip duchy-level titles with no de jure territory ever
@@ -712,18 +744,17 @@ def duchy_path():
 
 # TODO: refactor stuff
 def main():
-    csv.register_dialect('ckii', delimiter=';', quoting=csv.QUOTE_NONE)
     titles_txts = parse_files('history/titles/*.txt')
     provinces_txts = parse_files('history/provinces/*.txt')
     landed_titles_txts = parse_files('common/landed_titles/*.txt')
     cultures_txts = parse_files('common/cultures/*.txt')
-    parse_csvs(sorted(CKII_DIR.glob('localisation/*.csv')),
+    parse_csvs(files('localisation/*.csv', *modpaths),
                process_localisation_row)
     process_cultures(cultures_txts)
     process_landed_titles(landed_titles_txts)
     process_provinces(provinces_txts)
     process_titles(titles_txts)
-    default_map = parse_file(CKII_DIR / 'map/default.map')
+    default_map = parse_file(next(files('map/default.map', *modpaths)))
     map_definitions, map_provinces, map_adjacencies = (
         process_default_map(default_map))
     parse_csv(map_definitions, process_map_definitions_row)
