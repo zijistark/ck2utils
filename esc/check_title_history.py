@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import bisect
+from bisect import bisect_left, bisect, insort
 from collections import defaultdict
 from ck2parser import rootpath, is_codename, Date, SimpleParser, FullParser
 from pprint import pprint
@@ -19,12 +19,12 @@ CHECK_LIEGE_CONSISTENCY = True
 @print_time
 def main():
     parser = SimpleParser()
-    titles = []
+    landed_titles = []
     title_regions = {}
     def recurse(tree, region='titular'):
         for n, v in tree:
             if is_codename(n.val):
-                titles.append(n.val)
+                landed_titles.append(n.val)
                 child_region = region
                 if region == 'e_null' or (region == 'titular' and
                     any(is_codename(n2.val) for n2, _ in v)):
@@ -57,7 +57,7 @@ def main():
                 date = v['date'].val
                 if not any(a <= date < b for a, b in playables):
                     interval = date, next_day(date)
-                    bisect.insort(playables, interval)
+                    insort(playables, interval)
         for i in range(len(playables) - 1, 0, -1):
             if playables[i - 1][1] == playables[i][0]:
                 playables[i - 1] = playables[i - 1][0], playables[i][1]
@@ -78,8 +78,7 @@ def main():
                 except StopIteration:
                     pass
     if CHECK_LIEGE_CONSISTENCY:
-        char_titles = defaultdict(list)
-        char_titles_dates = defaultdict(list)
+        char_titles = defaultdict(dict)
     for path, tree in parser.parse_files('history/titles/*', *modpaths):
         title = path.stem
         if not len(tree) > 0:
@@ -92,13 +91,15 @@ def main():
             date = n.val
             for n2, v2 in v:
                 if n2.val == 'holder':
-                    i = bisect.bisect_left(holder_dates, date)
+                    # insert in sorted order
+                    i = bisect_left(holder_dates, date)
                     if i == len(holders) or holder_dates[i] != date:
                         holder = 0 if v2.val == '-' else int(v2.val)
                         holder_dates.insert(i, date)
                         holders.insert(i, holder)
                 elif n2.val == 'liege':
-                    i = bisect.bisect_left(liege_dates, date)
+                    # insert in sorted order
+                    i = bisect_left(liege_dates, date)
                     if i == len(lieges) or liege_dates[i] != date:
                         liege = 0 if v2.val in ('0', title) else v2.val
                         liege_dates.insert(i, date)
@@ -107,18 +108,21 @@ def main():
         #    pprint(title)
         #    pprint(list(zip(holder_dates, holders)))
         #    pprint(list(zip(liege_dates, lieges)))
+        # reverse order to allow deletion
         for i in range(len(holders) - 1, -1, -1):
+            # delete redundant entries
             if i > 0 and holders[i - 1] == holders[i]:
                 del holder_dates[i]
                 del holders[i]
                 continue
             if holders[i] != 0:
                 continue
+            # force liege to 0 while holder is 0
             start_date = holder_dates[i]
-            j = bisect.bisect_left(liege_dates, start_date)
+            j = bisect_left(liege_dates, start_date)
             if i < len(holders) - 1:
                 end_date = holder_dates[i + 1]
-                k = bisect.bisect_left(liege_dates, end_date)
+                k = bisect_left(liege_dates, end_date)
             else:
                 k = len(lieges)
             if (0 < k < len(lieges) and lieges[k - 1] != 0 and
@@ -157,30 +161,16 @@ def main():
                     else:
                         dead_holders.append((death, None))
                 if CHECK_LIEGE_CONSISTENCY and i + 1 < len(holders):
-                    start_date, end_date = holder_dates[i:i + 2]
-                    titles = char_titles[holder]
-                    titles_dates = char_titles_dates[holder]
-                    j = bisect.bisect_left(titles_dates, start_date)
-                    if j == len(titles) or titles_dates[j] != start_date:
-                        titles.insert(j, [(title, True)])
-                        titles_dates.insert(j, start_date)
-                    else:
-                        titles[j].append((title, True))
-                    j = bisect.bisect_left(titles_dates, end_date)
-                    if j == len(titles) or titles_dates[j] != end_date:
-                        titles.insert(j, [(title, False)])
-                        titles_dates.insert(j, end_date)
-                    else:
-                        titles[j].append((title, False))
+                    char_titles[holder][title] = tuple(holder_dates[i:i + 2])
             if CHECK_DEAD_HOLDERS and dead_holders:
                 title_dead_holders.append((title, dead_holders))
                 #if title in DEBUG_INSPECT_LIST:
                 #    pprint(title)
                 #    pprint(dead_holders)
     title_liege_errors = []
-    for title, liege_dates in sorted(title_liege_dates.items()):
+    for title, lieges in sorted(title_lieges.items()):
         errors = []
-        lieges = title_lieges[title]
+        liege_dates = title_liege_dates[title]
         for i, liege in enumerate(lieges):
             start_date = liege_dates[i]
             if liege == 0:
@@ -191,10 +181,10 @@ def main():
             else:
                 holder_dates = [(0, 0, 0)]
                 holders = [0]
-            holder_start = bisect.bisect(holder_dates, start_date) - 1
+            holder_start = bisect(holder_dates, start_date) - 1
             if i < len(lieges) - 1:
                 end_date = liege_dates[i + 1]
-                holder_end = bisect.bisect_left(holder_dates, end_date)
+                holder_end = bisect_left(holder_dates, end_date)
             else:
                 end_date = None
                 holder_end = len(holders)
@@ -220,7 +210,77 @@ def main():
         #    pprint(title)
         #    pprint(errors)
     if CHECK_LIEGE_CONSISTENCY:
-        pass
+        liege_consistency_errors = []
+        for char, titles in sorted(char_titles.items()):
+            held_title_lieges = []
+            for title, (start_date, end_date) in sorted(titles.items()):
+                lieges = title_lieges[title]
+                liege_dates = title_liege_dates[title]
+                lo = bisect(liege_dates, start_date) - 1
+                hi = bisect_left(liege_dates, end_date) - 1
+                for i in range(lo, hi):
+                    liege_start = liege_dates[i]
+                    try:
+                        liege_end = liege_dates[i + 1]
+                    except IndexError:
+                        liege_end = None
+                    liege = lieges[i]
+                    if liege == 0:
+                        insort(held_title_lieges,
+                               (liege_start, liege_end, liege, title, liege))
+                        continue
+                    if liege not in title_holders:
+                        insort(held_title_lieges,
+                               (liege_holder_start, liege_holder_end, 0,
+                                title, liege))
+                        continue
+                    liege_holder_dates = title_holder_dates[liege]
+                    liege_holders = title_holders[liege]
+                    j = bisect(liege_holder_dates, liege_start) - 1
+                    if liege_end is None:
+                        k = len(liege_holders)
+                    else:
+                        k = bisect_left(liege_holder_dates, liege_end)
+                    for l in range(j, k):
+                        liege_holder_start = (liege_start if l == j else
+                                              liege_holder_dates[l])
+                        liege_holder_end = (liege_end if l + 1 == k else
+                                            liege_holder_dates[l + 1])
+                        liege_holder = liege_holders[l]
+                        if liege_holder == char:
+                            liege_holder = 0
+                        insort(held_title_lieges,
+                               (liege_holder_start, liege_holder_end,
+                                liege_holder, title, liege))
+            for i, item1 in enumerate(held_title_lieges):
+                start1, end1, liege1, title1, liege_title1 = item1
+                for item2 in held_title_lieges[i + 1:]:
+                    start2, end2, liege2, title2, liege_title2 = item2
+                    if ((end2 is None or start1 < end2) and
+                        (end1 is None or start2 < end1) and liege1 != liege2):
+                        start = max(start1, start2)
+                        if end1 is None:
+                            end = end2
+                        elif end2 is None:
+                            end = end1
+                        else:
+                            end = min(end1, end2)
+                        if PRUNE_IMPOSSIBLE_STARTS:
+                            intersection = []
+                            for a, b in playables:
+                                if start < b and (end is None or a < end):
+                                    intersection.append((max(start, a),
+                                                         min(end, b)
+                                                         if end else b))
+                            for s, e in intersection:
+                                error = (char, s, e, liege1, title1,
+                                    liege_title1, liege2, title2,
+                                    liege_title2)
+                                liege_consistency_errors.append(error)
+                        else:
+                            error = (char, start, end, liege1, title1,
+                                liege_title1, liege2, title2, liege_title2)
+                            liege_consistency_errors.append(error)
     if PRUNE_IMPOSSIBLE_STARTS:
         for title, errors in reversed(title_liege_errors):
             for i in range(len(errors) - 1, -1, -1):
@@ -254,15 +314,15 @@ def main():
                 #    pprint(title)
                 #    pprint(dead_holders)
     if LANDED_TITLES_ORDER:
-        title_liege_errors.sort(key=lambda x: titles.index(x[0]))
+        title_liege_errors.sort(key=lambda x: landed_titles.index(x[0]))
         if CHECK_DEAD_HOLDERS:
-            title_dead_holders.sort(key=lambda x: titles.index(x[0]))
+            title_dead_holders.sort(key=lambda x: landed_titles.index(x[0]))
     else:
         title_liege_errors.sort(key=lambda x: (x[1][0][0],
-                                               titles.index(x[0])))
+                                               landed_titles.index(x[0])))
         if CHECK_DEAD_HOLDERS:
-            title_dead_holders.sort(key=lambda x: (x[1][0][0],
-                                                   titles.index(x[0])))
+            title_dead_holders.sort(key=lambda x:
+                                    (x[1][0][0], landed_titles.index(x[0])))
 
     with (rootpath / 'check_title_history.txt').open('w') as fp:
         print('Liege has no holder:', file=fp)
@@ -306,6 +366,23 @@ def main():
                         line += ', '
                 print(line, file=fp)
                 prev_region = region
+        if CHECK_LIEGE_CONSISTENCY:
+            print('Liege inconsistency:', file=fp)
+            if not liege_consistency_errors:
+                print('\t(none)', file=fp)
+            for item in liege_consistency_errors:
+                (char, start, end, liege1, title1, liege_title1, liege2,
+                 title2, liege_title2) = item
+                line = '\t{}: '.format(char)
+                line += '{}.{}.{}'.format(*start)
+                if end != next_day(start):
+                    if end is None:
+                        line += ' on'
+                    else:
+                        line += ' to {}.{}.{}'.format(*end)
+                line += ', {} ({}->{}) vs. {} ({}->{})'.format(liege1, title1,
+                    liege_title1, liege2, title2, liege_title2)
+                print(line, file=fp)
 
 if __name__ == '__main__':
     main()
