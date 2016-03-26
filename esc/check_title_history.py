@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 
 import bisect
+from collections import defaultdict
 from ck2parser import rootpath, is_codename, Date, SimpleParser, FullParser
 from pprint import pprint
 from print_time import print_time
 
-modpath = rootpath / 'SWMH-BETA/SWMH'
+modpaths = [rootpath / 'SWMH-BETA/SWMH']
 
 #DEBUG_INSPECT_LIST = ['d_aswan']
 
 LANDED_TITLES_ORDER = True # if false, date order
 PRUNE_IMPOSSIBLE_STARTS = True
 PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
-CHECK_DEAD_HOLDERS = False # slow; not useful without PRUNE_IMPOSSIBLE_STARTS
+CHECK_DEAD_HOLDERS = True # slow; not useful without PRUNE_IMPOSSIBLE_STARTS
+CHECK_LIEGE_CONSISTENCY = True
 
 @print_time
 def main():
@@ -31,26 +33,26 @@ def main():
                 if region == 'titular':
                     child_region = n.val
                 recurse(v, region=child_region)
-    for _, tree in parser.parse_files('common/landed_titles/*', modpath):
+    for _, tree in parser.parse_files('common/landed_titles/*', *modpaths):
         recurse(tree)
     def next_day(day):
-        next_day = day[0], day[1], day[2] + 1
+        next_day_ = day[0], day[1], day[2] + 1
         if (day[2] == 28 and day[1] == 2 or
             day[2] == 30 and day[1] in (4, 6, 9, 11) or
             day[2] == 31 and day[1] in (1, 3, 5, 7, 8, 10, 12)):
-            next_day = next_day[0], next_day[1] + 1, 1
-        if next_day[1] == 13:
-            next_day = next_day[0] + 1, 1, next_day[2]
-        return next_day
+            next_day_ = next_day_[0], next_day_[1] + 1, 1
+        if next_day_[1] == 13:
+            next_day_ = next_day_[0] + 1, 1, next_day_[2]
+        return next_day_
     if PRUNE_IMPOSSIBLE_STARTS or PRUNE_NONBOOKMARK_STARTS:
         if PRUNE_NONBOOKMARK_STARTS:
             playables = []
         else:
             _, defines = next(parser.parse_files('common/defines.txt',
-                                                 modpath))
+                                                 *modpaths))
             playables = [(defines['start_date'].val,
                           next_day(defines['last_start_date'].val))]
-        for _, tree in parser.parse_files('common/bookmarks/*', modpath):
+        for _, tree in parser.parse_files('common/bookmarks/*', *modpaths):
             for _, v in tree:
                 date = v['date'].val
                 if not any(a <= date < b for a, b in playables):
@@ -67,7 +69,7 @@ def main():
     title_lieges = {}
     if CHECK_DEAD_HOLDERS:
         char_death = {}
-        for _, tree in parser.parse_files('history/characters/*', modpath):
+        for _, tree in parser.parse_files('history/characters/*', *modpaths):
             for n, v in tree:
                 try:
                     char_death[n.val] = next(n2.val for n2, v2 in v
@@ -75,7 +77,10 @@ def main():
                         'death' in v2.dictionary)
                 except StopIteration:
                     pass
-    for path, tree in parser.parse_files('history/titles/*', modpath):
+    if CHECK_LIEGE_CONSISTENCY:
+        char_titles = defaultdict(list)
+        char_titles_dates = defaultdict(list)
+    for path, tree in parser.parse_files('history/titles/*', *modpaths):
         title = path.stem
         if not len(tree) > 0:
             continue
@@ -135,25 +140,43 @@ def main():
         title_holders[title] = holders
         title_liege_dates[title] = liege_dates
         title_lieges[title] = lieges
-    if CHECK_DEAD_HOLDERS:
-        title_dead_holders = []
+    if CHECK_DEAD_HOLDERS or CHECK_LIEGE_CONSISTENCY:
+        if CHECK_DEAD_HOLDERS:
+            title_dead_holders = []
         for title, holder_dates in sorted(title_holder_dates.items()):
-            dead_holders = []
             holders = title_holders[title]
+            if CHECK_DEAD_HOLDERS:
+                dead_holders = []
             for i, holder in enumerate(holders):
-                if holder == 0 or holder not in char_death:
-                    continue
-                death = char_death[holder]
-                if i + 1 < len(holders):
-                    if death < holder_dates[i + 1]:
-                        dead_holders.append((death, holder_dates[i + 1]))
-                else:
-                    dead_holders.append((death, None))
-            if dead_holders:
+                if (CHECK_DEAD_HOLDERS and holder != 0 and
+                    holder in char_death):
+                    death = char_death[holder]
+                    if i + 1 < len(holders):
+                        if death < holder_dates[i + 1]:
+                            dead_holders.append((death, holder_dates[i + 1]))
+                    else:
+                        dead_holders.append((death, None))
+                if CHECK_LIEGE_CONSISTENCY and i + 1 < len(holders):
+                    start_date, end_date = holder_dates[i:i + 2]
+                    titles = char_titles[holder]
+                    titles_dates = char_titles_dates[holder]
+                    j = bisect.bisect_left(titles_dates, start_date)
+                    if j == len(titles) or titles_dates[j] != start_date:
+                        titles.insert(j, [(title, True)])
+                        titles_dates.insert(j, start_date)
+                    else:
+                        titles[j].append((title, True))
+                    j = bisect.bisect_left(titles_dates, end_date)
+                    if j == len(titles) or titles_dates[j] != end_date:
+                        titles.insert(j, [(title, False)])
+                        titles_dates.insert(j, end_date)
+                    else:
+                        titles[j].append((title, False))
+            if CHECK_DEAD_HOLDERS and dead_holders:
                 title_dead_holders.append((title, dead_holders))
-            #if title in DEBUG_INSPECT_LIST:
-            #    pprint(title)
-            #    pprint(dead_holders)
+                #if title in DEBUG_INSPECT_LIST:
+                #    pprint(title)
+                #    pprint(dead_holders)
     title_liege_errors = []
     for title, liege_dates in sorted(title_liege_dates.items()):
         errors = []
@@ -196,6 +219,8 @@ def main():
         #if title in DEBUG_INSPECT_LIST:
         #    pprint(title)
         #    pprint(errors)
+    if CHECK_LIEGE_CONSISTENCY:
+        pass
     if PRUNE_IMPOSSIBLE_STARTS:
         for title, errors in reversed(title_liege_errors):
             for i in range(len(errors) - 1, -1, -1):
@@ -233,7 +258,8 @@ def main():
         if CHECK_DEAD_HOLDERS:
             title_dead_holders.sort(key=lambda x: titles.index(x[0]))
     else:
-        title_liege_errors.sort(key=lambda x: (x[1][0][0], titles.index(x[0])))
+        title_liege_errors.sort(key=lambda x: (x[1][0][0],
+                                               titles.index(x[0])))
         if CHECK_DEAD_HOLDERS:
             title_dead_holders.sort(key=lambda x: (x[1][0][0],
                                                    titles.index(x[0])))
