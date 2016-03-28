@@ -136,7 +136,7 @@ def main():
         parser, titles, titles_de_jure, duchies_de_jure)
     for path, tree in parser.parse_files('history/titles/*.txt',
                                          *source_paths, errors='replace',
-                                         cache=True):
+                                         memcache=True):
         if tree.contents:
             good = check_title(path.stem, path, titles)
             if (VANILLA_HISTORY_WARN and not good and

@@ -4,13 +4,15 @@ import collections
 import csv
 import functools
 import operator
+import os
 import pathlib
+import pickle
 import re
 import sys
 from funcparserlib.lexer import make_tokenizer, Token
 from funcparserlib.parser import (some, a, maybe, many, finished, skip,
                                   oneplus, forward_decl, NoParseError)
-from localpaths import rootpath, vanilladir
+from localpaths import rootpath, vanilladir, cachepath
 
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
                      quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
@@ -695,7 +697,13 @@ class SimpleParser:
         self.tag = tag
         self.parse_tree_cache = {}
         self.cache_default = False
+        self.diskcache_default = True
         self.fq_keys = []
+        self.cachedir = cachedir / self.__class__.__name__
+        try:
+            self.cachedir.mkdir(parents=True) # 3.5 pls
+        except FileExistsError:
+            pass
         self.setup_parser()
 
     def setup_parser(self):
@@ -717,24 +725,44 @@ class SimpleParser:
         if path is None:
             self.parse_tree_cache = {}
         else:
-            del self.parse_tree_cache[path]
+            del self.parse_tree_cache[path.resolve()]
 
     def parse_files(self, glob, *moddirs, basedir=vanilladir, **kwargs):
         for path in files(glob, *moddirs, basedir=basedir):
             yield path, self.parse_file(path, **kwargs)
 
-    def parse_file(self, path, encoding='cp1252', errors=None, cache=None):
-        if cache is None:
-            cache = self.cache_default
+    def parse_file(self, path, encoding='cp1252', errors=None, memcache=None,
+                   diskcache=None):
+        path = path.resolve()
+        if memcache is None:
+            memcache = self.memcache_default
+        if diskcache is None:
+            diskcache = self.diskcache_default
         if path in self.parse_tree_cache:
-            #and os.path.getmtime(str(path)) <= self.parse_tree_cache[path].mtime):
+            # and os.path.getmtime(str(path)) <=
+            # self.parse_tree_cache[path].mtime):
             return self.parse_tree_cache[path]
+        mtime = os.path.getmtime(str(path))
+        cachepath = self.cachedir / str(hash(path))
+        if cachepath.exists() and os.path.getmtime(str(cachepath)) >= mtime:
+            with cachepath.open() as f:
+                tree = pickle.load(f)
+                if memcache:
+                    self.parse_tree_cache[path] = tree
+                return tree
         with path.open(encoding=encoding, errors=errors) as f:
             try:
                 tree = self.parse(f.read())
-                #tree.mtime = time.time()
-                if cache:
+                tree.mtime = os.path.getmtime(str(path))
+                if memcache:
                     self.parse_tree_cache[path] = tree
+                if diskcache:
+                    try:
+                        self.cachepath.parent.mkdir(parents=True) # 3.5 pls
+                    except FileExistsError:
+                        pass
+                    with self.cachepath.open('w') as f:
+                        pickle.dump(tree, f, protocol=-1)
                 return tree
             except:
                 print(path)
