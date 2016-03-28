@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
-# import pdb
-
 from bisect import bisect_left, bisect, insort
 from collections import defaultdict
 from ck2parser import rootpath, is_codename, Date, SimpleParser, FullParser
+# import pdb
 from pprint import pprint
 from print_time import print_time
 
@@ -20,6 +19,7 @@ PRUNE_IMPOSSIBLE_STARTS = True # implies PRUNE_UNEXECUTED_HISTORY
 PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
 
 modpaths = [rootpath / 'SWMH-BETA/SWMH']
+# modpaths = [rootpath / 'CK2Plus/CK2Plus']
 
 @print_time
 def main():
@@ -74,7 +74,7 @@ def main():
                                                dates_to_examine[i][1])
                     del dates_to_examine[i]
         else:
-            dates_to_examine[:] = [time_beginning, dates_to_examine[-1][1]]
+            dates_to_examine[:] = [(time_beginning, dates_to_examine[-1][1])]
         # e.g. [((867, 1, 1), (867, 1, 2)), ((1066, 9, 15), (1337, 1, 2))]
     title_holder_dates = {}
     title_holders = {}
@@ -94,7 +94,7 @@ def main():
         char_titles = defaultdict(dict)
     for path, tree in parser.parse_files('history/titles/*', *modpaths):
         title = path.stem
-        if not len(tree) > 0:
+        if not len(tree) > 0 or title not in landed_titles:
             continue
         holder_dates = [time_beginning]
         holders = [0]
