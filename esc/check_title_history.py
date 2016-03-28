@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# import pdb
+
 from bisect import bisect_left, bisect, insort
 from collections import defaultdict
 from ck2parser import rootpath, is_codename, Date, SimpleParser, FullParser
@@ -47,6 +49,8 @@ def main():
         if next_day[1] == 13:
             next_day = next_day[0] + 1, 1, next_day[2]
         return next_day
+    time_beginning = (float('-inf'),) * 3
+    time_end = (float('inf'),) * 3
     prune = (PRUNE_UNEXECUTED_HISTORY or PRUNE_IMPOSSIBLE_STARTS or
              PRUNE_NONBOOKMARK_STARTS)
     if prune:
@@ -70,7 +74,7 @@ def main():
                                                dates_to_examine[i][1])
                     del dates_to_examine[i]
         else:
-            dates_to_examine[:] = [(0, 0, 0), dates_to_examine[-1][1]]
+            dates_to_examine[:] = [time_beginning, dates_to_examine[-1][1]]
         # e.g. [((867, 1, 1), (867, 1, 2)), ((1066, 9, 15), (1337, 1, 2))]
     title_holder_dates = {}
     title_holders = {}
@@ -92,9 +96,9 @@ def main():
         title = path.stem
         if not len(tree) > 0:
             continue
-        holder_dates = [(0, 0, 0)]
+        holder_dates = [time_beginning]
         holders = [0]
-        liege_dates = [(0, 0, 0)]
+        liege_dates = [time_beginning]
         lieges = [0]
         for n, v in tree:
             date = n.val
@@ -131,7 +135,7 @@ def main():
             j = bisect_left(liege_dates, start_date)
             if i < len(holders) - 1:
                 end_date = holder_dates[i + 1]
-                k = bisect_left(liege_dates, end_date)
+                k = bisect_left(liege_dates, end_date, lo=j)
             else:
                 k = len(lieges)
             if (0 < k < len(lieges) and lieges[k - 1] != 0 and
@@ -168,7 +172,7 @@ def main():
                         if death < holder_dates[i + 1]:
                             dead_holders.append((death, holder_dates[i + 1]))
                     else:
-                        dead_holders.append((death, None))
+                        dead_holders.append((death, time_end))
                 if CHECK_LIEGE_CONSISTENCY and i + 1 < len(holders):
                     char_titles[holder][title] = tuple(holder_dates[i:i + 2])
             if CHECK_DEAD_HOLDERS and dead_holders:
@@ -188,14 +192,15 @@ def main():
                 holder_dates = title_holder_dates[liege]
                 holders = title_holders[liege]
             else:
-                holder_dates = [(0, 0, 0)]
+                holder_dates = [time_beginning]
                 holders = [0]
             holder_start = bisect(holder_dates, start_date) - 1
             if i < len(lieges) - 1:
                 end_date = liege_dates[i + 1]
-                holder_end = bisect_left(holder_dates, end_date)
+                holder_end = bisect_left(holder_dates, end_date,
+                                         lo=holder_start)
             else:
-                end_date = None
+                end_date = time_end
                 holder_end = len(holders)
             for j in range(holder_start, holder_end):
                 if holders[j] == 0:
@@ -204,9 +209,7 @@ def main():
                     else:
                         error_start = holder_dates[j]
                     if j < len(holders) - 1:
-                        error_end = holder_dates[j + 1]
-                        if end_date is not None:
-                            error_end = min(end_date, error_end)
+                        error_end = min(end_date, holder_dates[j + 1])
                     else:
                         error_end = end_date
                     if errors and errors[-1][1] == error_start:
@@ -223,33 +226,24 @@ def main():
         for char, titles in sorted(char_titles.items()):
             held_title_lieges = []
             for title, (start_date, end_date) in sorted(titles.items()):
+                # if char == 83200 and title == 'd_leinster':
+                #     pdb.set_trace()
                 lieges = title_lieges[title]
                 liege_dates = title_liege_dates[title]
                 lo = bisect(liege_dates, start_date) - 1
-                hi = bisect_left(liege_dates, end_date) - 1
+                hi = bisect_left(liege_dates, end_date, lo=lo)
                 for i in range(lo, hi):
-                    liege_start = liege_dates[i]
-                    try:
-                        liege_end = liege_dates[i + 1]
-                    except IndexError:
-                        liege_end = None
+                    liege_start = start_date if i == lo else liege_dates[i]
+                    liege_end = end_date if i + 1 == hi else liege_dates[i + 1]
                     liege = lieges[i]
-                    if liege == 0:
+                    if liege == 0 or liege not in title_holders:
                         insort(held_title_lieges,
-                               (liege_start, liege_end, liege, title, liege))
-                        continue
-                    if liege not in title_holders:
-                        insort(held_title_lieges,
-                               (liege_holder_start, liege_holder_end, 0,
-                                title, liege))
+                               (liege_start, liege_end, 0, title, liege))
                         continue
                     liege_holder_dates = title_holder_dates[liege]
                     liege_holders = title_holders[liege]
                     j = bisect(liege_holder_dates, liege_start) - 1
-                    if liege_end is None:
-                        k = len(liege_holders)
-                    else:
-                        k = bisect_left(liege_holder_dates, liege_end)
+                    k = bisect_left(liege_holder_dates, liege_end, lo=j)
                     for l in range(j, k):
                         liege_holder_start = (liege_start if l == j else
                                               liege_holder_dates[l])
@@ -265,22 +259,15 @@ def main():
                 start1, end1, liege1, title1, liege_title1 = item1
                 for item2 in held_title_lieges[i + 1:]:
                     start2, end2, liege2, title2, liege_title2 = item2
-                    if ((end2 is None or start1 < end2) and
-                        (end1 is None or start2 < end1) and liege1 != liege2):
+                    if start1 < end2 and start2 < end1 and liege1 != liege2:
                         start = max(start1, start2)
-                        if end1 is None:
-                            end = end2
-                        elif end2 is None:
-                            end = end1
-                        else:
-                            end = min(end1, end2)
+                        end = min(end1, end2)
                         if prune:
                             intersection = []
                             for a, b in dates_to_examine:
-                                if start < b and (end is None or a < end):
+                                if start < b and a < end:
                                     intersection.append((max(start, a),
-                                                         min(end, b)
-                                                         if end else b))
+                                                         min(end, b)))
                             for s, e in intersection:
                                 error = (char, s, e, liege1, title1,
                                     liege_title1, liege2, title2,
@@ -298,9 +285,8 @@ def main():
                 start, end = errors[i]
                 intersection = []
                 for a, b in dates_to_examine:
-                    if start < b and (end is None or a < end):
-                        intersection.append((max(start, a),
-                                             min(end, b) if end else b))
+                    if start < b and a < end:
+                        intersection.append((max(start, a), min(end, b)))
                 errors[i:i + 1] = intersection
             if not errors:
                 title_liege_errors.remove((title, errors))
@@ -313,9 +299,8 @@ def main():
                     start, end = dead_holders[i]
                     intersection = []
                     for a, b in dates_to_examine:
-                        if start < b and (end is None or a < end):
-                            intersection.append((max(start, a),
-                                                 min(end, b) if end else b))
+                        if start < b and a < end:
+                            intersection.append((max(start, a), min(end, b)))
                     dead_holders[i:i + 1] = intersection
                 if not dead_holders:
                     title_dead_holders.remove((title, dead_holders))
@@ -346,7 +331,7 @@ def main():
             for i, error in enumerate(errors):
                 line += '{}.{}.{}'.format(*error[0])
                 if error[1] != get_next_day(error[0]):
-                    if error[1] is None:
+                    if error[1] == time_end:
                         line += ' on'
                     else:
                         line += ' to {}.{}.{}'.format(*error[1])
@@ -367,7 +352,7 @@ def main():
                 for i, dead_holder in enumerate(dead_holders):
                     line += '{}.{}.{}'.format(*dead_holder[0])
                     if dead_holder[1] != get_next_day(dead_holder[0]):
-                        if dead_holder[1] is None:
+                        if dead_holder[1] == time_end:
                             line += ' on'
                         else:
                             line += ' to {}.{}.{}'.format(*dead_holder[1])
@@ -385,7 +370,7 @@ def main():
                 line = '\t{}: '.format(char)
                 line += '{}.{}.{}'.format(*start)
                 if end != get_next_day(start):
-                    if end is None:
+                    if end == time_end:
                         line += ' on'
                     else:
                         line += ' to {}.{}.{}'.format(*end)
