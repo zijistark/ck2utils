@@ -6,15 +6,18 @@ from ck2parser import rootpath, is_codename, Date, SimpleParser, FullParser
 from pprint import pprint
 from print_time import print_time
 
-modpaths = [rootpath / 'SWMH-BETA/SWMH']
-
 #DEBUG_INSPECT_LIST = ['d_aswan']
 
-LANDED_TITLES_ORDER = True # if false, date order
-PRUNE_IMPOSSIBLE_STARTS = True
-PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
-CHECK_DEAD_HOLDERS = True # slow; not useful without PRUNE_IMPOSSIBLE_STARTS
+CHECK_DEAD_HOLDERS = True # slow; most useful with PRUNE_UNEXECUTED_HISTORY
 CHECK_LIEGE_CONSISTENCY = True
+
+LANDED_TITLES_ORDER = True # if false, date order
+
+PRUNE_UNEXECUTED_HISTORY = True # prune all after last playable start
+PRUNE_IMPOSSIBLE_STARTS = True # implies PRUNE_UNEXECUTED_HISTORY
+PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
+
+modpaths = [rootpath / 'SWMH-BETA/SWMH']
 
 @print_time
 def main():
@@ -35,33 +38,39 @@ def main():
                 recurse(v, region=child_region)
     for _, tree in parser.parse_files('common/landed_titles/*', *modpaths):
         recurse(tree)
-    def next_day(day):
-        next_day_ = day[0], day[1], day[2] + 1
+    def get_next_day(day):
+        next_day = day[0], day[1], day[2] + 1
         if (day[2] == 28 and day[1] == 2 or
             day[2] == 30 and day[1] in (4, 6, 9, 11) or
             day[2] == 31 and day[1] in (1, 3, 5, 7, 8, 10, 12)):
-            next_day_ = next_day_[0], next_day_[1] + 1, 1
-        if next_day_[1] == 13:
-            next_day_ = next_day_[0] + 1, 1, next_day_[2]
-        return next_day_
-    if PRUNE_IMPOSSIBLE_STARTS or PRUNE_NONBOOKMARK_STARTS:
+            next_day = next_day[0], next_day[1] + 1, 1
+        if next_day[1] == 13:
+            next_day = next_day[0] + 1, 1, next_day[2]
+        return next_day
+    prune = (PRUNE_UNEXECUTED_HISTORY or PRUNE_IMPOSSIBLE_STARTS or
+             PRUNE_NONBOOKMARK_STARTS)
+    if prune:
         if PRUNE_NONBOOKMARK_STARTS:
-            playables = []
+            dates_to_examine = []
         else:
             _, defines = next(parser.parse_files('common/defines.txt',
                                                  *modpaths))
-            playables = [(defines['start_date'].val,
-                          next_day(defines['last_start_date'].val))]
+            dates_to_examine = [(defines['start_date'].val,
+                          get_next_day(defines['last_start_date'].val))]
         for _, tree in parser.parse_files('common/bookmarks/*', *modpaths):
             for _, v in tree:
                 date = v['date'].val
-                if not any(a <= date < b for a, b in playables):
-                    interval = date, next_day(date)
-                    insort(playables, interval)
-        for i in range(len(playables) - 1, 0, -1):
-            if playables[i - 1][1] == playables[i][0]:
-                playables[i - 1] = playables[i - 1][0], playables[i][1]
-                del playables[i]
+                if not any(a <= date < b for a, b in dates_to_examine):
+                    interval = date, get_next_day(date)
+                    insort(dates_to_examine, interval)
+        if PRUNE_IMPOSSIBLE_STARTS or PRUNE_NONBOOKMARK_STARTS:
+            for i in range(len(dates_to_examine) - 1, 0, -1):
+                if dates_to_examine[i - 1][1] == dates_to_examine[i][0]:
+                    dates_to_examine[i - 1] = (dates_to_examine[i - 1][0],
+                                               dates_to_examine[i][1])
+                    del dates_to_examine[i]
+        else:
+            dates_to_examine[:] = [(0, 0, 0), dates_to_examine[-1][1]]
         # e.g. [((867, 1, 1), (867, 1, 2)), ((1066, 9, 15), (1337, 1, 2))]
     title_holder_dates = {}
     title_holders = {}
@@ -265,9 +274,9 @@ def main():
                             end = end1
                         else:
                             end = min(end1, end2)
-                        if PRUNE_IMPOSSIBLE_STARTS:
+                        if prune:
                             intersection = []
-                            for a, b in playables:
+                            for a, b in dates_to_examine:
                                 if start < b and (end is None or a < end):
                                     intersection.append((max(start, a),
                                                          min(end, b)
@@ -281,14 +290,14 @@ def main():
                             error = (char, start, end, liege1, title1,
                                 liege_title1, liege2, title2, liege_title2)
                             liege_consistency_errors.append(error)
-    if PRUNE_IMPOSSIBLE_STARTS:
+    if prune:
         for title, errors in reversed(title_liege_errors):
             for i in range(len(errors) - 1, -1, -1):
                 # intersect this interval with the playable intervals,
                 # and update, split, or remove errors[i] as necessary
                 start, end = errors[i]
                 intersection = []
-                for a, b in playables:
+                for a, b in dates_to_examine:
                     if start < b and (end is None or a < end):
                         intersection.append((max(start, a),
                                              min(end, b) if end else b))
@@ -303,7 +312,7 @@ def main():
                 for i in range(len(dead_holders) - 1, -1, -1):
                     start, end = dead_holders[i]
                     intersection = []
-                    for a, b in playables:
+                    for a, b in dates_to_examine:
                         if start < b and (end is None or a < end):
                             intersection.append((max(start, a),
                                                  min(end, b) if end else b))
@@ -336,7 +345,7 @@ def main():
             line = '\t{}: '.format(title)
             for i, error in enumerate(errors):
                 line += '{}.{}.{}'.format(*error[0])
-                if error[1] != next_day(error[0]):
+                if error[1] != get_next_day(error[0]):
                     if error[1] is None:
                         line += ' on'
                     else:
@@ -357,7 +366,7 @@ def main():
                 line = '\t{}: '.format(title)
                 for i, dead_holder in enumerate(dead_holders):
                     line += '{}.{}.{}'.format(*dead_holder[0])
-                    if dead_holder[1] != next_day(dead_holder[0]):
+                    if dead_holder[1] != get_next_day(dead_holder[0]):
                         if dead_holder[1] is None:
                             line += ' on'
                         else:
@@ -375,7 +384,7 @@ def main():
                  title2, liege_title2) = item
                 line = '\t{}: '.format(char)
                 line += '{}.{}.{}'.format(*start)
-                if end != next_day(start):
+                if end != get_next_day(start):
                     if end is None:
                         line += ' on'
                     else:
