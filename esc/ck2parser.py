@@ -19,10 +19,6 @@ from localpaths import rootpath, vanilladir, cachedir
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
                      quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
 
-# these used only to compute long line wrapping
-TAB_WIDTH = 4 # minimum 2
-CHARS_PER_LINE = 120
-
 memoize = functools.lru_cache(maxsize=None)
 
 
@@ -141,21 +137,6 @@ def is_codename(string):
         return False
 
 
-def chars(line):
-    line = str(line)
-    try:
-        line = line.splitlines()[-1]
-    except IndexError: # empty string
-        pass
-    col = 0
-    for char in line:
-        if char == '\t':
-            col = (col // TAB_WIDTH + 1) * TAB_WIDTH
-        else:
-            col += 1
-    return col
-
-
 def comments_to_str(parser, comments, indent):
     if not comments:
         return ''
@@ -218,7 +199,22 @@ class Stringifiable:
 
     @property
     def indent_col(self):
-        return self.indent * TAB_WIDTH
+        return self.indent * self.parser.tab_width
+
+    def chars(self, line):
+        line = str(line)
+        try:
+            line = line.splitlines()[-1]
+        except IndexError: # empty string
+            pass
+        col = 0
+        for char in line:
+            if char == '\t':
+                col = ((col // self.parser.tab_width + 1) *
+                       self.parser.tab_width)
+            else:
+                col += 1
+        return col
 
 
 class TopLevel(Stringifiable):
@@ -272,7 +268,14 @@ class TopLevel(Stringifiable):
             item.indent = value
 
     def str(self):
-        s = ''.join(x.str() for x in self)
+        s = ''
+        for i, item in enumerate(self):
+            s += item.str()
+            if item.indent <= self.parser.newlines_to_depth:
+                if (i < len(self) - 1 and isinstance(item.value, Obj) or
+                    (i > 0 and not isinstance(item.value, Obj) and
+                     isinstance(self.contents[i + 1].value, Obj))):
+                    s += '\n'
         if self.post_comments:
             s += self.indent * '\t'
             s += comments_to_str(self.parser, self.post_comments, self.indent)
@@ -308,14 +311,14 @@ class Commented(Stringifiable):
 
     def val_inline_str(self, col):
         s = str(self.val)
-        return s, col + chars(s)
+        return s, col + self.chars(s)
 
     def str(self):
         s = ''
         if self.pre_comments:
             s += self.indent * '\t'
             s += comments_to_str(self.parser, self.pre_comments, self.indent)
-        s += self.indent * '\t' + self.val_str()
+        s += self.val_str()
         if self.post_comment:
             s += ' ' + str(self.post_comment)
         s += '\n'
@@ -334,8 +337,8 @@ class Commented(Stringifiable):
                 s += '\t'
             else:
                 pre_indent = self.indent
-            # I can't tell the difference if I'm just after, say, "nor = { "
-            # with TAB_WIDTH == 8, but whatever.
+            # I can't tell the difference if I'm just after, say, "NOT = { "
+            # with tab_width == 8, but whatever. # ?????
             c_s = comments_to_str(self.parser, self.pre_comments,
                                   pre_indent) + sep[1:]
             s += c_s
@@ -361,7 +364,7 @@ class String(Commented):
         s = self.val
         if self.force_quote or not re.fullmatch(r'\S+', s):
             s = '"{}"'.format(s)
-        return s, col + chars(s)
+        return s, col + self.chars(s)
 
 
 class Number(Commented):
@@ -380,7 +383,7 @@ class Date(Commented):
 
     def val_inline_str(self, col):
         s = '{}.{}.{}'.format(*self.val)
-        return s, col + chars(s)
+        return s, col + self.chars(s)
 
 
 class Op(Commented):
@@ -451,7 +454,7 @@ class Pair(Stringifiable):
             s += ' '
             col += 1
         tis_is, (nl_tis, col_tis) = self.tis.inline_str(col)
-        if col > self.indent_col and col_tis > CHARS_PER_LINE:
+        if col > self.indent_col and col_tis > self.parser.chars_per_line:
             if not s[-2].isspace():
                 s = s[:-1]
             tis_s = self.tis.str()
@@ -469,20 +472,26 @@ class Pair(Stringifiable):
             s += ' '
             col += 1
         val_is, (nl_val, col_val) = self.value.inline_str(col)
-        if col > self.indent_col and col_val > CHARS_PER_LINE:
-            if not s[-2].isspace():
-                s = s[:-1]
-            val_s = self.value.str()
-            s += '\n' + val_s + self.indent * '\t'
-            nl += 1 + val_s.count('\n')
-            col = self.indent_col
-        else:
-            if val_is[0] == '\n':
-                s = s[:-1]
-                col -= 1
-            s += val_is
-            nl += nl_val
-            col = col_val
+        # if col > self.indent_col and col_val > self.parser.chars_per_line:
+        #     if not s[-2].isspace():
+        #         s = s[:-1]
+        #     val_s = self.value.str()
+        #     s += '\n' + val_s + self.indent * '\t'
+        #     nl += 1 + val_s.count('\n')
+        #     col = self.indent_col
+        # else:
+        #     if val_is[0] == '\n':
+        #         s = s[:-1]
+        #         col -= 1
+        #     s += val_is
+        #     nl += nl_val
+        #     col = col_val
+        if val_is[0] == '\n':
+            s = s[:-1]
+            col -= 1
+        s += val_is
+        nl += nl_val
+        col = col_val
         return s, (nl, col)
 
 
@@ -566,7 +575,8 @@ class Obj(Stringifiable):
         if self.kel.has_comments or self.ker.pre_comments:
             return False
         if self.contents and isinstance(self.contents[0], Pair):
-            return len(self) == 1 and not self.contents[0].has_comments
+            return (len(self) == 1 and not self.contents[0].has_comments and
+                    not self.contents[0].key.val in self.parser.no_fold_keys)
         return all(isinstance(x, Commented) and not x.has_comments
                    for x in self)
 
@@ -584,15 +594,15 @@ class Obj(Stringifiable):
                 item_is, (nl_item, col_item) = item.inline_str(1 + col_oneline)
                 s_oneline += ' ' + item_is
                 col_oneline = col_item
-                if nl_item > 0 or col_oneline + 2 > CHARS_PER_LINE:
+                if nl_item > 0 or col_oneline + 2 > self.parser.chars_per_line:
                     break
             else:
                 if self.contents:
                     s_oneline += ' '
                     col_oneline += 1
                 ker_is, (nl_ker, col_ker) = self.ker.inline_str(col_oneline)
-                if (nl_ker == 0 or
-                    chars(ker_is.splitlines()[0]) <= CHARS_PER_LINE):
+                if nl_ker == 0 or (self.chars(ker_is.splitlines()[0]) <=
+                                   self.parser.chars_per_line):
                     s_oneline += ker_is
                     return s_oneline, (nl_ker, col_ker)
         if self.has_pairs:
@@ -602,15 +612,21 @@ class Obj(Stringifiable):
             else:
                 s += '\n'
                 nl += 1
-            for item in self:
+            for i, item in enumerate(self):
                 item_s = item.str()
                 s += item_s
                 nl += item_s.count('\n')
+                if item.indent <= self.parser.newlines_to_depth:
+                    if (i < len(self) - 1 and isinstance(item.value, Obj) or
+                        (i > 0 and not isinstance(item.value, Obj) and
+                         isinstance(self.contents[i + 1].value, Obj))):
+                        s += '\n'
+                        nl += 1
             s += self.indent * '\t'
             col = self.indent_col
         else:
             sep = '\n' + (self.indent + 1) * '\t'
-            sep_col = chars(sep)
+            sep_col = self.chars(sep)
             if s[-1].isspace():
                 s += '\t'
             else:
@@ -622,7 +638,8 @@ class Obj(Stringifiable):
                     s += ' '
                     col += 1
                 item_is, (nl_item, col_item) = item.inline_str(col)
-                if col > self.indent_col and col_item > CHARS_PER_LINE:
+                if (col > self.indent_col and
+                    col_item > self.parser.chars_per_line):
                     if not s[-2].isspace():
                         s = s[:-1]
                     s += sep
@@ -700,7 +717,12 @@ class SimpleParser:
         self.parse_tree_cache = {}
         self.memcache_default = False
         self.diskcache_default = True
+        # these two used only to compute long line wrapping
+        self.tab_width = 4 # minimum 2
+        self.chars_per_line = 120
         self.fq_keys = []
+        self.no_fold_keys = []
+        self.newlines_to_depth = 1
         self.cachedir = cachedir / self.__class__.__name__
         try:
             self.cachedir.mkdir(parents=True) # 3.5 pls
@@ -723,6 +745,7 @@ class SimpleParser:
         obj = op('{') + many(pair | string | key) + op('}') >> unarg(Obj)
         pair.define(key + op('=') + (obj | string | key) >> unarg(Pair))
         self.toplevel = many(pair) + skip(finished) >> TopLevel
+
 
     def flush(self, path=None):
         if path is None:
@@ -785,7 +808,9 @@ class SimpleParser:
                         pass
                     # possible todo: put this i/o in another thread
                     with cachepath.open('wb') as f:
+                        tree.parser = None
                         pickle.dump(tree, f, protocol=-1)
+                    tree.parser = self
                 if memcache:
                     self.parse_tree_cache[path] = tree
                 tree.parser = self
@@ -798,6 +823,7 @@ class SimpleParser:
         tokens = list(self.tokenizer.tokenize(string))
         # try:
         tree = self.toplevel.parse(tokens)
+        tree.parser = self
         # except:
         #     from pprint import pprint
         #     pprint(list(enumerate(tokens[:20])))
