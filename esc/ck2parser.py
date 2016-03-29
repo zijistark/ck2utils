@@ -718,8 +718,8 @@ class SimpleParser:
         self.memcache_default = False
         self.diskcache_default = True
         # these two used only to compute long line wrapping
-        self.tab_width = 4 # minimum 2
-        self.chars_per_line = 120
+        self.tab_width = 8 # minimum 2
+        self.chars_per_line = 125
         self.fq_keys = []
         self.no_fold_keys = []
         self.newlines_to_depth = -1
