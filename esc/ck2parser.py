@@ -406,6 +406,13 @@ class Pair(Stringifiable):
             value = String.from_str(value)
         return cls(key, Op.from_str('='), value)
 
+    @classmethod
+    def with_empty_obj(cls, key):
+        if not isinstance(key, Stringifiable):
+            key = String.from_str(key)
+        value = Obj.from_iter([])
+        return cls(key, Op.from_str('='), value)
+
     def __iter__(self):
         yield self.key
         yield self.value

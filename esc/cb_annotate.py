@@ -5,12 +5,6 @@ from print_time import print_time
 
 MODPATH = rootpath / 'EMF/EMF'
 
-def make_empty_obj_pair(name):
-    key = String.from_str(name)
-    tis = Op.from_str('=')
-    value = Obj.from_iter([])
-    return Pair(key, tis, value)
-
 def mutate_cb(cb_pair):
     name, tree = cb_pair.key.val, cb_pair.value
     third_party = name.startswith('other_')
@@ -25,7 +19,7 @@ def mutate_cb(cb_pair):
         least_index = min(index, least_index)
         tree.contents.remove(can_use)
     except StopIteration:
-        can_use = make_empty_obj_pair('can_use')
+        can_use = Pair.with_empty_obj('can_use')
     if third_party:
         trigger_name = 'emf_cb_thirdparty_can_use_trigger'
     else:
@@ -44,7 +38,7 @@ def mutate_cb(cb_pair):
             least_index = min(index, least_index)
             tree.contents.remove(can_use_gui)
         except StopIteration:
-            can_use_gui = make_empty_obj_pair('can_use_gui')
+            can_use_gui = Pair.with_empty_obj('can_use_gui')
         if third_party:
             trigger_name = 'emf_cb_thirdparty_can_use_gui_trigger'
         else:
