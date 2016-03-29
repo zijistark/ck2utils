@@ -45,14 +45,13 @@ def mutate_cb(cb_pair):
             tree.contents.remove(can_use_gui)
         except StopIteration:
             can_use_gui = make_empty_obj_pair('can_use_gui')
-        if can_use_gui:
-            if third_party:
-                trigger_name = 'emf_cb_thirdparty_can_use_gui_trigger'
-            else:
-                trigger_name = 'emf_cb_can_use_gui_trigger'
-            trigger = Pair.from_kv(trigger_name, 'yes')
-            if not can_use_gui.value.has_pair(trigger_name, 'yes'):
-                can_use_gui.value.contents.insert(0, trigger)
+        if third_party:
+            trigger_name = 'emf_cb_thirdparty_can_use_gui_trigger'
+        else:
+            trigger_name = 'emf_cb_can_use_gui_trigger'
+        trigger = Pair.from_kv(trigger_name, 'yes')
+        if not can_use_gui.value.has_pair(trigger_name, 'yes'):
+            can_use_gui.value.contents.insert(0, trigger)
     # remove & handle can_use_title
     try:
         can_use_title = next(p for p in tree if p.key.val == 'can_use_title')
@@ -69,7 +68,8 @@ def mutate_cb(cb_pair):
             else:
                 trigger_name = 'emf_cb_can_use_de_jure_title_trigger'
             trigger = Pair.from_kv(trigger_name, 'yes')
-            can_use_title.value.contents.insert(0, trigger)
+            if not can_use_title.value.has_pair(trigger_name, 'yes'):
+                can_use_title.value.contents.insert(0, trigger)
         else:
             if third_party:
                 trigger_name = 'emf_cb_thirdparty_can_use_title_trigger'
