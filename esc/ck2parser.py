@@ -13,6 +13,7 @@ import sys
 from funcparserlib.lexer import make_tokenizer, Token
 from funcparserlib.parser import (some, a, maybe, many, finished, skip,
                                   oneplus, forward_decl, NoParseError)
+import git
 from localpaths import rootpath, vanilladir, cachedir
 
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
@@ -705,6 +706,7 @@ class SimpleParser:
             self.cachedir.mkdir(parents=True) # 3.5 pls
         except FileExistsError:
             pass
+        self._repos = {}
         self.setup_parser()
 
     def setup_parser(self):
@@ -731,8 +733,27 @@ class SimpleParser:
     def get_cachepath(self, path):
         m = hashlib.md5()
         m.update(bytes(path))
-        return self.cachedir / m.hexdigest()
-
+        if vanilladir in path.parents:
+            return self.cachedir / 'vanilla' / m.hexdigest()
+        for a_repopath, a_repo in self._repos.items():
+            if a_repopath in path.parents:
+                repo = a_repo
+                break
+        else:
+            try:
+                # todo: try other odbt for speed
+                repo = git.Repo(str(path.parent),
+                                search_parent_directories=True)
+                self._repos[pathlib.Path(repo.working_tree_dir)] = repo
+            except git.InvalidGitRepositoryError:
+                return self.cachedir / m.hexdigest()
+        repo_name = pathlib.Path(repo.working_dir).name
+        try:
+            branch = repo.active_branch.name
+            return self.cachedir / repo_name / branch / m.hexdigest()
+        except TypeError:
+            return self.cachedir / repo_name / m.hexdigest()
+            
     def parse_files(self, glob, *moddirs, basedir=vanilladir, **kwargs):
         for path in files(glob, *moddirs, basedir=basedir):
             yield path, self.parse_file(path, **kwargs)
@@ -744,22 +765,19 @@ class SimpleParser:
         if diskcache is None:
             diskcache = self.diskcache_default
         if path in self.parse_tree_cache:
-            # and os.path.getmtime(str(path)) <=
-            # self.parse_tree_cache[path].mtime):
             return self.parse_tree_cache[path]
-        mtime = os.path.getmtime(str(path))
         cachepath = self.get_cachepath(path)
-        if cachepath.exists() and os.path.getmtime(str(cachepath)) >= mtime:
+        if (cachepath.exists() and
+            os.path.getmtime(str(cachepath)) >= os.path.getmtime(str(path))):
             with cachepath.open('rb') as f:
                 tree = pickle.load(f)
-                tree.parser = self
                 if memcache:
                     self.parse_tree_cache[path] = tree
+                tree.parser = self
                 return tree
         with path.open(encoding=encoding, errors=errors) as f:
             try:
                 tree = self.parse(f.read())
-                tree.mtime = mtime
                 if diskcache:
                     try:
                         cachepath.parent.mkdir(parents=True) # 3.5 pls
@@ -768,9 +786,9 @@ class SimpleParser:
                     # possible todo: put this i/o in another thread
                     with cachepath.open('wb') as f:
                         pickle.dump(tree, f, protocol=-1)
-                    tree.parser = self
                 if memcache:
                     self.parse_tree_cache[path] = tree
+                tree.parser = self
                 return tree
             except:
                 print(path)
