@@ -183,7 +183,7 @@ def main():
             outpath = lt_t / inpath.name
             update_tree(tree)
             with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
-                f.write(tree.str())
+                f.write(tree.str(full_parser))
         while lt.exists():
             print('Removing old landed_titles...')
             shutil.rmtree(str(lt), ignore_errors=True)

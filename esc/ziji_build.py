@@ -66,7 +66,7 @@ def process_cultures(parser, where, build):
         if not AUDIT and mutated:
             outpath = make_outpath(build, inpath, where, vanilladir)
             with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
-                f.write(tree.str())
+                f.write(tree.str(parser))
     return cultures, culture_groups
 
 def process_history(parser, where, build, extra_keys):
@@ -99,7 +99,7 @@ def process_history(parser, where, build, extra_keys):
             if mutated:
                 outpath = make_outpath(build, inpath, where, vanilladir)
                 with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
-                    f.write(tree.str())
+                    f.write(tree.str(parser))
     # if critical_error:
     #     raise SystemExit()
     return prov_title
@@ -180,7 +180,7 @@ def main():
         update_tree(tree)
         if not AUDIT:
             with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
-                f.write(tree.str())
+                f.write(tree.str(parser))
 
     # process history
     prov_title = process_history(parser, modpath, build, extra_keys)

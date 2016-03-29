@@ -97,7 +97,6 @@ def mutate_cb(cb_pair):
     effect = Pair.from_kv(effect_name, 'yes')
     if not on_success_posttitle.value.has_pair(effect_name, 'yes'):
         on_success_posttitle.value.contents.append(effect)
-    cb_pair.parser = cb_pair.parser
     cb_pair.indent = cb_pair.indent
 
 @print_time
@@ -112,7 +111,7 @@ def main():
         for cb_pair in tree:
             mutate_cb(cb_pair)
         with path.open('w', encoding='cp1252', newline='\n') as f:
-            f.write(tree.str())
+            f.write(tree.str(parser))
 
 if __name__ == '__main__':
     main()
