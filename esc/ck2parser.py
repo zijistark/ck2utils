@@ -722,7 +722,7 @@ class SimpleParser:
         self.chars_per_line = 120
         self.fq_keys = []
         self.no_fold_keys = []
-        self.newlines_to_depth = 1
+        self.newlines_to_depth = -1
         self.cachedir = cachedir / self.__class__.__name__
         try:
             self.cachedir.mkdir(parents=True) # 3.5 pls
