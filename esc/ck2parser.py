@@ -733,26 +733,25 @@ class SimpleParser:
     def get_cachepath(self, path):
         m = hashlib.md5()
         m.update(bytes(path))
+        out_name = m.hexdigest()
         if vanilladir in path.parents:
-            return self.cachedir / 'vanilla' / m.hexdigest()
-        for a_repopath, a_repo in self._repos.items():
-            if a_repopath in path.parents:
-                repo = a_repo
-                break
-        else:
-            try:
-                # todo: try other odbt for speed
-                repo = git.Repo(str(path.parent),
-                                search_parent_directories=True)
-                self._repos[pathlib.Path(repo.working_tree_dir)] = repo
-            except git.InvalidGitRepositoryError:
-                return self.cachedir / m.hexdigest()
-        repo_name = pathlib.Path(repo.working_dir).name
+            return self.cachedir / 'vanilla' / out_name
+        for repo_path, repo_cache in self._repos.items():
+            if repo_path in path.parents:
+                return repo_cache / out_name
         try:
-            branch = repo.active_branch.name
-            return self.cachedir / repo_name / branch / m.hexdigest()
+            repo = git.Repo(str(path.parent), odbt=git.GitCmdObjectDB,
+                            search_parent_directories=True)
+        except git.InvalidGitRepositoryError:
+            return self.cachedir / out_name
+        repo_path = pathlib.Path(repo.working_tree_dir)
+        repo_cache = self.cachedir / repo_path.name
+        try:
+            repo_cache /= repo.active_branch.name
         except TypeError:
-            return self.cachedir / repo_name / m.hexdigest()
+            pass
+        self._repos[repo_path] = repo_cache
+        return repo_cache / out_name
             
     def parse_files(self, glob, *moddirs, basedir=vanilladir, **kwargs):
         for path in files(glob, *moddirs, basedir=basedir):
