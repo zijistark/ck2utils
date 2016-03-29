@@ -724,7 +724,6 @@ class SimpleParser:
         pair.define(key + op('=') + (obj | string | key) >> unarg(Pair))
         self.toplevel = many(pair) + skip(finished) >> TopLevel
 
-
     def flush(self, path=None):
         if path is None:
             self.parse_tree_cache = {}
