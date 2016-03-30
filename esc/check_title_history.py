@@ -38,12 +38,12 @@ def get_next_day(day):
 
 
 def iv_to_str(iv):
-    s = '{}.{}.{}'.format(*iv[0])
-    if iv[1] != get_next_day(iv[0]):
-        if iv[1] == timeline.end:
+    s = '{}.{}.{}'.format(*iv.begin)
+    if iv.end != get_next_day(iv.begin):
+        if iv.end == timeline.end:
             s += ' on'
         else:
-            s += ' to {}.{}.{}'.format(*iv[1])
+            s += ' to {}.{}.{}'.format(*iv.end)
     return s
 
 
@@ -66,10 +66,10 @@ def main():
                 recurse(v, region=child_region)
     for _, tree in parser.parse_files('common/landed_titles/*', *modpaths):
         recurse(tree)
-    prune = (PRUNE_UNEXECUTED_HISTORY or PRUNE_IMPOSSIBLE_STARTS or
-             PRUNE_NONBOOKMARK_STARTS)
-    if prune:
-        date_filter = IntervalTree([timeline])
+    date_filter = IntervalTree()
+    if (PRUNE_UNEXECUTED_HISTORY or PRUNE_IMPOSSIBLE_STARTS or
+        PRUNE_NONBOOKMARK_STARTS):
+        date_filter.add(timeline)
         last_start_date = timeline.begin
         for _, tree in parser.parse_files('common/bookmarks/*', *modpaths):
             for _, v in tree:
@@ -108,7 +108,7 @@ def main():
         holders = [(timeline.begin, 0)]
         lieges = [(timeline.begin, 0)]
         for n, v in sorted(tree, key=attrgetter('key.val')):
-            date = n.val
+            date = Date(*n.val)
             for n2, v2 in v:
                 if n2.val == 'holder':
                     holder = 0 if v2.val == '-' else int(v2.val)
@@ -158,6 +158,19 @@ def main():
         if errors:
             title_liege_errors.append((title, errors))
     if CHECK_LIEGE_CONSISTENCY:
+        def normalize_data(iv, islower):
+            if islower:
+                return iv.data[:1] + (filter_iv.begin,) + iv.data[2:]
+            else:
+                return (filter_iv.end,) + iv.data[1:]
+        def record_overlap(left, right):
+            begin1, end1, *data1 = left
+            begin2, end2, *data2 = right
+            begin = max(begin1, begin2)
+            end = min(end1, end2)
+            error = (char, begin, end) + tuple(data1) + tuple(data2)
+            liege_consistency_errors.append(error)
+            return right
         liege_consistency_errors = []
         for char, titles in sorted(char_titles.items()):
             liege_chars = IntervalTree()
@@ -178,19 +191,11 @@ def main():
                             liege_holder = 0
                         liege_chars[begin:end] = (begin, end,
                                                   liege_holder, title, liege)
-            if prune:
-                for iv in date_filter:
-                    liege_chars.chop(iv.begin, iv.end)
-            def data_reducer(left, right):
-                begin1, end1, *data1 = left
-                begin2, end2, *data2 = right
-                begin = max(begin1, begin2)
-                end = min(end1, end2)
-                error = (char, begin, end) + tuple(data1) + tuple(data2)
-                liege_consistency_errors.append(error)
-                return right
-            liege_chars.merge_overlaps(data_reducer=data_reducer)
-    if prune:
+            for filter_iv in date_filter:
+                liege_chars.chop(filter_iv.begin, filter_iv.end,
+                                 datafunc=normalize_data)
+            liege_chars.merge_overlaps(data_reducer=record_overlap)
+    if date_filter:
         for title, errors in reversed(title_liege_errors):
             for iv in date_filter:
                 errors.chop(iv.begin, iv.end)
@@ -242,68 +247,9 @@ def main():
                 print('\t(none)', file=fp)
             for char, start, end, *data in liege_consistency_errors:
                 line = ('\t{}: {}, {} ({}->{}) vs. {} ({}->{})'
-                        .format(char, iv_to_str((start, end)), *data))
+                        .format(char, iv_to_str(Interval(start, end)), *data))
                 print(line, file=fp)
 
 
 if __name__ == '__main__':
     main()
-
-# Node<(1012, 1, 2), depth=3, balance=-1>
-#  Interval((998, 1, 2), (1017, 1, 2), ((998, 1, 2), (1017, 1, 2), 0, 'c_balasaghnun', 'k_turkestan_east'))
-#  Interval((998, 1, 2), (1017, 1, 2), ((998, 1, 2), (1017, 1, 2), 0, 'c_barskhan', 'k_turkestan_east'))
-#  Interval((998, 1, 2), (1017, 1, 2), ((998, 1, 2), (1017, 1, 2), 0, 'c_kashgar', 'k_turkestan_east'))
-#  Interval((998, 1, 2), (1017, 1, 2), ((998, 1, 2), (1017, 1, 2), 0, 'c_naryn', 'k_turkestan_east'))
-#  Interval((998, 1, 2), (1017, 1, 2), ((998, 1, 2), (1017, 1, 2), 0, 'c_otrar', 'k_turkestan_east'))
-#  Interval((998, 1, 2), (1017, 1, 2), ((998, 1, 2), (1017, 1, 2), 0, 'c_talas', 'k_turkestan_east'))
-#  Interval((998, 1, 2), (1017, 1, 2), ((998, 1, 2), (1017, 1, 2), 0, 'c_vakhan', 'k_turkestan_east'))
-#  Interval((998, 1, 2), (1017, 1, 2), ((998, 1, 2), (1017, 1, 2), 0, 'k_turkestan_east', 0))
-#  Interval((999, 10, 10), (1017, 1, 2), ((999, 10, 10), (1017, 1, 2), 0, 'k_mavarannahr', 0))
-# <:  Node<(1012, 1, 2), depth=2, balance=-1>
-#      Interval((1012, 1, 2), (1017, 1, 2), ((1012, 1, 2), (1017, 1, 2), 0, 'c_aval', 'k_turkestan_east'))
-#      Interval((1012, 1, 2), (1017, 1, 2), ((1012, 1, 2), (1017, 1, 2), 0, 'c_bukhara', 'k_turkestan_east'))
-#      Interval((1012, 1, 2), (1017, 1, 2), ((1012, 1, 2), (1017, 1, 2), 0, 'c_ferghana', 'k_turkestan_east'))
-#      Interval((1012, 1, 2), (1017, 1, 2), ((1012, 1, 2), (1017, 1, 2), 0, 'c_khaylam', 'k_turkestan_east'))
-#      Interval((1012, 1, 2), (1017, 1, 2), ((1012, 1, 2), (1017, 1, 2), 0, 'c_khojand', 'k_turkestan_east'))
-#      Interval((1012, 1, 2), (1017, 1, 2), ((1012, 1, 2), (1017, 1, 2), 0, 'c_nakhsheb', 'k_turkestan_east'))
-#      Interval((1012, 1, 2), (1017, 1, 2), ((1012, 1, 2), (1017, 1, 2), 0, 'c_panjikend', 'k_turkestan_east'))
-#      Interval((1012, 1, 2), (1017, 1, 2), ((1012, 1, 2), (1017, 1, 2), 0, 'c_samarqand', 'k_turkestan_east'))
-#      Interval((1012, 1, 2), (1017, 1, 2), ((1012, 1, 2), (1017, 1, 2), 0, 'c_ustrushana', 'k_turkestan_east'))
-#     <:  Node<(996, 1, 2), depth=1, balance=0>
-#          Interval((996, 1, 2), (998, 1, 2), ((996, 1, 2), (998, 1, 2), 3000, 'c_shash', 'k_turkestan_east'))
-# >:  Node<(1024, 1, 2), depth=1, balance=0>
-#      Interval((1024, 1, 2), (1032, 1, 2), ((1024, 1, 2), (1032, 1, 2), 3008, 'c_aval', 'k_turkestan_east'))
-#      Interval((1024, 1, 2), (1032, 1, 2), ((1024, 1, 2), (1032, 1, 2), 3008, 'c_ferghana', 'k_turkestan_east'))
-#      Interval((1024, 1, 2), (1032, 1, 2), ((1024, 1, 2), (1032, 1, 2), 3008, 'c_khaylam', 'k_turkestan_east'))
-#      Interval((1024, 1, 2), (1032, 1, 2), ((1024, 1, 2), (1032, 1, 2), 3008, 'c_khojand', 'k_turkestan_east'))
-#      Interval((1024, 1, 2), (1032, 1, 2), ((1024, 1, 2), (1032, 1, 2), 3008, 'c_nakhsheb', 'k_turkestan_east'))
-#      Interval((1024, 1, 2), (1032, 1, 2), ((1024, 1, 2), (1032, 1, 2), 3008, 'c_panjikend', 'k_turkestan_east'))
-#      Interval((1024, 1, 2), (1032, 1, 2), ((1024, 1, 2), (1032, 1, 2), 3008, 'c_samarqand', 'k_turkestan_east'))
-#      Interval((1024, 1, 2), (1032, 1, 2), ((1024, 1, 2), (1032, 1, 2), 3008, 'c_ustrushana', 'k_turkestan_east'))
-
-# Time: 298.073 s
-# Traceback (most recent call last):
-#   File "/usr/lib/python3.4/site-packages/intervaltree/node.py", line 245, in remove_interval_helper
-#     self.s_center.remove(interval)
-# KeyError: Interval((1012, 1, 2), (1017, 1, 2), ((1012, 1, 2), (1017, 1, 2), 0, 'c_ferghana', 'k_turkestan_east'))
-
-# During handling of the above exception, another exception occurred:
-
-# Traceback (most recent call last):
-#   File "/home/Nicholas/ck2/ck2utils/esc/check_title_history.py", line 250, in <module>
-#     main()
-#   File "/cygdrive/c/Users/Nicholas/Documents/CK2/ck2utils/esc/print_time.py", line 9, in timed_func
-#     func()
-#   File "/home/Nicholas/ck2/ck2utils/esc/check_title_history.py", line 183, in main
-#     liege_chars.chop(iv.begin, iv.end)
-#   File "/usr/lib/python3.4/site-packages/intervaltree/intervaltree.py", line 508, in chop
-#     self.remove_envelop(begin, end)
-#   File "/usr/lib/python3.4/site-packages/intervaltree/intervaltree.py", line 486, in remove_envelop
-#     self.remove(iv)
-#   File "/usr/lib/python3.4/site-packages/intervaltree/intervaltree.py", line 361, in remove
-#     self.top_node = self.top_node.remove(interval)
-#   File "/usr/lib/python3.4/site-packages/intervaltree/node.py", line 211, in remove
-#     return self.remove_interval_helper(interval, done, should_raise_error=True)
-#   File "/usr/lib/python3.4/site-packages/intervaltree/node.py", line 248, in remove_interval_helper
-#     raise KeyError(interval)
-# KeyError: Interval((1012, 1, 2), (1017, 1, 2), ((1012, 1, 2), (1017, 1, 2), 0, 'c_ferghana', 'k_turkestan_east'))
