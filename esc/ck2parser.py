@@ -10,6 +10,7 @@ import pathlib
 import pickle
 import re
 import sys
+import traceback
 from funcparserlib.lexer import make_tokenizer, Token
 from funcparserlib.parser import (some, a, maybe, many, finished, skip,
                                   oneplus, forward_decl, NoParseError)
@@ -766,13 +767,19 @@ class SimpleParser:
         if path in self.parse_tree_cache:
             return self.parse_tree_cache[path]
         cachepath = self.get_cachepath(path)
-        if (cachepath.exists() and
-            os.path.getmtime(str(cachepath)) >= os.path.getmtime(str(path))):
-            with cachepath.open('rb') as f:
-                tree = pickle.load(f)
-                if memcache:
-                    self.parse_tree_cache[path] = tree
-                return tree
+        try:
+            if (cachepath.exists() and (os.path.getmtime(str(cachepath)) >=
+                                        os.path.getmtime(str(path)))):
+                with cachepath.open('rb') as f:
+                    tree = pickle.load(f, fix_imports=False)
+                    if memcache:
+                        self.parse_tree_cache[path] = tree
+                    return tree
+        except (pickle.PickleError, AttributeError, EOFError, ImportError,
+                IndexError):
+            print('Error retrieving cache for {}'.format(path))
+            traceback.print_exc()
+            pass
         with path.open(encoding=encoding, errors=errors) as f:
             try:
                 tree = self.parse(f.read())
@@ -783,7 +790,7 @@ class SimpleParser:
                         pass
                     # possible todo: put this i/o in another thread
                     with cachepath.open('wb') as f:
-                        pickle.dump(tree, f, protocol=-1)
+                        pickle.dump(tree, f, protocol=-1, fix_imports=False)
                 if memcache:
                     self.parse_tree_cache[path] = tree
                 return tree
