@@ -47,15 +47,29 @@ def iv_to_str(iv):
     return s
 
 
+def prune_tree(ivt, date_filter, pred=None):
+    def normalize_data(iv, islower):
+        if islower:
+            return iv.data[:1] + (filter_iv.begin,) + iv.data[2:]
+        else:
+            return (filter_iv.end,) + iv.data[1:]
+    for filter_iv in date_filter:
+        if pred is None or pred(filter_iv):
+            ivt.chop(filter_iv.begin, filter_iv.end, normalize_data)
+
+
 @print_time
 def main():
     parser = SimpleParser()
-    landed_titles = []
+    landed_titles_index = {}
     title_regions = {}
+    current_landed_titles_index = 0
     def recurse(tree, region='titular'):
+        nonlocal current_landed_titles_index
         for n, v in tree:
             if is_codename(n.val):
-                landed_titles.append(n.val)
+                landed_titles_index[n.val] = current_landed_titles_index
+                current_landed_titles_index += 1
                 child_region = region
                 if region == 'e_null' or (region == 'titular' and
                     any(is_codename(n2.val) for n2, _ in v)):
@@ -103,7 +117,7 @@ def main():
                     pass
     for path, tree in parser.parse_files('history/titles/*', *modpaths):
         title = path.stem
-        if not len(tree) > 0 or title not in landed_titles:
+        if not len(tree) > 0 or title not in landed_titles_index:
             continue
         holders = [(timeline.begin, 0)]
         lieges = [(timeline.begin, 0)]
@@ -131,7 +145,7 @@ def main():
             if CHECK_DEAD_HOLDERS and holder in char_death:
                 death = char_death[holder]
                 if death < end:
-                    dead_holders.addi(death, end)
+                    dead_holders.addi(death, end, (death, end))
             char_titles[holder][begin:end] = title
             title_holders[title][begin:end] = holder
         for i, (begin, liege) in enumerate(lieges):
@@ -143,7 +157,7 @@ def main():
         if dead_holders:
             title_dead_holders.append((title, dead_holders))
     title_liege_errors = []
-    for title, lieges in sorted(title_lieges.items()):
+    for title, lieges in title_lieges.items():
         errors = IntervalTree()
         for liege_begin, liege_end, liege in lieges:
             if liege == 0:
@@ -153,16 +167,14 @@ def main():
             holders = title_holders[liege][liege_begin:liege_end]
             for holder_begin, holder_end, holder in holders:
                 if holder == 0:
-                    errors.addi(max(liege_begin, holder_begin),
-                                min(liege_end, holder_end))
+                    begin = max(liege_begin, holder_begin)
+                    end = min(liege_end, holder_end)
+                    errors.addi(begin, end, (begin, end))
+        # not an error if title is also unheld
+        prune_tree(errors, title_holders[title], lambda x: x.data == 0)
         if errors:
             title_liege_errors.append((title, errors))
     if CHECK_LIEGE_CONSISTENCY:
-        def normalize_data(iv, islower):
-            if islower:
-                return iv.data[:1] + (filter_iv.begin,) + iv.data[2:]
-            else:
-                return (filter_iv.end,) + iv.data[1:]
         def record_overlap(left, right):
             begin1, end1, *data1 = left
             begin2, end2, *data2 = right
@@ -172,7 +184,7 @@ def main():
             liege_consistency_errors.append(error)
             return right
         liege_consistency_errors = []
-        for char, titles in sorted(char_titles.items()):
+        for char, titles in char_titles.items():
             liege_chars = IntervalTree()
             for holder_begin, holder_end, title in titles:
                 lieges = title_lieges[title][holder_begin:holder_end]
@@ -191,30 +203,24 @@ def main():
                             liege_holder = 0
                         liege_chars[begin:end] = (begin, end,
                                                   liege_holder, title, liege)
-            for filter_iv in date_filter:
-                liege_chars.chop(filter_iv.begin, filter_iv.end,
-                                 datafunc=normalize_data)
+            prune_tree(liege_chars, date_filter)
             liege_chars.merge_overlaps(data_reducer=record_overlap)
     if date_filter:
         for title, errors in reversed(title_liege_errors):
-            for iv in date_filter:
-                errors.chop(iv.begin, iv.end)
+            prune_tree(errors, date_filter)
             if not errors:
                 title_liege_errors.remove((title, errors))
         for title, dead_holders in reversed(title_dead_holders):
-            for iv in date_filter:
-                dead_holders.chop(iv.begin, iv.end)
+            prune_tree(dead_holders, date_filter)
             if not dead_holders:
                 title_dead_holders.remove((title, dead_holders))
     if LANDED_TITLES_ORDER:
-        title_liege_errors.sort(key=lambda x: landed_titles.index(x[0]))
-        title_dead_holders.sort(key=lambda x: landed_titles.index(x[0]))
+        sort_key = lambda x: landed_titles_index[x[0]]
     else:
-        title_liege_errors.sort(key=lambda x: (x[1][0][0],
-                                               landed_titles.index(x[0])))
-        title_dead_holders.sort(key=lambda x: (x[1][0][0],
-                                               landed_titles.index(x[0])))
-
+        sort_key = lambda x: (x[1][0][0], landed_titles_index[x[0]])
+    title_liege_errors.sort(key=sort_key)
+    title_dead_holders.sort(key=sort_key)
+    liege_consistency_errors.sort()
     with (rootpath / 'check_title_history.txt').open('w') as fp:
         print('Liege has no holder:', file=fp)
         if not title_liege_errors:
