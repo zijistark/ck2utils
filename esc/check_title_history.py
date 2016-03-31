@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 
+# a thought:
+#     130: 1066.1.6 to 1066.10.14
+#         0 (d_canterbury<-c_kent,c_surrey)
+#         122 (k_england<-c_essex,c_middlesex,d_canterbury)
+#         5644 (d_hereford<-c_bucks,c_hertford)
+
 from collections import defaultdict, namedtuple
 from operator import attrgetter
+import intervaltree
 from intervaltree import Interval, IntervalTree
+from intervaltree.node import Node
 from ck2parser import (rootpath, files, is_codename, Date as ASTDate,
                        SimpleParser, FullParser)
 from print_time import print_time
@@ -24,6 +32,30 @@ Date = namedtuple('Date', ['y', 'm', 'd'])
 
 timeline = Interval(Date(float('-inf'), float('-inf'), float('-inf')),
                     Date(float('inf'), float('inf'), float('inf')))
+
+# monkey patch Node.pop_greatest_child to fix issue 41
+# https://github.com/chaimleib/intervaltree/issues/41
+def pop_greatest_child(self):
+    if self.right_node:
+        greatest_child, self[1] = self[1].pop_greatest_child()
+        new_self = self.rotate()
+        for iv in set(new_self.s_center):
+            if iv.contains_point(greatest_child.x_center):
+                new_self.s_center.remove(iv)
+                greatest_child.add(iv)
+        return (greatest_child,
+                new_self if new_self.s_center else new_self.prune())
+    x_centers = set(iv.end for iv in self.s_center)
+    x_centers.remove(max(x_centers))
+    x_centers.add(self.x_center)
+    new_x_center = max(x_centers)
+    child = Node(new_x_center, (iv for iv in self.s_center
+                                if iv.contains_point(new_x_center)))
+    self.s_center -= child.s_center
+    return child, self if self.s_center else self[0]
+
+
+Node.pop_greatest_child = pop_greatest_child
 
 
 def get_next_day(day):
@@ -47,15 +79,15 @@ def iv_to_str(iv):
     return s
 
 
-def prune_tree(ivt, date_filter, pred=None):
+def prune_tree(ivt, date_filter, pred=None, data_iv=True):
     def normalize_data(iv, islower):
         if islower:
             return iv.data[:1] + (filter_iv.begin,) + iv.data[2:]
-        else:
-            return (filter_iv.end,) + iv.data[1:]
+        return (filter_iv.end,) + iv.data[1:]
     for filter_iv in date_filter:
         if pred is None or pred(filter_iv):
-            ivt.chop(filter_iv.begin, filter_iv.end, normalize_data)
+            ivt.chop(filter_iv.begin, filter_iv.end,
+                     normalize_data if data_iv else None)
 
 
 @print_time
@@ -130,14 +162,16 @@ def main():
                     holder = 0 if v2.val == '-' else int(v2.val)
                     if holders[-1][1] != holder:
                         if holders[-1][0] == date:
-                            del holders[-1]
-                        holders.append((date, holder))
+                            holders[-1] = date, holder
+                        else:
+                            holders.append((date, holder))
                 elif n2.val == 'liege':
-                    liege = 0 if v2.val in ('0', title) else v2.val
+                    liege = 0 if v2.val in ('0', '-', title) else v2.val
                     if lieges[-1][1] != liege:
                         if lieges[-1][0] == date:
-                            del lieges[-1]
-                        lieges.append((date, liege))
+                            lieges[-1] = date, liege
+                        else:
+                            lieges.append((date, liege))
         dead_holders = IntervalTree()
         for i, (begin, holder) in enumerate(holders):
             try:
@@ -161,7 +195,7 @@ def main():
                 end = timeline.end
             title_lieges[title][begin:end] = liege
         if dead_holders:
-            dead_holders.merge_overlaps(lambda a, b: a[0], b[1])
+            dead_holders.merge_overlaps(lambda a, b: (a[0], b[1]))
             title_dead_holders.append((title, dead_holders))
     title_liege_errors = []
     for title, lieges in title_lieges.items():
@@ -180,23 +214,9 @@ def main():
         # not an error if title is also unheld
         prune_tree(errors, title_holders[title], lambda x: x.data == 0)
         if errors:
-            errors.merge_overlaps(lambda a, b: a[0], b[1])
+            errors.merge_overlaps(lambda a, b: (a[0], b[1]))
             title_liege_errors.append((title, errors))
     if CHECK_LIEGE_CONSISTENCY:
-        # depends for correctness on receiving intervals in sorted order,
-        # which is the current undocumented (but probably stable) behavior.
-        # otherwise it will miss the conflict interval from 3.begin to 2.begin:
-        #  1  A |======|
-        #  2  B     |====|
-        #  3  B   |========|
-        def record_overlap(left, right):
-            begin1, end1, liege_holder1, title1, liege1 = left
-            begin2, end2, liege_holder2, title2, liege2 = right
-            if liege_holder1 != liege_holder2:
-                error = (char, begin2, min(end1, end2), liege_holder1, title1,
-                         liege1, liege_holder2, title2, liege2)
-                liege_consistency_errors.append(error)
-            return right
         liege_consistency_errors = []
         for char, titles in char_titles.items():
             liege_chars = IntervalTree()
@@ -206,8 +226,7 @@ def main():
                     liege_begin = max(liege_begin, holder_begin)
                     liege_end = min(liege_end, holder_end)
                     if liege not in title_holders:
-                        liege_chars[liege_begin:liege_end] = (
-                            liege_begin, liege_end, 0, title, liege)
+                        liege_chars[liege_begin:liege_end] = 0, title, liege
                         continue
                     liege_holders = title_holders[liege][liege_begin:liege_end]
                     for begin, end, liege_holder in liege_holders:
@@ -215,10 +234,18 @@ def main():
                         end = min(end, liege_end)
                         if liege_holder == char:
                             liege_holder = 0
-                        liege_chars[begin:end] = (begin, end,
-                                                  liege_holder, title, liege)
-            prune_tree(liege_chars, date_filter)
-            liege_chars.merge_overlaps(data_reducer=record_overlap)
+                        liege_chars[begin:end] = liege_holder, title, liege
+            prune_tree(liege_chars, date_filter, data_iv=False)
+            if liege_chars:
+                liege_chars = sorted(liege_chars)
+                low = liege_chars[0]
+                for high in liege_chars[1:]:
+                    # overlapping different-liege-holder
+                    if high.begin < low.end and low.data[0] != high.data[0]:
+                        error = ((char, high.begin, min(low.end, high.end)) +
+                                 low.data + high.data)
+                        liege_consistency_errors.append(error)
+                    low = high
     if date_filter:
         for title, errors in reversed(title_liege_errors):
             prune_tree(errors, date_filter)
