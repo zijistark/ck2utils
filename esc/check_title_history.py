@@ -63,16 +63,17 @@ def main():
     parser = SimpleParser()
     landed_titles_index = {}
     title_regions = {}
-    current_landed_titles_index = 0
+    current_index = 0
     def recurse(tree, region='titular'):
-        nonlocal current_landed_titles_index
+        nonlocal current_index
         for n, v in tree:
             if is_codename(n.val):
-                landed_titles_index[n.val] = current_landed_titles_index
-                current_landed_titles_index += 1
+                landed_titles_index[n.val] = current_index
+                current_index += 1
                 child_region = region
-                if region == 'e_null' or (region == 'titular' and
-                    any(is_codename(n2.val) for n2, _ in v)):
+                if (region in ['e_null', 'e_placeholder'] or
+                    (region == 'titular' and
+                     any(is_codename(n2.val) for n2, _ in v)):
                     child_region = n.val
                 title_regions[n.val] = child_region
                 if region == 'titular':
@@ -100,21 +101,22 @@ def main():
             if not PRUNE_IMPOSSIBLE_STARTS:
                 date_filter.clear()
                 date_filter.addi(get_next_day(last_start_date), timeline.end)
-        # e.g. [((867, 1, 1), (867, 1, 2)), ((1066, 9, 15), (1337, 1, 2))]
     title_holders = defaultdict(IntervalTree)
     title_lieges = defaultdict(IntervalTree)
     char_titles = defaultdict(IntervalTree)
-    char_death = {}
+    char_life = {}
     title_dead_holders = []
     if CHECK_DEAD_HOLDERS:
         for _, tree in parser.parse_files('history/characters/*', *modpaths):
             for n, v in tree:
-                try:
-                    char_death[n.val] = next(Date(*n2.val) for n2, v2 in v
-                        if (isinstance(n2, ASTDate) and
-                            'death' in v2.dictionary))
-                except StopIteration:
-                    pass
+                birth = next((Date(*n2.val) for n2, v2 in v
+                              if (isinstance(n2, ASTDate) and
+                                  'birth' in v2.dictionary)), timeline.end)
+                death = next((Date(*n2.val) for n2, v2 in v
+                              if (isinstance(n2, ASTDate) and
+                                  'death' in v2.dictionary)), timeline.end)
+                if birth <= death:
+                    char_life[n.val] = birth, death
     for path, tree in parser.parse_files('history/titles/*', *modpaths):
         title = path.stem
         if not len(tree) > 0 or title not in landed_titles_index:
@@ -142,12 +144,16 @@ def main():
                 end = holders[i + 1][0]
             except IndexError:
                 end = timeline.end
-            if CHECK_DEAD_HOLDERS and holder in char_death:
-                death = char_death[holder]
+            if CHECK_DEAD_HOLDERS and holder != 0:
+                birth, death = char_life.get(holder,
+                                             (timeline.end, timeline.end))
                 if death < end:
                     dead_holders.addi(death, end, (death, end))
-            char_titles[holder][begin:end] = title
+                elif begin < birth:
+                    dead_holders.addi(begin, birth, (begin, birth))
             title_holders[title][begin:end] = holder
+            if holder != 0:
+                char_titles[holder][begin:end] = title
         for i, (begin, liege) in enumerate(lieges):
             try:
                 end = lieges[i + 1][0]
@@ -175,13 +181,19 @@ def main():
         if errors:
             title_liege_errors.append((title, errors))
     if CHECK_LIEGE_CONSISTENCY:
+        # depends for correctness on receiving intervals in sorted order,
+        # which is the current undocumented (but probably stable) behavior.
+        # otherwise it will miss the conflict interval from 3.begin to 2.begin:
+        #  1  A |======|
+        #  2  B     |====|
+        #  3  B   |========|
         def record_overlap(left, right):
-            begin1, end1, *data1 = left
-            begin2, end2, *data2 = right
-            begin = max(begin1, begin2)
-            end = min(end1, end2)
-            error = (char, begin, end) + tuple(data1) + tuple(data2)
-            liege_consistency_errors.append(error)
+            begin1, end1, liege_holder1, title1, liege1 = left
+            begin2, end2, liege_holder2, title2, liege2 = right
+            if liege_holder1 != liege_holder2:
+                error = (char, begin2, min(end1, end2), liege_holder1, title1,
+                         liege1, liege_holder2, title2, liege2)
+                liege_consistency_errors.append(error)
             return right
         liege_consistency_errors = []
         for char, titles in char_titles.items():
@@ -235,7 +247,7 @@ def main():
             print(line, file=fp)
             prev_region = region
         if CHECK_DEAD_HOLDERS:
-            print('Holder is dead:', file=fp)
+            print('Holder not alive:', file=fp)
             if not title_dead_holders:
                 print('\t(none)', file=fp)
             prev_region = None
