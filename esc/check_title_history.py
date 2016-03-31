@@ -73,7 +73,7 @@ def main():
                 child_region = region
                 if (region in ['e_null', 'e_placeholder'] or
                     (region == 'titular' and
-                     any(is_codename(n2.val) for n2, _ in v)):
+                     any(is_codename(n2.val) for n2, _ in v))):
                     child_region = n.val
                 title_regions[n.val] = child_region
                 if region == 'titular':
@@ -147,10 +147,10 @@ def main():
             if CHECK_DEAD_HOLDERS and holder != 0:
                 birth, death = char_life.get(holder,
                                              (timeline.end, timeline.end))
+                if begin < birth:
+                    dead_holders.addi(begin, birth, (begin, birth))
                 if death < end:
                     dead_holders.addi(death, end, (death, end))
-                elif begin < birth:
-                    dead_holders.addi(begin, birth, (begin, birth))
             title_holders[title][begin:end] = holder
             if holder != 0:
                 char_titles[holder][begin:end] = title
@@ -161,6 +161,7 @@ def main():
                 end = timeline.end
             title_lieges[title][begin:end] = liege
         if dead_holders:
+            dead_holders.merge_overlaps(lambda a, b: a[0], b[1])
             title_dead_holders.append((title, dead_holders))
     title_liege_errors = []
     for title, lieges in title_lieges.items():
@@ -179,6 +180,7 @@ def main():
         # not an error if title is also unheld
         prune_tree(errors, title_holders[title], lambda x: x.data == 0)
         if errors:
+            errors.merge_overlaps(lambda a, b: a[0], b[1])
             title_liege_errors.append((title, errors))
     if CHECK_LIEGE_CONSISTENCY:
         # depends for correctness on receiving intervals in sorted order,
