@@ -10,6 +10,7 @@ import pathlib
 import pickle
 import re
 import sys
+import time
 import traceback
 from funcparserlib.lexer import make_tokenizer, Token
 from funcparserlib.parser import (some, a, maybe, many, finished, skip,
@@ -689,10 +690,17 @@ class FullTokenizer(SimpleTokenizer):
     t = staticmethod(make_tokenizer(specs))
 
 
+class Cacher:
+    def __init__(self):
+        pass
+
+
 class SimpleParser:
 
     def __init__(self, tag=None):
         self.tag = tag
+        self.cache_hits = 0
+        self.cache_misses = 0
         self.parse_tree_cache = {}
         self.memcache_default = False
         self.diskcache_default = True
@@ -709,6 +717,9 @@ class SimpleParser:
             pass
         self._repos = {}
         self.setup_parser()
+
+    def __del__(self):
+        print('{} hits, {} misses'.format(self.cache_hits, self.cache_misses))
 
     def setup_parser(self):
         unarg = lambda f: lambda x: f(*x)
@@ -734,32 +745,59 @@ class SimpleParser:
     def get_cachepath(self, path):
         m = hashlib.md5()
         m.update(bytes(path))
+        cachedir = self.cachedir
         name = m.hexdigest()
         if vanilladir in path.parents:
-            return self.cachedir / 'vanilla' / name
-        for repo_path, (repo, dirty_paths) in self._repos.items():
+            return cachedir / 'vanilla' / name
+        for repo_path, (latest_commit, dirty_paths) in self._repos.items():
             if repo_path in path.parents:
-                path = path.relative_to(repo_path)
-                if any(p == path or p in path.parents for p in dirty_paths):
-                    return self.cachedir / repo_path.name / name
-                commit = next(repo.iter_commits(paths=str(path), max_count=1))
-                return self.cachedir / repo_path.name / commit.hexsha / name
-        try:
-            repo = git.Repo(str(path.parent), odbt=git.GitCmdObjectDB,
-                            search_parent_directories=True)
-        except git.InvalidGitRepositoryError:
-            return self.cachedir / name
-        repo_path = pathlib.Path(repo.working_tree_dir)
-        dirty_paths = []
-        status_output = repo.git.status(ignored=True, z=True)
-        entries_iter = iter(status_output.split('\x00')[:-1])
-        for entry in entries_iter:
-            if entry[1] != ' ' or entry[0] == 'R':
-                dirty_paths.append(pathlib.Path(entry[3:]))
-                if entry[0] == 'R':
-                    next(entries_iter)
-        self._repos[repo_path] = repo, dirty_paths
-        return self.get_cachepath(path)
+                break
+        else:
+            repo_init_start = time.time()
+            try:
+                repo = git.Repo(str(path.parent), odbt=git.GitCmdObjectDB,
+                                search_parent_directories=True)
+            except git.InvalidGitRepositoryError:
+                return cachedir / name
+            repo_path = pathlib.Path(repo.working_tree_dir)
+            tracked_files = set(repo.git.ls_files(z=True).split('\x00')[:-1])
+            latest_commit = {}
+            log_output = repo.git.log('.', pretty='format:%h', z=True,
+                                      name_only=True)
+            log_iter = iter(log_output.split('\x00'))
+            for entry in log_iter:
+                try:
+                    commit, file_str = entry.split('\n', maxsplit=1)
+                except ValueError:
+                    continue
+                while file_str:
+                    try:
+                        tracked_files.remove(file_str)
+                        latest_commit[file_str] = commit
+                    except KeyError:
+                        pass
+                    file_str = next(log_iter)
+                if not tracked_files:
+                    break
+            dirty_paths = []
+            status_output = repo.git.status(z=True)
+            status_iter = iter(status_output.split('\x00')[:-1])
+            for entry in status_iter:
+                if entry[1] != ' ' or entry[0] == 'R':
+                    dirty_paths.append(pathlib.Path(entry[3:]))
+                    if entry[0] == 'R':
+                        next(status_iter)
+            self._repos[repo_path] = latest_commit, dirty_paths
+            print('Processed repo in {:g} s'.format(time.time() -
+                                                    repo_init_start))
+        cachedir /= repo_path.name
+        path = path.relative_to(repo_path)
+        if not any(p == path or p in path.parents for p in dirty_paths):
+            try:
+                cachedir /= latest_commit[str(path)]
+            except KeyError:
+                pass
+        return cachedir / name
 
     def parse_files(self, glob, *moddirs, basedir=vanilladir, **kwargs):
         for path in files(glob, *moddirs, basedir=basedir):
@@ -781,12 +819,14 @@ class SimpleParser:
                     tree = pickle.load(f, fix_imports=False)
                     if memcache:
                         self.parse_tree_cache[path] = tree
+                    self.cache_hits += 1
                     return tree
         except (pickle.PickleError, AttributeError, EOFError, ImportError,
                 IndexError):
             print('Error retrieving cache for {}'.format(path))
             traceback.print_exc()
             pass
+        cache_misses += 1
         with path.open(encoding=encoding, errors=errors) as f:
             try:
                 tree = self.parse(f.read())
