@@ -734,26 +734,33 @@ class SimpleParser:
     def get_cachepath(self, path):
         m = hashlib.md5()
         m.update(bytes(path))
-        out_name = m.hexdigest()
+        name = m.hexdigest()
         if vanilladir in path.parents:
-            return self.cachedir / 'vanilla' / out_name
-        for repo_path, repo_cache in self._repos.items():
+            return self.cachedir / 'vanilla' / name
+        for repo_path, (repo, dirty_paths) in self._repos.items():
             if repo_path in path.parents:
-                return repo_cache / out_name
+                path = path.relative_to(repo_path)
+                if any(p == path or p in path.parents for p in dirty_paths):
+                    return self.cachedir / repo_path.name / name
+                commit = next(repo.iter_commits(paths=str(path), max_count=1))
+                return self.cachedir / repo_path.name / commit.hexsha / name
         try:
             repo = git.Repo(str(path.parent), odbt=git.GitCmdObjectDB,
                             search_parent_directories=True)
         except git.InvalidGitRepositoryError:
-            return self.cachedir / out_name
+            return self.cachedir / name
         repo_path = pathlib.Path(repo.working_tree_dir)
-        repo_cache = self.cachedir / repo_path.name
-        try:
-            repo_cache /= repo.active_branch.name
-        except TypeError:
-            pass
-        self._repos[repo_path] = repo_cache
-        return repo_cache / out_name
-            
+        dirty_paths = []
+        status_output = repo.git.status(ignored=True, z=True)
+        entries_iter = iter(status_output.split('\x00')[:-1])
+        for entry in entries_iter:
+            if entry[1] != ' ' or entry[0] == 'R':
+                dirty_paths.append(pathlib.Path(entry[3:]))
+                if entry[0] == 'R':
+                    next(entries_iter)
+        self._repos[repo_path] = repo, dirty_paths
+        return self.get_cachepath(path)
+
     def parse_files(self, glob, *moddirs, basedir=vanilladir, **kwargs):
         for path in files(glob, *moddirs, basedir=basedir):
             yield path, self.parse_file(path, **kwargs)
