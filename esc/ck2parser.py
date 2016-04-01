@@ -690,11 +690,6 @@ class FullTokenizer(SimpleTokenizer):
     t = staticmethod(make_tokenizer(specs))
 
 
-class Cacher:
-    def __init__(self):
-        pass
-
-
 class SimpleParser:
 
     def __init__(self, tag=None):
@@ -826,7 +821,7 @@ class SimpleParser:
             print('Error retrieving cache for {}'.format(path))
             traceback.print_exc()
             pass
-        cache_misses += 1
+        self.cache_misses += 1
         with path.open(encoding=encoding, errors=errors) as f:
             try:
                 tree = self.parse(f.read())
