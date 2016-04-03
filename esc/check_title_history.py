@@ -2,6 +2,7 @@
 
 from bisect import bisect_left, bisect, insort
 from collections import defaultdict
+from operator import attrgetter
 from ck2parser import (rootpath, files, is_codename, Date, SimpleParser,
                        FullParser)
 from pprint import pprint
@@ -119,35 +120,32 @@ def main():
         holders = [0]
         liege_dates = [time_beginning]
         lieges = [0]
-        for n, v in tree:
+        for n, v in sorted(tree, key=attrgetter('key.val')):
             date = n.val
             for n2, v2 in v:
                 if n2.val == 'holder':
-                    # insert in sorted order
-                    i = bisect_left(holder_dates, date)
-                    if i == len(holders) or holder_dates[i] != date:
-                        holder = 0 if v2.val == '-' else int(v2.val)
-                        holder_dates.insert(i, date)
-                        holders.insert(i, holder)
+                    holder = 0 if v2.val == '-' else int(v2.val)
+                    if holders[-1] != holder:
+                        if holder_dates[-1] == date:
+                            holders[-1] = holder
+                        else:
+                            holder_dates.append(date)
+                            holders.append(holder)
                 elif n2.val == 'liege':
-                    # insert in sorted order
-                    i = bisect_left(liege_dates, date)
-                    if i == len(lieges) or liege_dates[i] != date:
-                        liege = 0 if v2.val in ('0', title) else v2.val
-                        liege_dates.insert(i, date)
-                        lieges.insert(i, liege)
+                    liege = 0 if v2.val in ('0', title) else v2.val
+                    if lieges[-1] != liege:
+                        if liege_dates[-1] == date:
+                            lieges[-1] = liege
+                        else:
+                            liege_dates.append(date)
+                            lieges.append(liege)
         # if title in DEBUG_INSPECT_LIST:
         #    pprint(title)
         #    pprint(list(zip(holder_dates, holders)))
         #    pprint(list(zip(liege_dates, lieges)))
         # reverse order to allow deletion
-        for i in range(len(holders) - 1, -1, -1):
-            # delete redundant entries
-            if i > 0 and holders[i - 1] == holders[i]:
-                del holder_dates[i]
-                del holders[i]
-                continue
-            if holders[i] != 0:
+        for i, holder in enumerate(holders):
+            if holder != 0:
                 continue
             # force liege to 0 while holder is 0
             start_date = holder_dates[i]
@@ -164,10 +162,6 @@ def main():
                 k = len(lieges)
             liege_dates[j:k] = [start_date]
             lieges[j:k] = [0]
-        for i in range(len(lieges) - 1, 0, -1):
-            if lieges[i - 1] == lieges[i]:
-                del liege_dates[i]
-                del lieges[i]
         # if title in DEBUG_INSPECT_LIST:
         #    pprint(title)
         #    pprint(list(zip(holder_dates, holders)))
