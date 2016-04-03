@@ -28,7 +28,13 @@ PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
 modpaths = [rootpath / 'SWMH-BETA/SWMH']
 # modpaths = [rootpath / 'CK2Plus/CK2Plus']
 
-Date = namedtuple('Date', ['y', 'm', 'd'])
+class Date(namedtuple('Date', ['y', 'm', 'd'])):
+
+    def __str__(self):
+        return '{}.{}.{}'.format(*self)
+
+    __slots__ = ()
+
 
 timeline = Interval(Date(float('-inf'), float('-inf'), float('-inf')),
                     Date(float('inf'), float('inf'), float('inf')))
@@ -70,13 +76,11 @@ def get_next_day(day):
 
 
 def iv_to_str(iv):
-    s = '{}.{}.{}'.format(*iv.begin)
-    if iv.end != get_next_day(iv.begin):
-        if iv.end == timeline.end:
-            s += ' on'
-        else:
-            s += ' to {}.{}.{}'.format(*iv.end)
-    return s
+    if iv.end == timeline.end:
+         return '{} on'.format(iv.begin)
+    if iv.end == get_next_day(iv.begin):
+        return str(iv.begin)
+    return '{} to {}'.format(iv.begin, iv.end)
 
 
 def prune_tree(ivt, date_filter, pred=None, data_iv=True):
@@ -173,6 +177,8 @@ def main():
                         else:
                             lieges.append((date, liege))
         dead_holders = IntervalTree()
+        # if title == 'c_ostfriesland':
+        #     import pdb; pdb.set_trace()
         for i, (begin, holder) in enumerate(holders):
             try:
                 end = holders[i + 1][0]
@@ -182,9 +188,11 @@ def main():
                 birth, death = char_life.get(holder,
                                              (timeline.end, timeline.end))
                 if begin < birth:
-                    dead_holders.addi(begin, birth, (begin, birth))
-                if death < end:
-                    dead_holders.addi(death, end, (death, end))
+                    error_end = min(end, birth)
+                    dead_holders.addi(begin, error_end, (begin, error_end))
+                elif death < end:
+                    error_begin = max(begin, death)
+                    dead_holders.addi(error_begin, end, (error_begin, end))
             title_holders[title][begin:end] = holder
             if holder != 0:
                 char_titles[holder][begin:end] = title
