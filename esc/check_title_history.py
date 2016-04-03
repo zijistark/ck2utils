@@ -194,7 +194,7 @@ def main():
                                     dead_holders[-1] = dead_holders[-1][0], end
                                 else:
                                     dead_holders.append((begin, end))
-                            if death < holder_dates[i + 1]:
+                            elif death < holder_dates[i + 1]:
                                 begin = max(death, holder_dates[i])
                                 end = holder_dates[i + 1]
                                 if (dead_holders and

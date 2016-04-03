@@ -743,7 +743,7 @@ class SimpleParser:
         cachedir = self.cachedir
         name = m.hexdigest()
         if vanilladir in path.parents:
-            return cachedir / 'vanilla' / name
+            return self.cachedir / 'vanilla' / name, False
         for repo_path, (latest_commit, dirty_paths) in self._repos.items():
             if repo_path in path.parents:
                 break
@@ -753,7 +753,7 @@ class SimpleParser:
                 repo = git.Repo(str(path.parent), odbt=git.GitCmdObjectDB,
                                 search_parent_directories=True)
             except git.InvalidGitRepositoryError:
-                return cachedir / name
+                return self.cachedir / name, False
             repo_path = pathlib.Path(repo.working_tree_dir)
             tracked_files = set(repo.git.ls_files(z=True).split('\x00')[:-1])
             latest_commit = {}
@@ -785,14 +785,11 @@ class SimpleParser:
             self._repos[repo_path] = latest_commit, dirty_paths
             print('Processed repo in {:g} s'.format(time.time() -
                                                     repo_init_start))
-        cachedir /= repo_path.name
+        repo_cachedir = self.cachedir / repo_path.name
         path = path.relative_to(repo_path)
         if not any(p == path or p in path.parents for p in dirty_paths):
-            try:
-                cachedir /= latest_commit[str(path)]
-            except KeyError:
-                pass
-        return cachedir / name
+            return repo_cachedir / latest_commit[str(path)] / name, False
+        return repo_cachedir / name, True
 
     def parse_files(self, glob, *moddirs, basedir=vanilladir, **kwargs):
         for path in files(glob, *moddirs, basedir=basedir):
@@ -806,9 +803,10 @@ class SimpleParser:
             diskcache = self.diskcache_default
         if path in self.parse_tree_cache:
             return self.parse_tree_cache[path]
-        cachepath = self.get_cachepath(path)
+        cachepath, is_indexed = self.get_cachepath(path)
         try:
-            if (cachepath.exists() and (os.path.getmtime(str(cachepath)) >=
+            if cachepath.exists() and (is_indexed or
+                                       (os.path.getmtime(str(cachepath)) >=
                                         os.path.getmtime(str(path)))):
                 with cachepath.open('rb') as f:
                     tree = pickle.load(f, fix_imports=False)
