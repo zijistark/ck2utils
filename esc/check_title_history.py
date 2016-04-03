@@ -176,7 +176,7 @@ def main():
                             lieges[-1] = date, liege
                         else:
                             lieges.append((date, liege))
-        dead_holders = IntervalTree()
+        dead_holders = []
         # if title == 'c_ostfriesland':
         #     import pdb; pdb.set_trace()
         for i, (begin, holder) in enumerate(holders):
@@ -187,12 +187,13 @@ def main():
             if CHECK_DEAD_HOLDERS and holder != 0:
                 birth, death = char_life.get(holder,
                                              (timeline.end, timeline.end))
-                if begin < birth:
-                    error_end = min(end, birth)
-                    dead_holders.addi(begin, error_end, (begin, error_end))
-                elif death < end:
-                    error_begin = max(begin, death)
-                    dead_holders.addi(error_begin, end, (error_begin, end))
+                if begin < birth or death < end:
+                    error_begin = death if birth <= begin < death else begin
+                    error_end = birth if begin < birth <= end else end
+                    if dead_holders and dead_holders[-1][1] == error_begin:
+                        dead_holders[-1] = dead_holders[-1][0], error_end
+                    else:
+                        dead_holders.append((error_begin, error_end))
             title_holders[title][begin:end] = holder
             if holder != 0:
                 char_titles[holder][begin:end] = title
@@ -203,11 +204,12 @@ def main():
                 end = timeline.end
             title_lieges[title][begin:end] = liege
         if dead_holders:
-            dead_holders.merge_overlaps(lambda a, b: (a[0], b[1]))
+            dead_holders = IntervalTree(Interval(begin, end, (begin, end))
+                                        for begin, end in dead_holders)
             title_dead_holders.append((title, dead_holders))
     title_liege_errors = []
     for title, lieges in title_lieges.items():
-        errors = IntervalTree()
+        errors = []
         for liege_begin, liege_end, liege in lieges:
             if liege == 0:
                 continue
@@ -218,12 +220,17 @@ def main():
                 if holder == 0:
                     begin = max(liege_begin, holder_begin)
                     end = min(liege_end, holder_end)
-                    errors.addi(begin, end, (begin, end))
+                    if errors and errors[-1][1] == begin:
+                        errors[-1] = errors[-1][0], end
+                    else:
+                        errors.append((begin, end))
         # not an error if title is also unheld
-        prune_tree(errors, title_holders[title], lambda x: x.data == 0)
         if errors:
-            errors.merge_overlaps(lambda a, b: (a[0], b[1]))
-            title_liege_errors.append((title, errors))
+            errors = IntervalTree(Interval(begin, end, (begin, end))
+                                        for begin, end in errors)
+            prune_tree(errors, title_holders[title], lambda x: x.data == 0)
+            if errors:
+                title_liege_errors.append((title, errors))
     if CHECK_LIEGE_CONSISTENCY:
         liege_consistency_errors = []
         for char, titles in char_titles.items():
