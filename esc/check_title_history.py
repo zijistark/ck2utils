@@ -7,7 +7,7 @@ from ck2parser import (rootpath, files, is_codename, Date, SimpleParser,
 from pprint import pprint
 from print_time import print_time
 
-# DEBUG_INSPECT_LIST = ['c_javakheti']
+# DEBUG_INSPECT_LIST = ['k_orthodox']
 
 CHECK_DEAD_HOLDERS = True # slow; most useful with PRUNE_UNEXECUTED_HISTORY
 CHECK_LIEGE_CONSISTENCY = True
@@ -155,15 +155,15 @@ def main():
             if i < len(holders) - 1:
                 end_date = holder_dates[i + 1]
                 k = bisect_left(liege_dates, end_date, lo=j)
+                if (k > 0 and lieges[k - 1] != 0 and
+                    (k == len(lieges) or liege_dates[k] != end_date)):
+                    liege_dates[j:k] = [start_date, end_date]
+                    lieges[j:k] = [0, lieges[k - 1]]
+                    continue
             else:
                 k = len(lieges)
-            if (0 < k < len(lieges) and lieges[k - 1] != 0 and
-                liege_dates[k] != end_date):
-                liege_dates[j:k] = [start_date, end_date]
-                lieges[j:k] = [0, lieges[k - 1]]
-            else:
-                liege_dates[j:k] = [start_date]
-                lieges[j:k] = [0]
+            liege_dates[j:k] = [start_date]
+            lieges[j:k] = [0]
         for i in range(len(lieges) - 1, 0, -1):
             if lieges[i - 1] == lieges[i]:
                 del liege_dates[i]
@@ -222,9 +222,9 @@ def main():
         errors = []
         liege_dates = title_liege_dates[title]
         for i, liege in enumerate(lieges):
-            start_date = liege_dates[i]
             if liege == 0:
                 continue
+            start_date = liege_dates[i]
             if liege in title_holders:
                 holder_dates = title_holder_dates[liege]
                 holders = title_holders[liege]
@@ -255,9 +255,9 @@ def main():
                         errors.append((error_start, error_end))
         if errors:
             title_liege_errors.append((title, errors))
-        #if title in DEBUG_INSPECT_LIST:
-        #    pprint(title)
-        #    pprint(errors)
+        # if title in DEBUG_INSPECT_LIST:
+        #     pprint(title)
+        #     pprint(errors)
     if CHECK_LIEGE_CONSISTENCY:
         liege_consistency_errors = []
         for char, titles in char_titles.items():
