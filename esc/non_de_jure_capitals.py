@@ -6,7 +6,7 @@ from print_time import print_time
 
 modpath = rootpath / 'SWMH-BETA/SWMH'
 
-def process_landed_titles(parser, where, prov_title):
+def process_landed_titles(parser, prov_title):
     def recurse(tree):
         for n, v in tree:
             if re.match('c_', n.val):
@@ -35,16 +35,17 @@ def process_landed_titles(parser, where, prov_title):
                         print('\tMust be {}' .format(de_jure_counties[0]))
                 yield from de_jure_counties
 
-    for _, tree in parser.parse_files('common/landed_titles/*', modpath):
+    for _, tree in parser.parse_files('common/landed_titles/*'):
         for _ in recurse(tree):
             pass
 
 @print_time
 def main():
     parser = SimpleParser()
+    parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
     province_title = {prov: title
-                      for prov, title, _ in get_provinces(modpath)}
-    process_landed_titles(parser, modpath, province_title)
+                      for prov, title, _ in get_provinces(parser)}
+    process_landed_titles(parser, province_title)
 
 if __name__ == '__main__':
     main()

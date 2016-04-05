@@ -43,23 +43,25 @@ def recurse(parser, tree, comment=False):
 def main():
     simple_parser = SimpleParser()
     full_parser = FullParser()
-    cultures, cult_groups = get_cultures(simple_parser, modpath)
+    simple_parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
+    full_parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
+    cultures, cult_groups = get_cultures(simple_parser)
     cultures = set(cultures)
     cultures.update(cult_groups)
     defined_titles = []
     commented_out_titles = []
-    for _, tree in full_parser.parse_files('common/landed_titles/*', modpath):
+    for _, tree in full_parser.parse_files('common/landed_titles/*'):
         for title, defined in recurse(simple_parser, tree):
             (defined_titles if defined else commented_out_titles).append(title)
     titles = set(defined_titles) | set(commented_out_titles)
-    localisation = get_localisation(modpath)
+    localisation = get_localisation(simple_parser.moddirs)
     unlocalised_noncounty_titles = [
         t for t in defined_titles
         if not t.startswith('c') and t not in localisation and t != 'e_null']
     unrecognized_nonbarony_keys = []
     unrecognized_barony_keys = []
     unrecognized_culture_keys = []
-    for path in files('localisation/*', basedir=modpath):
+    for path in files('localisation/*', basedir=simple_parser.moddirs[0]):
         for key, *_ in csv_rows(path):
             match = re.match(r'[ekdcb]_((?!_adj).)*', key)
             if match:

@@ -17,10 +17,10 @@ def abbrev_path(path):
     prefix = '<vanilla>' if vanilladir in path.parents else '<mod>'
     return prefix + '/' + path.name
 
-def get_locs():
+def get_locs(where):
     locs = collections.OrderedDict()
     dupe_lines = []
-    for path in files('localisation/*', modpath, reverse=True):
+    for path in files('localisation/*', where, reverse=True):
         vanilla = modpath not in path.parents
         for row, linenum in csv_rows(path, linenum=True):
             if row[0] in locs:
@@ -51,7 +51,7 @@ def scan_landed_titles(parser, cultures, loc_mod):
                         undef[v2.val].append((n.val, n2.val))
                 recurse(v)
 
-    for path, tree in parser.parse_files('common/landed_titles/*', modpath):
+    for path, tree in parser.parse_files('common/landed_titles/*'):
         print(path)
         recurse(tree)
     return dynamics, undef
@@ -59,12 +59,13 @@ def scan_landed_titles(parser, cultures, loc_mod):
 @print_time
 def main():
     parser = SimpleParser()
+    parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
     # province_id_mod, province_title_mod = get_province_id(modpath)
     # province_id, province_title = get_province_id(vanilladir)
     # province_id.update(province_id_mod)
     # province_title.update(province_title_mod)
-    cultures, cult_group = get_cultures(parser, modpath)
-    mod_loc, dupe_lines = get_locs()
+    cultures, cult_group = get_cultures(parser)
+    mod_loc, dupe_lines = get_locs(parser.moddirs)
     vanilla_loc = get_localisation()
     # localisation = vanilla_loc.copy()
     # localisation.update(mod_loc)

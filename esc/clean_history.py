@@ -8,17 +8,16 @@ from ck2parser import (rootpath, vanilladir, is_codename, csv_rows, files,
                        SimpleParser)
 from print_time import print_time
 
-modpath = rootpath / 'SWMH-BETA/SWMH'
-
 @print_time
 def main():
     parser = SimpleParser()
+    parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
     # scan all named provinces in definitions.csv for province history
-    _, default_map = next(parser.parse_files('map/default.map', modpath))
+    default_map = next(parser.parse_files('map/default.map'))[1]
     defs_name = default_map['definitions'].val
     # max_provinces = int(default_map['max_provinces'].val)
     prov_num_name_map = {}
-    defs_path = next(files('map/' + defs_name, modpath))
+    defs_path = next(files('map/' + defs_name, parser.moddirs))
     def_rows = list(csv_rows(defs_path))
     defs_change = False
     for def_row in def_rows:
@@ -31,7 +30,7 @@ def main():
             continue
         try:
             hist_path = next(files('history/provinces/' + hist_name,
-                                   modpath))
+                                   parser.moddirs))
         except StopIteration:
             continue
         # if it's a vanilla file, it should be copied to SWMH.
@@ -64,7 +63,7 @@ def main():
 
     # scan all province history (in mod):
     # if it doesn't match a line in definitions.csv, then it should be deleted.
-    for path in files('history/provinces/*', basedir=modpath):
+    for path in files('history/provinces/*', basedir=parser.moddirs[0]):
         num, name = path.stem.split(' - ')
         num = int(num)
         if num not in prov_num_name_map or prov_num_name_map[num] != name:
@@ -79,10 +78,10 @@ def main():
             if is_codename(n.val):
                 titles.add(n.val)
                 recurse(v)
-    for _, tree in parser.parse_files('common/landed_titles/*', modpath):
+    for _, tree in parser.parse_files('common/landed_titles/*'):
         recurse(tree)
     # delete all title history in mod not matching a title definition
-    for path in files('history/titles/*', basedir=modpath):
+    for path in files('history/titles/*', basedir=parser.moddirs[0]):
         title = path.stem
         if title not in titles:
             print('Deleting ' + str(path))
@@ -90,7 +89,7 @@ def main():
     # then, for all visible vanilla title history,
     # if it matches a title definition copy it
     # if it doesn't, override it with a blank file
-    for path in files('history/titles/*', modpath):
+    for path in files('history/titles/*', parser.moddirs[0]):
         title = path.stem
         if vanilladir in path.parents:
             new_path = modpath / path.relative_to(vanilladir)

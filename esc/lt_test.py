@@ -13,10 +13,11 @@ from print_time import print_time
 
 PRINT_CULTURES_RELIGIONS = False
 
-modpath = rootpath / 'SWMH-BETA/SWMH'
+parser = SimpleParser()
+parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
 
-cultures, culture_groups = get_cultures(modpath)
-religions, religion_groups = get_religions(modpath)
+cultures, culture_groups = get_cultures(parser)
+religions, religion_groups = get_religions(parser)
 if PRINT_CULTURES_RELIGIONS:
     pprint(cultures)
     pprint(culture_groups)
@@ -78,8 +79,7 @@ def recurse(tree):
 
 @print_time
 def main():
-    parser = SimpleParser()
-    for path, tree in parser.parse_files('common/landed_titles/*', modpath):
+    for path, tree in parser.parse_files('common/landed_titles/*'):
         print(path)
         recurse(tree)
 

@@ -21,16 +21,16 @@ def get_modpath():
 def output(provinces):
     print(*provinces, sep='\n')
 
-def get_start_interval(parser, where):
+def get_start_interval(parser):
     dates = []
-    for _, tree in parser.parse_files('common/bookmarks/*', where):
+    for _, tree in parser.parse_files('common/bookmarks/*'):
         dates.extend(v['date'].val for _, v in tree)
-    tree = parser.parse_file(where / 'common/defines.txt')
+    tree = next(parser.parse_file('common/defines.txt'))[1]
     dates.append(tree['start_date'].val)
     dates.append(tree['last_start_date'].val)
     return min(dates), max(dates)
 
-def process_landed_titles(parser, where):
+def process_landed_titles(parser):
     def recurse(tree):
         for n, v in tree:
             if is_codename(n.val):
@@ -38,14 +38,14 @@ def process_landed_titles(parser, where):
                 recurse(v)
 
     titles = set()
-    for _, tree in parser.parse_files('common/landed_titles/*', where):
+    for _, tree in parser.parse_files('common/landed_titles/*'):
         recurse(tree)
     return titles
 
-def process_provinces(parser, where, first_start, last_start):
+def process_provinces(parser, first_start, last_start):
     province_id = {}
     no_castles_or_cities = set()
-    for number, title, tree in get_provinces(parser, where):
+    for number, title, tree in get_provinces(parser):
         province_id[title] = number
         castles_and_cities = set()
         changes_by_date = collections.defaultdict(list)
@@ -69,10 +69,10 @@ def process_provinces(parser, where, first_start, last_start):
                     break
     return province_id, no_castles_or_cities
 
-def process_titles(parser, where, valid_titles, first_start, last_start):
+def process_titles(parser, valid_titles, first_start, last_start):
     nomads = set()
     vassals = collections.defaultdict(set)
-    for path in files('history/titles/*', where):
+    for path in files('history/titles/*', parser.moddirs):
         title = path.stem
         if title in valid_titles and not title.startswith('b'):
             tree = parser.parse_file(path)
@@ -100,13 +100,12 @@ def process_titles(parser, where, valid_titles, first_start, last_start):
 @print_time
 def main():
     parser = SimpleParser()
-    modpath = get_modpath()
-    titles = process_landed_titles(parser, modpath)
-    first_start, last_start = get_start_interval(parser, modpath)
+    parser.moddirs = [get_modpath()]
+    titles = process_landed_titles(parser)
+    first_start, last_start = get_start_interval(parser)
     province_id, no_castles_or_cities = process_provinces(
-        parser, modpath, first_start, last_start)
-    nomads, vassals = process_titles(parser, modpath, titles, first_start,
-                                     last_start)
+        parser, first_start, last_start)
+    nomads, vassals = process_titles(parser, titles, first_start, last_start)
     maybe_empty = set()
 
     def check_nomad(title):

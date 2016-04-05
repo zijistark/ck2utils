@@ -14,10 +14,6 @@ from print_time import print_time
 
 VANILLA_HISTORY_WARN = True
 
-modpaths = [rootpath / 'SWMH-BETA/SWMH']
-# modpaths = [rootpath / 'CK2Plus/CK2Plus']
-# modpaths = [rootpath / 'SWMH-BETA/SWMH', rootpath / 'MiniSWMH/MiniSWMH']
-
 results = {True: collections.defaultdict(list),
            False: collections.defaultdict(list)}
 
@@ -61,8 +57,7 @@ def check_regions(parser, titles, titles_de_jure, duchies_de_jure):
     region_duchies = collections.defaultdict(list)
 
 
-    path = next(files('map/geographical_region.txt', *modpaths))
-    tree = parser.parse_file(path)
+    tree = next(parser.parse_files('map/geographical_region.txt'))[1]
     for n, v in tree:
         world = n.val.startswith('world_')
         for n2, v2 in v:
@@ -90,16 +85,16 @@ def check_regions(parser, titles, titles_de_jure, duchies_de_jure):
     return bad_titles, missing_duchies
 
 def check_province_history(parser, titles):
-    tree = parser.parse_file(next(files('map/default.map', *modpaths)))
+    tree = next(parser.parse_files('map/default.map'))[1]
     defs = tree['definitions'].val
     _max_provinces = int(tree['max_provinces'].val)
     id_name_map = {}
-    for row in csv_rows(next(files('map/' + defs, *modpaths))):
+    for row in csv_rows(next(files('map/' + defs, parser.moddirs))):
         try:
             id_name_map[int(row[0])] = row[4]
         except (IndexError, ValueError):
             continue
-    for path in files('history/provinces/*', *modpaths):
+    for path in files('history/provinces/*', parser.moddirs):
         number, name = path.stem.split(' - ')
         number = int(number)
         if number in id_name_map and id_name_map[number] == name:
@@ -130,20 +125,21 @@ def process_landed_titles(parser):
                         parent_is_titular = False
         return parent_is_titular
 
-    for path in files('common/landed_titles/*', *modpaths):
-        recurse(parser.parse_file(path))
+    for _, tree in parser.parse_files('common/landed_titles/*'):
+        recurse(tree)
     # print('{} titles, {} de jure'.format(len(titles), len(titles_de_jure)))
     return titles, titles_de_jure, misogyny
 
 @print_time
 def main():
     parser = SimpleParser()
+    parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
     titles, titles_de_jure, misogyny = process_landed_titles(parser)
     duchies_de_jure = [t for t in titles_de_jure if t.startswith('d_')]
     check_province_history(parser, titles)
     bad_region_titles, missing_duchies = check_regions(
         parser, titles, titles_de_jure, duchies_de_jure)
-    for path, tree in parser.parse_files('history/titles/*.txt', *modpaths,
+    for path, tree in parser.parse_files('history/titles/*.txt',
                                          errors='replace', memcache=True):
         if tree.contents:
             good = check_title(path.stem, path, titles)
@@ -156,7 +152,7 @@ def main():
             else:
                 check_titles(parser, path, titles)
         parser.flush(path)
-    for _ in parser.parse_files('history/characters/*.txt', *modpaths):
+    for _ in parser.parse_files('history/characters/*.txt'):
         pass # just parse it to see if it parses
     globs = [
         'events/*.txt',

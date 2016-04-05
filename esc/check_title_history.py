@@ -19,9 +19,6 @@ PRUNE_UNEXECUTED_HISTORY = True # prune all after last playable start
 PRUNE_IMPOSSIBLE_STARTS = True # implies PRUNE_UNEXECUTED_HISTORY
 PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
 
-modpaths = [rootpath / 'SWMH-BETA/SWMH']
-# modpaths = [rootpath / 'CK2Plus/CK2Plus']
-
 time_beginning = (float('-inf'),) * 3
 time_end = (float('inf'),) * 3
 
@@ -49,6 +46,7 @@ def iv_to_str(begin, end):
 @print_time
 def main():
     parser = SimpleParser()
+    parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
     landed_titles_index = {}
     title_regions = {}
     current_index = 0
@@ -67,7 +65,7 @@ def main():
                 if region == 'titular':
                     child_region = n.val
                 recurse(v, region=child_region)
-    for _, tree in parser.parse_files('common/landed_titles/*', *modpaths):
+    for _, tree in parser.parse_files('common/landed_titles/*'):
         recurse(tree)
     prune = (PRUNE_UNEXECUTED_HISTORY or PRUNE_IMPOSSIBLE_STARTS or
              PRUNE_NONBOOKMARK_STARTS)
@@ -75,11 +73,10 @@ def main():
         if PRUNE_NONBOOKMARK_STARTS:
             dates_to_examine = []
         else:
-            defines = parser.parse_file(next(files('common/defines.txt',
-                                                   *modpaths)))
+            defines = next(parser.parse_files('common/defines.txt'))[1]
             dates_to_examine = [(defines['start_date'].val,
                 get_next_day(defines['last_start_date'].val))]
-        for _, tree in parser.parse_files('common/bookmarks/*', *modpaths):
+        for _, tree in parser.parse_files('common/bookmarks/*'):
             for _, v in tree:
                 date = v['date'].val
                 if not any(a <= date < b for a, b in dates_to_examine):
@@ -102,7 +99,7 @@ def main():
     char_life = {}
     title_dead_holders = []
     if CHECK_DEAD_HOLDERS:
-        for _, tree in parser.parse_files('history/characters/*', *modpaths):
+        for _, tree in parser.parse_files('history/characters/*'):
             for n, v in tree:
                 birth = next((n2.val for n2, v2 in v
                               if (isinstance(n2, Date) and
@@ -112,7 +109,7 @@ def main():
                                   'death' in v2.dictionary)), time_end)
                 if birth <= death:
                     char_life[n.val] = birth, death
-    for path, tree in parser.parse_files('history/titles/*', *modpaths):
+    for path, tree in parser.parse_files('history/titles/*'):
         title = path.stem
         if not len(tree) > 0 or title not in landed_titles_index:
             continue
