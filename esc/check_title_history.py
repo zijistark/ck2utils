@@ -8,13 +8,10 @@
 
 from collections import defaultdict, namedtuple
 from operator import attrgetter
-import intervaltree
 from intervaltree import Interval, IntervalTree
-from intervaltree.node import Node
 from ck2parser import (rootpath, files, is_codename, Date as ASTDate,
                        SimpleParser, FullParser)
 from print_time import print_time
-
 
 CHECK_DEAD_HOLDERS = True # slow; most useful with PRUNE_UNEXECUTED_HISTORY
 CHECK_LIEGE_CONSISTENCY = True
@@ -25,77 +22,64 @@ PRUNE_UNEXECUTED_HISTORY = True # prune all after last playable start
 PRUNE_IMPOSSIBLE_STARTS = True # implies PRUNE_UNEXECUTED_HISTORY
 PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
 
-modpaths = [rootpath / 'SWMH-BETA/SWMH']
-# modpaths = [rootpath / 'CK2Plus/CK2Plus']
 
 class Date(namedtuple('Date', ['y', 'm', 'd'])):
 
     def __str__(self):
         return '{}.{}.{}'.format(*self)
 
-    __slots__ = ()
+    def get_next_day(self):
+        y, m, d = self.y, self.m, self.d + 1
+        if (d == 29 and m == 2 or
+            d == 31 and m in (4, 6, 9, 11) or
+            d == 32 and m in (1, 3, 5, 7, 8, 10, 12)):
+            m, d = m + 1, 1
+            if m == 13:
+                y, m = y + 1, 1
+        return Date(y, m, d)
 
+Date.EARLIEST = Date(float('-inf'), float('-inf'), float('-inf'))
+Date.LATEST = Date(float('inf'), float('inf'), float('inf'))
 
-timeline = Interval(Date(float('-inf'), float('-inf'), float('-inf')),
-                    Date(float('inf'), float('inf'), float('inf')))
-
-# monkey patch Node.pop_greatest_child to fix issue 41
+# for monkey patching Node.pop_greatest_child to fix issue 41
 # https://github.com/chaimleib/intervaltree/issues/41
-def pop_greatest_child(self):
-    if self.right_node:
-        greatest_child, self[1] = self[1].pop_greatest_child()
-        new_self = self.rotate()
-        for iv in set(new_self.s_center):
-            if iv.contains_point(greatest_child.x_center):
-                new_self.s_center.remove(iv)
-                greatest_child.add(iv)
-        return (greatest_child,
-                new_self if new_self.s_center else new_self.prune())
-    x_centers = set(iv.end for iv in self.s_center)
-    x_centers.remove(max(x_centers))
-    x_centers.add(self.x_center)
-    new_x_center = max(x_centers)
-    child = Node(new_x_center, (iv for iv in self.s_center
-                                if iv.contains_point(new_x_center)))
-    self.s_center -= child.s_center
-    return child, self if self.s_center else self[0]
-
-
-Node.pop_greatest_child = pop_greatest_child
-
-
-def get_next_day(day):
-    day = Date(y=day.y, m=day.m, d=day.d + 1)
-    if (day.d == 29 and day.m == 2 or
-        day.d == 31 and day.m in (4, 6, 9, 11) or
-        day.d == 32 and day.m in (1, 3, 5, 7, 8, 10, 12)):
-        day = Date(y=day.y, m=day.m + 1, d=1)
-        if day.m == 13:
-            day = Date(y=day.y + 1, m=1, d=day.d)
-    return day
-
+def intervaltree_patch_issue_41():
+    from intervaltree.node import Node
+    def pop_greatest_child(self):
+        if self.right_node:
+            greatest_child, self[1] = self[1].pop_greatest_child()
+            new_self = self.rotate()
+            for iv in set(new_self.s_center):
+                if iv.contains_point(greatest_child.x_center):
+                    new_self.s_center.remove(iv)
+                    greatest_child.add(iv)
+            return (greatest_child,
+                    new_self if new_self.s_center else new_self.prune())
+        x_centers = set(iv.end for iv in self.s_center)
+        x_centers.remove(max(x_centers))
+        x_centers.add(self.x_center)
+        new_x_center = max(x_centers)
+        child = Node(new_x_center, (iv for iv in self.s_center
+                                    if iv.contains_point(new_x_center)))
+        self.s_center -= child.s_center
+        return child, self if self.s_center else self[0]
+    Node.pop_greatest_child = pop_greatest_child
 
 def iv_to_str(iv):
-    if iv.end == timeline.end:
+    if iv.end == Date.LATEST:
          return '{} on'.format(iv.begin)
-    if iv.end == get_next_day(iv.begin):
+    if iv.end == iv.begin.get_next_day():
         return str(iv.begin)
     return '{} to {}'.format(iv.begin, iv.end)
 
-
-def prune_tree(ivt, date_filter, pred=None, data_iv=True):
-    def normalize_data(iv, islower):
-        if islower:
-            return iv.data[:1] + (filter_iv.begin,) + iv.data[2:]
-        return (filter_iv.end,) + iv.data[1:]
+def prune_tree(ivt, date_filter, pred=None):
     for filter_iv in date_filter:
         if pred is None or pred(filter_iv):
-            ivt.chop(filter_iv.begin, filter_iv.end,
-                     normalize_data if data_iv else None)
-
+            ivt.chop(filter_iv.begin, filter_iv.end)
 
 @print_time
 def main():
+    intervaltree_patch_issue_41()
     parser = SimpleParser()
     parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
     landed_titles_index = {}
@@ -121,23 +105,22 @@ def main():
     date_filter = IntervalTree()
     if (PRUNE_UNEXECUTED_HISTORY or PRUNE_IMPOSSIBLE_STARTS or
         PRUNE_NONBOOKMARK_STARTS):
-        date_filter.add(timeline)
-        last_start_date = timeline.begin
-        for _, tree in parser.parse_files('common/bookmarks/*', *modpaths):
+        date_filter.addi(Date.EARLIEST, Date.LATEST)
+        last_start_date = Date.EARLIEST
+        for _, tree in parser.parse_files('common/bookmarks/*'):
             for _, v in tree:
                 date = Date(*v['date'].val)
-                date_filter.chop(date, get_next_day(date))
+                date_filter.chop(date, date.get_next_day())
                 last_start_date = max(date, last_start_date)
         if not PRUNE_NONBOOKMARK_STARTS:
-            defines = parser.parse_file(next(files('common/defines.txt',
-                                                   *modpaths)))
+            defines = next(parser.parse_files('common/defines.txt'))[1]
             first = Date(*defines['start_date'].val)
             last = Date(*defines['last_start_date'].val)
-            date_filter.chop(first, get_next_day(last))
+            date_filter.chop(first, last.get_next_day())
             last_start_date = max(last, last_start_date)
             if not PRUNE_IMPOSSIBLE_STARTS:
                 date_filter.clear()
-                date_filter.addi(get_next_day(last_start_date), timeline.end)
+                date_filter.addi(last_start_date.get_next_day(), Date.LATEST)
     title_holders = defaultdict(IntervalTree)
     title_lieges = defaultdict(IntervalTree)
     char_titles = defaultdict(IntervalTree)
@@ -148,18 +131,18 @@ def main():
             for n, v in tree:
                 birth = next((Date(*n2.val) for n2, v2 in v
                               if (isinstance(n2, ASTDate) and
-                                  'birth' in v2.dictionary)), timeline.end)
+                                  'birth' in v2.dictionary)), Date.LATEST)
                 death = next((Date(*n2.val) for n2, v2 in v
                               if (isinstance(n2, ASTDate) and
-                                  'death' in v2.dictionary)), timeline.end)
+                                  'death' in v2.dictionary)), Date.LATEST)
                 if birth <= death:
                     char_life[n.val] = birth, death
     for path, tree in parser.parse_files('history/titles/*'):
         title = path.stem
         if not len(tree) > 0 or title not in landed_titles_index:
             continue
-        holders = [(timeline.begin, 0)]
-        lieges = [(timeline.begin, 0)]
+        holders = [(Date.EARLIEST, 0)]
+        lieges = [(Date.EARLIEST, 0)]
         for n, v in sorted(tree, key=attrgetter('key.val')):
             date = Date(*n.val)
             for n2, v2 in v:
@@ -184,10 +167,10 @@ def main():
             try:
                 end = holders[i + 1][0]
             except IndexError:
-                end = timeline.end
+                end = Date.LATEST
             if CHECK_DEAD_HOLDERS and holder != 0:
                 birth, death = char_life.get(holder,
-                                             (timeline.end, timeline.end))
+                                             (Date.LATEST, Date.LATEST))
                 if begin < birth or death < end:
                     error_begin = death if birth <= begin < death else begin
                     error_end = birth if begin < birth <= end else end
@@ -202,11 +185,10 @@ def main():
             try:
                 end = lieges[i + 1][0]
             except IndexError:
-                end = timeline.end
+                end = Date.LATEST
             title_lieges[title][begin:end] = liege
         if dead_holders:
-            dead_holders = IntervalTree(Interval(begin, end, (begin, end))
-                                        for begin, end in dead_holders)
+            dead_holders = IntervalTree.from_tuples(dead_holders)
             title_dead_holders.append((title, dead_holders))
     title_liege_errors = []
     for title, lieges in title_lieges.items():
@@ -215,7 +197,7 @@ def main():
             if liege == 0:
                 continue
             if liege not in title_holders:
-                title_holders[liege][timeline.begin:timeline.end] = 0
+                title_holders[liege][Date.EARLIEST:Date.LATEST] = 0
             holders = title_holders[liege][liege_begin:liege_end]
             for holder_begin, holder_end, holder in holders:
                 if holder == 0:
@@ -227,8 +209,7 @@ def main():
                         errors.append((begin, end))
         # not an error if title is also unheld
         if errors:
-            errors = IntervalTree(Interval(begin, end, (begin, end))
-                                        for begin, end in errors)
+            errors = IntervalTree.from_tuples(errors)
             prune_tree(errors, title_holders[title], lambda x: x.data == 0)
             if errors:
                 title_liege_errors.append((title, errors))
@@ -251,7 +232,7 @@ def main():
                         if liege_holder == char:
                             liege_holder = 0
                         liege_chars[begin:end] = liege_holder, title, liege
-            prune_tree(liege_chars, date_filter, data_iv=False)
+            prune_tree(liege_chars, date_filter)
             if liege_chars:
                 liege_chars = sorted(liege_chars)
                 low = liege_chars[0]
@@ -312,7 +293,6 @@ def main():
                 line = ('\t{}: {}, {} ({}->{}) vs. {} ({}->{})'
                         .format(char, iv_to_str(Interval(start, end)), *data))
                 print(line, file=fp)
-
 
 if __name__ == '__main__':
     main()
