@@ -85,7 +85,7 @@ def main():
     intervaltree_patch_issue_41()
     parser = SimpleParser()
     parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
-    landed_titles_index = {}
+    landed_titles_index = {'0': -1}
     title_regions = {}
     current_index = 0
     def recurse(tree, region='titular'):
@@ -253,14 +253,6 @@ def main():
                 for iv, liege_holders in items.items():
                     if len(liege_holders) > 1:
                         liege_consistency_errors[char][iv] = liege_holders
-                # low = liege_chars[0]
-                # for high in liege_chars[1:]:
-                #     # overlapping different-liege-holder
-                #     if high.begin < low.end and low.data[0] != high.data[0]:
-                #         error = ((char, high.begin, min(low.end, high.end)) +
-                #                  low.data + high.data)
-                #         liege_consistency_errors.append(error)
-                #     low = high
     if date_filter:
         for title, errors in reversed(title_liege_errors):
             prune_tree(errors, date_filter)
@@ -315,16 +307,15 @@ def main():
             if not liege_consistency_errors:
                 print('\t(none)', file=fp)
             for char, ivs in sorted(liege_consistency_errors.items()):
-                print('\t{}:'.format(char), file=fp)
                 for iv, liege_holders in sorted(ivs.items()):
-                    print('\t\t{}:'.format(iv_to_str(iv)), file=fp)
+                    print('\t{}, {}:'.format(char, iv_to_str(iv)), file=fp)
                     for liege_holder, lieges in sorted(liege_holders.items()):
-                        strs = ['\t\t\t', str(liege_holder), ' (']
-                        for liege, titles in sorted(lieges.items()):
-                            strs += (liege, ' <- ', ','.join(sorted(titles)),
-                                     '; ')
-                        strs[-1] = ')'
-                        print(''.join(strs), file=fp)
+                        for liege, titles in sorted(lieges.items(),
+                            key=lambda x: landed_titles_index[x[0]]):
+                            print('\t\t{} ({}) <= {}'.format(
+                                liege, liege_holder, ', '.join(sorted(titles,
+                                key=lambda x: landed_titles_index[x]))),
+                                file=fp)
 
 if __name__ == '__main__':
     main()
