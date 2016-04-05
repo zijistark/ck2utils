@@ -65,12 +65,21 @@ def intervaltree_patch_issue_41():
         return child, self if self.s_center else self[0]
     Node.pop_greatest_child = pop_greatest_child
 
-def iv_to_str(iv):
-    if iv.end == Date.LATEST:
-         return '{} on'.format(iv.begin)
-    if iv.end == iv.begin.get_next_day():
-        return str(iv.begin)
-    return '{} to {}'.format(iv.begin, iv.end)
+def iv_to_str(iv, end=None):
+    if end is not None:
+        iv = iv, end
+    if iv[1] == Date.LATEST:
+         s = '{} on'.format(iv[0])
+    elif iv[1] == iv[0].get_next_day():
+        s = str(iv[0])
+    else:
+        s = '{} to {}'.format(iv[0], iv[1])
+    if len(iv) > 2 and iv[2] is not None:
+        s += ' ({})'.format(iv[2])
+    return s
+
+def title_tier(title):
+    return 'bcdke'.index(title[0])
 
 def prune_tree(ivt, date_filter, pred=None):
     for filter_iv in date_filter:
@@ -123,6 +132,7 @@ def main():
                 date_filter.addi(last_start_date.get_next_day(), Date.LATEST)
     title_holders = defaultdict(IntervalTree)
     title_lieges = defaultdict(IntervalTree)
+    title_lte_tier = []
     char_titles = defaultdict(IntervalTree)
     char_life = {}
     title_dead_holders = []
@@ -139,6 +149,7 @@ def main():
                     char_life[n.val] = birth, death
     for path, tree in parser.parse_files('history/titles/*'):
         title = path.stem
+        tier = title_tier(title)
         if not len(tree) > 0 or title not in landed_titles_index:
             continue
         holders = [(Date.EARLIEST, 0)]
@@ -181,12 +192,17 @@ def main():
             title_holders[title][begin:end] = holder
             if holder != 0:
                 char_titles[holder][begin:end] = title
+        lte_tier = IntervalTree()
         for i, (begin, liege) in enumerate(lieges):
             try:
                 end = lieges[i + 1][0]
             except IndexError:
                 end = Date.LATEST
+            if liege != 0 and title_tier(liege) <= tier:
+                lte_tier[begin:end] = liege
             title_lieges[title][begin:end] = liege
+        if lte_tier:
+            title_lte_tier.append((title, lte_tier))
         if dead_holders:
             dead_holders = IntervalTree.from_tuples(dead_holders)
             title_dead_holders.append((title, dead_holders))
@@ -257,6 +273,7 @@ def main():
     else:
         sort_key = lambda x: (x[1][0][0], landed_titles_index[x[0]])
     title_liege_errors.sort(key=sort_key)
+    title_lte_tier.sort(key=sort_key)
     title_dead_holders.sort(key=sort_key)
     liege_consistency_errors.sort()
     with (rootpath / 'check_title_history.txt').open('w') as fp:
@@ -272,6 +289,13 @@ def main():
             line += ', '.join(iv_to_str(iv) for iv in sorted(errors))
             print(line, file=fp)
             prev_region = region
+        print('Liege not of higher tier:', file=fp)
+        if not title_lte_tier:
+            print('\t(none)', file=fp)
+        for title, lte_tier in title_lte_tier:
+            line = '\t{}: '.format(title)
+            line += ', '.join(iv_to_str(iv) for iv in sorted(lte_tier))
+            print(line, file=fp)
         if CHECK_DEAD_HOLDERS:
             print('Holder not alive:', file=fp)
             if not title_dead_holders:
@@ -289,9 +313,9 @@ def main():
             print('Liege inconsistency:', file=fp)
             if not liege_consistency_errors:
                 print('\t(none)', file=fp)
-            for char, start, end, *data in liege_consistency_errors:
+            for char, begin, end, *data in liege_consistency_errors:
                 line = ('\t{}: {}, {} ({}->{}) vs. {} ({}->{})'
-                        .format(char, iv_to_str(Interval(start, end)), *data))
+                        .format(char, iv_to_str(begin, end), *data))
                 print(line, file=fp)
 
 if __name__ == '__main__':
