@@ -245,8 +245,10 @@ def main():
                     for begin, end, liege_holder in liege_holders:
                         begin = max(begin, liege_begin)
                         end = min(end, liege_end)
-                        if liege_holder == char:
+                        if liege == title:
                             liege_holder = 0
+                        elif liege_holder == char:
+                            continue
                         liege_chars[begin:end] = liege_holder, title, liege
             prune_tree(liege_chars, date_filter)
             if liege_chars:
