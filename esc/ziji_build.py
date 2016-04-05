@@ -44,7 +44,7 @@ def make_outpath(outroot, inpath, *roots):
             if i == len(roots) - 1:
                 raise
 
-def process_cultures(parser, where, build):
+def process_cultures(parser, build):
     def update_obj(obj):
         for p in reversed(obj.contents):
             if p.key.val == 'dynasty_title_names':
@@ -54,7 +54,7 @@ def process_cultures(parser, where, build):
 
     cultures = []
     culture_groups = []
-    for inpath, tree in parser.parse_files('common/cultures/*', where):
+    for inpath, tree in parser.parse_files('common/cultures/*'):
         mutated = False
         for n, v in tree:
             culture_groups.append(n.val)
@@ -64,19 +64,18 @@ def process_cultures(parser, where, build):
                     mutated |= update_obj(v2)
             mutated |= update_obj(v)
         if not AUDIT and mutated:
-            outpath = make_outpath(build, inpath, where, vanilladir)
+            outpath = make_outpath(build, inpath, vanilladir, *parser.moddirs)
             with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
                 f.write(tree.str(parser))
     return cultures, culture_groups
 
-def process_history(parser, where, build, extra_keys):
+def process_history(parser, build, extra_keys):
     prov_title = {}
-    id_name = get_province_id_name_map(parser, where)
+    id_name = get_province_id_name_map(parser)
     # critical_error = False
     for glob in ['history/provinces/*', 'history/titles/*']:
         # replace errors: vanilla history has some UTF-8 bytes
-        for inpath, tree in parser.parse_files(glob, where,
-                                               errors='replace'):
+        for inpath, tree in parser.parse_files(glob, errors='replace'):
             # if isinstance(tree, Exception):
             #     critical_error = True
             #     continue
@@ -97,17 +96,18 @@ def process_history(parser, where, build, extra_keys):
                     if id_name[number] == name:
                         prov_title[number] = v.val
             if mutated:
-                outpath = make_outpath(build, inpath, where, vanilladir)
+                outpath = make_outpath(build, inpath, vanilladir,
+                                       *parser.moddirs)
                 with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
                     f.write(tree.str(parser))
     # if critical_error:
     #     raise SystemExit()
     return prov_title
 
-def get_governments(parser, where):
+def get_governments(parser):
     governments = []
     prefixes = []
-    for _, tree in parser.parse_files('common/governments/*', where):
+    for _, tree in parser.parse_files('common/governments/*'):
         for _, v in tree:
             for n2, v2 in v:
                 governments.append(n2.val)
@@ -119,10 +119,10 @@ def get_governments(parser, where):
                     prefixes.append(prefix)
     return governments, prefixes
 
-def get_unlanded_titles(parser, where):
+def get_unlanded_titles(parser):
     ul_titles = []
     for glob in ['common/job_titles/*', 'common/minor_titles/*']:
-        for _, tree in parser.parse_files(glob, where):
+        for _, tree in parser.parse_files(glob):
             ul_titles.extend(n.val for n, v in tree)
     return ul_titles
 
@@ -133,6 +133,7 @@ def main():
         modpath = rootpath / 'SWMH-BETA/SWMH'
     else:
         modpath = pathlib.Path(sys.argv[1])
+    parser.moddirs = [modpath]
     if len(sys.argv) <= 2:
         build = modpath
     else:
@@ -146,12 +147,12 @@ def main():
         except FileExistsError: # pls cygwin gib 3.5
             pass
 
-    max_provs = get_max_provinces(parser, modpath)
-    cultures, culture_groups = process_cultures(parser, modpath, build)
+    max_provs = get_max_provinces(parser)
+    cultures, culture_groups = process_cultures(parser, build)
     if not NUKE_IT_FROM_ORBIT:
-        religions, religion_groups = get_religions(parser, modpath)
-        governments, gov_prefixes = get_governments(parser, modpath)
-        ul_titles = get_unlanded_titles(parser, modpath)
+        religions, religion_groups = get_religions(parser)
+        governments, gov_prefixes = get_governments(parser)
+        ul_titles = get_unlanded_titles(parser)
     parser.fq_keys = cultures
     lt_keys_to_remove = [
         'title', 'title_female', 'foa', 'title_prefix', 'short_name',
@@ -174,22 +175,21 @@ def main():
                 update_tree(v)
 
     # process landed_titles
-    for inpath, tree in parser.parse_files('common/landed_titles/*',
-                                           modpath):
-        outpath = make_outpath(build, inpath, modpath, vanilladir)
+    for inpath, tree in parser.parse_files('common/landed_titles/*'):
+        outpath = make_outpath(build, inpath, vanilladir, *parser.moddirs)
         update_tree(tree)
         if not AUDIT:
             with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
                 f.write(tree.str(parser))
 
     # process history
-    prov_title = process_history(parser, modpath, build, extra_keys)
+    prov_title = process_history(parser, build, extra_keys)
 
     if NUKE_IT_FROM_ORBIT:
         outrows = [[''] * 15]
         outrows[0][:6] = ['#CODE', 'ENGLISH', 'FRENCH', 'GERMAN', '', 'SPANISH']
         outrows[0][-1] = 'x'
-        inpaths = list(files('localisation/*', modpath))
+        inpaths = list(files('localisation/*', parser.moddirs))
         for inpath in inpaths:
             outpath = build / 'localisation' / inpath.name
             with outpath.open('w', encoding='cp1252', newline='') as csvfile:
@@ -243,8 +243,8 @@ def main():
             'zz Jobs and minor titles.csv', 'zz Mercs.csv',
             'zz Nobletitles.csv', 'zz Religions.csv', 'zz SWMHbaronies.csv',
             'zz SWMHcounties.csv', 'zz SWMHnewprovinces.csv',
-            'zz SWMHprovinces.csv']]
-        outpath = modpath / 'out.txt'
+            'zz SWMHprovinces.csv'] for modpath in parser.moddirs]
+        outpath = rootpath / 'ziji_build.txt'
         with outpath.open('w', encoding='cp1252', newline='') as f:
             for inpath in inpaths:
                 for row in csv_rows(inpath):
@@ -258,7 +258,7 @@ def main():
     outrows[0][-1] = 'x'
 
     keys_seen = set()
-    for path in files('localisation/*', modpath):
+    for path in files('localisation/*', parser.moddirs):
         for row in csv_rows(path):
             if len(row) >= 2 and row[0] not in keys_seen:
                 keys_seen.add(row[0])

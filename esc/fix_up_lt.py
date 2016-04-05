@@ -12,15 +12,13 @@ from ck2parser import (rootpath, is_codename, get_province_id_name_map,
                        prepend_post_comment, Obj, Comment, FullParser)
 from print_time import print_time
 
-modpath = rootpath / 'SWMH-BETA/SWMH'
-
 PRUNE_BARONIES = False
 FORMAT_ONLY = False # don't alter code, just format. overrides PRUNE_BARONIES
 
 # templar castles referenced by vanilla events
 mod_titles_to_keep = ['b_beitdejan', 'b_lafeve']
 
-def process_province_history(parser, where):
+def process_province_history(parser):
     def mark_barony(barony, county_set):
         try:
             if barony.val.startswith('b_'):
@@ -28,11 +26,11 @@ def process_province_history(parser, where):
         except AttributeError:
             pass
 
-    id_name = get_province_id_name_map(parser, where)
+    id_name = get_province_id_name_map(parser)
     province_id = {}
     used_baronies = collections.defaultdict(set)
     max_settlements = {}
-    for number, title, tree in get_provinces(parser, where):
+    for number, title, tree in get_provinces(parser):
         province_id[title] = number
         max_settlements[title] = int(tree['max_settlements'].val)
         for n, v in tree:
@@ -52,11 +50,14 @@ def process_province_history(parser, where):
 def main():
     simple_parser = SimpleParser()
     full_parser = FullParser()
+    modpath = rootpath / 'SWMH-BETA/SWMH'
+    simple_parser.moddirs = [modpath]
+    full_parser.moddirs = [modpath]
     lt = modpath / 'common/landed_titles'
     province_id, used_baronies, max_settlements = process_province_history(
-        simple_parser, modpath)
-    localisation = get_localisation(modpath)
-    cultures = get_cultures(simple_parser, modpath, groups=False)
+        simple_parser)
+    localisation = get_localisation(simple_parser.moddirs)
+    cultures = get_cultures(simple_parser, groups=False)
     full_parser.fq_keys = cultures
     historical_baronies = []
 
@@ -178,8 +179,7 @@ def main():
 
     with tempfile.TemporaryDirectory() as td:
         lt_t = pathlib.Path(td)
-        for inpath, tree in full_parser.parse_files('common/landed_titles/*',
-                                                    modpath):
+        for inpath, tree in full_parser.parse_files('common/landed_titles/*'):
             outpath = lt_t / inpath.name
             update_tree(tree)
             with outpath.open('w', encoding='cp1252', newline='\r\n') as f:

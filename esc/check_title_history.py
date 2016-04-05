@@ -97,6 +97,7 @@ def prune_tree(ivt, date_filter, pred=None, data_iv=True):
 @print_time
 def main():
     parser = SimpleParser()
+    parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
     landed_titles_index = {}
     title_regions = {}
     current_index = 0
@@ -115,7 +116,7 @@ def main():
                 if region == 'titular':
                     child_region = n.val
                 recurse(v, region=child_region)
-    for _, tree in parser.parse_files('common/landed_titles/*', *modpaths):
+    for _, tree in parser.parse_files('common/landed_titles/*'):
         recurse(tree)
     date_filter = IntervalTree()
     if (PRUNE_UNEXECUTED_HISTORY or PRUNE_IMPOSSIBLE_STARTS or
@@ -143,7 +144,7 @@ def main():
     char_life = {}
     title_dead_holders = []
     if CHECK_DEAD_HOLDERS:
-        for _, tree in parser.parse_files('history/characters/*', *modpaths):
+        for _, tree in parser.parse_files('history/characters/*'):
             for n, v in tree:
                 birth = next((Date(*n2.val) for n2, v2 in v
                               if (isinstance(n2, ASTDate) and
@@ -153,7 +154,7 @@ def main():
                                   'death' in v2.dictionary)), timeline.end)
                 if birth <= death:
                     char_life[n.val] = birth, death
-    for path, tree in parser.parse_files('history/titles/*', *modpaths):
+    for path, tree in parser.parse_files('history/titles/*'):
         title = path.stem
         if not len(tree) > 0 or title not in landed_titles_index:
             continue

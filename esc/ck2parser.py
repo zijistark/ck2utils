@@ -23,7 +23,6 @@ csv.register_dialect('ckii', delimiter=';', doublequote=False,
 
 memoize = functools.lru_cache(maxsize=None)
 
-
 def csv_rows(path, linenum=False, comments=False):
     with open(str(path), newline='', encoding='cp1252', errors='replace') as f:
         gen = ((r, i + 1) if linenum else r
@@ -32,34 +31,33 @@ def csv_rows(path, linenum=False, comments=False):
                    (comments or not r[0].startswith('#'))))
         yield from gen
 
-
 # give mod dirs in descending lexicographical order of mod name (Z-A),
 # modified for dependencies as necessary.
-def files(glob, *moddirs, basedir=vanilladir, reverse=False):
+def files(glob, moddirs=(), basedir=vanilladir, reverse=False):
     result_paths = {p.relative_to(d): p
-                    for d in (basedir,) + moddirs for p in d.glob(glob)}
+                    for d in (basedir,) + tuple(moddirs) for p in d.glob(glob)}
     for _, p in sorted(result_paths.items(), key=lambda t: t[0].parts,
                        reverse=reverse):
         yield p
 
-
 @memoize
-def get_cultures(parser, *moddirs, groups=True):
+def get_cultures(parser, moddirs=None, groups=True):
+    args = (moddirs,) if moddirs is None else ()
     cultures = []
     culture_groups = []
-    for _, tree in parser.parse_files('common/cultures/*', *moddirs):
+    for _, tree in parser.parse_files('common/cultures/*', *args):
         for n, v in tree:
             culture_groups.append(n.val)
             cultures.extend(n2.val for n2, v2 in v
                             if n2.val != 'graphical_cultures')
     return (cultures, culture_groups) if groups else cultures
 
-
 @memoize
-def get_religions(parser, *moddirs, groups=True):
+def get_religions(parser, moddirs=None, groups=True):
+    args = (moddirs,) if moddirs is None else ()
     religions = []
     religion_groups = []
-    for _, tree in parser.parse_files('common/religions/*', *moddirs):
+    for _, tree in parser.parse_files('common/religions/*', *args):
         for n, v in tree:
             religion_groups.append(n.val)
             religions.extend(n2.val for n2, v2 in v
@@ -67,17 +65,17 @@ def get_religions(parser, *moddirs, groups=True):
                                  n2.val not in ('male_names', 'female_names')))
     return (religions, religion_groups) if groups else religions
 
-
 _max_provinces = None
 
 @memoize
-def get_province_id_name_map(parser, where):
+def get_province_id_name_map(parser, where=None):
     global _max_provinces
-    _, tree = next(parser.parse_files('map/default.map', where))
+    args = ([where],) if where else ()
+    _, tree = next(parser.parse_files('map/default.map', *args))
     defs = tree['definitions'].val
     _max_provinces = int(tree['max_provinces'].val)
     id_name_map = {}
-    defs_path = next(files('map/' + defs, where))
+    defs_path = next(files('map/' + defs, *moddirs))
     for row in csv_rows(defs_path):
         try:
             id_name_map[int(row[0])] = row[4]
@@ -85,16 +83,15 @@ def get_province_id_name_map(parser, where):
             continue
     return id_name_map
 
-
-def get_max_provinces(parser, where):
+def get_max_provinces(parser, where=None):
     if _max_provinces is None:
         get_province_id_name_map(parser, where)
     return _max_provinces
 
-
-def get_provinces(parser, where):
+def get_provinces(parser, where=None):
+    args = ([where],) if where else ()
     id_name = get_province_id_name_map(parser, where)
-    for path in files('history/provinces/*', where):
+    for path in files('history/provinces/*', *args):
         number, name = path.stem.split(' - ')
         number = int(number)
         if number in id_name and id_name[number] == name:
@@ -105,11 +102,10 @@ def get_provinces(parser, where):
                 continue
             yield number, title, tree
 
-
-def get_localisation(*moddirs, basedir=vanilladir, ordered=False):
+def get_localisation(moddirs=(), basedir=vanilladir, ordered=False):
     locs = collections.OrderedDict() if ordered else {}
     loc_glob = 'localisation/*'
-    for path in files(loc_glob, *moddirs, basedir=basedir, reverse=True):
+    for path in files(loc_glob, moddirs, basedir=basedir, reverse=True):
         for row in csv_rows(path):
             try:
                 if row[0] not in locs:
@@ -118,12 +114,10 @@ def get_localisation(*moddirs, basedir=vanilladir, ordered=False):
                 continue
     return locs
 
-
 def first_post_comment(item):
     if item.post_comment:
         return item.post_comment.val.split('#', 1)[0].strip()
     return None
-
 
 def prepend_post_comment(item, s, force=False):
     if force or first_post_comment(item) != s:
@@ -131,13 +125,11 @@ def prepend_post_comment(item, s, force=False):
             s += ' ' + str(item.post_comment)
         item.post_comment = Comment(s)
 
-
 def is_codename(string):
     try:
         return re.match(r'[ekdcb]_', string) is not None
     except TypeError:
         return False
-
 
 def chars(line, parser):
     line = str(line)
@@ -152,7 +144,6 @@ def chars(line, parser):
         else:
             col += 1
     return col
-
 
 def comments_to_str(parser, comments, indent):
     if not comments:
@@ -458,20 +449,6 @@ class Pair(Stringifiable):
             s += ' '
             col += 1
         val_is, (nl_val, col_val) = self.value.inline_str(col, parser)
-        # if col > self.indent_col(parser) and col_val > parser.chars_per_line:
-        #     if not s[-2].isspace():
-        #         s = s[:-1]
-        #     val_s = self.value.str(parser)
-        #     s += '\n' + val_s + self.indent * '\t'
-        #     nl += 1 + val_s.count('\n')
-        #     col = self.indent_col(parser)
-        # else:
-        #     if val_is[0] == '\n':
-        #         s = s[:-1]
-        #         col -= 1
-        #     s += val_is
-        #     nl += nl_val
-        #     col = col_val
         if val_is[0] == '\n':
             s = s[:-1]
             col -= 1
@@ -641,6 +618,15 @@ class Obj(Stringifiable):
 
 
 class SimpleTokenizer:
+    specs = [
+        ('Comment', (r'#.*',)),
+        ('Space', (r'\s+',)),
+        ('Op', (r'[={}]',)),
+        ('String', (r'".*?"',)),
+        ('Key', (r'[^\s"#={}]+',))
+    ]
+    useless = ['Comment', 'Space']
+    t = staticmethod(make_tokenizer(specs))
 
     @classmethod
     def tokenize(cls, string):
@@ -655,19 +641,8 @@ class SimpleTokenizer:
                         x.type = 'Name'
                 yield x
 
-    specs = [
-        ('Comment', (r'#.*',)),
-        ('Space', (r'\s+',)),
-        ('Op', (r'[={}]',)),
-        ('String', (r'".*?"',)),
-        ('Key', (r'[^\s"#={}]+',))
-    ]
-    useless = ['Comment', 'Space']
-    t = staticmethod(make_tokenizer(specs))
-
 
 class FullTokenizer(SimpleTokenizer):
-
     #specs = [
     #    ('Comment', (r'#(.*\S)?',)),
     #    ('Space', (r'[ \t]+',)),
@@ -691,9 +666,11 @@ class FullTokenizer(SimpleTokenizer):
 
 
 class SimpleParser:
+    tokenizer = SimpleTokenizer
 
-    def __init__(self, tag=None):
-        self.tag = tag
+    def __init__(self):
+        self.moddirs = []
+        self.basedir = vanilladir
         self.cache_hits = 0
         self.cache_misses = 0
         self.parse_tree_cache = {}
@@ -791,8 +768,12 @@ class SimpleParser:
             return repo_cachedir / latest_commit[str(path)] / name, False
         return repo_cachedir / name, True
 
-    def parse_files(self, glob, *moddirs, basedir=vanilladir, **kwargs):
-        for path in files(glob, *moddirs, basedir=basedir):
+    def parse_files(self, glob, moddirs=None, basedir=None, **kwargs):
+        if moddirs is None:
+            moddirs = self.moddirs
+        if basedir is None:
+            basedir = self.basedir
+        for path in files(glob, moddirs, basedir=basedir):
             yield path, self.parse_file(path, **kwargs)
 
     def parse_file(self, path, encoding='cp1252', errors=None, memcache=None,
@@ -843,10 +824,9 @@ class SimpleParser:
         tree = self.toplevel.parse(tokens)
         return tree
 
-    tokenizer = SimpleTokenizer
-
 
 class FullParser(SimpleParser):
+    tokenizer = FullTokenizer
 
     def setup_parser(self):
         unarg = lambda f: lambda x: f(*x)
@@ -871,5 +851,3 @@ class FullParser(SimpleParser):
         value.define(obj | key | quoted_string)
         self.toplevel = (many(pair) + many(nl + comment) + end >>
                          unarg(TopLevel))
-
-    tokenizer = FullTokenizer

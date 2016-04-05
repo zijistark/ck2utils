@@ -9,7 +9,7 @@ epoch = 1066, 9, 15
 
 def get_crsdr_grp_map(parser):
     crsdr_grp_map = {}
-    for _, tree in parser.parse_files('common/religions/*', modpath):
+    for _, tree in parser.parse_files('common/religions/*'):
         for n, v in tree:
             for n2, v2 in v:
                 if (isinstance(v2, Obj) and
@@ -34,12 +34,13 @@ def process_landed_titles(parser, crsdr_grp_map):
     grp_crsdr_map = collections.defaultdict(list)
     for k, v in crsdr_grp_map.items():
         grp_crsdr_map[v].append(k)
-    for _, tree in parser.parse_files('common/landed_titles/*', modpath):
+    for _, tree in parser.parse_files('common/landed_titles/*'):
         yield from recurse(tree)
 
 @print_time
 def main():
     parser = SimpleParser()
+    parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
     crsdr_grp_map = get_crsdr_grp_map()
     relg_weights = {relg: {} for relg in crsdr_grp_map
                              if crsdr_grp_map[relg] is not None}
