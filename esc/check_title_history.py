@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
 
-# a thought:
-#     130: 1066.1.6 to 1066.10.14
-#         0 (d_canterbury<-c_kent,c_surrey)
-#         122 (k_england<-c_essex,c_middlesex,d_canterbury)
-#         5644 (d_hereford<-c_bucks,c_hertford)
-
 from collections import defaultdict, namedtuple
 from operator import attrgetter
 from intervaltree import Interval, IntervalTree
@@ -153,7 +147,7 @@ def main():
         if not len(tree) > 0 or title not in landed_titles_index:
             continue
         holders = [(Date.EARLIEST, 0)]
-        lieges = [(Date.EARLIEST, 0)]
+        lieges = [(Date.EARLIEST, '0')]
         for n, v in sorted(tree, key=attrgetter('key.val')):
             date = Date(*n.val)
             for n2, v2 in v:
@@ -165,7 +159,7 @@ def main():
                         else:
                             holders.append((date, holder))
                 elif n2.val == 'liege':
-                    liege = 0 if v2.val in ('0', '-', title) else v2.val
+                    liege = '0' if v2.val in (0, '-', title) else v2.val
                     if lieges[-1][1] != liege:
                         if lieges[-1][0] == date:
                             lieges[-1] = date, liege
@@ -198,7 +192,7 @@ def main():
                 end = lieges[i + 1][0]
             except IndexError:
                 end = Date.LATEST
-            if liege != 0 and title_tier(liege) <= tier:
+            if liege != '0' and title_tier(liege) <= tier:
                 lte_tier[begin:end] = liege
             title_lieges[title][begin:end] = liege
         if lte_tier:
@@ -210,7 +204,7 @@ def main():
     for title, lieges in title_lieges.items():
         errors = []
         for liege_begin, liege_end, liege in lieges:
-            if liege == 0:
+            if liege == '0':
                 continue
             if liege not in title_holders:
                 title_holders[liege][Date.EARLIEST:Date.LATEST] = 0
@@ -230,7 +224,7 @@ def main():
             if errors:
                 title_liege_errors.append((title, errors))
     if CHECK_LIEGE_CONSISTENCY:
-        liege_consistency_errors = []
+        liege_consistency_errors = defaultdict(dict)
         for char, titles in char_titles.items():
             liege_chars = IntervalTree()
             for holder_begin, holder_end, title in titles:
@@ -239,7 +233,7 @@ def main():
                     liege_begin = max(liege_begin, holder_begin)
                     liege_end = min(liege_end, holder_end)
                     if liege not in title_holders:
-                        liege_chars[liege_begin:liege_end] = 0, title, liege
+                        liege_chars[liege_begin:liege_end] = 0, liege, title
                         continue
                     liege_holders = title_holders[liege][liege_begin:liege_end]
                     for begin, end, liege_holder in liege_holders:
@@ -249,18 +243,24 @@ def main():
                             liege_holder = 0
                         elif liege_holder == char:
                             continue
-                        liege_chars[begin:end] = liege_holder, title, liege
+                        liege_chars[begin:end] = liege_holder, liege, title
             prune_tree(liege_chars, date_filter)
             if liege_chars:
-                liege_chars = sorted(liege_chars)
-                low = liege_chars[0]
-                for high in liege_chars[1:]:
-                    # overlapping different-liege-holder
-                    if high.begin < low.end and low.data[0] != high.data[0]:
-                        error = ((char, high.begin, min(low.end, high.end)) +
-                                 low.data + high.data)
-                        liege_consistency_errors.append(error)
-                    low = high
+                items = defaultdict(
+                    lambda: defaultdict(lambda: defaultdict(list)))
+                for begin, end, data in liege_chars:
+                    items[(begin, end)][data[0]][data[1]].append(data[2])
+                for iv, liege_holders in items.items():
+                    if len(liege_holders) > 1:
+                        liege_consistency_errors[char][iv] = liege_holders
+                # low = liege_chars[0]
+                # for high in liege_chars[1:]:
+                #     # overlapping different-liege-holder
+                #     if high.begin < low.end and low.data[0] != high.data[0]:
+                #         error = ((char, high.begin, min(low.end, high.end)) +
+                #                  low.data + high.data)
+                #         liege_consistency_errors.append(error)
+                #     low = high
     if date_filter:
         for title, errors in reversed(title_liege_errors):
             prune_tree(errors, date_filter)
@@ -277,7 +277,6 @@ def main():
     title_liege_errors.sort(key=sort_key)
     title_lte_tier.sort(key=sort_key)
     title_dead_holders.sort(key=sort_key)
-    liege_consistency_errors.sort()
     with (rootpath / 'check_title_history.txt').open('w') as fp:
         print('Liege has no holder:', file=fp)
         if not title_liege_errors:
@@ -315,10 +314,17 @@ def main():
             print('Liege inconsistency:', file=fp)
             if not liege_consistency_errors:
                 print('\t(none)', file=fp)
-            for char, begin, end, *data in liege_consistency_errors:
-                line = ('\t{}: {}, {} ({}->{}) vs. {} ({}->{})'
-                        .format(char, iv_to_str(begin, end), *data))
-                print(line, file=fp)
+            for char, ivs in sorted(liege_consistency_errors.items()):
+                print('\t{}:'.format(char), file=fp)
+                for iv, liege_holders in sorted(ivs.items()):
+                    print('\t\t{}:'.format(iv_to_str(iv)), file=fp)
+                    for liege_holder, lieges in sorted(liege_holders.items()):
+                        strs = ['\t\t\t', str(liege_holder), ' (']
+                        for liege, titles in sorted(lieges.items()):
+                            strs += (liege, ' <- ', ','.join(sorted(titles)),
+                                     '; ')
+                        strs[-1] = ')'
+                        print(''.join(strs), file=fp)
 
 if __name__ == '__main__':
     main()
