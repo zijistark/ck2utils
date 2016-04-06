@@ -13,8 +13,9 @@ CHECK_LIEGE_CONSISTENCY = True
 LANDED_TITLES_ORDER = True # if false, date order
 
 PRUNE_UNEXECUTED_HISTORY = True # prune all after last playable start
-PRUNE_IMPOSSIBLE_STARTS = True # implies PRUNE_UNEXECUTED_HISTORY
+PRUNE_IMPOSSIBLE_STARTS = False # implies PRUNE_UNEXECUTED_HISTORY
 PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
+PRUNE_ALL_BUT_DATE = 1066, 9, 15 # overrides above three
 
 
 class Date(namedtuple('Date', ['y', 'm', 'd'])):
@@ -83,8 +84,8 @@ def prune_tree(ivt, date_filter, pred=None):
 @print_time
 def main():
     intervaltree_patch_issue_41()
-    parser = SimpleParser()
-    parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
+    simple_parser = SimpleParser()
+    simple_parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
     landed_titles_index = {'0': -1}
     title_regions = {}
     current_index = 0
@@ -103,20 +104,24 @@ def main():
                 if region == 'titular':
                     child_region = n.val
                 recurse(v, region=child_region)
-    for _, tree in parser.parse_files('common/landed_titles/*'):
+    for _, tree in simple_parser.parse_files('common/landed_titles/*'):
         recurse(tree)
     date_filter = IntervalTree()
-    if (PRUNE_UNEXECUTED_HISTORY or PRUNE_IMPOSSIBLE_STARTS or
+    if PRUNE_ALL_BUT_DATE is not None:
+        date = Date(*PRUNE_ALL_BUT_DATE)
+        date_filter.addi(Date.EARLIEST, date)
+        date_filter.addi(date.get_next_day(), Date.LATEST)
+    elif (PRUNE_UNEXECUTED_HISTORY or PRUNE_IMPOSSIBLE_STARTS or
         PRUNE_NONBOOKMARK_STARTS):
         date_filter.addi(Date.EARLIEST, Date.LATEST)
         last_start_date = Date.EARLIEST
-        for _, tree in parser.parse_files('common/bookmarks/*'):
+        for _, tree in simple_parser.parse_files('common/bookmarks/*'):
             for _, v in tree:
                 date = Date(*v['date'].val)
                 date_filter.chop(date, date.get_next_day())
                 last_start_date = max(date, last_start_date)
         if not PRUNE_NONBOOKMARK_STARTS:
-            defines = next(parser.parse_files('common/defines.txt'))[1]
+            defines = next(simple_parser.parse_files('common/defines.txt'))[1]
             first = Date(*defines['start_date'].val)
             last = Date(*defines['last_start_date'].val)
             date_filter.chop(first, last.get_next_day())
@@ -131,7 +136,7 @@ def main():
     char_life = {}
     title_dead_holders = []
     if CHECK_DEAD_HOLDERS:
-        for _, tree in parser.parse_files('history/characters/*'):
+        for _, tree in simple_parser.parse_files('history/characters/*'):
             for n, v in tree:
                 birth = next((Date(*n2.val) for n2, v2 in v
                               if (isinstance(n2, ASTDate) and
@@ -141,7 +146,7 @@ def main():
                                   'death' in v2.dictionary)), Date.LATEST)
                 if birth <= death:
                     char_life[n.val] = birth, death
-    for path, tree in parser.parse_files('history/titles/*'):
+    for path, tree in simple_parser.parse_files('history/titles/*'):
         title = path.stem
         tier = title_tier(title)
         if not len(tree) > 0 or title not in landed_titles_index:
@@ -229,6 +234,8 @@ def main():
         for char, titles in char_titles.items():
             liege_chars = IntervalTree()
             for holder_begin, holder_end, title in titles:
+                # if char == 71823 and title == 'c_roma':
+                #     import pdb; pdb.set_trace()
                 lieges = title_lieges[title][holder_begin:holder_end]
                 for liege_begin, liege_end, liege in lieges:
                     liege_begin = max(liege_begin, holder_begin)
@@ -247,6 +254,7 @@ def main():
                         liege_chars[begin:end] = liege_holder, liege, title
             prune_tree(liege_chars, date_filter)
             if liege_chars:
+                liege_chars.split_overlaps()
                 items = defaultdict(
                     lambda: defaultdict(lambda: defaultdict(list)))
                 for begin, end, (liege_holder, liege, title) in liege_chars:
