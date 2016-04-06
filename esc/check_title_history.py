@@ -224,7 +224,8 @@ def main():
             if errors:
                 title_liege_errors.append((title, errors))
     if CHECK_LIEGE_CONSISTENCY:
-        liege_consistency_errors = defaultdict(dict)
+        liege_consistency_unamb = defaultdict(dict)
+        liege_consistency_amb = defaultdict(dict)
         for char, titles in char_titles.items():
             liege_chars = IntervalTree()
             for holder_begin, holder_end, title in titles:
@@ -248,11 +249,19 @@ def main():
             if liege_chars:
                 items = defaultdict(
                     lambda: defaultdict(lambda: defaultdict(list)))
-                for begin, end, data in liege_chars:
-                    items[(begin, end)][data[0]][data[1]].append(data[2])
+                for begin, end, (liege_holder, liege, title) in liege_chars:
+                    items[(begin, end)][liege_holder][liege].append(title)
                 for iv, liege_holders in items.items():
                     if len(liege_holders) > 1:
-                        liege_consistency_errors[char][iv] = liege_holders
+                        tiers = [max(title_tier(title)
+                                     for _, titles in lieges.items()
+                                     for title in titles)
+                                 for _, lieges in liege_holders.items()]
+                        if tiers.count(max(tiers)) == 1:
+                            which_dict = liege_consistency_unamb
+                        else:
+                            which_dict = liege_consistency_amb
+                        which_dict[char][iv] = liege_holders
     if date_filter:
         for title, errors in reversed(title_liege_errors):
             prune_tree(errors, date_filter)
@@ -303,10 +312,23 @@ def main():
                 print(line, file=fp)
                 prev_region = region
         if CHECK_LIEGE_CONSISTENCY:
-            print('Liege inconsistency:', file=fp)
-            if not liege_consistency_errors:
+            print('Liege inconsistency (unambiguous):', file=fp)
+            if not liege_consistency_unamb:
                 print('\t(none)', file=fp)
-            for char, ivs in sorted(liege_consistency_errors.items()):
+            for char, ivs in sorted(liege_consistency_unamb.items()):
+                for iv, liege_holders in sorted(ivs.items()):
+                    print('\t{}, {}:'.format(char, iv_to_str(iv)), file=fp)
+                    for liege_holder, lieges in sorted(liege_holders.items()):
+                        for liege, titles in sorted(lieges.items(),
+                            key=lambda x: landed_titles_index[x[0]]):
+                            print('\t\t{} ({}) <= {}'.format(
+                                liege, liege_holder, ', '.join(sorted(titles,
+                                key=lambda x: landed_titles_index[x]))),
+                                file=fp)
+            print('Liege inconsistency (ambiguous):', file=fp)
+            if not liege_consistency_amb:
+                print('\t(none)', file=fp)
+            for char, ivs in sorted(liege_consistency_amb.items()):
                 for iv, liege_holders in sorted(ivs.items()):
                     print('\t{}, {}:'.format(char, iv_to_str(iv)), file=fp)
                     for liege_holder, lieges in sorted(liege_holders.items()):
