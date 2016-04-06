@@ -765,8 +765,8 @@ class SimpleParser:
         repo_cachedir = self.cachedir / repo_path.name
         path = path.relative_to(repo_path)
         if not any(p == path or p in path.parents for p in dirty_paths):
-            return repo_cachedir / latest_commit[str(path)] / name, False
-        return repo_cachedir / name, True
+            return repo_cachedir / latest_commit[str(path)] / name, True
+        return repo_cachedir / name, False
 
     def parse_files(self, glob, moddirs=None, basedir=None, **kwargs):
         if moddirs is None:
