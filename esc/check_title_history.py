@@ -15,7 +15,11 @@ LANDED_TITLES_ORDER = True # if false, date order
 PRUNE_UNEXECUTED_HISTORY = True # prune all after last playable start
 PRUNE_IMPOSSIBLE_STARTS = False # implies PRUNE_UNEXECUTED_HISTORY
 PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
-PRUNE_ALL_BUT_DATE = 1066, 9, 15 # overrides above three
+PRUNE_ALL_BUT_DATE = None # overrides above three
+# PRUNE_ALL_BUT_DATE = 1066, 9, 15 # overrides above three
+
+PRUNE_ALL_BUT_REGION = 'e_britannia'
+# PRUNE_ALL_BUT_REGION = None
 
 
 class Date(namedtuple('Date', ['y', 'm', 'd'])):
@@ -87,23 +91,18 @@ def main():
     simple_parser = SimpleParser()
     simple_parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
     landed_titles_index = {'0': -1}
-    title_regions = {}
+    title_djls = {}
     current_index = 0
-    def recurse(tree, region='titular'):
+    def recurse(tree, stack=[]):
         nonlocal current_index
         for n, v in tree:
             if is_codename(n.val):
                 landed_titles_index[n.val] = current_index
                 current_index += 1
-                child_region = region
-                if (region in ['e_null', 'e_placeholder'] or
-                    (region == 'titular' and
-                     any(is_codename(n2.val) for n2, _ in v))):
-                    child_region = n.val
-                title_regions[n.val] = child_region
-                if region == 'titular':
-                    child_region = n.val
-                recurse(v, region=child_region)
+                stack.append(n.val)
+                title_djls[n.val] = stack.copy()
+                recurse(v, stack=stack)
+                stack.pop()
     for _, tree in simple_parser.parse_files('common/landed_titles/*'):
         recurse(tree)
     date_filter = IntervalTree()
@@ -261,6 +260,16 @@ def main():
                     items[(begin, end)][liege_holder][liege].append(title)
                 for iv, liege_holders in items.items():
                     if len(liege_holders) > 1:
+                        if (PRUNE_ALL_BUT_REGION and
+                            all(PRUNE_ALL_BUT_REGION not in
+                                title_djls.get(title, ())
+                                for _, ls in liege_holders.items()
+                                for l in ls) and
+                            all(PRUNE_ALL_BUT_REGION not in
+                                title_djls.get(title, ())
+                                for _, ls in liege_holders.items()
+                                for _, ts in ls.items() for t in ts)):
+                            continue
                         tiers = [max(title_tier(title)
                                      for _, titles in lieges.items()
                                      for title in titles)
@@ -286,13 +295,29 @@ def main():
     title_liege_errors.sort(key=sort_key)
     title_lte_tier.sort(key=sort_key)
     title_dead_holders.sort(key=sort_key)
+    def title_region(title):
+        try:
+            region = title_djls[title][0]
+        except KeyError:
+            return 'undefined'
+        if region.startswith('e'):
+            if region in ('e_null', 'e_placeholder'):
+                try:
+                    return title_djls[title][1]
+                except:
+                    pass
+            return region
+        return 'titular'
     with (rootpath / 'check_title_history.txt').open('w') as fp:
         print('Liege has no holder:', file=fp)
         if not title_liege_errors:
             print('\t(none)', file=fp)
         prev_region = None
         for title, errors in title_liege_errors:
-            region = title_regions[title]
+            if (PRUNE_ALL_BUT_REGION and
+                PRUNE_ALL_BUT_REGION not in title_djls[title]):
+                continue
+            region = title_region(title)
             if LANDED_TITLES_ORDER and region != prev_region:
                 print('\t# {}'.format(region), file=fp)
             line = '\t{}: '.format(title)
@@ -312,7 +337,10 @@ def main():
                 print('\t(none)', file=fp)
             prev_region = None
             for title, dead_holders in title_dead_holders:
-                region = title_regions[title]
+                if (PRUNE_ALL_BUT_REGION and
+                    PRUNE_ALL_BUT_REGION not in title_djls[title]):
+                    continue
+                region = title_region(title)
                 if LANDED_TITLES_ORDER and region != prev_region:
                     print('\t# {}'.format(region), file=fp)
                 line = '\t{}: '.format(title)
