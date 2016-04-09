@@ -21,8 +21,6 @@ from localpaths import rootpath, vanilladir, cachedir
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
                      quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
 
-memoize = functools.lru_cache(maxsize=None)
-
 def csv_rows(path, linenum=False, comments=False):
     with open(str(path), newline='', encoding='cp1252', errors='replace') as f:
         gen = ((r, i + 1) if linenum else r
@@ -40,24 +38,20 @@ def files(glob, moddirs=(), basedir=vanilladir, reverse=False):
                        reverse=reverse):
         yield p
 
-@memoize
-def get_cultures(parser, moddirs=None, groups=True):
-    args = (moddirs,) if moddirs is None else ()
+def get_cultures(parser, groups=True):
     cultures = []
     culture_groups = []
-    for _, tree in parser.parse_files('common/cultures/*', *args):
+    for _, tree in parser.parse_files('common/cultures/*'):
         for n, v in tree:
             culture_groups.append(n.val)
             cultures.extend(n2.val for n2, v2 in v
                             if n2.val != 'graphical_cultures')
     return (cultures, culture_groups) if groups else cultures
 
-@memoize
-def get_religions(parser, moddirs=None, groups=True):
-    args = (moddirs,) if moddirs is None else ()
+def get_religions(parser, groups=True):
     religions = []
     religion_groups = []
-    for _, tree in parser.parse_files('common/religions/*', *args):
+    for _, tree in parser.parse_files('common/religions/*'):
         for n, v in tree:
             religion_groups.append(n.val)
             religions.extend(n2.val for n2, v2 in v
@@ -65,17 +59,11 @@ def get_religions(parser, moddirs=None, groups=True):
                                  n2.val not in ('male_names', 'female_names')))
     return (religions, religion_groups) if groups else religions
 
-_max_provinces = None
-
-@memoize
-def get_province_id_name_map(parser, where=None):
-    global _max_provinces
-    args = ([where],) if where else ()
-    _, tree = next(parser.parse_files('map/default.map', *args))
+def get_province_id_name_map(parser):
+    _, tree = next(parser.parse_files('map/default.map'))
     defs = tree['definitions'].val
-    _max_provinces = int(tree['max_provinces'].val)
     id_name_map = {}
-    defs_path = next(files('map/' + defs, *moddirs))
+    defs_path = next(files('map/' + defs, parser.moddirs))
     for row in csv_rows(defs_path):
         try:
             id_name_map[int(row[0])] = row[4]
@@ -83,18 +71,12 @@ def get_province_id_name_map(parser, where=None):
             continue
     return id_name_map
 
-def get_max_provinces(parser, where=None):
-    if _max_provinces is None:
-        get_province_id_name_map(parser, where)
-    return _max_provinces
-
-def get_provinces(parser, where=None):
-    args = ([where],) if where else ()
-    id_name = get_province_id_name_map(parser, where)
-    for path in files('history/provinces/*', *args):
+def get_provinces(parser):
+    id_name = get_province_id_name_map(parser)
+    for path in files('history/provinces/*', parser.moddirs):
         number, name = path.stem.split(' - ')
         number = int(number)
-        if number in id_name and id_name[number] == name:
+        if id_name.get(number) == name:
             tree = parser.parse_file(path)
             try:
                 title = tree['title'].val
@@ -667,6 +649,7 @@ class FullTokenizer(SimpleTokenizer):
 
 class SimpleParser:
     tokenizer = SimpleTokenizer
+    repos = {}
 
     def __init__(self):
         self.moddirs = []
@@ -687,7 +670,6 @@ class SimpleParser:
             self.cachedir.mkdir(parents=True) # 3.5 pls
         except FileExistsError:
             pass
-        self._repos = {}
         self.setup_parser()
 
     def __del__(self):
@@ -721,7 +703,7 @@ class SimpleParser:
         name = m.hexdigest()
         if vanilladir in path.parents:
             return self.cachedir / 'vanilla' / name, False
-        for repo_path, (latest_commit, dirty_paths) in self._repos.items():
+        for repo_path, (latest_commit, dirty_paths) in self.repos.items():
             if repo_path in path.parents:
                 break
         else:
@@ -759,7 +741,7 @@ class SimpleParser:
                     dirty_paths.append(pathlib.Path(entry[3:]))
                     if entry[0] == 'R':
                         next(status_iter)
-            self._repos[repo_path] = latest_commit, dirty_paths
+            self.repos[repo_path] = latest_commit, dirty_paths
             print('Processed repo in {:g} s'.format(time.time() -
                                                     repo_init_start))
         repo_cachedir = self.cachedir / repo_path.name
