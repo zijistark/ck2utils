@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 
-from bisect import bisect_left, bisect, insort
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from operator import attrgetter
-from ck2parser import (rootpath, files, is_codename, Date, SimpleParser,
-                       FullParser)
-from pprint import pprint
+from intervaltree import Interval, IntervalTree
+from ck2parser import (rootpath, files, is_codename, Date as ASTDate,
+                       SimpleParser, FullParser)
 from print_time import print_time
-
-# DEBUG_INSPECT_LIST = ['k_orthodox']
 
 CHECK_DEAD_HOLDERS = True # slow; most useful with PRUNE_UNEXECUTED_HISTORY
 CHECK_LIEGE_CONSISTENCY = True
@@ -16,365 +13,367 @@ CHECK_LIEGE_CONSISTENCY = True
 LANDED_TITLES_ORDER = True # if false, date order
 
 PRUNE_UNEXECUTED_HISTORY = True # prune all after last playable start
-PRUNE_IMPOSSIBLE_STARTS = True # implies PRUNE_UNEXECUTED_HISTORY
+PRUNE_IMPOSSIBLE_STARTS = False # implies PRUNE_UNEXECUTED_HISTORY
 PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
+PRUNE_ALL_BUT_DATE = None # overrides above three
+# PRUNE_ALL_BUT_DATE = 1066, 9, 15 # overrides above three
 
-time_beginning = (float('-inf'),) * 3
-time_end = (float('inf'),) * 3
-
-def get_next_day(day):
-    day = day[0], day[1], day[2] + 1
-    if (day[2] == 29 and day[1] == 2 or
-        day[2] == 31 and day[1] in (4, 6, 9, 11) or
-        day[2] == 32 and day[1] in (1, 3, 5, 7, 8, 10, 12)):
-        day = day[0], day[1] + 1, 1
-    if day[1] == 13:
-        day = day[0] + 1, 1, day[2]
-    return day
+PRUNE_ALL_BUT_REGION = 'e_britannia'
+# PRUNE_ALL_BUT_REGION = None
 
 
-def iv_to_str(begin, end):
-    s = '{}.{}.{}'.format(*begin)
-    if end != get_next_day(begin):
-        if end == time_end:
-            s += ' on'
-        else:
-            s += ' to {}.{}.{}'.format(*end)
+class Date(namedtuple('Date', ['y', 'm', 'd'])):
+
+    def __str__(self):
+        return '{}.{}.{}'.format(*self)
+
+    def get_next_day(self):
+        y, m, d = self.y, self.m, self.d + 1
+        if (d == 29 and m == 2 or
+            d == 31 and m in (4, 6, 9, 11) or
+            d == 32 and m in (1, 3, 5, 7, 8, 10, 12)):
+            m, d = m + 1, 1
+            if m == 13:
+                y, m = y + 1, 1
+        return Date(y, m, d)
+
+Date.EARLIEST = Date(float('-inf'), float('-inf'), float('-inf'))
+Date.LATEST = Date(float('inf'), float('inf'), float('inf'))
+
+# for monkey patching Node.pop_greatest_child to fix issue 41
+# https://github.com/chaimleib/intervaltree/issues/41
+def intervaltree_patch_issue_41():
+    from intervaltree.node import Node
+    def pop_greatest_child(self):
+        if self.right_node:
+            greatest_child, self[1] = self[1].pop_greatest_child()
+            new_self = self.rotate()
+            for iv in set(new_self.s_center):
+                if iv.contains_point(greatest_child.x_center):
+                    new_self.s_center.remove(iv)
+                    greatest_child.add(iv)
+            return (greatest_child,
+                    new_self if new_self.s_center else new_self.prune())
+        x_centers = set(iv.end for iv in self.s_center)
+        x_centers.remove(max(x_centers))
+        x_centers.add(self.x_center)
+        new_x_center = max(x_centers)
+        child = Node(new_x_center, (iv for iv in self.s_center
+                                    if iv.contains_point(new_x_center)))
+        self.s_center -= child.s_center
+        return child, self if self.s_center else self[0]
+    Node.pop_greatest_child = pop_greatest_child
+
+def iv_to_str(iv, end=None):
+    if end is not None:
+        iv = iv, end
+    if iv[1] == Date.LATEST:
+         s = '{} on'.format(iv[0])
+    elif iv[1] == iv[0].get_next_day():
+        s = str(iv[0])
+    else:
+        s = '{} to {}'.format(iv[0], iv[1])
+    if len(iv) > 2 and iv[2] is not None:
+        s += ' ({})'.format(iv[2])
     return s
 
+def title_tier(title):
+    return 'bcdke'.index(title[0])
+
+def prune_tree(ivt, date_filter, pred=None):
+    for filter_iv in date_filter:
+        if pred is None or pred(filter_iv):
+            ivt.chop(filter_iv.begin, filter_iv.end)
 
 @print_time
 def main():
-    parser = SimpleParser()
-    parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
-    landed_titles_index = {}
-    title_regions = {}
+    intervaltree_patch_issue_41()
+    simple_parser = SimpleParser()
+    simple_parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
+    landed_titles_index = {'0': -1}
+    title_djls = {}
     current_index = 0
-    def recurse(tree, region='titular'):
+    def recurse(tree, stack=[]):
         nonlocal current_index
         for n, v in tree:
             if is_codename(n.val):
                 landed_titles_index[n.val] = current_index
                 current_index += 1
-                child_region = region
-                if (region in ['e_null', 'e_placeholder'] or
-                    (region == 'titular' and
-                     any(is_codename(n2.val) for n2, _ in v))):
-                    child_region = n.val
-                title_regions[n.val] = child_region
-                if region == 'titular':
-                    child_region = n.val
-                recurse(v, region=child_region)
-    for _, tree in parser.parse_files('common/landed_titles/*'):
+                stack.append(n.val)
+                title_djls[n.val] = stack.copy()
+                recurse(v, stack=stack)
+                stack.pop()
+    for _, tree in simple_parser.parse_files('common/landed_titles/*'):
         recurse(tree)
-    prune = (PRUNE_UNEXECUTED_HISTORY or PRUNE_IMPOSSIBLE_STARTS or
-             PRUNE_NONBOOKMARK_STARTS)
-    if prune:
-        if PRUNE_NONBOOKMARK_STARTS:
-            dates_to_examine = []
-        else:
-            defines = next(parser.parse_files('common/defines.txt'))[1]
-            dates_to_examine = [(defines['start_date'].val,
-                get_next_day(defines['last_start_date'].val))]
-        for _, tree in parser.parse_files('common/bookmarks/*'):
+    date_filter = IntervalTree()
+    if PRUNE_ALL_BUT_DATE is not None:
+        date = Date(*PRUNE_ALL_BUT_DATE)
+        date_filter.addi(Date.EARLIEST, date)
+        date_filter.addi(date.get_next_day(), Date.LATEST)
+    elif (PRUNE_UNEXECUTED_HISTORY or PRUNE_IMPOSSIBLE_STARTS or
+        PRUNE_NONBOOKMARK_STARTS):
+        date_filter.addi(Date.EARLIEST, Date.LATEST)
+        last_start_date = Date.EARLIEST
+        for _, tree in simple_parser.parse_files('common/bookmarks/*'):
             for _, v in tree:
-                date = v['date'].val
-                if not any(a <= date < b for a, b in dates_to_examine):
-                    interval = date, get_next_day(date)
-                    insort(dates_to_examine, interval)
-        if PRUNE_IMPOSSIBLE_STARTS or PRUNE_NONBOOKMARK_STARTS:
-            for i in range(len(dates_to_examine) - 1, 0, -1):
-                if dates_to_examine[i - 1][1] == dates_to_examine[i][0]:
-                    dates_to_examine[i - 1] = (dates_to_examine[i - 1][0],
-                                               dates_to_examine[i][1])
-                    del dates_to_examine[i]
-        else:
-            dates_to_examine[:] = [(time_beginning, dates_to_examine[-1][1])]
-        # e.g. [((867, 1, 1), (867, 1, 2)), ((1066, 9, 15), (1337, 1, 2))]
-    title_holder_dates = {}
-    title_holders = {}
-    title_liege_dates = {}
-    title_lieges = {}
-    char_titles = defaultdict(dict)
+                date = Date(*v['date'].val)
+                date_filter.chop(date, date.get_next_day())
+                last_start_date = max(date, last_start_date)
+        if not PRUNE_NONBOOKMARK_STARTS:
+            defines = next(simple_parser.parse_files('common/defines.txt'))[1]
+            first = Date(*defines['start_date'].val)
+            last = Date(*defines['last_start_date'].val)
+            date_filter.chop(first, last.get_next_day())
+            last_start_date = max(last, last_start_date)
+            if not PRUNE_IMPOSSIBLE_STARTS:
+                date_filter.clear()
+                date_filter.addi(last_start_date.get_next_day(), Date.LATEST)
+    title_holders = defaultdict(IntervalTree)
+    title_lieges = defaultdict(IntervalTree)
+    title_lte_tier = []
+    char_titles = defaultdict(IntervalTree)
     char_life = {}
     title_dead_holders = []
     if CHECK_DEAD_HOLDERS:
-        for _, tree in parser.parse_files('history/characters/*'):
+        for _, tree in simple_parser.parse_files('history/characters/*'):
             for n, v in tree:
-                birth = next((n2.val for n2, v2 in v
-                              if (isinstance(n2, Date) and
-                                  'birth' in v2.dictionary)), time_end)
-                death = next((n2.val for n2, v2 in v
-                              if (isinstance(n2, Date) and
-                                  'death' in v2.dictionary)), time_end)
+                birth = next((Date(*n2.val) for n2, v2 in v
+                              if (isinstance(n2, ASTDate) and
+                                  'birth' in v2.dictionary)), Date.LATEST)
+                death = next((Date(*n2.val) for n2, v2 in v
+                              if (isinstance(n2, ASTDate) and
+                                  'death' in v2.dictionary)), Date.LATEST)
                 if birth <= death:
                     char_life[n.val] = birth, death
-    for path, tree in parser.parse_files('history/titles/*'):
+    for path, tree in simple_parser.parse_files('history/titles/*'):
         title = path.stem
+        tier = title_tier(title)
         if not len(tree) > 0 or title not in landed_titles_index:
             continue
-        holder_dates = [time_beginning]
-        holders = [0]
-        liege_dates = [time_beginning]
-        lieges = [0]
+        holders = [(Date.EARLIEST, 0)]
+        lieges = [(Date.EARLIEST, '0')]
         for n, v in sorted(tree, key=attrgetter('key.val')):
-            date = n.val
+            date = Date(*n.val)
             for n2, v2 in v:
                 if n2.val == 'holder':
                     holder = 0 if v2.val == '-' else int(v2.val)
-                    if holders[-1] != holder:
-                        if holder_dates[-1] == date:
-                            holders[-1] = holder
+                    if holders[-1][1] != holder:
+                        if holders[-1][0] == date:
+                            holders[-1] = date, holder
                         else:
-                            holder_dates.append(date)
-                            holders.append(holder)
+                            holders.append((date, holder))
                 elif n2.val == 'liege':
-                    liege = 0 if v2.val in ('0', title) else v2.val
-                    if lieges[-1] != liege:
-                        if liege_dates[-1] == date:
-                            lieges[-1] = liege
+                    liege = '0' if v2.val in (0, '-', title) else v2.val
+                    if lieges[-1][1] != liege:
+                        if lieges[-1][0] == date:
+                            lieges[-1] = date, liege
                         else:
-                            liege_dates.append(date)
-                            lieges.append(liege)
-        # if title in DEBUG_INSPECT_LIST:
-        #    pprint(title)
-        #    pprint(list(zip(holder_dates, holders)))
-        #    pprint(list(zip(liege_dates, lieges)))
-        # reverse order to allow deletion
-        for i, holder in enumerate(holders):
+                            lieges.append((date, liege))
+        dead_holders = []
+        # if title == 'c_ostfriesland':
+        #     import pdb; pdb.set_trace()
+        for i, (begin, holder) in enumerate(holders):
+            try:
+                end = holders[i + 1][0]
+            except IndexError:
+                end = Date.LATEST
+            if CHECK_DEAD_HOLDERS and holder != 0:
+                birth, death = char_life.get(holder,
+                                             (Date.LATEST, Date.LATEST))
+                if begin < birth or death < end:
+                    error_begin = death if birth <= begin < death else begin
+                    error_end = birth if begin < birth <= end else end
+                    if dead_holders and dead_holders[-1][1] == error_begin:
+                        dead_holders[-1] = dead_holders[-1][0], error_end
+                    else:
+                        dead_holders.append((error_begin, error_end))
+            title_holders[title][begin:end] = holder
             if holder != 0:
-                continue
-            # force liege to 0 while holder is 0
-            start_date = holder_dates[i]
-            j = bisect_left(liege_dates, start_date)
-            if i < len(holders) - 1:
-                end_date = holder_dates[i + 1]
-                k = bisect_left(liege_dates, end_date, lo=j)
-                if (k > 0 and lieges[k - 1] != 0 and
-                    (k == len(lieges) or liege_dates[k] != end_date)):
-                    liege_dates[j:k] = [start_date, end_date]
-                    lieges[j:k] = [0, lieges[k - 1]]
-                    continue
-            else:
-                k = len(lieges)
-            liege_dates[j:k] = [start_date]
-            lieges[j:k] = [0]
-        # if title in DEBUG_INSPECT_LIST:
-        #    pprint(title)
-        #    pprint(list(zip(holder_dates, holders)))
-        #    pprint(list(zip(liege_dates, lieges)))
-        title_holder_dates[title] = holder_dates
-        title_holders[title] = holders
-        title_liege_dates[title] = liege_dates
-        title_lieges[title] = lieges
-    if CHECK_DEAD_HOLDERS or CHECK_LIEGE_CONSISTENCY:
-        for title, holder_dates in title_holder_dates.items():
-            holders = title_holders[title]
-            dead_holders = []
-            for i, holder in enumerate(holders):
-                if holder != 0:
-                    if CHECK_DEAD_HOLDERS:
-                        birth, death = char_life.get(holder,
-                                                     (time_end, time_end))
-                        if i + 1 < len(holders):
-                            if holder_dates[i] < birth:
-                                begin = holder_dates[i]
-                                end = min(birth, holder_dates[i + 1])
-                                if (dead_holders and
-                                    dead_holders[-1][1] == begin):
-                                    dead_holders[-1] = dead_holders[-1][0], end
-                                else:
-                                    dead_holders.append((begin, end))
-                            elif death < holder_dates[i + 1]:
-                                begin = max(death, holder_dates[i])
-                                end = holder_dates[i + 1]
-                                if (dead_holders and
-                                    dead_holders[-1][1] == begin):
-                                    dead_holders[-1] = dead_holders[-1][0], end
-                                else:
-                                    dead_holders.append((begin, end))
-                        elif death != time_end:
-                            begin = max(death, holder_dates[i])
-                            if dead_holders and dead_holders[-1][1] == begin:
-                                dead_holders[-1] = (dead_holders[-1][0],
-                                                    time_end)
-                            else:
-                                dead_holders.append((begin, time_end))
-                    if CHECK_LIEGE_CONSISTENCY and i + 1 < len(holders):
-                        begin, end = holder_dates[i:i + 2]
-                        char_titles[holder][title] = begin, end
-            if dead_holders:
-                title_dead_holders.append((title, dead_holders))
-            # if CHECK_DEAD_HOLDERS and title in DEBUG_INSPECT_LIST:
-            #    pprint(title)
-            #    pprint(dead_holders)
+                char_titles[holder][begin:end] = title
+        lte_tier = IntervalTree()
+        for i, (begin, liege) in enumerate(lieges):
+            try:
+                end = lieges[i + 1][0]
+            except IndexError:
+                end = Date.LATEST
+            if liege != '0' and title_tier(liege) <= tier:
+                lte_tier[begin:end] = liege
+            title_lieges[title][begin:end] = liege
+        if lte_tier:
+            title_lte_tier.append((title, lte_tier))
+        if dead_holders:
+            dead_holders = IntervalTree.from_tuples(dead_holders)
+            title_dead_holders.append((title, dead_holders))
     title_liege_errors = []
     for title, lieges in title_lieges.items():
         errors = []
-        liege_dates = title_liege_dates[title]
-        for i, liege in enumerate(lieges):
-            if liege == 0:
+        for liege_begin, liege_end, liege in lieges:
+            if liege == '0':
                 continue
-            start_date = liege_dates[i]
-            if liege in title_holders:
-                holder_dates = title_holder_dates[liege]
-                holders = title_holders[liege]
-            else:
-                holder_dates = [time_beginning]
-                holders = [0]
-            holder_start = bisect(holder_dates, start_date) - 1
-            if i < len(lieges) - 1:
-                end_date = liege_dates[i + 1]
-                holder_end = bisect_left(holder_dates, end_date,
-                                         lo=holder_start)
-            else:
-                end_date = time_end
-                holder_end = len(holders)
-            for j in range(holder_start, holder_end):
-                if holders[j] == 0:
-                    if j == holder_start:
-                        error_start = max(start_date, holder_dates[j])
+            if liege not in title_holders:
+                title_holders[liege][Date.EARLIEST:Date.LATEST] = 0
+            holders = title_holders[liege][liege_begin:liege_end]
+            for holder_begin, holder_end, holder in holders:
+                if holder == 0:
+                    begin = max(liege_begin, holder_begin)
+                    end = min(liege_end, holder_end)
+                    if errors and errors[-1][1] == begin:
+                        errors[-1] = errors[-1][0], end
                     else:
-                        error_start = holder_dates[j]
-                    if j < len(holders) - 1:
-                        error_end = min(end_date, holder_dates[j + 1])
-                    else:
-                        error_end = end_date
-                    if errors and errors[-1][1] == error_start:
-                        errors[-1] = errors[-1][0], error_end
-                    else:
-                        errors.append((error_start, error_end))
+                        errors.append((begin, end))
+        # not an error if title is also unheld
         if errors:
-            title_liege_errors.append((title, errors))
-        # if title in DEBUG_INSPECT_LIST:
-        #     pprint(title)
-        #     pprint(errors)
+            errors = IntervalTree.from_tuples(errors)
+            prune_tree(errors, title_holders[title], lambda x: x.data == 0)
+            if errors:
+                title_liege_errors.append((title, errors))
     if CHECK_LIEGE_CONSISTENCY:
-        liege_consistency_errors = []
+        liege_consistency_unamb = defaultdict(dict)
+        liege_consistency_amb = defaultdict(dict)
         for char, titles in char_titles.items():
-            held_title_lieges = []
-            for title, (start_date, end_date) in titles.items():
-                # if char == 83200 and title == 'd_leinster':
-                #     pdb.set_trace()
-                lieges = title_lieges[title]
-                liege_dates = title_liege_dates[title]
-                lo = bisect(liege_dates, start_date) - 1
-                hi = bisect_left(liege_dates, end_date, lo=lo)
-                for i in range(lo, hi):
-                    liege_start = start_date if i == lo else liege_dates[i]
-                    liege_end = end_date if i + 1 == hi else liege_dates[i + 1]
-                    liege = lieges[i]
-                    if liege == 0 or liege not in title_holders:
-                        insort(held_title_lieges,
-                               (liege_start, liege_end, 0, title, liege))
+            liege_chars = IntervalTree()
+            for holder_begin, holder_end, title in titles:
+                # if char == 71823 and title == 'c_roma':
+                #     import pdb; pdb.set_trace()
+                lieges = title_lieges[title][holder_begin:holder_end]
+                for liege_begin, liege_end, liege in lieges:
+                    liege_begin = max(liege_begin, holder_begin)
+                    liege_end = min(liege_end, holder_end)
+                    if liege not in title_holders:
+                        liege_chars[liege_begin:liege_end] = 0, liege, title
                         continue
-                    liege_holder_dates = title_holder_dates[liege]
-                    liege_holders = title_holders[liege]
-                    j = bisect(liege_holder_dates, liege_start) - 1
-                    k = bisect_left(liege_holder_dates, liege_end, lo=j)
-                    for l in range(j, k):
-                        liege_holder_start = (liege_start if l == j else
-                                              liege_holder_dates[l])
-                        liege_holder_end = (liege_end if l + 1 == k else
-                                            liege_holder_dates[l + 1])
-                        liege_holder = liege_holders[l]
-                        if liege_holder == char:
+                    liege_holders = title_holders[liege][liege_begin:liege_end]
+                    for begin, end, liege_holder in liege_holders:
+                        begin = max(begin, liege_begin)
+                        end = min(end, liege_end)
+                        if liege == title:
                             liege_holder = 0
-                        insort(held_title_lieges,
-                               (liege_holder_start, liege_holder_end,
-                                liege_holder, title, liege))
-            for i, item1 in enumerate(held_title_lieges):
-                start1, end1, liege1, title1, liege_title1 = item1
-                for item2 in held_title_lieges[i + 1:]:
-                    start2, end2, liege2, title2, liege_title2 = item2
-                    if start1 < end2 and start2 < end1 and liege1 != liege2:
-                        start = max(start1, start2)
-                        end = min(end1, end2)
-                        if prune:
-                            intersection = []
-                            for a, b in dates_to_examine:
-                                if start < b and a < end:
-                                    intersection.append((max(start, a),
-                                                         min(end, b)))
-                            for s, e in intersection:
-                                error = (char, s, e, liege1, title1,
-                                    liege_title1, liege2, title2,
-                                    liege_title2)
-                                liege_consistency_errors.append(error)
+                        elif liege_holder == char:
+                            continue
+                        liege_chars[begin:end] = liege_holder, liege, title
+            prune_tree(liege_chars, date_filter)
+            if liege_chars:
+                liege_chars.split_overlaps()
+                items = defaultdict(
+                    lambda: defaultdict(lambda: defaultdict(list)))
+                for begin, end, (liege_holder, liege, title) in liege_chars:
+                    items[(begin, end)][liege_holder][liege].append(title)
+                for iv, liege_holders in items.items():
+                    if len(liege_holders) > 1:
+                        if (PRUNE_ALL_BUT_REGION and
+                            all(PRUNE_ALL_BUT_REGION not in
+                                title_djls.get(title, ())
+                                for _, ls in liege_holders.items()
+                                for l in ls) and
+                            all(PRUNE_ALL_BUT_REGION not in
+                                title_djls.get(title, ())
+                                for _, ls in liege_holders.items()
+                                for _, ts in ls.items() for t in ts)):
+                            continue
+                        tiers = [max(title_tier(title)
+                                     for _, titles in lieges.items()
+                                     for title in titles)
+                                 for _, lieges in liege_holders.items()]
+                        if tiers.count(max(tiers)) == 1:
+                            which_dict = liege_consistency_unamb
                         else:
-                            error = (char, start, end, liege1, title1,
-                                liege_title1, liege2, title2, liege_title2)
-                            liege_consistency_errors.append(error)
-    if prune:
+                            which_dict = liege_consistency_amb
+                        which_dict[char][iv] = liege_holders
+    if date_filter:
         for title, errors in reversed(title_liege_errors):
-            for i in range(len(errors) - 1, -1, -1):
-                # intersect this interval with the playable intervals,
-                # and update, split, or remove errors[i] as necessary
-                start, end = errors[i]
-                intersection = []
-                for a, b in dates_to_examine:
-                    if start < b and a < end:
-                        intersection.append((max(start, a), min(end, b)))
-                errors[i:i + 1] = intersection
+            prune_tree(errors, date_filter)
             if not errors:
                 title_liege_errors.remove((title, errors))
-            #if title in DEBUG_INSPECT_LIST:
-            #    pprint(title)
-            #    pprint(errors)
         for title, dead_holders in reversed(title_dead_holders):
-            for i in range(len(dead_holders) - 1, -1, -1):
-                start, end = dead_holders[i]
-                intersection = []
-                for a, b in dates_to_examine:
-                    if start < b and a < end:
-                        intersection.append((max(start, a), min(end, b)))
-                dead_holders[i:i + 1] = intersection
+            prune_tree(dead_holders, date_filter)
             if not dead_holders:
                 title_dead_holders.remove((title, dead_holders))
-            # if CHECK_DEAD_HOLDERS and title in DEBUG_INSPECT_LIST:
-            #    pprint(title)
-            #    pprint(dead_holders)
     if LANDED_TITLES_ORDER:
         sort_key = lambda x: landed_titles_index[x[0]]
     else:
         sort_key = lambda x: (x[1][0][0], landed_titles_index[x[0]])
     title_liege_errors.sort(key=sort_key)
+    title_lte_tier.sort(key=sort_key)
     title_dead_holders.sort(key=sort_key)
-    liege_consistency_errors.sort()
+    def title_region(title):
+        try:
+            region = title_djls[title][0]
+        except KeyError:
+            return 'undefined'
+        if region.startswith('e'):
+            if region in ('e_null', 'e_placeholder'):
+                try:
+                    return title_djls[title][1]
+                except:
+                    pass
+            return region
+        return 'titular'
     with (rootpath / 'check_title_history.txt').open('w') as fp:
         print('Liege has no holder:', file=fp)
         if not title_liege_errors:
             print('\t(none)', file=fp)
         prev_region = None
         for title, errors in title_liege_errors:
-            region = title_regions[title]
+            if (PRUNE_ALL_BUT_REGION and
+                PRUNE_ALL_BUT_REGION not in title_djls[title]):
+                continue
+            region = title_region(title)
             if LANDED_TITLES_ORDER and region != prev_region:
                 print('\t# {}'.format(region), file=fp)
             line = '\t{}: '.format(title)
-            line += ', '.join(iv_to_str(*iv) for iv in errors)
+            line += ', '.join(iv_to_str(iv) for iv in sorted(errors))
             print(line, file=fp)
             prev_region = region
+        print('Liege not of higher tier:', file=fp)
+        if not title_lte_tier:
+            print('\t(none)', file=fp)
+        for title, lte_tier in title_lte_tier:
+            line = '\t{}: '.format(title)
+            line += ', '.join(iv_to_str(iv) for iv in sorted(lte_tier))
+            print(line, file=fp)
         if CHECK_DEAD_HOLDERS:
             print('Holder not alive:', file=fp)
             if not title_dead_holders:
                 print('\t(none)', file=fp)
             prev_region = None
             for title, dead_holders in title_dead_holders:
-                region = title_regions[title]
+                if (PRUNE_ALL_BUT_REGION and
+                    PRUNE_ALL_BUT_REGION not in title_djls[title]):
+                    continue
+                region = title_region(title)
                 if LANDED_TITLES_ORDER and region != prev_region:
                     print('\t# {}'.format(region), file=fp)
                 line = '\t{}: '.format(title)
-                line += ', '.join(iv_to_str(*iv) for iv in dead_holders)
+                line += ', '.join(iv_to_str(iv) for iv in sorted(dead_holders))
                 print(line, file=fp)
                 prev_region = region
         if CHECK_LIEGE_CONSISTENCY:
-            print('Liege inconsistency:', file=fp)
-            if not liege_consistency_errors:
+            print('Liege inconsistency (unambiguous):', file=fp)
+            if not liege_consistency_unamb:
                 print('\t(none)', file=fp)
-            for char, start, end, *data in liege_consistency_errors:
-                line = ('\t{}: {}, {} ({}->{}) vs. {} ({}->{})'
-                        .format(char, iv_to_str(start, end), *data))
-                print(line, file=fp)
+            for char, ivs in sorted(liege_consistency_unamb.items()):
+                for iv, liege_holders in sorted(ivs.items()):
+                    print('\t{}, {}:'.format(char, iv_to_str(iv)), file=fp)
+                    for liege_holder, lieges in sorted(liege_holders.items()):
+                        for liege, titles in sorted(lieges.items(),
+                            key=lambda x: landed_titles_index[x[0]]):
+                            print('\t\t{} ({}) <= {}'.format(
+                                liege, liege_holder, ', '.join(sorted(titles,
+                                key=lambda x: landed_titles_index[x]))),
+                                file=fp)
+            print('Liege inconsistency (ambiguous):', file=fp)
+            if not liege_consistency_amb:
+                print('\t(none)', file=fp)
+            for char, ivs in sorted(liege_consistency_amb.items()):
+                for iv, liege_holders in sorted(ivs.items()):
+                    print('\t{}, {}:'.format(char, iv_to_str(iv)), file=fp)
+                    for liege_holder, lieges in sorted(liege_holders.items()):
+                        for liege, titles in sorted(lieges.items(),
+                            key=lambda x: landed_titles_index[x[0]]):
+                            print('\t\t{} ({}) <= {}'.format(
+                                liege, liege_holder, ', '.join(sorted(titles,
+                                key=lambda x: landed_titles_index[x]))),
+                                file=fp)
 
 if __name__ == '__main__':
     main()

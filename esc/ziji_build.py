@@ -20,8 +20,7 @@ import csv
 import pathlib
 import re
 import sys
-from ck2parser import (rootpath, vanilladir, csv_rows, files,
-                       get_max_provinces, get_religions,
+from ck2parser import (rootpath, vanilladir, csv_rows, files, get_religions,
                        get_province_id_name_map, is_codename, Date, String,
                        SimpleParser)
 from print_time import print_time
@@ -125,6 +124,9 @@ def get_unlanded_titles(parser):
         for _, tree in parser.parse_files(glob):
             ul_titles.extend(n.val for n, v in tree)
     return ul_titles
+
+def get_max_provinces(parser):
+    return next(parser.parse_files('map/default.map'))[1]['max_provinces'].val
 
 @print_time
 def main():
