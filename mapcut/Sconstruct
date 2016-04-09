@@ -3,7 +3,7 @@
 env = Environment()
 env.Append(CXXFLAGS="-Wall -Wextra -Wno-unused-function -Wno-unused-parameter -g -O2 --std=c++11")
 
-sources = ["main.cc", "token.cc", "lexer.cc", "pdx.cc", "default_map.cc", "definitions_table.cc"]
+sources = ["main.cc", "token.cc", "lexer.cc", "pdx.cc", "default_map.cc", "definitions_table.cc", "provsetup.cc"]
 sources += env.CXXFile('scanner.ll') # Our `flex` rules
 
 env.Program('mapcut', sources, LIBS=["boost_filesystem", "boost_system"])

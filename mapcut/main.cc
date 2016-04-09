@@ -1,6 +1,7 @@
 
 #include "default_map.h"
 #include "definitions_table.h"
+#include "provsetup.h"
 #include "pdx.h"
 #include "error.h"
 
@@ -20,6 +21,7 @@ const path VROOT_DIR("D:/SteamLibrary/steamapps/common/Crusader Kings II");
 const path ROOT_DIR("D:/g/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("D:/g/MiniSWMH/MiniSWMH");
 const path TITLES_PATH("common/landed_titles/swmh_landed_titles.txt"); // only uses this landed_titles file
+const path PROVSETUP_FILE("00_province_setup.txt"); // only uses this prov_setup file
 
 typedef std::vector<std::string> strvec_t;
 typedef std::unordered_map<std::string, uint> str2id_map_t;
@@ -69,6 +71,7 @@ int main(int argc, char** argv) {
     try {
         default_map dm(ROOT_DIR);
         definitions_table def_tbl(dm);
+        provsetup ps_tbl(ROOT_DIR / "common" / "province_setup" / PROVSETUP_FILE);
 
         str2id_map_t county_to_id_map;
         fill_county_to_id_map(dm, def_tbl, county_to_id_map);
@@ -112,13 +115,27 @@ int main(int argc, char** argv) {
             /* blank the province name in definitions to turn it into a wasteland */
             def_tbl.row_vec[id-1].name = "";
 
+            /* blank the province's county title in provsetup to turn into a wasteland */
+            std::string& title = ps_tbl.row_vec[id-1].title;
+
+            if (title != t)
+                throw va_error("province_setup: province %u assigned as %s but it should be %s",
+                               id, title.c_str(), t.c_str());
+
+            title = "";
+
             ++g_stats.n_counties_cut;
         }
 
-        path out_def_path = OUT_ROOT_DIR / "map";
+        path out_def_path(OUT_ROOT_DIR / "map");
         create_directories(out_def_path);
         out_def_path /= dm.definitions_path();
         def_tbl.write(out_def_path);
+
+        path out_ps_path(OUT_ROOT_DIR / "common" / "province_setup");
+        create_directories(out_ps_path);
+        out_ps_path /= PROVSETUP_FILE;
+        ps_tbl.write(out_ps_path);
 
         blank_title_history(del_titles);
 
