@@ -102,15 +102,13 @@ def mutate_cb(cb_pair):
 @print_time
 def main():
     parser = FullParser()
-    parser.tab_width = 8
-    parser.chars_per_line = 125
     parser.fq_keys.append('has_dlc')
     parser.no_fold_keys.extend(['factor', 'value'])
     parser.newlines_to_depth = 1
     for path, tree in parser.parse_files('common/cb_types/*', basedir=MODPATH):
-        for cb_pair in tree:
-            mutate_cb(cb_pair)
-        with path.open('w', encoding='cp1252', newline='\n') as f:
+        # for cb_pair in tree:
+        #     mutate_cb(cb_pair)
+        with path.open('w', encoding='cp1252', newline='\r\n') as f:
             f.write(tree.str(parser))
 
 if __name__ == '__main__':

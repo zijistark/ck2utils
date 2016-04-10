@@ -513,6 +513,7 @@ class Obj(Stringifiable):
             return False
         if self.contents and isinstance(self.contents[0], Pair):
             return (len(self) == 1 and not self.contents[0].has_comments and
+                    self.indent > parser.no_fold_to_depth and
                     not self.contents[0].key.val in parser.no_fold_keys)
         return all(isinstance(x, Commented) and not x.has_comments
                    for x in self)
@@ -556,9 +557,8 @@ class Obj(Stringifiable):
                 s += item_s
                 nl += item_s.count('\n')
                 if item.indent <= parser.newlines_to_depth:
-                    if (i < len(self) - 1 and isinstance(item.value, Obj) or
-                        (i > 0 and not isinstance(item.value, Obj) and
-                         isinstance(self.contents[i + 1].value, Obj))):
+                    if (i < len(self) - 1 and (isinstance(item.value, Obj) or
+                        isinstance(self.contents[i + 1].value, Obj))):
                         s += '\n'
                         nl += 1
             s += self.indent * '\t'
@@ -664,6 +664,7 @@ class SimpleParser:
         self.chars_per_line = 125
         self.fq_keys = []
         self.no_fold_keys = []
+        self.no_fold_to_depth = -1
         self.newlines_to_depth = -1
         self.cachedir = cachedir / self.__class__.__name__
         try:
@@ -673,7 +674,8 @@ class SimpleParser:
         self.setup_parser()
 
     def __del__(self):
-        print('{} hits, {} misses'.format(self.cache_hits, self.cache_misses))
+        print('{}: {} hits, {} misses'.format(
+              self.__class__.__name__, self.cache_hits, self.cache_misses))
 
     def setup_parser(self):
         unarg = lambda f: lambda x: f(*x)
@@ -742,8 +744,8 @@ class SimpleParser:
                     if entry[0] == 'R':
                         next(status_iter)
             self.repos[repo_path] = latest_commit, dirty_paths
-            print('Processed repo in {:g} s'.format(time.time() -
-                                                    repo_init_start))
+            print('Repo {} processed in {:g} s'.format(
+                  repo_path.name, time.time() - repo_init_start))
         repo_cachedir = self.cachedir / repo_path.name
         path = path.relative_to(repo_path)
         if not any(p == path or p in path.parents for p in dirty_paths):
@@ -820,7 +822,7 @@ class FullParser(SimpleParser):
         end = nl + skip(finished)
         comment = toktype('comment')
         commented = lambda x: (many(nl + comment) + nl + x + maybe(comment))
-        unquoted_string = (commented(toktype( 'unquoted_string')) >>
+        unquoted_string = (commented(toktype('unquoted_string')) >>
                            unarg(String))
         quoted_string = (commented(toktype('quoted_string') >> unquote) >>
                          unarg(String))

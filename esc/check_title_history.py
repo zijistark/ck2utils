@@ -3,8 +3,8 @@
 from collections import defaultdict, namedtuple
 from operator import attrgetter
 from intervaltree import Interval, IntervalTree
-from ck2parser import (rootpath, files, is_codename, Date as ASTDate,
-                       SimpleParser, FullParser)
+from ck2parser import (rootpath, vanilladir, files, is_codename,
+                       Date as ASTDate, SimpleParser, FullParser)
 from print_time import print_time
 
 CHECK_DEAD_HOLDERS = True # slow; most useful with PRUNE_UNEXECUTED_HISTORY
@@ -18,8 +18,10 @@ PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
 PRUNE_ALL_BUT_DATE = None # overrides above three
 # PRUNE_ALL_BUT_DATE = 1066, 9, 15 # overrides above three
 
-PRUNE_ALL_BUT_REGION = 'e_britannia'
-# PRUNE_ALL_BUT_REGION = None
+# PRUNE_ALL_BUT_REGION = 'e_britannia'
+PRUNE_ALL_BUT_REGION = None
+
+FORMAT_TITLE_HISTORY = True
 
 
 class Date(namedtuple('Date', ['y', 'm', 'd'])):
@@ -90,6 +92,10 @@ def main():
     intervaltree_patch_issue_41()
     simple_parser = SimpleParser()
     simple_parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
+    if FORMAT_TITLE_HISTORY:
+        full_parser = FullParser()
+        full_parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
+        full_parser.no_fold_to_depth = 0
     landed_titles_index = {'0': -1}
     title_djls = {}
     current_index = 0
@@ -145,11 +151,21 @@ def main():
                                   'death' in v2.dictionary)), Date.LATEST)
                 if birth <= death:
                     char_life[n.val] = birth, death
-    for path, tree in simple_parser.parse_files('history/titles/*'):
+    history_parser = full_parser if FORMAT_TITLE_HISTORY else simple_parser
+    for path, tree in history_parser.parse_files('history/titles/*'):
         title = path.stem
         tier = title_tier(title)
         if not len(tree) > 0 or title not in landed_titles_index:
+            if (title in landed_titles_index and
+                not (vanilladir / 'history/titles' / path.name).exists()):
+                if FORMAT_TITLE_HISTORY:
+                    path.unlink()
+                else:
+                    print('unnecessary blank? {}'.format(path.name))
             continue
+        if FORMAT_TITLE_HISTORY:
+            with path.open('w', encoding='cp1252', newline='\r\n') as f:
+                f.write(tree.str(history_parser))
         holders = [(Date.EARLIEST, 0)]
         lieges = [(Date.EARLIEST, '0')]
         for n, v in sorted(tree, key=attrgetter('key.val')):
@@ -318,7 +334,8 @@ def main():
                 PRUNE_ALL_BUT_REGION not in title_djls[title]):
                 continue
             region = title_region(title)
-            if LANDED_TITLES_ORDER and region != prev_region:
+            if (not PRUNE_ALL_BUT_REGION and LANDED_TITLES_ORDER and
+                region != prev_region):
                 print('\t# {}'.format(region), file=fp)
             line = '\t{}: '.format(title)
             line += ', '.join(iv_to_str(iv) for iv in sorted(errors))
@@ -341,7 +358,8 @@ def main():
                     PRUNE_ALL_BUT_REGION not in title_djls[title]):
                     continue
                 region = title_region(title)
-                if LANDED_TITLES_ORDER and region != prev_region:
+                if (not PRUNE_ALL_BUT_REGION and LANDED_TITLES_ORDER and
+                    region != prev_region):
                     print('\t# {}'.format(region), file=fp)
                 line = '\t{}: '.format(title)
                 line += ', '.join(iv_to_str(iv) for iv in sorted(dead_holders))
