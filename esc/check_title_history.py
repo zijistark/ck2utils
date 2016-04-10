@@ -70,7 +70,7 @@ def iv_to_str(iv, end=None):
     if end is not None:
         iv = iv, end
     if iv[1] == Date.LATEST:
-         s = '{} on'.format(iv[0])
+        s = '{} on'.format(iv[0])
     elif iv[1] == iv[0].get_next_day():
         s = str(iv[0])
     else:
@@ -163,28 +163,35 @@ def main():
                 else:
                     print('unnecessary blank? {}'.format(path.name))
             continue
-        if FORMAT_TITLE_HISTORY:
-            with path.open('w', encoding='cp1252', newline='\r\n') as f:
-                f.write(tree.str(history_parser))
+        # if FORMAT_TITLE_HISTORY:
+        #     with path.open('w', encoding='cp1252', newline='\r\n') as f:
+        #         f.write(tree.str(history_parser))
         holders = [(Date.EARLIEST, 0)]
         lieges = [(Date.EARLIEST, '0')]
         for n, v in sorted(tree, key=attrgetter('key.val')):
             date = Date(*n.val)
-            for n2, v2 in v:
-                if n2.val == 'holder':
-                    holder = 0 if v2.val == '-' else int(v2.val)
+            for p2 in v:
+                if p2.key.val == 'holder':
+                    if p2.value.val == '-':
+                        p2.value = Number(0, p2.value)
+                    holder = p2.value.val
                     if holders[-1][1] != holder:
                         if holders[-1][0] == date:
                             holders[-1] = date, holder
                         else:
                             holders.append((date, holder))
-                elif n2.val == 'liege':
-                    liege = '0' if v2.val in (0, '-', title) else v2.val
+                elif p2.key.val == 'liege':
+                    if p2.value.val in (0, '-', title):
+                        p2.value = Number(0, p2.value)
+                    liege = str(p2.value.val)
                     if lieges[-1][1] != liege:
                         if lieges[-1][0] == date:
                             lieges[-1] = date, liege
                         else:
                             lieges.append((date, liege))
+        if FORMAT_TITLE_HISTORY:
+            with path.open('w', encoding='cp1252', newline='\r\n') as f:
+                f.write(tree.str(history_parser))
         dead_holders = []
         # if title == 'c_ostfriesland':
         #     import pdb; pdb.set_trace()

@@ -82,7 +82,7 @@ def main():
                 except KeyError:
                     pass
                 v.ker.post_comment = None
-                _, (nl, _) = v.inline_str(0)
+                _, (nl, _) = v.inline_str(0, full_parser)
                 if nl >= 36:
                     comment = 'end ' + n.val
                     prepend_post_comment(v.ker, comment)
@@ -157,9 +157,9 @@ def main():
                     post_barony_pair = v.ker
                 if PRUNE_BARONIES:
                     for barony in reversed(baronies_to_remove):
-                        b_is, _ = barony.inline_str(0)
+                        b_is, _ = barony.inline_str(0, full_parser)
                         comments = [Comment(s) for s in b_is.split('\n')]
-                        post_barony_pair.pre_comments[0:0] = comments
+                        post_barony_pair.pre_comments[:0] = comments
                 is_def_children = True
             else:
                 is_def_children = False

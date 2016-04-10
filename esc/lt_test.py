@@ -49,7 +49,7 @@ def exclude(n, v):
 
 # count = 0
 
-def recurse(tree):
+def recurse(tree, parser):
     # global count
     for n, v in tree:
         if is_codename(n):
@@ -62,7 +62,8 @@ def recurse(tree):
                 # print(count, n2, n1, n, level)
                 if not exclude(n2, v2):
                     # try:
-                    results.add(p2.inline_str(0).split('\n', 1)[0])
+                    results.add(
+                        p2.inline_str(0, parser, 0)[0].split('\n', 1)[0])
                     # print(parser.to_string((n2, v2)))
                     # except TypeError:
                         # print(n2, v2)

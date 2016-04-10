@@ -97,7 +97,6 @@ def mutate_cb(cb_pair):
     effect = Pair.from_kv(effect_name, 'yes')
     if not on_success_posttitle.value.has_pair(effect_name, 'yes'):
         on_success_posttitle.value.contents.append(effect)
-    cb_pair.indent = cb_pair.indent
 
 @print_time
 def main():
