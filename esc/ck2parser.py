@@ -229,7 +229,7 @@ class Commented(Stringifiable):
             self.post_comment = Comment(args[2]) if args[2] else None
         elif len(args) == 2:
             self.pre_comments = args[1].pre_comments
-            if isinstance(str, args[0]):
+            if isinstance(args[0], str):
                 self.val = self.str_to_val(args[0])
             else:
                 self.val = args[0]
