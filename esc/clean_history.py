@@ -11,7 +11,8 @@ from print_time import print_time
 @print_time
 def main():
     parser = SimpleParser()
-    parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
+    modpath = rootpath / 'SWMH-BETA/SWMH'
+    parser.moddirs = [modpath]
     # scan all named provinces in definitions.csv for province history
     default_map = next(parser.parse_files('map/default.map'))[1]
     defs_name = default_map['definitions'].val
@@ -63,7 +64,7 @@ def main():
 
     # scan all province history (in mod):
     # if it doesn't match a line in definitions.csv, then it should be deleted.
-    for path in files('history/provinces/*', basedir=parser.moddirs[0]):
+    for path in files('history/provinces/*', basedir=modpath):
         num, name = path.stem.split(' - ')
         num = int(num)
         if num not in prov_num_name_map or prov_num_name_map[num] != name:
@@ -81,7 +82,7 @@ def main():
     for _, tree in parser.parse_files('common/landed_titles/*'):
         recurse(tree)
     # delete all title history in mod not matching a title definition
-    for path in files('history/titles/*', basedir=parser.moddirs[0]):
+    for path in files('history/titles/*', basedir=modpath):
         title = path.stem
         if title not in titles:
             print('Deleting ' + str(path))
@@ -89,7 +90,7 @@ def main():
     # then, for all visible vanilla title history,
     # if it matches a title definition copy it
     # if it doesn't, override it with a blank file
-    for path in files('history/titles/*', parser.moddirs[0]):
+    for path in files('history/titles/*', parser.moddirs):
         title = path.stem
         if vanilladir in path.parents:
             new_path = modpath / path.relative_to(vanilladir)

@@ -17,7 +17,7 @@ VANILLA_HISTORY_WARN = True
 results = {True: collections.defaultdict(list),
            False: collections.defaultdict(list)}
 
-def check_title(v, path, titles, lhs=False, line=None):
+def check_title(parser, v, path, titles, lhs=False, line=None):
     if isinstance(v, str):
         v_str = v
     else:
@@ -39,14 +39,14 @@ def check_titles(parser, path, titles):
             for p in tree:
                 n, v = p
                 v_is_obj = isinstance(v, Obj)
-                check_title(n, path, titles, v_is_obj, p)
+                check_title(parser, n, path, titles, v_is_obj, p)
                 if v_is_obj:
                     recurse(v)
                 else:
-                    check_title(v, path, titles, line=p)
+                    check_title(parser, v, path, titles, line=p)
         else:
             for v in tree:
-                check_title(v, path, titles, line=v)
+                check_title(parser, v, path, titles, line=v)
 
     recurse(parser.parse_file(path, errors='replace'))
 
@@ -54,9 +54,7 @@ def check_regions(parser, titles, titles_de_jure, duchies_de_jure):
     bad_titles = []
     missing_duchies = list(duchies_de_jure)
     region_duchies = collections.defaultdict(list)
-
-
-    tree = next(parser.parse_files('map/geographical_region.txt'))[1]
+    path, tree = next(parser.parse_files('map/geographical_region.txt'))
     for n, v in tree:
         world = n.val.startswith('world_')
         for n2, v2 in v:
@@ -71,7 +69,7 @@ def check_regions(parser, titles, titles_de_jure, duchies_de_jure):
             elif n2.val == 'duchies':
                 for v3 in v2:
                     if is_codename(v3.val):
-                        check_title(v3, path, titles, line=v3)
+                        check_title(parser, v3, path, titles, line=v3)
                         region_duchies[n.val].append(v3.val)
                         if v3.val in titles and v3.val not in titles_de_jure:
                             bad_titles.append(v3.val)
@@ -141,9 +139,9 @@ def main():
     for path, tree in parser.parse_files('history/titles/*.txt',
                                          errors='replace', memcache=True):
         if tree.contents:
-            good = check_title(path.stem, path, titles)
+            good = check_title(parser, path.stem, path, titles)
             if (VANILLA_HISTORY_WARN and not good and
-                not any(d in path.parents for d in modpaths)):
+                not any(d in path.parents for d in parser.moddirs)):
                 # newpath = modpath / 'history/titles' / path.name
                 # newpath.open('w').close()
                 print('Should override {} with blank file'.format(
@@ -168,7 +166,7 @@ def main():
         'common/achievements.txt'
         ]
     for glob in globs:
-        for path in files(glob, *modpaths):
+        for path in files(glob, parser.moddirs):
             check_titles(parser, path, titles)
     with (rootpath / 'check_titles.txt').open('w', encoding='cp1252') as fp:
         if bad_region_titles:
@@ -186,7 +184,7 @@ def main():
                     print('Undefined references:', file=fp)
             for path, titles in sorted(results[lhs].items()):
                 if titles:
-                    for modpath in modpaths:
+                    for modpath in parser.moddirs:
                         if modpath in path.parents:
                             rel_path = '<mod>' / path.relative_to(modpath)
                             break

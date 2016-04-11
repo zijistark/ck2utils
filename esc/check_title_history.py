@@ -3,8 +3,8 @@
 from collections import defaultdict, namedtuple
 from operator import attrgetter
 from intervaltree import Interval, IntervalTree
-from ck2parser import (rootpath, vanilladir, files, is_codename,
-                       Date as ASTDate, SimpleParser, FullParser)
+from ck2parser import (rootpath, vanilladir, is_codename, Date as ASTDate,
+                       SimpleParser, FullParser)
 from print_time import print_time
 
 CHECK_DEAD_HOLDERS = True # slow; most useful with PRUNE_UNEXECUTED_HISTORY
@@ -63,8 +63,8 @@ class Title:
             ('conquest_culture', 0),
             ('name', ''),
             ('adjective', ''),
-            ('suzerain', 0),
-        ])}
+            ('suzerain', 0)
+        ]}
         self.history = defaultdict(list)
 
 # for monkey patching Node.pop_greatest_child to fix issue 41
@@ -131,7 +131,7 @@ def main():
         nonlocal current_index
         for n, v in tree:
             if is_codename(n.val):
-                titles[n.val] = Title(stack[-1])
+                titles[n.val] = Title(stack[-1] if stack else 0)
                 landed_titles_index[n.val] = current_index
                 current_index += 1
                 stack.append(n.val)
