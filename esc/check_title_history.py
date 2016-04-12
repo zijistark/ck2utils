@@ -10,13 +10,14 @@ from print_time import print_time
 CHECK_DEAD_HOLDERS = True # slow; most useful with PRUNE_UNEXECUTED_HISTORY
 CHECK_LIEGE_CONSISTENCY = True
 
-LANDED_TITLES_ORDER = True # if false, date order
+LANDED_TITLES_ORDER = False # if false, date order
 
-PRUNE_UNEXECUTED_HISTORY = True # prune all after last playable start
-PRUNE_IMPOSSIBLE_STARTS = False # implies PRUNE_UNEXECUTED_HISTORY
-PRUNE_NONBOOKMARK_STARTS = False # implies PRUNE_IMPOSSIBLE_STARTS
-PRUNE_ALL_BUT_DATE = None # overrides above three
-# PRUNE_ALL_BUT_DATE = 1066, 9, 15 # overrides above three
+PRUNE_UNEXECUTED_HISTORY = False # prune all after last playable start
+PRUNE_IMPOSSIBLE_STARTS = False # implies prev
+PRUNE_NONBOOKMARK_STARTS = False # implies prev
+PRUNE_NONERA_STARTS = True # implies prev
+
+PRUNE_ALL_BUT_DATES = [] # overrides above
 
 # PRUNE_ALL_BUT_REGION = 'e_britannia'
 PRUNE_ALL_BUT_REGION = None
@@ -141,20 +142,23 @@ def main():
     for _, tree in simple_parser.parse_files('common/landed_titles/*'):
         recurse(tree)
     date_filter = IntervalTree()
-    if PRUNE_ALL_BUT_DATE is not None:
-        date = Date(*PRUNE_ALL_BUT_DATE)
-        date_filter.addi(Date.EARLIEST, date)
-        date_filter.addi(date.get_next_day(), Date.LATEST)
+    if PRUNE_ALL_BUT_DATES:
+        dates = [Date(*d) for d in PRUNE_ALL_BUT_DATES]
+        dates.append(Date.LATEST)
+        date_filter.addi(Date.EARLIEST, dates[0])
+        for i in range(len(dates) - 1):
+            date_filter.addi(dates[i].get_next_day(), dates[i + 1])
     elif (PRUNE_UNEXECUTED_HISTORY or PRUNE_IMPOSSIBLE_STARTS or
-        PRUNE_NONBOOKMARK_STARTS):
+        PRUNE_NONBOOKMARK_STARTS or PRUNE_NONERA_STARTS):
         date_filter.addi(Date.EARLIEST, Date.LATEST)
         last_start_date = Date.EARLIEST
         for _, tree in simple_parser.parse_files('common/bookmarks/*'):
             for _, v in tree:
                 date = Date(*v['date'].val)
-                date_filter.chop(date, date.get_next_day())
+                if not PRUNE_NONERA_STARTS or v.has_pair('era', 'yes'):
+                    date_filter.chop(date, date.get_next_day())
                 last_start_date = max(date, last_start_date)
-        if not PRUNE_NONBOOKMARK_STARTS:
+        if not PRUNE_NONBOOKMARK_STARTS and not PRUNE_NONERA_STARTS:
             defines = next(simple_parser.parse_files('common/defines.txt'))[1]
             first = Date(*defines['start_date'].val)
             last = Date(*defines['last_start_date'].val)
@@ -269,7 +273,7 @@ def main():
     title_liege_errors = []
     for title, lieges in title_lieges.items():
         errors = []
-        for liege_begin, liege_end, liege in lieges:
+        for liege_begin, liege_end, liege in sorted(lieges):
             if liege == 0:
                 continue
             if liege not in title_holders:
@@ -353,7 +357,7 @@ def main():
     if LANDED_TITLES_ORDER:
         sort_key = lambda x: landed_titles_index[x[0]]
     else:
-        sort_key = lambda x: (x[1][0][0], landed_titles_index[x[0]])
+        sort_key = lambda x: (x[1].begin(), landed_titles_index[x[0]])
     title_liege_errors.sort(key=sort_key)
     title_lte_tier.sort(key=sort_key)
     title_dead_holders.sort(key=sort_key)
