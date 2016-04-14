@@ -7,10 +7,9 @@ from ck2parser import (rootpath, vanilladir, is_codename, Date as ASTDate,
                        SimpleParser, FullParser)
 from print_time import print_time
 
-CHECK_DEAD_HOLDERS = True # slow; most useful with PRUNE_UNEXECUTED_HISTORY
 CHECK_LIEGE_CONSISTENCY = True
 
-LANDED_TITLES_ORDER = False # if false, date order
+LANDED_TITLES_ORDER = True # if false, date order
 
 PRUNE_UNEXECUTED_HISTORY = False # prune all after last playable start
 PRUNE_IMPOSSIBLE_STARTS = False # implies prev
@@ -19,11 +18,10 @@ PRUNE_NONERA_STARTS = True # implies prev
 
 PRUNE_ALL_BUT_DATES = [] # overrides above
 
-# PRUNE_ALL_BUT_REGION = 'e_britannia'
-PRUNE_ALL_BUT_REGION = None
+PRUNE_ALL_BUT_REGIONS = []
 
 FORMAT_TITLE_HISTORY = False
-CLEANUP_TITLE_HISTORY = False # overrides previous
+CLEANUP_TITLE_HISTORY = False # implies previous
 
 
 class Date(namedtuple('Date', ['y', 'm', 'd'])):
@@ -51,10 +49,11 @@ class Title:
     #  'pentarch', 'set_tribute_suzerain', 'clear_tribute_suzerain',
     #  'conquest_culture', 'effect', 'clr_global_flag, 'reset_adjective,
     #  'reset_name, 'name, 'adjective']
-    def __init__(self, djl):
+    def __init__(self, name, djl):
+        self.name = name
         self.attr = {k: [(Date.EARLIEST, v)] for k, v in [
             ('holder', 0),
-            ('liege', 0),
+            ('liege', djl if name.startswith('b') else 0),
             ('de_jure_liege', djl),
             ('vice_royalty', 'no'),
             ('historical_nomad', 'no'),
@@ -95,7 +94,11 @@ def intervaltree_patch_issue_41():
 def iv_to_str(iv, end=None):
     if end is not None:
         iv = iv, end
-    if iv[1] == Date.LATEST:
+    if iv[0] == Date.EARLIEST and iv[1] == Date.LATEST:
+        s = 'always'
+    elif iv[0] == Date.EARLIEST:
+        s = 'till {}'.format(iv[1])
+    elif iv[1] == Date.LATEST:
         s = '{} on'.format(iv[0])
     elif iv[1] == iv[0].get_next_day():
         s = str(iv[0])
@@ -132,7 +135,7 @@ def main():
         nonlocal current_index
         for n, v in tree:
             if is_codename(n.val):
-                titles[n.val] = Title(stack[-1] if stack else 0)
+                titles[n.val] = Title(n.val, stack[-1] if stack else 0)
                 landed_titles_index[n.val] = current_index
                 current_index += 1
                 stack.append(n.val)
@@ -173,17 +176,17 @@ def main():
     char_titles = defaultdict(IntervalTree)
     char_life = {}
     title_dead_holders = []
-    if CHECK_DEAD_HOLDERS:
-        for _, tree in simple_parser.parse_files('history/characters/*'):
-            for n, v in tree:
-                birth = next((Date(*n2.val) for n2, v2 in v
-                              if (isinstance(n2, ASTDate) and
-                                  'birth' in v2.dictionary)), Date.LATEST)
-                death = next((Date(*n2.val) for n2, v2 in v
-                              if (isinstance(n2, ASTDate) and
-                                  'death' in v2.dictionary)), Date.LATEST)
-                if birth <= death:
-                    char_life[n.val] = birth, death
+    title_county_unheld = []
+    for _, tree in simple_parser.parse_files('history/characters/*'):
+        for n, v in tree:
+            birth = next((Date(*n2.val) for n2, v2 in v
+                          if (isinstance(n2, ASTDate) and
+                              'birth' in v2.dictionary)), Date.LATEST)
+            death = next((Date(*n2.val) for n2, v2 in v
+                          if (isinstance(n2, ASTDate) and
+                              'death' in v2.dictionary)), Date.LATEST)
+            if birth <= death:
+                char_life[n.val] = birth, death
     for path, tree in history_parser.parse_files('history/titles/*'):
         title = path.stem
         tier = title_tier(title)
@@ -234,15 +237,15 @@ def main():
                 elif attr_vals[-1][1] != value:
                     attr_vals.append((date, value))
         dead_holders = []
-        # if title == 'c_ostfriesland':
-        #     import pdb; pdb.set_trace()
+        county_unheld = []
+        #if title == 'c_ely': import pdb; pdb.set_trace()
         holders = titles[title].attr['holder']
         for i, (begin, holder) in enumerate(holders):
             try:
                 end = holders[i + 1][0]
             except IndexError:
                 end = Date.LATEST
-            if CHECK_DEAD_HOLDERS and holder != 0:
+            if holder != 0:
                 birth, death = char_life.get(holder,
                                              (Date.LATEST, Date.LATEST))
                 if begin < birth or death < end:
@@ -252,6 +255,11 @@ def main():
                         dead_holders[-1] = dead_holders[-1][0], error_end
                     else:
                         dead_holders.append((error_begin, error_end))
+            elif title.startswith('c'):
+                if county_unheld and county_unheld[-1][1] == begin:
+                    county_unheld[-1] = county_unheld[-1][0], end
+                else:
+                    county_unheld.append((begin, end))
             title_holders[title][begin:end] = holder
             if holder != 0:
                 char_titles[holder][begin:end] = title
@@ -270,11 +278,17 @@ def main():
         if dead_holders:
             dead_holders = IntervalTree.from_tuples(dead_holders)
             title_dead_holders.append((title, dead_holders))
+        if county_unheld:
+            county_unheld = IntervalTree.from_tuples(county_unheld)
+            title_county_unheld.append((title, county_unheld))
+    # possible todo: look for dead lieges,
+    # even though redundant with dead holders
     title_liege_errors = []
     for title, lieges in title_lieges.items():
         errors = []
         for liege_begin, liege_end, liege in sorted(lieges):
-            if liege == 0:
+            # counties are always held by someone
+            if liege == 0 or liege.startswith('c'):
                 continue
             if liege not in title_holders:
                 title_holders[liege][Date.EARLIEST:Date.LATEST] = 0
@@ -287,12 +301,9 @@ def main():
                         errors[-1] = errors[-1][0], end
                     else:
                         errors.append((begin, end))
-        # not an error if title is also unheld
         if errors:
             errors = IntervalTree.from_tuples(errors)
-            prune_tree(errors, title_holders[title], lambda x: x.data == 0)
-            if errors:
-                title_liege_errors.append((title, errors))
+            title_liege_errors.append((title, errors))
     if CHECK_LIEGE_CONSISTENCY:
         liege_consistency_unamb = defaultdict(dict)
         liege_consistency_amb = defaultdict(dict)
@@ -326,15 +337,15 @@ def main():
                     items[(begin, end)][liege_holder][liege].append(title)
                 for iv, liege_holders in items.items():
                     if len(liege_holders) > 1:
-                        if (PRUNE_ALL_BUT_REGION and
-                            all(PRUNE_ALL_BUT_REGION not in
-                                title_djls.get(title, ())
+                        if (PRUNE_ALL_BUT_REGIONS and
+                            all(region not in title_djls.get(title, ())
                                 for _, ls in liege_holders.items()
-                                for l in ls) and
-                            all(PRUNE_ALL_BUT_REGION not in
-                                title_djls.get(title, ())
+                                for l in ls
+                                for region in PRUNE_ALL_BUT_REGIONS) and
+                            all(region not in title_djls.get(title, ())
                                 for _, ls in liege_holders.items()
-                                for _, ts in ls.items() for t in ts)):
+                                for _, ts in ls.items() for t in ts
+                                for region in PRUNE_ALL_BUT_REGIONS)):
                             continue
                         tiers = [max(title_tier(title)
                                      for _, titles in lieges.items()
@@ -350,6 +361,10 @@ def main():
             prune_tree(errors, date_filter)
             if not errors:
                 title_liege_errors.remove((title, errors))
+        for title, errors in reversed(title_county_unheld):
+            prune_tree(errors, date_filter)
+            if not errors:
+                title_county_unheld.remove((title, errors))
         for title, dead_holders in reversed(title_dead_holders):
             prune_tree(dead_holders, date_filter)
             if not dead_holders:
@@ -359,6 +374,7 @@ def main():
     else:
         sort_key = lambda x: (x[1].begin(), landed_titles_index[x[0]])
     title_liege_errors.sort(key=sort_key)
+    title_county_unheld.sort(key=sort_key)
     title_lte_tier.sort(key=sort_key)
     title_dead_holders.sort(key=sort_key)
     if CLEANUP_TITLE_HISTORY:
@@ -382,11 +398,29 @@ def main():
             print('\t(none)', file=fp)
         prev_region = None
         for title, errors in title_liege_errors:
-            if (PRUNE_ALL_BUT_REGION and
-                PRUNE_ALL_BUT_REGION not in title_djls[title]):
+            if (PRUNE_ALL_BUT_REGIONS and
+                all(region not in title_djls[title]
+                    for region in PRUNE_ALL_BUT_REGIONS)):
                 continue
             region = title_region(title)
-            if (not PRUNE_ALL_BUT_REGION and LANDED_TITLES_ORDER and
+            if (not PRUNE_ALL_BUT_REGIONS and LANDED_TITLES_ORDER and
+                region != prev_region):
+                print('\t# {}'.format(region), file=fp)
+            line = '\t{}: '.format(title)
+            line += ', '.join(iv_to_str(iv) for iv in sorted(errors))
+            print(line, file=fp)
+            prev_region = region
+        print('County has no holder:', file=fp)
+        if not title_county_unheld:
+            print('\t(none)', file=fp)
+        prev_region = None
+        for title, errors in title_county_unheld:
+            if (PRUNE_ALL_BUT_REGIONS and
+                all(region not in title_djls[title]
+                    for region in PRUNE_ALL_BUT_REGIONS)):
+                continue
+            region = title_region(title)
+            if (not PRUNE_ALL_BUT_REGIONS and LANDED_TITLES_ORDER and
                 region != prev_region):
                 print('\t# {}'.format(region), file=fp)
             line = '\t{}: '.format(title)
@@ -400,23 +434,23 @@ def main():
             line = '\t{}: '.format(title)
             line += ', '.join(iv_to_str(iv) for iv in sorted(lte_tier))
             print(line, file=fp)
-        if CHECK_DEAD_HOLDERS:
-            print('Holder not alive:', file=fp)
-            if not title_dead_holders:
-                print('\t(none)', file=fp)
-            prev_region = None
-            for title, dead_holders in title_dead_holders:
-                if (PRUNE_ALL_BUT_REGION and
-                    PRUNE_ALL_BUT_REGION not in title_djls[title]):
-                    continue
-                region = title_region(title)
-                if (not PRUNE_ALL_BUT_REGION and LANDED_TITLES_ORDER and
-                    region != prev_region):
-                    print('\t# {}'.format(region), file=fp)
-                line = '\t{}: '.format(title)
-                line += ', '.join(iv_to_str(iv) for iv in sorted(dead_holders))
-                print(line, file=fp)
-                prev_region = region
+        print('Holder not alive:', file=fp)
+        if not title_dead_holders:
+            print('\t(none)', file=fp)
+        prev_region = None
+        for title, dead_holders in title_dead_holders:
+            if (PRUNE_ALL_BUT_REGIONS and
+                all(region not in title_djls[title]
+                    for region in PRUNE_ALL_BUT_REGIONS)):
+                continue
+            region = title_region(title)
+            if (not PRUNE_ALL_BUT_REGIONS and LANDED_TITLES_ORDER and
+                region != prev_region):
+                print('\t# {}'.format(region), file=fp)
+            line = '\t{}: '.format(title)
+            line += ', '.join(iv_to_str(iv) for iv in sorted(dead_holders))
+            print(line, file=fp)
+            prev_region = region
         if CHECK_LIEGE_CONSISTENCY:
             print('Liege inconsistency (unambiguous):', file=fp)
             if not liege_consistency_unamb:
