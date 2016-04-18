@@ -3,8 +3,9 @@
 from collections import defaultdict, namedtuple
 from operator import attrgetter
 from intervaltree import Interval, IntervalTree
-from ck2parser import (rootpath, vanilladir, is_codename, Date as ASTDate,
-                       SimpleParser, FullParser)
+from ck2parser import (rootpath, vanilladir, is_codename, TopLevel, Number,
+                       Pair, Obj, Date as ASTDate, Comment, SimpleParser,
+                       FullParser)
 from print_time import print_time
 
 CHECK_LIEGE_CONSISTENCY = True
@@ -14,14 +15,14 @@ LANDED_TITLES_ORDER = True # if false, date order
 PRUNE_UNEXECUTED_HISTORY = False # prune all after last playable start
 PRUNE_IMPOSSIBLE_STARTS = False # implies prev
 PRUNE_NONBOOKMARK_STARTS = False # implies prev
-PRUNE_NONERA_STARTS = True # implies prev
+PRUNE_NONERA_STARTS = False # implies prev
 
 PRUNE_ALL_BUT_DATES = [] # overrides above
 
 PRUNE_ALL_BUT_REGIONS = []
 
-FORMAT_TITLE_HISTORY = False
-CLEANUP_TITLE_HISTORY = False # implies previous
+FORMAT_TITLE_HISTORY = True
+CLEANUP_TITLE_HISTORY = True # implies previous
 
 
 class Date(namedtuple('Date', ['y', 'm', 'd'])):
@@ -43,14 +44,18 @@ Date.EARLIEST = Date(float('-inf'), float('-inf'), float('-inf'))
 Date.LATEST = Date(float('inf'), float('inf'), float('inf'))
 
 
-class Title:
-    # ['holder', 'liege', 'law', 'de_jure_liege', 'vice_royalty',
-    #  'historical_nomad', 'holding_dynasty', 'active', 'set_global_flag',
-    #  'pentarch', 'set_tribute_suzerain', 'clear_tribute_suzerain',
-    #  'conquest_culture', 'effect', 'clr_global_flag, 'reset_adjective,
-    #  'reset_name, 'name, 'adjective']
+class TitleHistory:
+    keys = [
+        'de_jure_liege', 'historical_nomad', 'holding_dynasty',
+        'liege', 'holder', 'pentarch', 'law', 'vice_royalty', 'active',
+        'clear_tribute_suzerain', 'set_tribute_suzerain', 'conquest_culture',
+        'name', 'reset_name', 'adjective', 'reset_adjective',
+        'set_global_flag', 'clr_global_flag', 'effect'
+    ]
+
     def __init__(self, name, djl):
         self.name = name
+        self.has_file = False
         self.attr = {k: [(Date.EARLIEST, v)] for k, v in [
             ('holder', 0),
             ('liege', djl if name.startswith('b') else 0),
@@ -65,7 +70,59 @@ class Title:
             ('adjective', ''),
             ('suzerain', 0)
         ]}
+        self.date_comments = defaultdict(list)
+        self.date_ker_comments = defaultdict(list)
+        self.attr_comment = {}
+        self.post_comments = None
         self.history = defaultdict(list)
+
+    def write(self, parser, folder):
+        for k, vs in self.attr.items():
+            for i, (date, v) in enumerate(vs):
+                if date != Date.EARLIEST:
+                    if k == 'suzerain':
+                        if v[1] == 0:
+                            item = 'clear_tribute_suzerain', v[0]
+                        else:
+                            if (i > 0 and vs[i - 1][1] != 0 and
+                                vs[i - 1][1][0] != v[0]):
+                                self.history[date].append(
+                                    Pair.from_kv('clear_tribute_suzerain',
+                                                 vs[i - 1][1][0]))
+                            v = Obj([Pair.from_kv('who', v[0]),
+                                     Pair.from_kv('percentage',
+                                                  Number(str(v[1])))])
+                            item = 'set_tribute_suzerain', v
+                    elif k in ('name', 'adjective') and v == '':
+                        item = 'reset_{}'.format(k), 'yes'
+                    else:
+                        item = k, v
+                    if isinstance(item[1], int):
+                        item = item[0], Number(str(item[1]))
+                    pair = Pair.from_kv(item[0], item[1])
+                    if isinstance(item[1], Number):
+                        item = item[0], item[1].val
+                    if (date, item) in self.attr_comment:
+                        pre, post = self.attr_comment[(date, item)]
+                        pair.key.pre_comments = pre
+                        pair.value.post_comment = post
+                    self.history[date].append(pair)
+        contents = []
+        for date, items in sorted(self.history.items()):
+            items.sort(key=lambda x:
+                       (x.key.val != 'active' or x.value.val != 'yes',
+                        self.keys.index(x.key.val)))
+            obj = Obj(items)
+            if date in self.date_ker_comments:
+                obj.ker.pre_comments = self.date_ker_comments[date]
+            date = ASTDate(self.date_comments[date], str(date), None)
+            date_pair = Pair.from_kv(date, obj)
+            contents.append(date_pair)
+        tree = TopLevel(contents)
+        tree.post_comments = self.post_comments
+        path = folder / '{}.txt'.format(self.name)
+        with path.open('w', encoding='cp1252', newline='\r\n') as f:
+            f.write(tree.str(parser))
 
 # for monkey patching Node.pop_greatest_child to fix issue 41
 # https://github.com/chaimleib/intervaltree/issues/41
@@ -121,7 +178,7 @@ def main():
     intervaltree_patch_issue_41()
     simple_parser = SimpleParser()
     simple_parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
-    if FORMAT_TITLE_HISTORY and not CLEANUP_TITLE_HISTORY:
+    if FORMAT_TITLE_HISTORY or CLEANUP_TITLE_HISTORY:
         history_parser = FullParser()
         history_parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
     else:
@@ -129,13 +186,14 @@ def main():
     history_parser.no_fold_to_depth = 0
     landed_titles_index = {0: -1}
     title_djls = {}
-    titles = {}
+    histories = {}
     current_index = 0
     def recurse(tree, stack=[]):
         nonlocal current_index
         for n, v in tree:
             if is_codename(n.val):
-                titles[n.val] = Title(n.val, stack[-1] if stack else 0)
+                histories[n.val] = TitleHistory(n.val,
+                                                stack[-1] if stack else 0)
                 landed_titles_index[n.val] = current_index
                 current_index += 1
                 stack.append(n.val)
@@ -198,48 +256,69 @@ def main():
                 else:
                     print('unnecessary blank? {}'.format(path.name))
             continue
+        histories[title].has_file = True
+        histories[title].post_comments = tree.post_comments
         if FORMAT_TITLE_HISTORY and not CLEANUP_TITLE_HISTORY:
             with path.open('w', encoding='cp1252', newline='\r\n') as f:
                 f.write(tree.str(history_parser))
-        for n, v in sorted(tree, key=attrgetter('key.val')):
+        for p in sorted(tree, key=attrgetter('key.val')):
+            n, v = p
             date = Date(*n.val)
-            for n2, v2 in v:
+            date_comments = histories[title].date_comments[date]
+            date_comments.extend(str(c) for c in n.pre_comments)
+            potentials = [x.post_comment for x in (p.tis, v.kel, v.ker)
+                          if x.post_comment]
+            if not(len(potentials) == 1 and len(v) == 1 and
+                   not v.contents[0].value.post_comment):
+                histories[title].date_comments[date].extend(str(c) for c in
+                                                            potentials)
+            histories[title].date_ker_comments[date].extend(
+                v.ker.pre_comments)
+            for p2 in v:
+                n2, v2 = p2
                 if n2.val in ('law', 'set_global_flag', 'clr_global_flag',
                               'effect'):
-                    titles[title].history[date].append((n2.val, v2))
+                    histories[title].history[date].append(p2)
                     continue
                 attr_vals, value = None, None
                 if n2.val in ('holder', 'liege'):
                     if v2.val in ('0', '-', title):
                         value = 0
                 elif n2.val == 'set_tribute_suzerain':
-                    attr_vals = titles[title].attr['suzerain']
+                    attr_vals = histories[title].attr['suzerain']
                     try:
-                        value = v2['who'], v2['percentage']
+                        value = v2['who'].val, v2['percentage'].val
                     except KeyError:
                         continue
                 elif n2.val == 'clear_tribute_suzerain':
-                    attr_vals = titles[title].attr['suzerain']
-                    value = 0
+                    attr_vals = histories[title].attr['suzerain']
+                    value = v2.val, 0
                     if attr_vals[-1][1] == 0 or attr_vals[-1][1][0] != v2.val:
                         continue
                 elif n2.val in ('reset_adjective', 'reset_name'):
                     if v2.val != 'yes':
                         continue
-                    attr_vals = titles[title].attr[n2.val[6:]]
+                    attr_vals = histories[title].attr[n2.val[6:]]
                     value = ''
                 if attr_vals is None:
-                    attr_vals = titles[title].attr[n2.val]
+                    attr_vals = histories[title].attr[n2.val]
                 if value is None:
                     value = v2.val
                 if attr_vals[-1][0] == date:
                     attr_vals[-1] = date, value
                 elif attr_vals[-1][1] != value:
                     attr_vals.append((date, value))
+                #if title == 'b_agen': import pdb; pdb.set_trace()
+                if (len(potentials) == 1 and len(v) == 1 and
+                    not v2.post_comment):
+                    v2.post_comment = potentials[0]
+                if n2.pre_comments or v2.post_comment:
+                    histories[title].attr_comment[(date, (n2.val, value))] = (
+                        n2.pre_comments, v2.post_comment)
         dead_holders = []
         county_unheld = []
         #if title == 'c_ely': import pdb; pdb.set_trace()
-        holders = titles[title].attr['holder']
+        holders = histories[title].attr['holder']
         for i, (begin, holder) in enumerate(holders):
             try:
                 end = holders[i + 1][0]
@@ -264,7 +343,7 @@ def main():
             if holder != 0:
                 char_titles[holder][begin:end] = title
         lte_tier = IntervalTree()
-        lieges = titles[title].attr['liege']
+        lieges = histories[title].attr['liege']
         for i, (begin, liege) in enumerate(lieges):
             try:
                 end = lieges[i + 1][0]
@@ -378,7 +457,10 @@ def main():
     title_lte_tier.sort(key=sort_key)
     title_dead_holders.sort(key=sort_key)
     if CLEANUP_TITLE_HISTORY:
-        print('not implemented lols')
+        history_folder = history_parser.moddirs[0] / 'history/titles'
+        for title_history in histories.values():
+            if title_history.has_file:
+                title_history.write(history_parser, history_folder)
     def title_region(title):
         try:
             region = title_djls[title][0]
