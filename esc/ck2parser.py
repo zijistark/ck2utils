@@ -349,7 +349,7 @@ class Pair(Stringifiable):
     def with_empty_obj(cls, key):
         if not isinstance(key, Stringifiable):
             key = String(key)
-        value = Obj.from_iter([])
+        value = Obj([])
         return cls(key, Op('='), value)
 
     def __iter__(self):
@@ -685,7 +685,7 @@ class SimpleParser:
             repo_path = pathlib.Path(repo.working_tree_dir)
             tracked_files = set(repo.git.ls_files(z=True).split('\x00')[:-1])
             latest_commit = {}
-            log_output = repo.git.log('.', pretty='format:%h', z=True,
+            log_output = repo.git.log('.', m=True, pretty='format:%h', z=True,
                                       name_only=True)
             log_iter = iter(log_output.split('\x00'))
             for entry in log_iter:
