@@ -1,0 +1,16 @@
+%YAML1.2
+---
+file_extensions: [gfx, gui]
+scope: source.ck2script
+contexts:
+  main:
+    - match: '#.*$\n?'
+      scope: comment
+    - match: '".*"'
+      scope: string
+    - match: '\b(-)?[0-9.]+\b'
+      scope: constant.numeric
+    - match: '\b(ROOT|FROM|(PREV){1,4}|THIS)\b'
+      scope: keyword
+    - match: '\b(AND|OR|NOT|NOR|NAND|and|or|not|nor|nand|no|yes)\b'
+      scope: support.constant
