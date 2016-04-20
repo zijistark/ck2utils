@@ -36,7 +36,7 @@ contexts:
         1: entity.function.name
         # 3: some scope for namespaces or identifiers (entity.name... ?)
         4: constant.numeric
-    - match: '\b((-)?([0-9]\.)?[0-9]+)\b'
+    - match: '\b((-)?([0-9]+\.)?[0-9]+)\b'
       scope: constant.numeric.ck2script
     - match: '\b[bcdek]_[a-z][a-z_-]+\b'
       scope: variable.other.ck2script
