@@ -1,0 +1,99 @@
+%YAML1.2
+---
+file_extensions: [gfx, gui]
+scope: source.ck2script
+first_line_match: '-\*- ck2(script)? -\*-'
+
+contexts:
+  main:
+    - match: '#.*$\n?'
+      # VERIFY: number-sign
+      scope: comment.line.number-sign.ck2script
+    - match: '"'
+      captures:
+        0: punctuation.definition.string.begin.ck2script
+      push:
+        - meta_scope: string.quoted.double.ck2script
+        - match: '"'
+          captures:
+            0: punctuation.definition.string.end.ck2script
+          pop: true
+        # TODO: want literal newlines to apply an invalid.illegal.<something> (strings in ck2 cannot span lines)
+        # - match: '$'
+        #   scope: 
+        # TODO: want to recognize localisation escaped literals (e.g., '\\n') as invalid.illegal.<something>
+        # - match: '\\n'
+        # TODO: want to recognize localisation control sequences (e.g., '§Y') as markup of some kind, which could theoretically be colored as it is in-game
+        #       --> also would like to match begin/end markup control sequences together
+        #       --> also would like to match localisation command brackets together
+        #           --> within these, would like to recognize the builtin localisation scopes (e.g., PrevPrev or Root or ...)
+    - match: '\{'
+      push: braces
+    - match: '\}'
+      scope: invalid.illegal.stray-bracket-end
+    - match: '\bid\s*=\s*(((\w+)\.)?(0|([1-9][0-9]+)))\b'
+      captures:
+        1: entity.function.name
+        # 3: some scope for namespaces or identifiers (entity.name... ?)
+        4: constant.numeric
+    - match: '\b((-)?([0-9]\.)?[0-9]+)\b'
+      scope: constant.numeric.ck2script
+    - match: '\b[bcdek]_[a-z][a-z_-]+\b'
+      scope: variable.other.ck2script
+    - match: '\bc_\d+\b' # character scope, not a title; integer is character ID
+      scope: variable.other.ck2script
+    - match: '\b(clear(_global)?_event_target|save(_global)?_event_target_as)\s*=\s*([a-zA-Z]\w*)\b'
+      captures:
+        4: variable.other.ck2script
+    - match: '\b(event_target:[a-zA-Z]\w*)\b'
+      scope: variable.other.ck2script
+    - match: '\b(ROOT|root|(FROM){1,6}|(from){1,6}|(PREV){1,4}|(prev){1,4}|(ROOT_(FROM){1,6})|(root_(from){1,6})|(ROOT_(from){1,6})|(root_(FROM){1,6})|THIS|this)\b'
+      scope: variable.language.ck2script
+    - match: '\b(AND|OR|NOT|NOR|NAND|and|or|not|nor|nand|calc_true_if)\b'
+      scope: support.constant.ck2script
+    - match: '\b(yes|no)\b'
+      scope: support.constant.ck2script
+    - match: '\b(if|trigger_switch)\b'
+      scope: keyword.control.ck2script
+    - match: '\b(immediate|option)\b'
+      scope: keyword.control.ck2script
+    - match: '\b(trigger|major_trigger)\b'
+      scope: keyword.control.ck2script
+      # FUTURE DECISION/LAW CONTEXT:
+    - match: '\b(allow|potential|from_potential|revoke_allowed)\b' # triggers
+      scope: keyword.control.ck2script
+    - match: '\b(effect|pass_effect)\b' # effects
+      scope: keyword.control.ck2script
+    - match: '\b(ai_will_do|ai_will_revoke)\b' # modifier sets
+      scope: keyword.control.ck2script
+      # FUTURE MINOR TITLE / RELIGIOUS TITLE CONTEXT:
+    - match: '\b(allowed_to_grant|allowed_to_hold|revoke_trigger)\b' # triggers
+      scope: keyword.control.ck2script
+    - match: '\b(gain_effect|lose_effect|retire_effect)\b' # effects
+      scope: keyword.control.ck2script
+    - match: '\bai_will_do\b' # modifier sets
+      scope: keyword.control.ck2script
+      # FUTURE JOB TITLE CONTEXT:
+    - match: '\b(allow|dismiss_trigger)\b' # triggers
+      scope: keyword.control.ck2script
+    - match: '\b(gain_effect|lose_effect|retire_effect)\b' # effects
+      scope: keyword.control.ck2script
+      # FUTURE CB CONTEXT:
+    - match: '\b((can_use(_(title|gui))?)|(is_valid(_title)?))\b'
+      scope: keyword.control.ck2script
+    - match: '\b((on_(add|success|fail|reverse_demand)(_(title|posttitle))?)|on_invalidation|on_(attacker|defender)_leader_death)\b' # effects
+      scope: keyword.control.ck2script
+    - match: '\b(((attacker|defender)_ai_(victory|defeat)_worth)|ai_will_do)\b' # modifier sets
+      scope: keyword.control.ck2script
+      # TODO: FUTURE CONTEXT OF JOB ACTIONS, AMBITIONS, PLOTS, FOCUSES, FACTIONS, LANDED_TITLES, COUNCIL_VOTING, TRAITS,
+      #       COUNCIL_POSITIONS, GOVERNMENTS, ([LONG_]CHARACTER|LETTER|NARRATIVE|PROVINCE|UNIT|DIPLORESPONSE)_EVENT, ...
+      # random stuff not covered above [yet]:
+    - match: '\b(mean_time_to_happen|weight_multiplier|chance|membership|ai_chance)\b' # modifier sets
+      scope: keyword.control.ck2script
+    - match: '\b(random|random_list)\n' # effects w/ modifier sets
+      scope: keyword.control.ck2script
+
+  braces:
+    - match: '\}'
+      pop: true
+    - include: main
