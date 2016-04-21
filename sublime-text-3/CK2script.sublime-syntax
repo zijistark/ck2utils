@@ -54,7 +54,7 @@ contexts:
       scope: support.constant.ck2script
     - match: '\b(yes|no)\b'
       scope: support.constant.ck2script
-    - match: '\b(if|trigger_switch)\b'
+    - match: '\b(if|trigger_switch|limit|on_trigger)\b'
       scope: keyword.control.ck2script
     - match: '\b(immediate|option)\b'
       scope: keyword.control.ck2script
