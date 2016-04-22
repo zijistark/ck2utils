@@ -51,9 +51,10 @@ def write_output(out_path, parser, loc_keys, noble_regex):
             if key in seen or not re.fullmatch(noble_regex, key):
                 continue
             if key.startswith('vice_royalty'):
-                imperial_key = 'imperial' + key[len('vice_royalty'):]
-                viceroy_rows.append(([imperial_key] + row[1:14] +
-                                    [''] * (14 - len(row)) + ['x']))
+                if 'empire' not in key and 'emperor' not in key:
+                    imperial_key = 'imperial' + key[len('vice_royalty'):]
+                    viceroy_rows.append(([imperial_key] + row[1:14] +
+                                        [''] * (14 - len(row)) + ['x']))
                 continue
             seen.add(key)
             imperial_key = 'imperial_' + key
