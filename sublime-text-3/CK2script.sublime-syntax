@@ -104,7 +104,7 @@ contexts:
       # random stuff not covered above [yet]:
     - match: \b(mean_time_to_happen|weight_multiplier|chance|membership|ai_chance)\b # modifier sets
       scope: keyword.control.ck2script
-    - match: \b(random|random_list)\n # effects w/ modifier sets
+    - match: \b(random|random_list)\b # effects w/ modifier sets
       scope: keyword.control.ck2script
 
   braces:
