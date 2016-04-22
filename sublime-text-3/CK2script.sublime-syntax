@@ -5,7 +5,7 @@ file_extensions:
   - gfx
   - gui
 scope: source.ck2script
-first_line_match: '-*- ck2(script)? -*-'
+first_line_match: -\*- ck2(script)? -\*-
 
 contexts:
   main:
@@ -26,9 +26,9 @@ contexts:
         #       --> also would like to match begin/end markup control sequences together
         #       --> also would like to match localisation command brackets together
         #           --> within these, would like to recognize the builtin localisation scopes (e.g., PrevPrev or Root or ...)
-    - match: '{'
+    - match: \{
       push: braces
-    - match: '}'
+    - match: \}
       scope: invalid.illegal.stray-bracket-end
     - match: \bid\s*=\s*(((\w+)\.)?(0|([1-9][0-9]*)))\b
       captures:
@@ -93,6 +93,6 @@ contexts:
       scope: keyword.control.ck2script
 
   braces:
-    - match: '}'
+    - match: \}
       pop: true
     - include: main
