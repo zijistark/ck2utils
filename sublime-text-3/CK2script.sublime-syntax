@@ -46,16 +46,31 @@ contexts:
         4: variable.other.ck2script
     - match: \b(event_target:[a-zA-Z]\w*)\b
       scope: variable.other.ck2script
-    - match: \b(ROOT|root|(FROM){1,6}|(from){1,6}|(PREV){1,4}|(prev){1,4}|(ROOT_(FROM){1,6})|(root_(from){1,6})|(ROOT_(from){1,6})|(root_(FROM){1,6})|THIS|this)\b
+    - match: \b(ROOT|root|(FROM){1,4}|(from){1,4}|(PREV){1,4}|(prev){1,4}|(ROOT_(FROM){1,4})|(root_(from){1,4})|(ROOT_(from){1,4})|(root_(FROM){1,4})|THIS|this)\b
       scope: variable.language.ck2script
+    - match: \b((mult_)?modifier|modifier|additive_modifier|additive_power_diff_modifier|additive_opinion_modifier)\b
+      scope: keyword.control.ck2script
+      # these guys are really annoying without being context-limited (and having a color scheme that gives me more than 3-4 choices):
+#    - match: \b(factor|value|count|amount|days|months|years)\b
+#      scope: keyword.control.ck2script
+    - match: \b((hidden_|custom_)?tooltip)\b
+      scope: keyword.control.ck2script
     - match: \b(AND|OR|NOT|NOR|NAND|and|or|not|nor|nand|calc_true_if)\b
       scope: support.constant.ck2script
     - match: \b(yes|no)\b
       scope: support.constant.ck2script
     - match: \b(if|trigger_switch|limit|on_trigger)\b
       scope: keyword.control.ck2script
+      # types of "events" (repeat_event is strictly a command and not also an actual event type)
+    - match: \b((character|long_character|narrative|letter|diploresponse|province|unit|repeat)_event)\b
+      scope: keyword.control.ck2script
+      # top-level event context flags/paramters:
+    - match: \b(id|is_triggered_only|major|desc|is_friendly|picture|border|title|(show_(ROOT|root))|(hide_(window|from|FROM|new))|(show(_from|_FROM){2,4}))\b
+      scope: keyword.control.ck2script
+      # top-level event effect blocks
     - match: \b(immediate|option)\b
       scope: keyword.control.ck2script
+      # top-level event trigger blocks
     - match: \b(trigger|major_trigger)\b
       scope: keyword.control.ck2script
       # FUTURE DECISION/LAW CONTEXT:
