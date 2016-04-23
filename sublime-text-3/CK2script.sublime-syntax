@@ -5,7 +5,7 @@ file_extensions:
   - gfx
   - gui
 scope: source.ck2script
-first_line_match: '-\*- ck2(\.\w[\w\.]*)? -\*-'
+first_line_match: -\*- ck2(\.\w[\w\.]*)? -\*-
 
 contexts:
   main:
