@@ -356,6 +356,7 @@ void execute_province_history(const default_map& dm,
 
 
 void write_main_event(FILE* f, an_province** prov_map, uint prov_map_sz) {
+    fprintf(f, "# -*- ck2.events -*-\n\n");
     fprintf(f, "namespace = emf_nomad\n\n");
     fprintf(f, "# emf_nomad.%u\n", BASE_EVENT_ID);
     fprintf(f, "#\n# Invoked on startup to build temples & tribes as necessary to preserve\n");
