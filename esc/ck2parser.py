@@ -642,7 +642,8 @@ class SimpleParser:
 
     def __del__(self):
         print('{}: {} hits, {} misses'.format(
-              self.__class__.__name__, self.cache_hits, self.cache_misses))
+              self.__class__.__name__, self.cache_hits, self.cache_misses),
+              file=sys.stderr)
 
     def setup_parser(self):
         unarg = lambda f: lambda x: f(*x)
@@ -712,7 +713,8 @@ class SimpleParser:
                         next(status_iter)
             self.repos[repo_path] = latest_commit, dirty_paths
             print('Repo {} processed in {:g} s'.format(
-                  repo_path.name, time.time() - repo_init_start))
+                  repo_path.name, time.time() - repo_init_start),
+                  file=sys.stderr)
         repo_cachedir = self.cachedir / repo_path.name
         path = path.relative_to(repo_path)
         if not any(p == path or p in path.parents for p in dirty_paths):
@@ -748,7 +750,8 @@ class SimpleParser:
                     return tree
         except (pickle.PickleError, AttributeError, EOFError, ImportError,
                 IndexError):
-            print('Error retrieving cache for {}'.format(path))
+            print('Error retrieving cache for {}'.format(path),
+                  file=sys.stderr)
             traceback.print_exc()
             pass
         self.cache_misses += 1
@@ -767,7 +770,7 @@ class SimpleParser:
                     self.parse_tree_cache[path] = tree
                 return tree
             except:
-                print(path)
+                print(path, file=sys.stderr)
                 raise
 
     def parse(self, string):

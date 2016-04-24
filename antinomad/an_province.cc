@@ -7,12 +7,12 @@ void an_province::write_event(FILE* f, uint event_id) const {
     fprintf(f, "# emf_nomad.%u [%u - %s]\n", event_id, _id, _name.c_str());
 
     fprintf(f, "province_event = {\n");
-    fprintf(f, "\tid = emf_nomad.%u\n", event_id);
-    fprintf(f, "\thide_window = yes\n");
-    fprintf(f, "\tis_triggered_only = yes\n\n");
+    fprintf(f, "\tid = emf_nomad.%u\n\n", event_id);
+    fprintf(f, "\tis_triggered_only = yes\n");
+    fprintf(f, "\thide_window = yes\n\n");
     fprintf(f, "\ttrigger = {\n");
     fprintf(f, "\t\towner = { is_nomadic = yes }\n");
-    fprintf(f, "\t\tnot = { any_province_holding = { not = { holding_type = nomad } } }\n");
+    fprintf(f, "\t\tNOT = { any_province_holding = { NOT = { holding_type = nomad } } }\n");
     fprintf(f, "\t\thas_empty_holding = yes\n");
     fprintf(f, "\t}\n\n");
     fprintf(f, "\timmediate = {\n");
@@ -21,7 +21,7 @@ void an_province::write_event(FILE* f, uint event_id) const {
         const hist_entry& e = _hist_list[i];
 
         fprintf(f, "\t\tif = {\n");
-        fprintf(f, "\t\t\tlimit = { not = { year = %u } }\n", _hist_list[i+1].year);
+        fprintf(f, "\t\t\tlimit = { NOT = { year = %u } }\n", _hist_list[i+1].year);
         fprintf(f, "\t\t\tif = {\n");
 
         fprintf(f, "\t\t\t\tlimit = { culture = %s religion = %s }\n",
@@ -56,5 +56,4 @@ void an_province::write_event(FILE* f, uint event_id) const {
 
     fprintf(f, "\t}\n}\n\n\n");
 }
-
 

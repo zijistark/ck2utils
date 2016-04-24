@@ -3,7 +3,8 @@
 import collections
 import pathlib
 import sys
-from ck2parser import rootpath, get_provinces, is_codename, Obj, SimpleParser
+from ck2parser import (rootpath, get_provinces, files, is_codename, Obj,
+                       SimpleParser)
 from print_time import print_time
 
 IGNORE_ENCODING_ERRORS = True
@@ -25,7 +26,7 @@ def get_start_interval(parser):
     dates = []
     for _, tree in parser.parse_files('common/bookmarks/*'):
         dates.extend(v['date'].val for _, v in tree)
-    tree = next(parser.parse_file('common/defines.txt'))[1]
+    tree = next(parser.parse_files('common/defines.txt'))[1]
     dates.append(tree['start_date'].val)
     dates.append(tree['last_start_date'].val)
     return min(dates), max(dates)
