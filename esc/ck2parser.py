@@ -128,12 +128,16 @@ def chars(line, parser):
     return col
 
 def comments_to_str(parser, comments, indent):
+    s = ''
+    if indent == 0 and comments and re.match(r'-\*-', comments[0].val):
+        s = str(comments[0]) + '\n\n'
+        comments = comments[1:]
     if not comments:
-        return ''
+        return s
     sep = '\n' + indent * '\t'
     comments_str = '\n'.join(c.val for c in comments)
     if comments_str == '':
-        return ''
+        return s
     try:
         tree = parser.parse(comments_str)
         if not tree.contents:
@@ -142,8 +146,7 @@ def comments_to_str(parser, comments, indent):
         butlast = comments_to_str(parser, comments[:-1], indent)
         if butlast:
             butlast += indent * '\t'
-        return butlast + str(comments[-1]) + '\n'
-    s = ''
+        return s + butlast + str(comments[-1]) + '\n'
     for p in tree:
         p_is, _ = p.inline_str(0, parser, indent)
         p_is_lines = p_is.rstrip().splitlines()
@@ -707,10 +710,9 @@ class SimpleParser:
             status_output = repo.git.status(z=True)
             status_iter = iter(status_output.split('\x00')[:-1])
             for entry in status_iter:
-                if entry[1] != ' ' or entry[0] == 'R':
-                    dirty_paths.append(pathlib.Path(entry[3:]))
-                    if entry[0] == 'R':
-                        next(status_iter)
+                dirty_paths.append(pathlib.Path(entry[3:]))
+                if entry[0] == 'R':
+                    next(status_iter)
             self.repos[repo_path] = latest_commit, dirty_paths
             print('Repo {} processed in {:g} s'.format(
                   repo_path.name, time.time() - repo_init_start),
