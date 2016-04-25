@@ -53,8 +53,9 @@ class TitleHistory:
         'name', 'reset_name', 'adjective', 'reset_adjective',
         'set_global_flag', 'clr_global_flag', 'effect'
     ]
-    keys_sort_key = lambda x: (x.key.val != 'active' or x.value.val != 'yes',
-                               self.keys.index(x.key.val))
+    keys_sort_key = lambda cls, x: (
+        x.key.val != 'active' or x.value.val != 'yes',
+        cls.keys.index(x.key.val))
 
     def __init__(self, name, djl):
         self.name = name
@@ -123,67 +124,150 @@ class TitleHistory:
         self.tree.post_comments = self.post_comments
 
     def remove_dead_holders(self, parser, dead_holders):
+        print(self.name)
+        if not dead_holders:
+            return
         if not self.tree:
             self.compile()
-        prev = 0, Date.EARLIEST, 0
-        i = 1
-        while i < len(self.tree):
-            date_pair = self.tree.contents[i]
-            date = date_pair.key.val
-            obj = date_pair.value
-            try:
-                j, holder_pair = next(j, e for j, e in enumerate(obj)
-                                      if e.key.val == 'holder')
-            except StopIteration:
+        prevprev_holder = 0
+        prev = -1, None, None
+        i = 0
+        while True:
+            last_iter = i == len(self.tree)
+            if not last_iter:
+                date_pair = self.tree.contents[i]
+                date = date_pair.key.val
+                obj = date_pair.value
+                try:
+                    j, holder_pair = next((j, e) for j, e in enumerate(obj)
+                                          if e.key.val == 'holder')
+                except StopIteration:
+                    i += 1
+                    continue
+                holder = holder_pair.value.val
+            else:
+                date = Date.LATEST
+            prev_i, prev_date_pair, prev_holder_pair = prev
+            if prev_date_pair:
+                prev_date = prev_date_pair.key.val
+                prev_holder = prev_holder_pair.value.val
+            else:
+                prev = i, date_pair, holder_pair
+                i += 1
                 continue
-            holder = holder_pair.value.val
-            prev_i, prev_date, prev_holder = prev
-            begin, end = next(b, e for b, e in dead_holders
-                              if e > prev_date)
-            if begin == prev_date:
-                if len(obj) == 1:
-                    # remove whole date
-                    del self.tree.contents[i]
-                    pair_is, _ = date_pair.inline_str(0, parser)
-                    comments = [Comment(s) for s in date_pair.split('\n')]
-                    if i == len(self.tree):
-                        self.post_comments[:0] = comments
+            #if self.name == 'c_godwad' and prev_date[0] == 1321:
+            #    import pdb; pdb.set_trace()
+            if not last_iter and holder == 0:
+                if prev_holder == 0:
+                    if len(obj) == 1:
+                        # remove whole date
+                        del self.tree.contents[i]
                     else:
-                        # TODO fix how this stacks up comment level
-                        self.tree.contents[i].pre_comments[:0] = comments
-                        i -= 1
+                        del obj.contents[j]
                 else:
-                    del obj.contents[j]
-                    pair_is, _ = holder_pair.inline_str(0, parser)
-                    comments = [Comment(s) for s in pair_is.split('\n')]
-                    next_thing = (obj.contents[j + 1]
-                                  if j + 1 < len(obj) else obj.ker)
-                    next_thing.pre_comments[:0] = comments
+                    i += 1
+                continue
+            try:
+                begin, end = next((b, e)
+                                  for b, e in dead_holders if e > prev_date)
+            except StopIteration:
+                break
+            if begin <= prev_date:
+                obj = prev_date_pair.value
+                if prevprev_holder == 0:
+                    if len(obj) == 1:
+                        # remove whole date
+                        self.tree.contents.remove(prev_date_pair)
+                        pair_is, _ = prev_date_pair.inline_str(0, parser, 0)
+                        comments = [Comment(s)
+                                    for s in pair_is.split('\n') if s]
+                        if prev_i < len(self.tree):
+                            # TODO fix how this stacks up comment level
+                            next_thing = self.tree.contents[prev_i].key
+                            next_thing.pre_comments[:0] = comments
+                            i -= 1
+                        else:
+                            self.post_comments[:0] = comments
+                    else:
+                        j = obj.contents.index(prev_holder_pair)
+                        pair_is, _ = prev_holder_pair.inline_str(0, parser, 0)
+                        comments = [Comment(s)
+                                    for s in pair_is.split('\n') if s]
+                        next_thing = (obj.contents[j + 1].key
+                                      if j + 1 < len(obj) else obj.ker)
+                        next_thing.pre_comments[:0] = comments
+                else:
+                    obj.contents.remove(prev_holder_pair)
+                    no_holder_pair = Pair.from_kv('holder', Number(0))
+                    pair_is, _ = prev_holder_pair.inline_str(0, parser, 0)
+                    comments = [Comment(s)
+                                for s in pair_is.split('\n') if s]
+                    no_holder_pair.key.pre_comments[:0] = comments
+                    obj.contents.append(no_holder_pair)
+                    obj.contents.sort(key=self.keys_sort_key)
+                # possible redundant holder = 0 from that
+                # will be removed next iteration
                 if end < date:
                     # re-add holder when he's born
                     if end in self.tree.dictionary:
                         obj = self.tree[end]
-                        obj.contents.append(holder_pair)
+                        obj.contents.append(prev_holder_pair)
                         obj.contents.sort(key=self.keys_sort_key)
                     else:
-                        self.tree.contents.append(
-                            Pair.from_kv(ASTDate(end), Obj([holder_pair])))
+                        self.tree.contents.append(Pair.from_kv(
+                            ASTDate(str(end)), Obj([prev_holder_pair])))
+                        self.tree.contents.sort(key=lambda x: x.key.val)
+                next_begin = next((b for b, e in dead_holders if b > begin),
+                                  Date.LATEST)
+                if next_begin < date:
+                    no_holder_pair = Pair.from_kv('holder', Number(0))
+                    if end in self.tree.dictionary:
+                        obj = self.tree[end]
+                        obj.contents.append(no_holder_pair)
+                        obj.contents.sort(key=self.keys_sort_key)
+                    else:
+                        self.tree.contents.append(Pair.from_kv(
+                            ASTDate(str(end)), Obj([no_holder_pair])))
+                        self.tree.contents.sort(key=lambda x: x.key.val)
+            elif begin < date:
+                # no holder when he's dead
+                if holder == 0:
+                    if len(date_pair.value) == 1:
+                        date_pair.key = ASTDate(str(begin))
+                    else:
+                        date_pair.value.contents.remove(holder_pair)
+                        date_pair = Pair.from_kv(ASTDate(str(begin)),
+                                                 Obj([holder_pair]))
+                        self.tree.contents.append(date_pair)
+                    self.tree.contents.sort(key=lambda x: x.key.val)
+                    i = self.tree.contents.index(date_pair)
+                else:
+                    no_holder_pair = Pair.from_kv('holder', Number(0))
+                    if begin in self.tree.dictionary:
+                        obj = self.tree[begin]
+                        obj.contents.append(no_holder_pair)
+                        obj.contents.sort(key=self.keys_sort_key)
+                    else:
+                        self.tree.contents.append(Pair.from_kv(
+                            ASTDate(str(begin)), Obj([no_holder_pair])))
                         self.tree.contents.sort(key=lambda x: x.key.val)
                         i += 1
-            # TODO handle cases where begin != prev_date
-            # TODO handle cases where NEXT end == date
-            prev = i, date, holder
+                    date = end
+            if last_iter:
+                break
+            if end == date:
+                prevprev_holder = 0
+            else:
+                prevprev_holder = prev_holder
+            prev = i, date_pair, holder_pair
             i += 1
-        # TODO handle last holder
-
-
 
     def write(self, parser, folder):
         if not self.tree:
             self.compile()
         path = folder / '{}.txt'.format(self.name)
         with path.open('w', encoding='cp1252', newline='\r\n') as f:
-            f.write(tree.str(parser))
+            f.write(self.tree.str(parser))
 
 # for monkey patching Node.pop_greatest_child to fix issue 41
 # https://github.com/chaimleib/intervaltree/issues/41
@@ -290,7 +374,8 @@ def main():
                 last_start_date = max(last, last_start_date)
                 if not PRUNE_IMPOSSIBLE_STARTS:
                     date_filter.clear()
-                    date_filter.addi(last_start_date.get_next_day(), Date.LATEST)
+                    date_filter.addi(last_start_date.get_next_day(),
+                                     Date.LATEST)
     title_holders = defaultdict(IntervalTree)
     title_lieges = defaultdict(IntervalTree)
     title_lte_tier = []
@@ -347,24 +432,6 @@ def main():
                 if n2.val in ('holder', 'liege'):
                     if v2.val in ('0', '-', title):
                         value = 0
-                    #elif (CLEANUP_TITLE_HISTORY and n2.val == 'holder' and
-                    #      title.startswith('b')):
-                    #    attr_vals = histories[title].attr[n2.val]
-                    #    if attr_vals[-1][1] not in (0, v2.val):
-                    #        prev_date, prev_holder = attr_vals[-1]
-                    #        birth, death = char_life.get(prev_holder,
-                    #            (Date.LATEST, Date.LATEST))
-                    #        if death < date:
-                    #    birth, death = char_life.get(holder, (Date.LATEST,
-                    #                                          Date.LATEST))
-                    #    if date < birth:
-                    #        if attr_vals[-1][0] == date:
-                    #            attr_vals[-1] = date, 0
-                    #        elif attr_vals[-1][1] != 0:
-                    #            attr_vals.append((date, 0))
-                    #        histories[title].attr_comment[date,
-                    #                                       (n2.val, 0)] = (
-                    #            Comment('{} # unborn'))
                 elif n2.val == 'set_tribute_suzerain':
                     attr_vals = histories[title].attr['suzerain']
                     try:
@@ -389,7 +456,6 @@ def main():
                     attr_vals[-1] = date, value
                 elif attr_vals[-1][1] != value:
                     attr_vals.append((date, value))
-                #if title == 'b_agen': import pdb; pdb.set_trace()
                 if (len(potentials) == 1 and len(v) == 1 and
                     not v2.post_comment):
                     v2.post_comment = potentials[0]
@@ -398,50 +464,7 @@ def main():
                         n2.pre_comments, v2.post_comment)
         dead_holders = []
         county_unheld = []
-        #if title == 'c_ely': import pdb; pdb.set_trace()
         holders = histories[title].attr['holder']
-        #if CLEANUP_TITLE_HISTORY and title.startswith('b'):
-        #    comments = histories[title].attr_comment
-        #    holders_copy = list(holders)
-        #    for i, (begin, holder) in enumerate(holders_copy):
-        #        if holder != 0:
-        #            try:
-        #                end, next_holder = holders_copy[i + 1]
-        #            except IndexError:
-        #                end, next_holder = Date.LATEST, None
-        #            birth, death = char_life.get(holder,
-        #                                         (Date.LATEST, Date.LATEST))
-        #            if begin < birth or death < end:
-        #                comment = str(holder)
-        #                if begin < birth and death < end:
-        #                    comment += ' unborn'
-        #                    holders.remove((begin, holder))
-        #                    if begin, ('holder', holder) in comments:
-        #                        comment += ', {}'.format(
-        #                            comments[end, ('holder', 0)].val)
-        #                    insort(holders, (begin, 0))
-        #                    insort(holders, (birth, holder))
-        #                comment += ' dead' if begin < birth
-        #                elif birth <= begin < death:
-        #                    comment += ' dead'
-        #                    if next_holder == 0:
-        #                        holders.remove((end, 0))
-        #                        if end, ('holder', 0) in comments:
-        #                            comment += ', {}'.format(
-        #                                comments[end, ('holder', 0)].val)
-        #                    insort(holders, (death, 0))
-        #                    comments[death, ('holder', 0)] = Comment(comment)
-        #                elif begin < birth <= end:
-        #                    comment += ' unborn'
-        #                    holders.remove((begin, holder))
-        #                    insort(holders, (begin, 0))
-        #                    insort(holders, (birth, holder))
-        #                else:
-        #                    comment += ' dead'
-        #                    holders.remove((begin, holder))
-        #                    insort(holders, (begin, 0))
-        #                    if next_holder == 0:
-        #                        holders.remove((end, 0))
         for i, (begin, holder) in enumerate(holders):
             try:
                 end = holders[i + 1][0]
@@ -590,10 +613,13 @@ def main():
     title_dead_holders.sort(key=sort_key)
     if CLEANUP_TITLE_HISTORY:
         history_folder = history_parser.moddirs[0] / 'history/titles'
-        for title_history in histories.values():
-            if title_history.has_file:
-                title_history.remove_dead_holders(history_parser, dead_holders)
-                title_history.write(history_parser, history_folder)
+        for history in sorted(histories.values(), key=lambda x: x.name):
+            if history.has_file:
+                dead_holders = next((l for title, l in title_dead_holders
+                                     if title == history.name), [])
+                dead_holders = [(x[0], x[1]) for x in sorted(dead_holders)]
+                history.remove_dead_holders(history_parser, dead_holders)
+                history.write(history_parser, history_folder)
     def title_region(title):
         try:
             region = title_djls[title][0]
