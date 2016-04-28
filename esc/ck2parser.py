@@ -334,11 +334,29 @@ class Op(Commented):
 
 class Pair(Stringifiable):
 
-    def __init__(self, key, tis, value):
+    def __init__(self, *args):
         super().__init__()
-        self.key = key
-        self.tis = tis
-        self.value = value
+        if len(args) == 3:
+            self.key = args[0]
+            self.tis = args[1]
+            self.value = args[2]
+        elif len(args) == 2:
+            if isinstance(args[0], Stringifiable):
+                self.key = args[0]
+            else:
+                self.key = String(args[0])
+            self.tis = Op('=')
+            if isinstance(args[1], Stringifiable):
+                self.value = args[1]
+            else:
+                self.value = String(args[1])
+        else:
+            if isinstance(args[0], Stringifiable):
+                self.key = args[0]
+            else:
+                self.key = String(args[0])
+            self.tis = Op('=')
+            self.value = Obj([])
 
     @classmethod
     def from_kv(cls, key, value):
@@ -350,10 +368,7 @@ class Pair(Stringifiable):
 
     @classmethod
     def with_empty_obj(cls, key):
-        if not isinstance(key, Stringifiable):
-            key = String(key)
-        value = Obj([])
-        return cls(key, Op('='), value)
+        return cls(key, Obj([]))
 
     def __iter__(self):
         yield self.key
@@ -621,8 +636,8 @@ class SimpleParser:
     tokenizer = SimpleTokenizer
     repos = {}
 
-    def __init__(self):
-        self.moddirs = []
+    def __init__(self, *moddirs):
+        self.moddirs = list(moddirs)
         self.basedir = vanilladir
         self.cache_hits = 0
         self.cache_misses = 0
@@ -722,6 +737,12 @@ class SimpleParser:
         if not any(p == path or p in path.parents for p in dirty_paths):
             return repo_cachedir / latest_commit[str(path)] / name, True
         return repo_cachedir / name, False
+
+    def files(self, glob, reverse=False):
+        yield from files(glob, self.moddirs, reverse=reverse)
+
+    def file(self, *args):
+        return next(self.files(*args))
 
     def parse_files(self, glob, moddirs=None, basedir=None, **kwargs):
         if moddirs is None:
