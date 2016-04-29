@@ -41,7 +41,8 @@ def main():
             except KeyError:
                 continue
     province_graph = nx.Graph()
-    a = np.array(Image.open(str(parser.file('map/provinces.bmp'))))
+    provinces_path = parser.file('map/' + default_tree['provinces'].val)
+    a = np.array(Image.open(str(provinces_path)))
     for i, j in np.ndindex(a.shape[0] - 1, a.shape[1] - 1):
         province = rgb_id_map.get(tuple(a[i, j]), 0)
         if province != 0:
@@ -51,6 +52,12 @@ def main():
             for neighbor in (neighbor_x, neighbor_y):
                 if neighbor != province and neighbor != 0:
                     province_graph.add_edge(province, neighbor)
+    adjacencies_path = parser.file('map/' + default_tree['adjacencies'].val)
+    for row in csv_rows(adjacencies_path):
+        try:
+            province_graph.add_edge(int(row[0]), int(row[1]))
+        except ValueError:
+            pass
     county_graph = nx.relabel_nodes(province_graph, id_county_map)
     remaining_provs = [x for x in county_graph if isinstance(x, int)]
     county_graph.remove_nodes_from(remaining_provs)
