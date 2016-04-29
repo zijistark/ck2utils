@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
+import csv
 import networkx as nx
 import numpy as np
 from PIL import Image
-from ck2parser import (rootpath, csv_rows, String, Pair, Obj, TopLevel,
-                       SimpleParser)
+from ck2parser import (rootpath, csv_rows, get_localisation, String, Pair, Obj,
+                       TopLevel, SimpleParser)
 from print_time import print_time
 
 def duchy_properties(tree):
@@ -60,8 +61,8 @@ def main():
     current_index = 0
     for _, tree in parser.parse_files('common/landed_titles/*'):
         for duchy, capital, counties in duchy_properties(tree):
-            duchy_capital_map[duchy] = id_county_map[capital]
-            duchy_counties_map[duchy] = counties
+            duchy_capital_map[duchy] = capital
+            duchy_counties_map[duchy] = set(counties)
             county_duchy_map.update((county, duchy) for county in counties)
             landed_titles_index[duchy] = current_index
             current_index += 1
@@ -70,23 +71,43 @@ def main():
                 current_index += 1
     duchy_region_map = {}
     for duchy, counties in duchy_counties_map.items():
-        capital = duchy_capital_map[duchy]
+        capital = id_county_map[duchy_capital_map[duchy]]
         if capital in counties:
-            region = set(counties)
+            region = counties.copy()
             for neighbor in county_graph[capital]:
                 region.update(duchy_counties_map[county_duchy_map[neighbor]])
             duchy_region_map[duchy] = region
+    locs = get_localisation(parser.moddirs)
+    out_rows = ['#CODE;ENGLISH;FRENCH;GERMAN;;SPANISH;;;;;;;;;x'.split(';')]
     region_pairs = []
     for region_duchy in sorted(duchy_region_map, key=landed_titles_index.get):
-        region_name = 'arles_region_tradezone_{}'.format(region_duchy)
+        region_codename = 'arles_region_tradezone_{}'.format(region_duchy)
+        capital_loc = locs['PROV{}'.format(duchy_capital_map[region_duchy])]
+        region_name = 'Potential {} Trade Zone'.format(capital_loc)
+        out_rows.append([region_codename, region_name] + [''] * 12 + ['x'])
         counties = duchy_region_map[region_duchy]
-        counties = sorted(counties, key=landed_titles_index.get)
-        counties_obj = Obj([String(county) for county in counties])
-        region_pair = Pair(region_name, Obj([Pair('counties', counties_obj)]))
+        duchies = set()
+        for filter_duchy, filter_counties in duchy_counties_map.items():
+            if filter_counties and filter_counties <= counties:
+                counties -= filter_counties
+                duchies.add(filter_duchy)
+        region_pair = Pair(region_codename)
+        if duchies:
+            duchies = sorted(duchies, key=landed_titles_index.get)
+            duchies_obj = Obj([String(duchy) for duchy in duchies])
+            region_pair.value.contents.append(Pair('duchies', duchies_obj))
+        if counties:
+            counties = sorted(counties, key=landed_titles_index.get)
+            counties_obj = Obj([String(county) for county in counties])
+            region_pair.value.contents.append(Pair('counties', counties_obj))
         region_pairs.append(region_pair)
     tree = TopLevel(region_pairs)
-    with (rootpath / 'arles.txt').open('w', encoding='cp1252') as fp:
+    regions_out_path = rootpath / 'arles-regions.txt'
+    with regions_out_path.open('w', encoding='cp1252') as fp:
         print(tree.str(parser), file=fp)
+    loc_out_path = rootpath / 'arles-locs.csv'
+    with loc_out_path.open('w', encoding='cp1252', newline='') as fp:
+        csv.writer(fp, dialect='ckii').writerows(out_rows)
 
 if __name__ == '__main__':
     main()
