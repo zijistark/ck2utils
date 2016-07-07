@@ -34,19 +34,25 @@ def update_tree(tree):
 @print_time.print_time
 def main():
     swmhpath = rootpath / 'SWMH-BETA/SWMH'
+    minipath = rootpath / 'MiniSWMH/MiniSWMH'
     simple_parser = SimpleParser(swmhpath)
-    full_parser = FullParser(swmhpath)
+    full_parser = FullParser()
     full_parser.fq_keys = get_cultures(simple_parser, groups=False)
-    emf_lt_path = rootpath / 'EMF/EMF+SWMH/common/landed_titles'
+    emf_swmh_lt = rootpath / 'EMF/EMF+SWMH/common/landed_titles'
+    emf_mini_lt = rootpath / 'EMF/EMF+MiniSWMH/common/landed_titles'
 
-    for inpath, tree in full_parser.parse_files('common/landed_titles/*'):
-        if inpath.name in WHITELIST:
-            continue
-        if not FORMAT_ONLY:
-            update_tree(tree)
-        outpath = emf_lt_path / inpath.name
-        with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
-            f.write(tree.str(full_parser))
+    for indir, outdir in [(swmhpath, emf_swmh_lt), (minipath, emf_mini_lt)]:
+        if not outdir.exists():
+            outdir.mkdir(parents=True)
+        for inpath, tree in full_parser.parse_files('common/landed_titles/*',
+                                                    basedir=indir):
+            if inpath.name in WHITELIST:
+                continue
+            if not FORMAT_ONLY:
+                update_tree(tree)
+            outpath = outdir / inpath.name
+            with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
+                f.write(tree.str(full_parser))
 
 if __name__ == '__main__':
     main()
