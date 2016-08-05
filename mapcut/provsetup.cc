@@ -23,7 +23,7 @@ provsetup::provsetup(const fs::path& in_path) {
         if (!s.key.is_integer())
             throw va_error("province_setup: unexpected non-integer where province ID %d expected: %s", id, path);
 
-        const int prvid = s.key.integer();
+        const int prvid = s.key.as_integer();
 
         if (prvid != id)
             throw va_error("province_setup: unexpected province ID %d found where ID %d expected: %s", prvid, id, path);
@@ -31,7 +31,7 @@ provsetup::provsetup(const fs::path& in_path) {
         if (!s.val.is_block())
             throw va_error("province_setup: unexpected non-block value for province ID %d: %s", id, path);
 
-        const pdx::block* p_block = s.val.block();
+        const pdx::block* p_block = s.val.as_block();
         row r;
 
         for (auto&& ps : p_block->stmt_list) {
