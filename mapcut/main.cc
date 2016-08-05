@@ -17,9 +17,9 @@ using namespace boost::filesystem;
 
 
 /* TODO: use Boost::ProgramOptions (or just a config file), and end this nonsense */
-const path VROOT_DIR("D:/SteamLibrary/steamapps/common/Crusader Kings II");
-const path ROOT_DIR("D:/g/SWMH-BETA/SWMH");
-const path OUT_ROOT_DIR("D:/g/MiniSWMH/MiniSWMH");
+const path VROOT_DIR("/home/ziji/ck2");
+const path ROOT_DIR("/home/ziji/g/SWMH-BETA/SWMH");
+const path OUT_ROOT_DIR("/home/ziji/g/MiniSWMH/MiniSWMH");
 const path TITLES_PATH("common/landed_titles/swmh_landed_titles.txt"); // only uses this landed_titles file
 const path PROVSETUP_FILE("00_province_setup.txt"); // only uses this prov_setup file
 
@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
 
 
     try {
-        default_map dm(ROOT_DIR);
+      default_map dm(ROOT_DIR);
         definitions_table def_tbl(dm);
         provsetup ps_tbl(ROOT_DIR / "common" / "province_setup" / PROVSETUP_FILE);
 
