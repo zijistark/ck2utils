@@ -43,7 +43,7 @@ def write_output(out_path, parser, loc_keys, noble_regex):
     seen = set()
     out_rows = ['#CODE;ENGLISH;FRENCH;GERMAN;;SPANISH;;;;;;;;;x'.split(';')]
     viceroy_rows = []
-    for path in files('localisation/*', parser.moddirs, reverse=True):
+    for path in files('localisation/*', parser.moddirs):
         if path.name == OUT_NAME:
             continue
         out_rows.append(['#' + path.name] + [''] * 13 + ['x'])

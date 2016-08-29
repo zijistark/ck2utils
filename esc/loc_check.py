@@ -20,7 +20,7 @@ def abbrev_path(path):
 def get_locs(where):
     locs = collections.OrderedDict()
     dupe_lines = []
-    for path in files('localisation/*', where, reverse=True):
+    for path in files('localisation/*', where):
         vanilla = modpath not in path.parents
         for row, linenum in csv_rows(path, linenum=True):
             if row[0] in locs:

@@ -87,7 +87,7 @@ def get_provinces(parser):
 def get_localisation(moddirs=(), basedir=vanilladir, ordered=False):
     locs = collections.OrderedDict() if ordered else {}
     loc_glob = 'localisation/*'
-    for path in files(loc_glob, moddirs, basedir=basedir, reverse=True):
+    for path in files(loc_glob, moddirs, basedir=basedir):
         for row in csv_rows(path):
             try:
                 if row[0] not in locs:
