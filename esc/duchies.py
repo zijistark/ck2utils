@@ -382,7 +382,7 @@ def process_default_map(default_map):
     for n, v in default_map:
         if n == 'major_rivers':
             Title.rivers.update(map(int, v))
-    return tuple(next(files('map' / v_dict[key], *modpaths)) for key in
+    return tuple(next(files('map/' + v_dict[key], *modpaths)) for key in
                  ['definitions', 'provinces', 'adjacencies'])
 
 # pre: process default_map, provinces
@@ -479,8 +479,9 @@ def process_map_adjacencies_row(row):
 # TODO: write secondary table for british duchies in 769
 def format_duchies_table():
     def rows():
-        starts = [datetime.date(867, 1, 1), datetime.date(1066, 9, 15)]
-        start_1066 = starts[1]
+        starts = [datetime.date(769, 1, 1), datetime.date(867, 1, 1),
+                  datetime.date(1066, 9, 15)]
+        start_1066 = starts[2]
         for duchy in Title.duchies():
             if not duchy.vassal_intvls:
                 # skip duchy-level titles with no de jure territory ever
