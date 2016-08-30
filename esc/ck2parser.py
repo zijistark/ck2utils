@@ -160,7 +160,7 @@ def comments_to_str(parser, comments, indent):
 
 class Comment:
     def __init__(self, string):
-        if string[0] == '#':
+        if string and string[0] == '#':
             string = string[1:]
         self.val = string.strip()
 
