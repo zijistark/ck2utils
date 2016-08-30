@@ -11,6 +11,12 @@ import print_time
 
 JUST_PRINT_STATS = True
 
+def process_province_history(parser):
+    max_settlements = {}
+    for number, title, tree in ck2parser.get_provinces(parser):
+        max_settlements[title] = int(tree['max_settlements'].val)
+    return max_settlements
+
 def uncomment_baronies(parser, obj):
     for elem in [n for n, v in obj] + [obj.ker]:
         try:
@@ -28,11 +34,13 @@ def main():
     outdir = parser.moddirs[0] / 'common/landed_titles'
     simple_parser = ck2parser.SimpleParser(*parser.moddirs)
 
+    max_settlements = process_province_history(simple_parser)
     cultures = ck2parser.get_cultures(simple_parser, groups=False)
     parser.fq_keys = cultures
 
     defined_baronies = set()
-    county_counter = collections.Counter()
+    missing_counter = collections.Counter()
+    possible_counter = collections.Counter()
 
     def scan_for_baronies(tree):
         for n, v in tree:
@@ -49,7 +57,8 @@ def main():
                     old_barony_count = sum(1 for n2, _ in v
                                            if n2.val.startswith('b_'))
                     num = 7 - old_barony_count
-                    yield max(num, 0)
+                    possible_slots = old_barony_count - max_settlements[n.val]
+                    yield max(num, 0), possible_slots
                     if old_barony_count < 7:
                         if JUST_PRINT_STATS:
                             continue
@@ -83,7 +92,9 @@ def main():
         for inpath, tree in parser.parse_files('common/landed_titles/*'):
             temppath = tempdir / inpath.name
             defined_baronies.update(scan_for_baronies(tree))
-            county_counter.update(update_tree(tree))
+            for missing, possible in update_tree(tree):
+                missing_counter[missing] += 1
+                possible_counter[possible] += 1
             if JUST_PRINT_STATS:
                 continue
             with temppath.open('w', encoding='cp1252', newline='\r\n') as f:
@@ -95,9 +106,11 @@ def main():
 
         print('{} defined baronies'.format(len(defined_baronies)))
         print('[1] counties missing [0] baronies:')
-        pprint.pprint(sorted(county_counter.items()))
+        pprint.pprint(sorted(missing_counter.items()))
         print('{} total missing baronies'.format(
-            sum(k * v for k, v in county_counter.items())))
+            sum(k * v for k, v in missing_counter.items())))
+        print('[1] counties with [0] possible prosperity slots:')
+        pprint.pprint(sorted(possible_counter.items()))
 
 if __name__ == '__main__':
     main()
