@@ -9,7 +9,7 @@ import tempfile
 import ck2parser
 import print_time
 
-JUST_PRINT_STATS = True
+JUST_PRINT_STATS = False
 
 def process_province_history(parser):
     title_id = {}
@@ -18,8 +18,10 @@ def process_province_history(parser):
     return title_id
 
 def build_trigger(parser, counties_by_barony_count, title_id):
-    trigger_outer = ck2parser.Pair('emf_cant_add_holding_slot_trigger')
-    trigger = ck2parser.Pair('OR')
+    trigger_outer = ck2parser.Pair('emf_can_add_holding_slot_trigger')
+    trigger = ck2parser.Pair('NOR')
+    trigger.value.contents.append(ck2parser.Pair('num_of_max_settlements',
+                                                 ck2parser.Number(7)))
     for i in range(1, 7):
         block = ck2parser.Pair('AND')
         block.value.contents.append(ck2parser.Pair('num_of_max_settlements',
@@ -37,15 +39,13 @@ def build_trigger(parser, counties_by_barony_count, title_id):
         or_block.value.contents.extend(prov_pairs)
         block.value.contents.append(or_block)
         trigger.value.contents.append(block)
-    trigger.value.contents.append(ck2parser.Pair('num_of_max_settlements',
-                                                 ck2parser.Number(7)))
     trigger_outer.value.contents.append(trigger)
     return trigger_outer
 
 @print_time.print_time
 def main():
     parser = ck2parser.FullParser(ck2parser.rootpath / 'SWMH-BETA/SWMH')
-    outpath = ck2parser.rootpath / 'emf_cant_add_holding_slot_trigger.txt'
+    outpath = ck2parser.rootpath / 'EMF/EMF+SWMH/common/scripted_triggers/emf_can_add_holding_slot_trigger.txt'
     simple_parser = ck2parser.SimpleParser(*parser.moddirs)
 
     title_id = process_province_history(simple_parser)
