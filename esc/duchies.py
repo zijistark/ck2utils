@@ -29,8 +29,8 @@ import PIL.Image
 import tabulate
 import localpaths
 
-modpaths = []
-# modpaths = [localpaths.rootpath / 'SWMH-BETA/SWMH']
+# modpaths = []
+modpaths = [localpaths.rootpath / 'SWMH-BETA/SWMH']
 
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
                      quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
@@ -482,6 +482,8 @@ def format_duchies_table():
         starts = [datetime.date(769, 1, 1), datetime.date(867, 1, 1),
                   datetime.date(1066, 9, 15)]
         start_1066 = starts[2]
+        if modpaths:
+            del starts[0]
         for duchy in Title.duchies():
             if not duchy.vassal_intvls:
                 # skip duchy-level titles with no de jure territory ever
@@ -492,7 +494,8 @@ def format_duchies_table():
             row['Kingdom'] = kingdom.name if kingdom else '-'
             try:
                 empire = kingdom.liege(start_1066)
-                row['Empire'] = empire.name if empire else '-'
+                row['Empire'] = (empire.name
+                    if empire and empire.name != 'e_null' else '-')
             except AttributeError:
                 row['Empire'] = '-'
             start_holdings = [sum(1 for c in duchy.vassals(s) for b in
