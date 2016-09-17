@@ -4,12 +4,13 @@
 # nicholas.escalona@gmail.com
 
 # requires:
-#     >= Python 3.4
-#     >= funcparserlib 0.3.6
-#     >= NetworkX 0.32
-#     >= NumPy 1.9.0
-#     >= Pillow 2.0.0
-#     >= tabulate 0.7.3
+#     Python 3.4
+#     funcparserlib
+#     Matplotlib
+#     Networkx
+#     NumPy
+#     Pillow
+#     tabulate
 
 import collections
 import csv
@@ -22,6 +23,9 @@ import time
 import funcparserlib
 import funcparserlib.lexer
 import funcparserlib.parser
+import matplotlib
+import matplotlib.cm
+import matplotlib.colors
 import networkx
 import numpy
 import PIL
@@ -38,7 +42,13 @@ csv.register_dialect('ckii', delimiter=';', doublequote=False,
 CKII_DIR = localpaths.vanilladir
 
 OUTPUT_FILE = pathlib.Path('C:/Users/Nicholas/Desktop/table.txt')
-BORDERS_PATH = pathlib.Path('C:/Users/Nicholas/Pictures/CKII/borderlayer.png')
+
+if modpaths:
+    borders_path = pathlib.Path('C:/Users/Nicholas/Pictures/CKII/'
+                                'borderlayer_swmh.png')
+else:
+    borders_path = pathlib.Path('C:/Users/Nicholas/Pictures/CKII/'
+                                'borderlayer.png')
 
 class Interval:
     def __init__(self, start, stop):
@@ -244,7 +254,7 @@ def parse(tokens):
     return toplevel.parse(list(tokens))
 
 def parse_files(glob):
-    for path in files(glob, *modpaths):
+    for path in files(glob):
         yield path.stem, parse_file(path)
 
 def parse_file(path):
@@ -254,9 +264,9 @@ def parse_file(path):
 
 # give mod dirs in descending lexicographical order of mod name (Z-A),
 # modified for dependencies as necessary.
-def files(glob, *moddirs, basedir=CKII_DIR, reverse=False):
+def files(glob, basedir=CKII_DIR, reverse=False):
     result_paths = {p.relative_to(d): p
-                    for d in (basedir,) + moddirs for p in d.glob(glob)}
+                    for d in (basedir,) + tuple(modpaths) for p in d.glob(glob)}
     for _, p in sorted(result_paths.items(), key=lambda t: t[0].parts,
                        reverse=reverse):
         yield p
@@ -292,7 +302,7 @@ def process_provinces(provinces_txts):
     defs = tree['definitions']
     max_provinces = int(tree['max_provinces'])
     id_name_map = {}
-    defs_path = next(files('map/' + defs, *modpaths))
+    defs_path = next(files('map/' + defs))
     def row_func(row):
         try:
             id_name_map[int(row[0])] = row[4]
@@ -382,7 +392,7 @@ def process_default_map(default_map):
     for n, v in default_map:
         if n == 'major_rivers':
             Title.rivers.update(map(int, v))
-    return tuple(next(files('map/' + v_dict[key], *modpaths)) for key in
+    return tuple(next(files('map/' + v_dict[key])) for key in
                  ['definitions', 'provinces', 'adjacencies'])
 
 # pre: process default_map, provinces
@@ -418,7 +428,7 @@ def parse_map_provinces(path):
     seas_lakes = Title.province_graph.subgraph(Title.waters - Title.rivers)
     Title.seas = {x for x in seas_lakes if seas_lakes[x]}
 
-def generate_holding_map(in_path, out_path):
+def generate_province_map(in_path, out_dir, value):
     COLORMAP = {1: numpy.uint8((247, 252, 245)),
                 2: numpy.uint8((219, 241, 213)),
                 3: numpy.uint8((173, 222, 167)),
@@ -426,47 +436,105 @@ def generate_holding_map(in_path, out_path):
                 5: numpy.uint8((55, 160, 85)),
                 6: numpy.uint8((11, 119, 52)),
                 7: numpy.uint8((0, 68, 27))}
-    NO_HOLDINGS_COLOR = numpy.uint8((36, 36, 36))
-    WATER_COLOR = numpy.uint8((51, 67, 85))
+    wasteland_color = numpy.uint8((36, 36, 36))
+    water_color = numpy.uint8((51, 67, 85))
 
-    def num_holdings(rgb):
+    rgb_map = {}
+    border = True
+    start = datetime.date(1066, 9, 15)
+    in_image = PIL.Image.open(str(in_path))
+    array = numpy.array(in_image)
+
+    def province_color(rgb):
         rgb_t = tuple(rgb)
         try:
             return rgb_map[rgb_t]
         except KeyError:
             province = Title.rgb_id_map.get(rgb_t, 0)
             if province == 0 or province in Title.waters:
-                color = WATER_COLOR
+                color = water_color
             else:
                 try:
                     title = Title.id_title_map[province]
                 except KeyError:
-                    color = NO_HOLDINGS_COLOR
+                    color = wasteland_color
                 else:
-                    color = COLORMAP[title.max_holdings]
+                    v = max(vmin, min(title_value(title), vmax))
+                    color = numpy.uint8(colormap.to_rgba(v, bytes=True)[:3])
             rgb_map[rgb_t] = color
             return color
 
-    rgb_map = {}
-    in_image = PIL.Image.open(str(in_path))
+    def count_province_area(rgb):
+        try:
+            prov_area[Title.id_title_map[Title.rgb_id_map[tuple(rgb)]]] += 1
+        except KeyError:
+            pass
+        return 0
+
+    if value == 'max_settlements':
+        title_value = lambda title: title.max_holdings
+        vmin, vmax = 1, 7
+    elif value == 'defined_baronies':
+        title_value = lambda title: sum(1 for t in title.vassals())
+        vmin, vmax = 1, 7
+    elif value == 'defined_baronies_minus_max_settlements':
+        title_value = lambda title: (
+            sum(1 for t in title.vassals()) - title.max_holdings)
+        vmin, vmax = 0, 6
+    elif value == '1066_built_holdings':
+        title_value = lambda title: (
+            sum(1 for t in title.built_holdings(start)))
+        vmin, vmax = 1, 7
+    elif value == 'max_settlements_minus_1066_built_holdings':
+        title_value = lambda title: (
+            title.max_holdings - sum(1 for t in title.built_holdings(start)))
+        vmin, vmax = 0, 6
+    elif value.endswith('divided_by_area'):
+        wasteland_color = COLORMAP[1]
+        water_color = COLORMAP[1]
+        border = False
+        prov_area = collections.Counter()
+        numpy.apply_along_axis(count_province_area, 2, array)
+        if 'max_settlements' in value:
+            title_value = lambda title: (
+                title.max_holdings / prov_area[title])
+        elif '1066_built_holdings' in value:
+            title_value = lambda title: (
+                sum(1 for t in title.built_holdings(start)) / prov_area[title])
+        else:
+            raise ValueError()
+        # import pprint
+        # pprint.pprint(sorted(((t.name, title_value(t)) for t in prov_area),
+        #                      key=lambda x: -x[1])[:20])
+        vmin, vmax = 0, max(title_value(t) for t in prov_area)
+    else:
+        raise ValueError()
+
     # width_px, height_px = in_image.size
     # dpi = 96
-    # size = (width_px / dpi, height_px / 96)
+    # size = (width_px / dpi, height_px / dpi)
     # figure = matplotlib.pyplot.figure(figsize=size, dpi=dpi, frameon=False)
     # plot_axes = figure.add_axes([0, 0, 1, 1])
     # plot_axes.axis('off')
-    array = numpy.array(in_image)
-    array = numpy.apply_along_axis(num_holdings, 2, array)
+    # cmap = matplotlib.cm.get_cmap('Greens', vmax - vmin + 1)
+    cmap = matplotlib.cm.get_cmap('Greens')
+    # cmap.set_under('#242424')
+    # cmap.set_over('#334355')
+    if value.startswith('log_'):
+        vmin = min(title_value(t) for t in prov_area)
+        norm = matplotlib.colors.LogNorm(vmin, vmax)
+    else:
+        norm = matplotlib.colors.Normalize(vmin, vmax)
+    colormap = matplotlib.cm.ScalarMappable(cmap=cmap, norm=norm)
+    array = numpy.apply_along_axis(province_color, 2, array)
     out_image = PIL.Image.fromarray(array)
-    # colormap = matplotlib.cm.get_cmap('Greens', 7)
-    # colormap.set_under('#242424')
-    # colormap.set_over('#334355')
-    # norm = matplotlib.colors.Normalize(0.5, 7.5)
-    # colored_image = plot_axes.matshow(array, cmap=colormap, norm=norm)
-    borders = PIL.Image.open(str(BORDERS_PATH))
-    out_image.paste(borders, mask=borders)
-    # # plot_axes.imshow(borders_image)
+    if border:
+        borders = PIL.Image.open(str(borders_path))
+        out_image.paste(borders, mask=borders)
+        # plot_axes.imshow(borders)
+    out_path = out_dir / '{}{}.png'.format('swmh_' if modpaths else '', value)
     out_image.save(str(out_path))
+    # figure.savefig(str(out_path))
 
 # pre: parse_map_provinces
 def process_map_adjacencies_row(row):
@@ -517,7 +585,7 @@ def format_duchies_table():
             row['ID'] = duchy.codename
             yield row
 
-    sorted_rows = sorted(rows(), key=operator.itemgetter('Empire', 'Kingdom', 
+    sorted_rows = sorted(rows(), key=operator.itemgetter('Empire', 'Kingdom',
                                                          'Duchy'))
     return tabulate.tabulate(sorted_rows, headers='keys', tablefmt='mediawiki')
 
@@ -626,7 +694,7 @@ def check_nomads():
     print('wrong holdings: {}'.format([c.name for c in wrong]))
 
 def format_other_provs_table():
-    def rows():    
+    def rows():
         # dunno why broken , temp fix
         category = dict.fromkeys(range(1, Title.max_provinces), 'terra incognita')
         # category = dict.fromkeys(range(1, Title.max_provinces), 'unused')
@@ -752,13 +820,12 @@ def main():
     provinces_txts = parse_files('history/provinces/*.txt')
     landed_titles_txts = parse_files('common/landed_titles/*.txt')
     cultures_txts = parse_files('common/cultures/*.txt')
-    parse_csvs(files('localisation/*.csv', *modpaths),
-               process_localisation_row)
+    parse_csvs(files('localisation/*.csv'), process_localisation_row)
     process_cultures(cultures_txts)
     process_landed_titles(landed_titles_txts)
     process_provinces(provinces_txts)
     process_titles(titles_txts)
-    default_map = parse_file(next(files('map/default.map', *modpaths)))
+    default_map = parse_file(next(files('map/default.map')))
     map_definitions, map_provinces, map_adjacencies = (
         process_default_map(default_map))
     parse_csv(map_definitions, process_map_definitions_row)
@@ -770,20 +837,29 @@ def main():
     # duchy_path()
     # check_nomads()
 
-    output = format_duchies_table()
+    # output = format_duchies_table()
 
     # output = format_counties_table()
 
     # output = format_other_provs_table()
 
-    output = re.sub(r' {2,}', ' ', output)
-    with OUTPUT_FILE.open('w') as f:
-        f.write(output)
+    # output = re.sub(r' {2,}', ' ', output)
+    # with OUTPUT_FILE.open('w') as f:
+    #     f.write(output)
 
     # color_kingdoms()
 
-    # generate_holding_map(map_provinces, pathlib.Path(
-    #     'C:/Users/Nicholas/Pictures/CKII/max_holdings.png'))
+    province_map_out = pathlib.Path('C:/Users/Nicholas/Pictures/CKII')
+    generate_province_map(map_provinces, province_map_out,
+                          # 'max_settlements')
+                          # 'defined_baronies')
+                          # 'defined_baronies_minus_max_settlements')
+                          # '1066_built_holdings')
+                          # 'max_settlements_minus_1066_built_holdings')
+                          # 'max_settlements_divided_by_area')
+                          # 'log_max_settlements_divided_by_area')
+                          '1066_built_holdings_divided_by_area')
+                          # 'log_1066_built_holdings_divided_by_area')
 
 # def parse_map_test():
 #     Title.province_graph = networkx.Graph()
