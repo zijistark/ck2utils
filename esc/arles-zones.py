@@ -108,10 +108,14 @@ def main():
             counties_obj = Obj([String(county) for county in counties])
             region_pair.value.contents.append(Pair('counties', counties_obj))
         region_pairs.append(region_pair)
-    tree = TopLevel(region_pairs)
+    region_tree = TopLevel(region_pairs)
+    
     regions_out_path = rootpath / 'arles-regions.txt'
     with regions_out_path.open('w', encoding='cp1252') as fp:
-        print(tree.str(parser), file=fp)
+        print(region_tree.str(parser), file=fp)
+    events_out_path = rootpath / 'arles-events.txt'
+    with events_out_path.open('w', encoding='cp1252') as fp:
+        print(events_tree.str(parser), file=fp)
     loc_out_path = rootpath / 'arles-locs.csv'
     with loc_out_path.open('w', encoding='cp1252', newline='') as fp:
         csv.writer(fp, dialect='ckii').writerows(out_rows)

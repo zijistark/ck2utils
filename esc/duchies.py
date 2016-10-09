@@ -450,17 +450,19 @@ def generate_province_map(in_path, out_dir, value):
         try:
             return rgb_map[rgb_t]
         except KeyError:
-            province = Title.rgb_id_map.get(rgb_t, 0)
-            if province == 0 or province in Title.waters:
-                color = water_color
-            else:
-                try:
-                    title = Title.id_title_map[province]
-                except KeyError:
-                    color = wasteland_color
+            try:
+                province = Title.rgb_id_map[rgb_t]
+                if province in Title.waters:
+                    color = water_color
                 else:
+                    title = Title.id_title_map[province]
                     v = max(vmin, min(title_value(title), vmax))
                     color = numpy.uint8(colormap.to_rgba(v, bytes=True)[:3])
+            except KeyError:
+                if rgb_t == (255, 255, 255):
+                    color = water_color
+                else:
+                    color = wasteland_color
             rgb_map[rgb_t] = color
             return color
 
@@ -475,11 +477,11 @@ def generate_province_map(in_path, out_dir, value):
         title_value = lambda title: title.max_holdings
         vmin, vmax = 1, 7
     elif value == 'defined_baronies':
-        title_value = lambda title: sum(1 for t in title.vassals())
+        title_value = lambda title: sum(1 for t in title.vassals(start))
         vmin, vmax = 1, 7
     elif value == 'defined_baronies_minus_max_settlements':
         title_value = lambda title: (
-            sum(1 for t in title.vassals()) - title.max_holdings)
+            sum(1 for t in title.vassals(start)) - title.max_holdings)
         vmin, vmax = 0, 6
     elif value == '1066_built_holdings':
         title_value = lambda title: (
@@ -490,8 +492,9 @@ def generate_province_map(in_path, out_dir, value):
             title.max_holdings - sum(1 for t in title.built_holdings(start)))
         vmin, vmax = 0, 6
     elif value.endswith('divided_by_area'):
-        wasteland_color = COLORMAP[1]
-        water_color = COLORMAP[1]
+        if not value.startswith('log_'):
+            wasteland_color = COLORMAP[1]
+            water_color = COLORMAP[1]
         border = False
         prov_area = collections.Counter()
         numpy.apply_along_axis(count_province_area, 2, array)
@@ -850,16 +853,19 @@ def main():
     # color_kingdoms()
 
     province_map_out = pathlib.Path('C:/Users/Nicholas/Pictures/CKII')
-    generate_province_map(map_provinces, province_map_out,
-                          # 'max_settlements')
-                          # 'defined_baronies')
-                          # 'defined_baronies_minus_max_settlements')
-                          # '1066_built_holdings')
-                          # 'max_settlements_minus_1066_built_holdings')
-                          # 'max_settlements_divided_by_area')
-                          # 'log_max_settlements_divided_by_area')
-                          '1066_built_holdings_divided_by_area')
-                          # 'log_1066_built_holdings_divided_by_area')
+    maps = [
+        'max_settlements',
+        'defined_baronies',
+        'defined_baronies_minus_max_settlements',
+        '1066_built_holdings',
+        'max_settlements_minus_1066_built_holdings',
+        'max_settlements_divided_by_area',
+        'log_max_settlements_divided_by_area',
+        '1066_built_holdings_divided_by_area',
+        'log_1066_built_holdings_divided_by_area',
+    ]
+    for value in maps:
+        generate_province_map(map_provinces, province_map_out, value)
 
 # def parse_map_test():
 #     Title.province_graph = networkx.Graph()

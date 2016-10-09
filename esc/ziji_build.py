@@ -35,6 +35,8 @@ AUDIT = False
 # if true, blank ALL localisations
 NUKE_IT_FROM_ORBIT = False
 
+COUNTY_TITLE_NAMES = True
+
 def make_outpath(outroot, inpath, *roots):
     for i, root in enumerate(roots):
         try:
@@ -93,7 +95,7 @@ def process_history(parser, build, extra_keys):
                     number, name = inpath.stem.split(' - ')
                     number = int(number)
                     if id_name[number] == name:
-                        prov_title[number] = v.val
+                        prov_title['PROV{}'.format(number)] = v.val
             if mutated:
                 outpath = make_outpath(build, inpath, vanilladir,
                                        *parser.moddirs)
@@ -225,7 +227,7 @@ def main():
             prov_id = int(prov_match.group(1))
             if not (0 < prov_id < max_provs):
                 return None
-            outrow[1] = prov_title.get(key, '')
+            outrow[1] = prov_title.get(key, '') if COUNTY_TITLE_NAMES else ''
         elif re.fullmatch(misc_regex, key):
             pass
         elif re.fullmatch(noble_regex, key):
@@ -240,12 +242,12 @@ def main():
         # import pprint
         # pprint.pprint(noble_regex)
         inpaths = [modpath / 'localisation' / name for name in [
-            'zz Cultures.csv', 'zz DuchiesKingdomsandEmpires de jure.csv',
-            'zz DuchiesKingdomsandEmpires titular.csv',
-            'zz Jobs and minor titles.csv', 'zz Mercs.csv',
-            'zz Nobletitles.csv', 'zz Religions.csv', 'zz SWMHbaronies.csv',
-            'zz SWMHcounties.csv', 'zz SWMHnewprovinces.csv',
-            'zz SWMHprovinces.csv'] for modpath in parser.moddirs]
+            'A_Cultures.csv', 'A_DuchiesKingdomsandEmpires_de_jure.csv',
+            'A_DuchiesKingdomsandEmpires_titular.csv',
+            'A_Jobs_and_minor_titles.csv', 'A_Mercs.csv',
+            'A_Nobletitles.csv', 'A_Religions.csv', 'A_SWMHbaronies.csv',
+            'A_SWMHcounties.csv', 'A_SWMHnewprovinces.csv',
+            'A_SWMHprovinces.csv'] for modpath in parser.moddirs]
         outpath = rootpath / 'ziji_build.txt'
         with outpath.open('w', encoding='cp1252', newline='') as f:
             for inpath in inpaths:
@@ -268,7 +270,7 @@ def main():
                 if outrow:
                     outrows.append(outrow)
 
-    outpath = build / 'localisation' / 'zzz testing override.csv'
+    outpath = build / 'localisation' / '00_testing override.csv'
     with outpath.open('w', encoding='cp1252', newline='') as csvfile:
         csv.writer(csvfile, dialect='ckii').writerows(outrows)
 
