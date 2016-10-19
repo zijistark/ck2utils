@@ -7,15 +7,19 @@ import string
 import sys
 import localpaths
 
+LINE_ENDINGS = False
+
 rootpath = localpaths.rootpath
 # wd = rootpath / 'CK2Plus'
 # wd = rootpath / 'SWMH-BETA'
 # wd = rootpath / 'EMF'
+# wd = rootpath / 'Britannia'
 wd = pathlib.Path('C:/Users/Nicholas/Documents/Paradox Interactive/Crusader Kings II/mod/modules')
 
 glob = '**/*'
 out_path = rootpath / 'audit2.txt'
-binary = ['.dds', '.tga', '.xac', '.bmp', '.db', '.jpg', '.yml', '.xlsx']
+binary = ['.dds', '.tga', '.xac', '.bmp', '.db', '.jpg', '.yml', '.xlsx',
+          '.ogg', '.wav', '.xcf', '.psd']
 suspicious = ['Â¡', 'Â¤', 'Â§', 'Â°', 'Â¿', 'Ã€', 'Ã', 'Ã‚', 'Ãƒ', 'Ã„', 'Ã…',
               'Ã†', 'Ã‡', 'Ãˆ', 'Ã‰', 'ÃŠ', 'Ã‹', 'ÃŒ', 'Ã', 'ÃŽ', 'Ã', 'Ã',
               'Ã‘', 'Ã’', 'Ã“', 'Ã”', 'Ã•', 'Ã–', 'Ã˜', 'Ã™', 'Ãš', 'Ãœ', 'Ãž',
@@ -36,6 +40,7 @@ somewhat_suspicious = [
     'Ã¤', 'Ã¥', 'Ã¦', 'Ã§', 'Ã¨', 'Ã©', 'Ãª', 'Ã«', 'Ã¬', 'Ã­', 'Ã®', 'Ã¯',
     'Ã°', 'Ã±', 'Ã²', 'Ã³', 'Ã´', 'Ãµ', 'Ã¶', 'Ã·', 'Ã¸', 'Ã¹', 'Ãº', 'Ã»',
     'Ã¼', 'Ã½', 'Ã¾', 'Ã¿']
+regex = '|'.join(['\ufffd'] + somewhat_suspicious)
 encoding_exception = {
 #    wd / 'SWMH/map/default.map':
 #        'utf-8' #XXX
@@ -45,18 +50,20 @@ crlfs = []
 lfs = []
 
 def audit_file(fp, path):
-    fs = fp.read()
-    crlf = '\r\n' in fs
-    lf = bool(re.search(r'[^\r]\n', fs))
-    if crlf and not lf:
-        crlfs.append(path)
-    if not crlf and lf:
-        lfs.append(path)
-    if crlf and lf:
-        yield 'Error: Inconsistent line endings'
-    for string in somewhat_suspicious:
-        if string in fs:
-            yield repr(string)
+    if LINE_ENDINGS:
+        fs = fp.read()
+        crlf = '\r\n' in fs
+        lf = bool(re.search(r'[^\r]\n', fs))
+        if crlf and not lf:
+            crlfs.append(path)
+        if not crlf and lf:
+            lfs.append(path)
+        if crlf and lf:
+            yield 'Error: Inconsistent line endings'
+        fp.seek(0)
+    for i, line in enumerate(fp):
+        for match in re.findall(regex, line.split('#', 1)[0]):
+            yield '{}: {!r}'.format(i + 1, match)
 
 audit = collections.defaultdict(list)
 for path in sorted(wd.glob(glob)):
@@ -64,21 +71,23 @@ for path in sorted(wd.glob(glob)):
         if (path.is_file() and path.suffix not in binary and
             '.git' not in path.parts):
             encoding = encoding_exception.get(path, 'cp1252')
-            with path.open(encoding=encoding, newline='') as fp:
+            with path.open(encoding=encoding, errors='replace', newline='') as fp:
                 path = path.relative_to(wd)
                 audit[path].extend(audit_file(fp, path))
     except:
         audit[path].append(str(sys.exc_info()[1]))
-print('{} CRLF files'.format(len(crlfs)))
-print('{} LF files'.format(len(lfs)))
-if len(crlfs) > len(lfs):
-    kind = 'LF'
-    files = lfs
-else:
-    kind = 'CRLF'
-    files = crlfs
+if LINE_ENDINGS:
+    print('{} CRLF files'.format(len(crlfs)))
+    print('{} LF files'.format(len(lfs)))
+    if len(crlfs) > len(lfs):
+        kind = 'LF'
+        files = lfs
+    else:
+        kind = 'CRLF'
+        files = crlfs
 with out_path.open('w', encoding='cp1252') as fp:
-    print(kind + ' files', *files, sep='\n\t', file=fp)
+    if LINE_ENDINGS:
+        print(kind + ' files', *files, sep='\n\t', file=fp)
     for path, results in sorted(audit.items()):
         if results:
             print(path, *results, sep='\n\t', file=fp)

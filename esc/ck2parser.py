@@ -674,7 +674,8 @@ class SimpleParser:
         string = toktype('String') >> (lambda s: s[1:-1]) >> String
         key = date | number | name
         pair = forward_decl()
-        obj = op('{') + many(pair | string | key) + op('}') >> unarg(Obj)
+        obj = (op('{') + many(pair | string | key) +
+               (op('}') | skip(finished)) >> unarg(Obj))
         pair.define(key + op('=') + (obj | string | key) >> unarg(Pair))
         self.toplevel = many(pair) + skip(finished) >> TopLevel
 
@@ -825,7 +826,7 @@ class FullParser(SimpleParser):
         key = unquoted_string | date | number
         value = forward_decl()
         pair = key + op('=') + value >> unarg(Pair)
-        obj = op('{') + (many(pair | value)) + op('}') >> unarg(Obj)
+        obj = op('{') + (many(pair | value)) + (op('}') | end) >> unarg(Obj)
         value.define(obj | key | quoted_string)
         self.toplevel = (many(pair) + many(nl + comment) + end >>
                          unarg(TopLevel))

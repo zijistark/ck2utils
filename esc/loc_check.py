@@ -7,7 +7,7 @@ import re
 import shutil
 import tempfile
 from ck2parser import (rootpath, vanilladir, csv_rows, files, is_codename,
-                       SimpleParser)
+                       get_cultures, get_localisation, SimpleParser)
 from print_time import print_time
 
 modpath = rootpath / 'SWMH-BETA/SWMH'
