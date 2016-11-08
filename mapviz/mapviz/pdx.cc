@@ -8,19 +8,19 @@
 
 static char* my_strsep(char** stringp, const char* delim)
 {
-	char* start = *stringp;
-	char* p;
+    char* start = *stringp;
+    char* p;
 
-	p = (start != NULL) ? strpbrk(start, delim) : NULL;
+    p = (start != NULL) ? strpbrk(start, delim) : NULL;
 
-	if (p == NULL)
-		*stringp = NULL;
-	else {
-		*p = '\0';
-		*stringp = p + 1;
-	}
+    if (p == NULL)
+        *stringp = NULL;
+    else {
+        *p = '\0';
+        *stringp = p + 1;
+    }
 
-	return start;
+    return start;
 }
 
 
@@ -209,18 +209,14 @@ namespace pdx {
             else
                 fprintf(f, "%s", data.s);
         }
-        else if (type == INT) {
+        else if (type == INT)
             fprintf(f, "%d", data.i);
-        }
-        else if (type == DECIMAL) {
+        else if (type == DECIMAL)
             fprintf(f, "%s", data.s);
-        }
-        else if (type == DATE) {
+        else if (type == DATE)
             fprintf(f, "%s", data.s);
-        }
-        else if (type == TITLE) {
+        else if (type == TITLE)
             fprintf(f, "%s", data.s);
-        }
         else if (type == BLOCK) {
             fprintf(f, "{\n");
             data.p_block->print(f, indent+4);
@@ -236,12 +232,10 @@ namespace pdx {
 
             fprintf(f, "}");
         }
-        else if (type == COLOR) {
+        else if (type == COLOR)
             fprintf(f, "{ %u %u %u }", data.color.r, data.color.g, data.color.b);
-        }
-        else {
+        else
             assert(false);
-        }
     }
 
     list::list(plexer& lex) {
@@ -354,7 +348,6 @@ namespace pdx {
 
         if ( !(*s == 'b' || *s == 'c' || *s == 'd' || *s == 'k' || *s == 'e') )
             return false;
-
 
         if (s[1] != '_')
             return false;

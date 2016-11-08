@@ -19,8 +19,8 @@ public:
     int n = vsnprintf(&msg[0], sizeof(msg), format, vl);
     va_end(vl);
     
-    if (n < 0 || n < sizeof(msg)-1)
-      throw std::runtime_error("va_error: vasprintf");
+    if (n < 0)
+      throw std::runtime_error("va_error: vsnprintf");
   }
 
   const char* what() const throw() {

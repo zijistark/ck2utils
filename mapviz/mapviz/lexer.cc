@@ -12,7 +12,7 @@ lexer::lexer(const char* filename)
     _filename(filename) {
 
   if (!_f)
-    throw va_error("Could not open file: %s\n", filename);
+    throw va_error("could not open file: %s", filename);
 
   yyin = _f;
   yylineno = 1;

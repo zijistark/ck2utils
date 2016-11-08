@@ -161,7 +161,7 @@
   <ItemGroup>
     <ClCompile Include="default_map.cc" />
     <ClCompile Include="lexer.cc" />
-    <ClCompile Include="mapviz.cpp" />
+    <ClCompile Include="mapviz.cc" />
     <ClCompile Include="pdx.cc" />
     <ClCompile Include="province_map.cc" />
     <ClCompile Include="scanner.cc" />
