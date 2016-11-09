@@ -165,7 +165,7 @@ if ($opt_launch) {
 
 	unless ($pid) {
 		# child process
-		chdir($game_dir) or croak "chdir: $!: $game_dir";
+		chdir($opt_game_dir) or croak "chdir: $!: $opt_game_dir";
 		exec($game_exe, '-debug', '-debugscripts') or croak "exec: $!: $game_exe";
 	}
 }
