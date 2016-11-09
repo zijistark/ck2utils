@@ -5,11 +5,15 @@
 #include "error.h"
 
 #include <boost/filesystem.hpp>
+#include <boost/program_options.hpp>
+
+#include <string>
+#include <fstream>
+#include <iostream>
 
 using namespace boost::filesystem;
+namespace po = boost::program_options;
 
-//const path ROOT_PATH("C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings II");
-const path ROOT_PATH("C:/cygwin64/home/ziji/g/SWMH-BETA/SWMH");
 const path OUT_PATH("out.bmp");
 
 
@@ -18,10 +22,49 @@ bool prov_is_water(const default_map& dm, uint prov_id) {
 }
 
 
-int main()
-{
+int main(int argc, const char** argv) {
     try {
-        default_map dm(ROOT_PATH);
+        path opt_root_path;
+
+        /* command-line & configuration file parameter specification */
+
+        po::options_description opt_spec{ "Options" };
+        opt_spec.add_options()
+            ("help,h", "Show help information")
+            ("config",
+                po::value<std::string>(),
+                "Configuration file")
+            ("root-path",
+                po::value<path>(&opt_root_path)->default_value("C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings II"),
+                "Root path (mod/game folder)")
+            ;
+
+        /* parse command line & optional configuration file (command-line options override --config file options)
+         *
+         * example config file contents:
+         *   root-path = C:/cygwin64/home/ziji/g/SWMH-BETA/SWMH
+         */
+
+        po::variables_map opt;
+        po::store(po::parse_command_line(argc, argv, opt_spec), opt);
+
+        if (opt.count("config")) {
+            std::ifstream f_cfg{ opt["config"].as<std::string>().c_str() };
+
+            if (f_cfg)
+                po::store(po::parse_config_file(f_cfg, opt_spec), opt);
+        }
+
+        if (opt.count("help")) {
+            std::cout << opt_spec << std::endl;
+            return 0;
+        }
+
+        po::notify(opt);
+
+        /* done with program option processing */
+
+        default_map dm(opt_root_path);
         province_map pm(dm);
 
         std::string spath = OUT_PATH.string();
@@ -72,8 +115,6 @@ int main()
         const uint8_t WATER_RED = 0x5B;
         const uint8_t WATER_GREEN = 0xAD;
         const uint8_t WATER_BLUE = 0xFF;
-
-        const uint16_t* p_id_map = pm.map();
 
         /* draw base map */
 
@@ -131,7 +172,7 @@ int main()
             throw va_error("failed to write bitmap: %s: %s", strerror(errno), path);
     }
     catch (const std::exception& e) {
-        fprintf(stderr, "fatal: %s\n", e.what());
+        std::cerr << "fatal: " << e.what() << std::endl;
         return 1;
     }
 
