@@ -8,7 +8,6 @@ use Getopt::Long qw(:config gnu_getopt);
 use File::stat;
 use File::Spec;
 use POSIX qw(setsid);
-use Readonly;
 
 my $home_doc_dir = File::Spec->catdir(qw( /cygdrive c Users ), $ENV{USER}, 'Documents');
 
@@ -28,7 +27,6 @@ my $opt_game_dir = $GAME_DIR_DEFAULT;
 my $opt_mod_user_dir = 'HIP';
 my $opt_name;
 my $opt_continue = 0;
-my $opt_bench_file = 0;
 my $opt_daemon = 0;
 my $opt_resume_reason;
 my $opt_compress = 1;
@@ -36,7 +34,7 @@ my $opt_archive = 1;
 my $opt_launch = 0;
 
 sub escalona_mode {
-	$opt_game_dir = File::Spec->catdir(qw( /cygdrive c SteamLibrary steamapps commmon ), 'Crusader Kings II');
+	$opt_game_dir = File::Spec->catdir(qw( /cygdrive c SteamLibrary steamapps common ), 'Crusader Kings II');
 	$opt_launch = 1;
 	$opt_resume_reason = 'Unknown' unless $opt_resume_reason; # I'm more strict w/ myself than he needs to be
 }
@@ -167,7 +165,7 @@ if ($opt_launch) {
 
 	unless ($pid) {
 		# child process
-		exec($game_exe, '-debug', '-debugscripts');
+		exec($game_exe, '-debug', '-debugscripts') or croak "exec: $!: $game_exe";
 	}
 }
 
