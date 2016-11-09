@@ -18,9 +18,13 @@ $ARCHIVE_DIR_DEFAULT = undef unless -d $ARCHIVE_DIR_DEFAULT;
 my $USER_DIR_DEFAULT = File::Spec->catdir($home_doc_dir, 'Paradox Interactive', 'Crusader Kings II');
 $USER_DIR_DEFAULT = undef unless -d $USER_DIR_DEFAULT;
 
+my $GAME_DIR_DEFAULT = File::Spec->catdir(qw( /cygdrive c ), 'Program Files (x86)',
+                                          qw( Steam steamapps common ), 'Crusader Kings II');
+$GAME_DIR_DEFAULT = undef unless -d $GAME_DIR_DEFAULT;
 
 my $opt_archive_dir = $ARCHIVE_DIR_DEFAULT;
 my $opt_user_dir = $USER_DIR_DEFAULT;
+my $opt_game_dir = $GAME_DIR_DEFAULT;
 my $opt_mod_user_dir = 'HIP';
 my $opt_name;
 my $opt_continue = 0;
@@ -29,30 +33,51 @@ my $opt_daemon = 0;
 my $opt_resume_reason;
 my $opt_compress = 1;
 my $opt_archive = 1;
+my $opt_launch = 0;
+
+sub escalona_mode {
+	$opt_game_dir = File::Spec->catdir(qw( /cygdrive c SteamLibrary steamapps commmon ), 'Crusader Kings II');
+	$opt_launch = 1;
+	$opt_resume_reason = 'Unknown' unless $opt_resume_reason; # I'm more strict w/ myself than he needs to be
+}
 
 GetOptions(
 	'a|archive-dir=s' => \$opt_archive_dir,
 	'u|user-dir=s' => \$opt_user_dir,
 	'm|mod-user-dir=s' => \$opt_mod_user_dir,
-	'Z|ziji' => sub { $opt_user_dir = File::Spec->catdir(qw( /cygdrive d ck )) },
+	'g|game-dir=s' => \$opt_game_dir,
 	'n|name=s' => \$opt_name,
 	'c|continue' => \$opt_continue,
 	'D|daemonize' => \$opt_daemon,
+	'l|launch' => \$opt_launch,
 	'r|resume-reason=s' => \$opt_resume_reason,
 	'ctd|resume-ctd' => sub { $opt_resume_reason = 'CTD' },
 	'normal|resume-normal' => sub { $opt_resume_reason = 'Normal' },
 	'no-compression' => sub { $opt_compress = 0 },
 	'no-save-archiving' => sub { $opt_archive = 0 },
+	'E|escalona' => \&escalona_mode,
 ) or croak;
 
 $opt_continue = 1 if $opt_resume_reason;
-	
+
 croak "specify a user directory with --user-dir" unless $opt_user_dir;
 croak "specify a name for the savegame series with --name" unless $opt_name;
 croak "specify an archive root directory with --archive-dir" unless $opt_archive_dir;
+croak "specify the CK2 game directory with --game-dir" unless (!$opt_launch || $opt_game_dir);
 
 croak "user directory not found or not a directory: $opt_user_dir" unless -d $opt_user_dir;
 croak "archive root directory not found or not a directory: $opt_archive_dir" unless -d $opt_archive_dir;
+croak "CK2 game directory not found or not a directory" unless (!$opt_launch || -d $opt_game_dir);
+
+my $game_exe;
+
+if ($opt_launch) {
+	$game_exe = File::Spec->catfile($opt_game_dir, 'CK2game.exe');
+	
+	unless (-f $game_exe && -x $game_exe) {
+		croak "game executable not valid (not there or needs execute permission): $game_exe";
+	}
+}
 
 my $user_dir = $opt_user_dir;
 
@@ -135,6 +160,15 @@ else {
 	update_counter_file();
 	open($bf, '>', $bench_file) or croak "file open failed: $!: $bench_file";
 	$bf->print("Sample ID;Date;Duration (seconds);File Size (MB);Resume Reason;Comment\n");
+}
+
+if ($opt_launch) {
+	defined(my $pid = fork()) or croak "can't fork: $!";
+
+	unless ($pid) {
+		# child process
+		exec($game_exe, '-debug', '-debugscripts');
+	}
 }
 
 my $as_mtime = (-f $autosave_file) ? stat($autosave_file)->mtime : 0;
