@@ -26,6 +26,7 @@ class province_map {
 
 public:
     province_map(const default_map&);
+    ~province_map() { if (_p_map) delete[] _p_map; }
 
     static const uint16_t TYPE_OCEAN = (1<<16)-1;
     static const uint16_t TYPE_IMPASSABLE = (1<<16)-2;

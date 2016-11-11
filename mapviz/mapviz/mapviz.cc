@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iostream>
 
+using namespace std;
 using namespace boost::filesystem;
 namespace po = boost::program_options;
 
@@ -24,7 +25,9 @@ bool prov_is_water(const default_map& dm, uint prov_id) {
 
 int main(int argc, const char** argv) {
     try {
-        path opt_root_path;
+        path opt_game_path;
+        bool opt_outline_provinces;
+        bool opt_outline_seazones;
 
         /* command-line & configuration file parameter specification */
 
@@ -32,17 +35,27 @@ int main(int argc, const char** argv) {
         opt_spec.add_options()
             ("help,h", "Show help information")
             ("config",
-                po::value<std::string>(),
+                po::value<string>(),
                 "Configuration file")
-            ("root-path",
-                po::value<path>(&opt_root_path)->default_value("C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings II"),
-                "Root path (mod/game folder)")
+            ("game-path",
+                po::value<path>(&opt_game_path)->default_value("C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings II"),
+                "Game folder (can be a mod too, for now)")
+            ("outline-provinces",
+                po::value<bool>(&opt_outline_provinces)->default_value(true),
+                "Draw province outline")
+            ("outline-seazones",
+                po::value<bool>(&opt_outline_provinces)->default_value(false),
+                "Include seazones in province outline")
             ;
 
         /* parse command line & optional configuration file (command-line options override --config file options)
          *
          * example config file contents:
-         *   root-path = C:/cygwin64/home/ziji/g/SWMH-BETA/SWMH
+         *
+         *   game-path = C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings II
+         *   mod-path  = C:/cygwin64/home/ziji/g/SWMH-BETA/SWMH
+         *
+         *   outline-seazones = yes   # include seazones in the province outline
          */
 
         po::variables_map opt;
@@ -64,7 +77,7 @@ int main(int argc, const char** argv) {
 
         /* done with program option processing */
 
-        default_map dm(opt_root_path);
+        default_map dm(opt_game_path);
         province_map pm(dm);
 
         std::string spath = OUT_PATH.string();
@@ -110,7 +123,7 @@ int main(int argc, const char** argv) {
         if (fwrite(&bf_hdr, sizeof(bf_hdr), 1, f) < 1)
             throw va_error("failed to write bitmap header: %s: %s", strerror(errno), path);
 
-        uint8_t* p_out_map = new uint8_t[n_map_sz];
+        auto p_out_map = make_unique<uint8_t[]>( n_map_sz );
 
         const uint8_t WATER_RED = 0x5B;
         const uint8_t WATER_GREEN = 0xAD;
@@ -119,7 +132,7 @@ int main(int argc, const char** argv) {
         /* draw base map */
 
         for (uint y = 0; y < n_height; ++y) {
-            uint8_t* p_out_row = &p_out_map[n_row_sz * (n_height - 1 - y)];
+            auto p_out_row = &p_out_map[n_row_sz * (n_height - 1 - y)];
 
             for (uint x = 0; x < n_width; ++x) {
                 uint16_t prov_id = pm.at(x, y);
@@ -142,33 +155,36 @@ int main(int argc, const char** argv) {
             }
         }
 
-        /* draw province outline: top & left edges */
+        if (opt_outline_provinces) {
+            /* draw province outline: top & left edges */
 
-        for (uint y = 0; y < n_height; ++y) {
-            uint8_t* p_out_row = &p_out_map[n_row_sz * (n_height - 1 - y)];
+            for (uint y = 0; y < n_height; ++y) {
+                auto p_out_row = &p_out_map[n_row_sz * (n_height - 1 - y)];
 
-            for (uint x = 0; x < n_width; ++x) {
-                uint16_t prov_id = pm.at(x, y);
-                uint16_t right_prov_id = pm.at(x + 1, y);
-                uint16_t below_prov_id = pm.at(x, y + 1);
+                for (uint x = 0; x < n_width; ++x) {
+                    uint16_t prov_id = pm.at(x, y);
+                    uint16_t right_prov_id = pm.at(x + 1, y);
+                    uint16_t below_prov_id = pm.at(x, y + 1);
 
-                if (prov_id == right_prov_id && prov_id == below_prov_id)
-                    continue;
+                    if (prov_id == right_prov_id && prov_id == below_prov_id)
+                        continue;
 
-                /* draw an outline pixel if any of the edges involve a land province */
+                    /* draw an outline pixel if any of the edges involve a land province, or if seazone outlining is enabled */
 
-                if (!prov_is_water(dm, prov_id) ||
-                    !prov_is_water(dm, right_prov_id) ||
-                    !prov_is_water(dm, below_prov_id)) {
+                    if (opt_outline_seazones ||
+                        !prov_is_water(dm, prov_id) ||
+                        !prov_is_water(dm, right_prov_id) ||
+                        !prov_is_water(dm, below_prov_id)) {
 
-                    p_out_row[3 * x + 0] = 0x7F;
-                    p_out_row[3 * x + 1] = 0x7F;
-                    p_out_row[3 * x + 2] = 0x7F;
+                        p_out_row[3 * x + 0] = 0x7F;
+                        p_out_row[3 * x + 1] = 0x7F;
+                        p_out_row[3 * x + 2] = 0x7F;
+                    }
                 }
             }
         }
 
-        if (fwrite(p_out_map, n_map_sz, 1, f) < 1)
+        if (fwrite(p_out_map.get(), n_map_sz, 1, f) < 1)
             throw va_error("failed to write bitmap: %s: %s", strerror(errno), path);
     }
     catch (const std::exception& e) {
@@ -178,4 +194,3 @@ int main(int argc, const char** argv) {
 
     return 0;
 }
-
