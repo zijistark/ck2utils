@@ -153,6 +153,7 @@
     <ClInclude Include="default_map.h" />
     <ClInclude Include="error.h" />
     <ClInclude Include="lexer.h" />
+    <ClInclude Include="mod_vfs.h" />
     <ClInclude Include="pdx.h" />
     <ClInclude Include="province_map.h" />
     <ClInclude Include="scanner.h" />

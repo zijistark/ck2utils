@@ -39,6 +39,9 @@
     <ClInclude Include="bmp_format.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="mod_vfs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="scanner.cc">

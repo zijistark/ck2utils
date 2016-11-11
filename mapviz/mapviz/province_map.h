@@ -2,6 +2,7 @@
 #ifndef _MDH_PROVINCE_MAP_H_
 #define _MDH_PROVINCE_MAP_H_
 
+#include "mod_vfs.h"
 #include "default_map.h"
 
 #include <string>
@@ -15,7 +16,7 @@ class province_map {
     uint _n_height;
 
     typedef std::unordered_map<uint32_t, uint16_t> color2id_map_t;
-    void fill_color2id_map(color2id_map_t&, const default_map&);
+    void fill_color2id_map(color2id_map_t&, const mod_vfs&, const default_map&);
 
     template<typename T>
     static uint32_t make_color(T r, T g, T b) noexcept {
@@ -25,7 +26,7 @@ class province_map {
     }
 
 public:
-    province_map(const default_map&);
+    province_map(const mod_vfs&, const default_map&);
     ~province_map() { if (_p_map) delete[] _p_map; }
 
     static const uint16_t TYPE_OCEAN = (1<<16)-1;

@@ -7,13 +7,13 @@
 #include <cassert>
 
 
-default_map::default_map(const fs::path& root_path)
-: _max_province_id(0), _root_path(root_path) {
+default_map::default_map(const mod_vfs& vfs)
+: _max_province_id(0) {
 
     using namespace pdx;
 
-    fs::path path = root_path / "map/default.map";
-    plexer lex(path.string().c_str());
+    const std::string spath{ vfs.resolve_path("map/default.map").string() };
+    plexer lex(spath.c_str());
     block doc(lex, true);
 
     for (auto&& s : doc.stmt_list) {

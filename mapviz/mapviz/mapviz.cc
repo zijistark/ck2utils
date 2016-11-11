@@ -1,4 +1,5 @@
 
+#include "mod_vfs.h"
 #include "default_map.h"
 #include "province_map.h"
 #include "bmp_format.h"
@@ -15,7 +16,7 @@ using namespace std;
 using namespace boost::filesystem;
 namespace po = boost::program_options;
 
-const path OUT_PATH("out.bmp");
+const char* OUT_PATH("out.bmp");
 
 
 bool prov_is_water(const default_map& dm, uint prov_id) {
@@ -35,16 +36,22 @@ int main(int argc, const char** argv) {
         opt_spec.add_options()
             ("help,h", "Show help information")
             ("config",
-                po::value<string>(),
+                po::value<path>(),
                 "Configuration file")
             ("game-path",
                 po::value<path>(&opt_game_path)->default_value("C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings II"),
-                "Game folder (can be a mod too, for now)")
+                "Path to game folder")
+            ("mod-path",
+                po::value<path>(),
+                "Path to root folder of a mod")
+            ("submod-path",
+                po::value<path>(),
+                "Path to root folder of a sub-mod")
             ("outline-provinces",
                 po::value<bool>(&opt_outline_provinces)->default_value(true),
                 "Draw province outline")
             ("outline-seazones",
-                po::value<bool>(&opt_outline_provinces)->default_value(false),
+                po::value<bool>(&opt_outline_seazones)->default_value(false),
                 "Include seazones in province outline")
             ;
 
@@ -52,20 +59,23 @@ int main(int argc, const char** argv) {
          *
          * example config file contents:
          *
-         *   game-path = C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings II
-         *   mod-path  = C:/cygwin64/home/ziji/g/SWMH-BETA/SWMH
+         *   game-path = C:/SteamLibrary/steamapps/common/Crusader Kings II
+         *   mod-path  = D:\git\SWMH-BETA\SWMH
          *
-         *   outline-seazones = yes   # include seazones in the province outline
+         *   outline-provinces = no  # don't draw the province outline (boolean options take yes/no/true/false/1/0)
          */
 
         po::variables_map opt;
         po::store(po::parse_command_line(argc, argv, opt_spec), opt);
 
         if (opt.count("config")) {
-            std::ifstream f_cfg{ opt["config"].as<std::string>().c_str() };
+            const std::string cfg_path = opt["config"].as<path>().string();
+            std::ifstream f_cfg{ cfg_path };
 
             if (f_cfg)
                 po::store(po::parse_config_file(f_cfg, opt_spec), opt);
+            else
+                throw std::runtime_error("failed to open config file specified with --config: " + cfg_path);
         }
 
         if (opt.count("help")) {
@@ -75,13 +85,23 @@ int main(int argc, const char** argv) {
 
         po::notify(opt);
 
+        mod_vfs vfs{ opt_game_path };
+        
+        if (opt.count("mod-path")) {
+            vfs.push_mod_path(opt["mod-path"].as<path>());
+
+            if (opt.count("submod-path"))
+                vfs.push_mod_path(opt["submod-path"].as<path>());
+        }
+        else if (opt.count("submod-path"))
+            throw std::runtime_error("cannot specify --submod-path without also providing a --mod-path");
+
         /* done with program option processing */
 
-        default_map dm(opt_game_path);
-        province_map pm(dm);
+        default_map dm(vfs);
+        province_map pm(vfs, dm);
 
-        std::string spath = OUT_PATH.string();
-        const char* path = spath.c_str();
+        const char* path = OUT_PATH;
 
         FILE* f;
 

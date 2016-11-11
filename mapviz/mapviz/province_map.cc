@@ -11,16 +11,16 @@
 #include <iostream>
 #include <string>
 
-province_map::province_map(const default_map& dm)
+province_map::province_map(const mod_vfs& vfs, const default_map& dm)
     : _p_map(nullptr),
       _n_width(0),
       _n_height(0) {
 
     color2id_map_t color2id_map;
-    fill_color2id_map(color2id_map, dm);
+    fill_color2id_map(color2id_map, vfs, dm);
 
-	const std::string sp = fs::path(dm.root_path() / "map" / dm.provinces_path()).string();
-    const char* path = sp.c_str();
+    const std::string spath{ vfs.resolve_path("map" / dm.provinces_path()).string() };
+    const char* path = spath.c_str();
 
     FILE* f;
 
@@ -122,10 +122,11 @@ province_map::province_map(const default_map& dm)
 }
 
 
-void province_map::fill_color2id_map(color2id_map_t& m, const default_map& dm) {
+void province_map::fill_color2id_map(color2id_map_t& m, const mod_vfs& vfs, const default_map& dm) {
 
-    const std::string sp = fs::path(dm.root_path() / "map" / dm.definitions_path()).string();
-    const char* path = sp.c_str();
+    const std::string spath{ vfs.resolve_path("map" / dm.definitions_path()).string() };
+    const char* path = spath.c_str();
+
     FILE* f;
 
     if ( (f = fopen(path, "rb")) == nullptr )
