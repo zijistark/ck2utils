@@ -150,8 +150,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="bmp_format.h" />
+    <ClInclude Include="color.h" />
     <ClInclude Include="default_map.h" />
+    <ClInclude Include="definitions_table.h" />
     <ClInclude Include="error.h" />
+    <ClInclude Include="legacy_compat.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="mod_vfs.h" />
     <ClInclude Include="pdx.h" />
@@ -161,6 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="default_map.cc" />
+    <ClCompile Include="definitions_table.cc" />
     <ClCompile Include="lexer.cc" />
     <ClCompile Include="mapviz.cc" />
     <ClCompile Include="pdx.cc" />

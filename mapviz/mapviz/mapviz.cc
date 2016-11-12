@@ -2,7 +2,9 @@
 #include "mod_vfs.h"
 #include "default_map.h"
 #include "province_map.h"
+#include "definitions_table.h"
 #include "bmp_format.h"
+#include "color.h"
 #include "error.h"
 
 #include <boost/filesystem.hpp>
@@ -16,12 +18,41 @@ using namespace std;
 using namespace boost::filesystem;
 namespace po = boost::program_options;
 
-const char* OUT_PATH("out.bmp");
+
+struct province {
+    bool       is_seazone;
+    uint16_t   id;
+    string     county_title;
+    rgba_color color;
+
+    province(uint16_t _id, bool attr_seazone)
+        : is_seazone(attr_seazone), id(_id), color{ 0xFF,0xFF,0xFF } { }
+};
 
 
-bool prov_is_water(const default_map& dm, uint prov_id) {
-    return prov_id == province_map::TYPE_OCEAN || dm.id_is_seazone(prov_id);
-}
+class province_table {
+    vector<province> vec;
+   
+public:
+    province_table(const default_map& dm) {
+        vec.reserve(dm.max_province_id());
+
+        for (uint i = 0; i < dm.max_province_id(); ++i)
+            vec.emplace_back(province{ static_cast<uint16_t>(i + 1), dm.id_is_seazone(i + 1) });
+    }
+
+    bool is_water(uint16_t id) const {
+        return id == province_map::TYPE_OCEAN || (id <= vec.size() && vec[id - 1].is_seazone);
+    }
+
+    bool is_impassable(uint16_t id) const { return id == province_map::TYPE_IMPASSABLE; }
+
+    bool is_wasteland(uint16_t id) const {
+        return id <= vec.size() && vec[id - 1].county_title.empty() && !vec[id - 1].is_seazone;
+    }
+
+    const province& operator[](uint16_t id) const { return vec[id - 1]; }
+};
 
 
 int main(int argc, const char** argv) {
@@ -29,6 +60,7 @@ int main(int argc, const char** argv) {
         path opt_game_path;
         bool opt_outline_provinces;
         bool opt_outline_seazones;
+        bool opt_outline_between_wasteland;
 
         /* command-line & configuration file parameter specification */
 
@@ -53,6 +85,9 @@ int main(int argc, const char** argv) {
             ("outline-seazones",
                 po::value<bool>(&opt_outline_seazones)->default_value(false),
                 "Include seazones in province outline")
+            ("outline-between-wasteland",
+                po::value<bool>(&opt_outline_between_wasteland)->default_value(false),
+                "Don't merge wasteland in province outline")
             ;
 
         /* parse command line & optional configuration file (command-line options override --config file options)
@@ -69,24 +104,24 @@ int main(int argc, const char** argv) {
         po::store(po::parse_command_line(argc, argv, opt_spec), opt);
 
         if (opt.count("config")) {
-            const std::string cfg_path = opt["config"].as<path>().string();
+            const string cfg_path = opt["config"].as<path>().string();
             std::ifstream f_cfg{ cfg_path };
 
             if (f_cfg)
                 po::store(po::parse_config_file(f_cfg, opt_spec), opt);
             else
-                throw std::runtime_error("failed to open config file specified with --config: " + cfg_path);
+                throw runtime_error("failed to open config file specified with --config: " + cfg_path);
         }
 
         if (opt.count("help")) {
-            std::cout << opt_spec << std::endl;
+            cout << opt_spec << endl;
             return 0;
         }
 
         po::notify(opt);
 
         mod_vfs vfs{ opt_game_path };
-        
+
         if (opt.count("mod-path")) {
             vfs.push_mod_path(opt["mod-path"].as<path>());
 
@@ -94,15 +129,16 @@ int main(int argc, const char** argv) {
                 vfs.push_mod_path(opt["submod-path"].as<path>());
         }
         else if (opt.count("submod-path"))
-            throw std::runtime_error("cannot specify --submod-path without also providing a --mod-path");
+            throw runtime_error("cannot specify --submod-path without also providing a --mod-path");
 
         /* done with program option processing */
 
-        default_map dm(vfs);
-        province_map pm(vfs, dm);
+        default_map dm{ vfs };
+        definitions_table def_tbl{ vfs, dm };
+        province_map pm{ vfs, dm, def_tbl };
+        province_table prov_tbl{ dm };
 
-        const char* path = OUT_PATH;
-
+        const char* path = "out.bmp";
         FILE* f;
 
         if ((f = fopen(path, "wb")) == nullptr)
@@ -134,20 +170,16 @@ int main(int argc, const char** argv) {
         bf_hdr.n_colors = 0;
         bf_hdr.n_important_colors = 0;
 
-        printf("width: %u\n", n_width);
+        printf("width:  %u\n", n_width);
         printf("height: %u\n", n_height);
-        printf("header size: %zu\n", sizeof(bf_hdr));
-        printf("bitmap offset: %u\n", bf_hdr.n_bitmap_offset);
-        printf("file size: %u\n", bf_hdr.n_file_size);
+        printf("size:   %0.2f MiB\n", bf_hdr.n_file_size / 1024.0 / 1024.0);
 
         if (fwrite(&bf_hdr, sizeof(bf_hdr), 1, f) < 1)
             throw va_error("failed to write bitmap header: %s: %s", strerror(errno), path);
 
         auto p_out_map = make_unique<uint8_t[]>( n_map_sz );
 
-        const uint8_t WATER_RED = 0x5B;
-        const uint8_t WATER_GREEN = 0xAD;
-        const uint8_t WATER_BLUE = 0xFF;
+        const rgba_color WATER_COLOR{ 0x5B,0xAD,0xFF };
 
         /* draw base map */
 
@@ -157,17 +189,18 @@ int main(int argc, const char** argv) {
             for (uint x = 0; x < n_width; ++x) {
                 uint16_t prov_id = pm.at(x, y);
 
-                if (prov_is_water(dm, prov_id)) {
-                    p_out_row[3 * x + 0] = WATER_BLUE;
-                    p_out_row[3 * x + 1] = WATER_GREEN;
-                    p_out_row[3 * x + 2] = WATER_RED;
+                if (prov_tbl.is_water(prov_id)) {
+                    p_out_row[3 * x + 0] = WATER_COLOR.blue();
+                    p_out_row[3 * x + 1] = WATER_COLOR.green();
+                    p_out_row[3 * x + 2] = WATER_COLOR.red();
                 }
-                else if (prov_id == province_map::TYPE_IMPASSABLE) {
+                else if (prov_tbl.is_impassable(prov_id)) {
                     p_out_row[3 * x + 0] = 0x00;
                     p_out_row[3 * x + 1] = 0x00;
                     p_out_row[3 * x + 2] = 0x00;
                 }
                 else {
+                    const province& prov = prov_tbl[prov_id];
                     p_out_row[3 * x + 0] = 0xFF;
                     p_out_row[3 * x + 1] = 0xFF;
                     p_out_row[3 * x + 2] = 0xFF;
@@ -191,10 +224,10 @@ int main(int argc, const char** argv) {
 
                     /* draw an outline pixel if any of the edges involve a land province, or if seazone outlining is enabled */
 
-                    if (opt_outline_seazones ||
-                        !prov_is_water(dm, prov_id) ||
-                        !prov_is_water(dm, right_prov_id) ||
-                        !prov_is_water(dm, below_prov_id)) {
+                    if (!prov_tbl.is_water(prov_id) ||
+                        !prov_tbl.is_water(right_prov_id) ||
+                        !prov_tbl.is_water(below_prov_id) ||
+                        opt_outline_seazones) {
 
                         p_out_row[3 * x + 0] = 0x7F;
                         p_out_row[3 * x + 1] = 0x7F;
@@ -207,8 +240,8 @@ int main(int argc, const char** argv) {
         if (fwrite(p_out_map.get(), n_map_sz, 1, f) < 1)
             throw va_error("failed to write bitmap: %s: %s", strerror(errno), path);
     }
-    catch (const std::exception& e) {
-        std::cerr << "fatal: " << e.what() << std::endl;
+    catch (const exception& e) {
+        cerr << "fatal: " << e.what() << endl;
         return 1;
     }
 

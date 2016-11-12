@@ -20,13 +20,15 @@ public:
     void push_mod_path(const fs::path& p) { _path_stack.push_back(p); }
 
     bool resolve_path(fs::path* p_real_path, const fs::path& virtual_path) const {
+        /* search path vector for a filesystem hit in reverse */
         for (auto i = _path_stack.crbegin(); i != _path_stack.crend(); ++i)
-            if (fs::exists( *p_real_path = *i / virtual_path ))
+            if (fs::exists( *p_real_path = *i / virtual_path.native() ))
                 return true;
         return false;
     }
 
-    fs::path resolve_path(const fs::path& virtual_path) const {
+    /* a more convenient accessor which auto-throws on a nonexistent path */
+    fs::path operator[](const fs::path& virtual_path) const {
         fs::path p;
         if (!resolve_path(&p, virtual_path))
             throw std::runtime_error("missing game file: " + virtual_path.string());
@@ -43,8 +45,8 @@ public:
         return resolve_path(p_real_path, fs::path(virtual_path));
     }
 
-    fs::path resolve_path(const std::string& virtual_path) const { return resolve_path(fs::path(virtual_path)); }
-    fs::path resolve_path(const char* virtual_path) const        { return resolve_path(fs::path(virtual_path)); }
+    fs::path operator[](const std::string& virtual_path) const { return (*this)[fs::path(virtual_path)]; }
+    fs::path operator[](const char* virtual_path) const        { return (*this)[fs::path(virtual_path)]; }
 };
 
 

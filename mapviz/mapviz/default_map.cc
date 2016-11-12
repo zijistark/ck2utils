@@ -12,7 +12,7 @@ default_map::default_map(const mod_vfs& vfs)
 
     using namespace pdx;
 
-    const std::string spath{ vfs.resolve_path("map/default.map").string() };
+    const std::string spath{ vfs["map/default.map"].string() };
     plexer lex(spath.c_str());
     block doc(lex, true);
 

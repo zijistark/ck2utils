@@ -8,18 +8,23 @@
 #include <cerrno>
 #include <cstdlib>
 #include <cassert>
-#include <iostream>
 #include <string>
+#include <unordered_map>
 
-province_map::province_map(const mod_vfs& vfs, const default_map& dm)
+province_map::province_map(const mod_vfs& vfs, const default_map& dm, const definitions_table& def_tbl)
     : _p_map(nullptr),
       _n_width(0),
       _n_height(0) {
 
-    color2id_map_t color2id_map;
-    fill_color2id_map(color2id_map, vfs, dm);
+    std::unordered_map<rgba_color, uint16_t> color2id_map;
 
-    const std::string spath{ vfs.resolve_path("map" / dm.provinces_path()).string() };
+    { /* map provinces.bmp color to province ID */
+        uint16_t id = 0;
+        for (auto&& row : def_tbl.row_vec)
+            color2id_map.emplace(row.color, ++id);
+    }
+
+    const std::string spath{ vfs["map" / dm.provinces_path()].string() };
     const char* path = spath.c_str();
 
     FILE* f;
@@ -78,7 +83,7 @@ province_map::province_map(const mod_vfs& vfs, const default_map& dm)
             if (errno)
                 throw va_error("failed to read raw bitmap data: %s: %s", strerror(errno), path);
             else
-                throw va_error("unexpected EOF while reading raw bitmap data: %s", path);
+                throw std::runtime_error("unexpected EOF while reading raw bitmap data: " + spath);
         }
 
         const uint y = _n_height-1 - row;
@@ -100,9 +105,7 @@ province_map::province_map(const mod_vfs& vfs, const default_map& dm)
             else if (x > 0 && p[0] == prev_b && p[1] == prev_g && p[2] == prev_r)
                 id = prev_id;
             else {
-
-                uint32_t color = make_color(p[2], p[1], p[0]);
-                auto i = color2id_map.find(color);
+                auto i = color2id_map.find({ p[2], p[1], p[0] });
 
                 if (i == color2id_map.end())
                     throw va_error("unexpected color RGB(%hhu, %hhu, %hhu) in provinces bitmap at (%u, %u)",
@@ -121,54 +124,3 @@ province_map::province_map(const mod_vfs& vfs, const default_map& dm)
     fclose(f);
 }
 
-
-void province_map::fill_color2id_map(color2id_map_t& m, const mod_vfs& vfs, const default_map& dm) {
-
-    const std::string spath{ vfs.resolve_path("map" / dm.definitions_path()).string() };
-    const char* path = spath.c_str();
-
-    FILE* f;
-
-    if ( (f = fopen(path, "rb")) == nullptr )
-        throw va_error("could not open file: %s: %s", strerror(errno), path);
-
-    char buf[128];
-    uint n_line = 0;
-
-    if ( fgets(&buf[0], sizeof(buf), f) == nullptr ) // consume CSV header
-        throw va_error("definitions file lacks at least 1 line of text: %s", path);
-
-    while ( fgets(&buf[0], sizeof(buf), f) != nullptr ) {
-
-        ++n_line;
-
-        char* p = &buf[0];
-
-        if (*p == '#')
-            continue;
-
-        char* n_str[4];
-        n_str[0] = strtok(p, ";");
-
-        for (uint x = 1; x < 4; ++x)
-            n_str[x] = strtok(nullptr, ";");
-
-        uint n[4];
-        char* p_end;
-
-        for (uint x = 0; x < 4; ++x) {
-            n[x] = strtol(n_str[x], &p_end, 10);
-            assert( *p_end == '\0' );
-        }
-
-        m.emplace( make_color(n[1], n[2], n[3]), static_cast<uint16_t>(n[0]) );
-
-        if (n[0] == dm.max_province_id())
-            break;
-    }
-
-    fclose(f);
-
-    if (m.empty())
-        throw va_error("definitions file lacked any data: %s", path);
-}

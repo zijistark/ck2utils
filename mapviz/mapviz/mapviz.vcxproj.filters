@@ -42,6 +42,15 @@
     <ClInclude Include="mod_vfs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="definitions_table.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="legacy_compat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="scanner.cc">
@@ -63,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="mapviz.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="definitions_table.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

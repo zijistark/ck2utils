@@ -4,10 +4,10 @@
 
 #include "mod_vfs.h"
 #include "default_map.h"
+#include "definitions_table.h"
+#include "color.h"
 
-#include <string>
 #include <cstdint>
-#include <unordered_map>
 
 
 class province_map {
@@ -15,31 +15,18 @@ class province_map {
     uint _n_width;
     uint _n_height;
 
-    typedef std::unordered_map<uint32_t, uint16_t> color2id_map_t;
-    void fill_color2id_map(color2id_map_t&, const mod_vfs&, const default_map&);
-
-    template<typename T>
-    static uint32_t make_color(T r, T g, T b) noexcept {
-        return (static_cast<uint32_t>(b)<<24) |
-               (static_cast<uint32_t>(g)<<16) |
-               (static_cast<uint32_t>(r)<<8);
-    }
-
 public:
-    province_map(const mod_vfs&, const default_map&);
+    province_map(const mod_vfs&, const default_map&, const definitions_table&);
     ~province_map() { if (_p_map) delete[] _p_map; }
 
     static const uint16_t TYPE_OCEAN = (1<<16)-1;
     static const uint16_t TYPE_IMPASSABLE = (1<<16)-2;
 
-    uint width() const noexcept { return _n_width; }
-    uint height() const noexcept { return _n_height; }
+    uint      width() const noexcept  { return _n_width; }
+    uint      height() const noexcept { return _n_height; }
+    uint16_t* map() const noexcept    { return _p_map; }
 
-    uint16_t at(uint x, uint y) const noexcept {
-        return _p_map[ y*_n_width + x ];
-    }
-
-    uint16_t* map() const noexcept { return _p_map; }
+    uint16_t at(uint x, uint y) const noexcept { return _p_map[ y*_n_width + x ]; }
 };
 
 

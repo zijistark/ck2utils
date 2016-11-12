@@ -2,26 +2,10 @@
 #include "pdx.h"
 #include "token.h"
 #include "error.h"
+#include "legacy_compat.h"
 
 #include <cstdlib>
 #include <ctype.h>
-
-static char* my_strsep(char** stringp, const char* delim)
-{
-    char* start = *stringp;
-    char* p;
-
-    p = (start != NULL) ? strpbrk(start, delim) : NULL;
-
-    if (p == NULL)
-        *stringp = NULL;
-    else {
-        *p = '\0';
-        *stringp = p + 1;
-    }
-
-    return start;
-}
 
 
 namespace pdx {
@@ -362,9 +346,9 @@ namespace pdx {
     void obj::store_date_from_str(char* s, lexer* p_lex) {
         /* we already are guaranteed to have a well-formed date string due to the
          * lexer's recognition rules */
-        char* s_y = my_strsep(&s, ".");
-        char* s_m = my_strsep(&s, ".");
-        char* s_d = my_strsep(&s, ".");
+        char* s_y = strsep(&s, ".");
+        char* s_m = strsep(&s, ".");
+        char* s_d = strsep(&s, ".");
         const int y = atoi(s_y);
         const int m = atoi(s_m);
         const int d = atoi(s_d);
