@@ -7,7 +7,7 @@ from ck2parser import (rootpath, get_provinces, files, is_codename, Obj,
                        SimpleParser)
 from print_time import print_time
 
-IGNORE_ENCODING_ERRORS = True
+IGNORE_ENCODING_ERRORS = False
 
 if IGNORE_ENCODING_ERRORS:
     errors = 'replace'
