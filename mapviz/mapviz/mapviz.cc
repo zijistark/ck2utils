@@ -4,6 +4,7 @@
 #include "province_map.h"
 #include "definitions_table.h"
 #include "bmp_format.h"
+#include "pdx.h"
 #include "color.h"
 #include "error.h"
 
@@ -41,17 +42,18 @@ public:
             vec.emplace_back(province{ static_cast<uint16_t>(i + 1), dm.id_is_seazone(i + 1) });
     }
 
-    bool is_water(uint16_t id) const {
+    bool is_water(uint16_t id) const noexcept {
         return id == province_map::TYPE_OCEAN || (id <= vec.size() && vec[id - 1].is_seazone);
     }
 
-    bool is_impassable(uint16_t id) const { return id == province_map::TYPE_IMPASSABLE; }
+    bool is_impassable(uint16_t id) const noexcept { return id == province_map::TYPE_IMPASSABLE; }
 
-    bool is_wasteland(uint16_t id) const {
+    bool is_wasteland(uint16_t id) const noexcept {
         return id <= vec.size() && vec[id - 1].county_title.empty() && !vec[id - 1].is_seazone;
     }
 
-    const province& operator[](uint16_t id) const { return vec[id - 1]; }
+    province& operator[](uint16_t id) noexcept { return vec[id - 1]; }
+    const province& operator[](uint16_t id) const noexcept { return vec[id - 1]; }
 };
 
 
@@ -138,6 +140,37 @@ int main(int argc, const char** argv) {
         province_map pm{ vfs, dm, def_tbl };
         province_table prov_tbl{ dm };
 
+        {
+            char filename[128];
+            uint id = 0;
+
+            for (auto&& d : def_tbl.row_vec) {
+                ++id;
+
+                if (d.name.empty() || prov_tbl[id].is_seazone)
+                    continue;
+
+                sprintf(filename, "%u - %s.txt", id, d.name.c_str());
+
+                path real_path;
+                path virt_path{ "history/provinces" };
+                virt_path /= filename;
+                
+                if (!vfs.resolve_path(&real_path, virt_path)) {
+                    cerr << "warning: failed to find expected file: " << virt_path.native() << endl;
+                    continue;
+                }
+
+                const string spath = real_path.string();
+                pdx::plexer lex(spath.c_str());
+                pdx::block doc(lex, true);
+
+                for (auto&& s : doc.stmt_list)
+                    if (s.key_eq("title"))
+                        prov_tbl[id].county_title = s.val.as_c_str();
+            }
+        }
+
         const char* path = "out.bmp";
         FILE* f;
 
@@ -201,9 +234,9 @@ int main(int argc, const char** argv) {
                 }
                 else {
                     const province& prov = prov_tbl[prov_id];
-                    p_out_row[3 * x + 0] = 0xFF;
-                    p_out_row[3 * x + 1] = 0xFF;
-                    p_out_row[3 * x + 2] = 0xFF;
+                    p_out_row[3 * x + 0] = prov.color.blue();
+                    p_out_row[3 * x + 1] = prov.color.green();
+                    p_out_row[3 * x + 2] = prov.color.red();
                 }
             }
         }
@@ -222,7 +255,15 @@ int main(int argc, const char** argv) {
                     if (prov_id == right_prov_id && prov_id == below_prov_id)
                         continue;
 
-                    /* draw an outline pixel if any of the edges involve a land province, or if seazone outlining is enabled */
+                    /* skip outline if edge(s) are only between wasteland, unless --outline-between-wasteland */
+
+                    if (!opt_outline_between_wasteland &&
+                        prov_tbl.is_wasteland(prov_id) &&
+                        prov_tbl.is_wasteland(right_prov_id) &&
+                        prov_tbl.is_wasteland(below_prov_id))
+                        continue;
+
+                    /* draw an outline pixel if any of the edges involve a land province or if --outline-seazones */
 
                     if (!prov_tbl.is_water(prov_id) ||
                         !prov_tbl.is_water(right_prov_id) ||
