@@ -85,8 +85,6 @@ namespace pdx {
     char*  c_str()   const noexcept { return data.s; }
     int    integer() const noexcept { return data.i; }
     char*  title()   const noexcept { return data.s; }
-    block* block()   const noexcept { return data.p_block; }
-    list*  list()    const noexcept { return data.p_list; }
     date_t date()    const noexcept { return data.date; }
 
     /* type accessors */

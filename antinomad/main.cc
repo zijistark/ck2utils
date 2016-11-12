@@ -16,19 +16,19 @@
 
 using namespace boost::filesystem;
 
-const path VROOT_DIR("D:/SteamLibrary/steamapps/common/Crusader Kings II");
+const path VROOT_DIR("/var/local/vanilla-ck2");
 
 //const path ROOT_DIR("D:/g/CK2Plus/CK2Plus");
 //const path ROOT_DIR(VROOT_DIR);
-const path ROOT_DIR("D:/g/SWMH-BETA/SWMH");
+const path ROOT_DIR("/var/local/git/SWMH-BETA/SWMH");
 
 //const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 769}, {769, 867}, {867, 1000}, {1000, 1066}, };
 //const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 769}, {769, 867}, {867, 1066}, };
-const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 867}, {867, 1066}, };
+const std::vector< std::pair<uint, uint> > UNPLAYABLE_YEAR_RANGES = { {0, 867}, {867, 1043}, };
 
 //const path DEFAULT_OUTPUT_PATH("D:/g/CK2Plus/CK2Plus/events/emf_nomad_codegen_events.txt");
 //const path DEFAULT_OUTPUT_PATH("D:/g/EMF/EMF/events/emf_nomad_codegen.txt");
-const path DEFAULT_OUTPUT_PATH("D:/g/EMF/EMF+SWMH/events/emf_nomad_codegen.txt");
+const path DEFAULT_OUTPUT_PATH("/var/local/git/EMF/EMF+SWMH/events/emf_nomad_codegen.txt");
 
 const uint END_YEAR = 1337;
 const bool OUTPUT_HISTORY_DATA = false; // debugging data to stderr re: history execution
