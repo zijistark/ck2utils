@@ -60,7 +60,7 @@ definitions_table::definitions_table(const mod_vfs& vfs, const default_map& dm) 
       throw va_error("unexpected province ID %u on line %u: %s",
 		     n[0], n_line, path);
 
-    row_vec.emplace_back(n_str[4], rgba_color{ n[1], n[2], n[3] });
+    row_vec.emplace_back(n_str[4], rgb{ n[1], n[2], n[3] });
 
     if (n[0] == dm.max_province_id())
       break;

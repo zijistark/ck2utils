@@ -212,7 +212,7 @@ int main(int argc, const char** argv) {
 
         auto p_out_map = make_unique<uint8_t[]>( n_map_sz );
 
-        const rgba_color WATER_COLOR{ 0x5B,0xAD,0xFF };
+        const rgb WATER_COLOR{ 0x5B,0xAD,0xFF };
 
         /* draw base map */
 

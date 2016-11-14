@@ -16,7 +16,7 @@ province_map::province_map(const mod_vfs& vfs, const default_map& dm, const defi
       _n_width(0),
       _n_height(0) {
 
-    std::unordered_map<rgba_color, uint16_t> color2id_map;
+    std::unordered_map<rgb, uint16_t> color2id_map;
 
     { /* map provinces.bmp color to province ID */
         uint16_t id = 0;

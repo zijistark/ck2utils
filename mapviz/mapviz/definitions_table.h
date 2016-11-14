@@ -16,9 +16,9 @@ namespace fs = boost::filesystem;
 struct definitions_table {
     struct row {
         std::string name;
-        rgba_color color;
+        rgb color;
 
-        row(const std::string& n, const rgba_color& c)
+        row(const std::string& n, const rgb& c)
         : name(n), color(c) { }
     };
 
