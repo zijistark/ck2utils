@@ -22,12 +22,12 @@ namespace pdx {
 
 #pragma pack(push, 1)
 
-  struct date_t {
+  struct date {
     uint16_t y;
     uint8_t  m;
     uint8_t  d;
 
-    bool operator<(const date_t e) const noexcept {
+    bool operator<(date e) const noexcept {
       /* note that since our binary representation is simpy a 32-bit unsigned integer
        * and since our fields are MSB to LSB, we could just compare date_t as a uint,
        * but this is the more correct pattern for multi-field comparison, and I don't
@@ -63,7 +63,7 @@ namespace pdx {
         uint8_t g;
         uint8_t b;
       } color;
-      date_t date;
+      date date;
     } data;
 
     static const uint STR     = 0;
@@ -84,12 +84,12 @@ namespace pdx {
     char*  as_title()   const noexcept { assert(type == TITLE); return data.s; }
     block* as_block()   const noexcept { assert(type == BLOCK); return data.p_block; }
     list*  as_list()    const noexcept { assert(type == LIST);  return data.p_list; }
-    date_t as_date()    const noexcept { assert(type == DATE);  return data.date; }
+    date   as_date()    const noexcept { assert(type == DATE);  return data.date; }
 
     /* more readable accessors (unchecked type) */
-    /*
     char*  c_str()   const noexcept { return data.s; }
     int    integer() const noexcept { return data.i; }
+    /*
     char*  title()   const noexcept { return data.s; }
     block* block()   const noexcept { return data.p_block; }
     list*  list()    const noexcept { return data.p_list; }

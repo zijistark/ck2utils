@@ -60,7 +60,7 @@ definitions_table::definitions_table(const mod_vfs& vfs, const default_map& dm) 
       throw va_error("unexpected province ID %u on line %u: %s",
 		     n[0], n_line, path);
 
-    row_vec.emplace_back(n_str[4], rgb{ n[1], n[2], n[3] });
+    vec.emplace_back(n_str[4], rgb{ n[1], n[2], n[3] });
 
     if (n[0] == dm.max_province_id())
       break;
@@ -68,9 +68,9 @@ definitions_table::definitions_table(const mod_vfs& vfs, const default_map& dm) 
 
   fclose(f);
 
-  if (row_vec.size() != dm.max_province_id())
+  if (vec.size() != dm.max_province_id())
     throw va_error("%u provinces defined for a map with %u: %s",
-		   row_vec.size(), dm.max_province_id(), path);
+		   vec.size(), dm.max_province_id(), path);
 }
 
 
@@ -86,8 +86,9 @@ void definitions_table::write(const fs::path& p) {
 
     uint id = 0;
 
-    for (auto&& r : row_vec)
-        fprintf(f, "%u;%hhu;%hhu;%hhu;%s;x\n", ++id, r.color.r, r.color.g, r.color.b, r.name.c_str());
+    for (auto&& r : vec)
+        fprintf(f, "%u;%hhu;%hhu;%hhu;%s;x\n",
+            ++id, r.color.red(), r.color.green(), r.color.blue(), r.name.c_str());
 
     fclose(f);
 }

@@ -16,11 +16,11 @@ province_map::province_map(const mod_vfs& vfs, const default_map& dm, const defi
       _n_width(0),
       _n_height(0) {
 
+    /* map provinces.bmp color to province ID */
     std::unordered_map<rgb, uint16_t> color2id_map;
-
-    { /* map provinces.bmp color to province ID */
+    {
         uint16_t id = 0;
-        for (auto&& row : def_tbl.row_vec)
+        for (auto&& row : def_tbl)
             color2id_map.emplace(row.color, ++id);
     }
 

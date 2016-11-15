@@ -17,10 +17,11 @@ class province_map {
 
 public:
     province_map(const mod_vfs&, const default_map&, const definitions_table&);
-    ~province_map() { if (_p_map) delete[] _p_map; }
+    ~province_map() { delete[] _p_map; }
 
-    static const uint16_t TYPE_OCEAN = (1<<16)-1;
-    static const uint16_t TYPE_IMPASSABLE = (1<<16)-2;
+    static const uint16_t TYPE_OCEAN = UINT16_MAX;
+    static const uint16_t TYPE_IMPASSABLE = UINT16_MAX-1;
+    static const uint16_t REAL_ID_MAX = UINT16_MAX-2;
 
     uint      width() const noexcept  { return _n_width; }
     uint      height() const noexcept { return _n_height; }

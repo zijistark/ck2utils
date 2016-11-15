@@ -7,6 +7,7 @@
 #include "pdx.h"
 #include "color.h"
 #include "error.h"
+#include "optional.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
@@ -16,44 +17,87 @@
 #include <iostream>
 
 using namespace std;
+using namespace std::experimental;
 using namespace boost::filesystem;
 namespace po = boost::program_options;
 
-
 struct province {
-    bool       is_seazone;
-    uint16_t   id;
-    string     county_title;
-    rgba_color color;
+    /* facts about this province */
+    uint16_t id;
+    bool is_seazone;
+    optional<string> county_title;
+
+    /* options regarding this province's painting */
+    optional<rgb> color; // fill the province with this color, if specified
 
     province(uint16_t _id, bool attr_seazone)
-        : is_seazone(attr_seazone), id(_id), color{ 0xFF,0xFF,0xFF } { }
+        : is_seazone(attr_seazone), id(_id) { }
+    province(uint16_t _id, bool attr_seazone, const std::string& title)
+        : is_seazone(attr_seazone), id(_id), county_title(title) { }
 };
 
 
 class province_table {
-    vector<province> vec;
+    typedef vector<province> vec_t;
+    vec_t vec;
    
 public:
-    province_table(const default_map& dm) {
-        vec.reserve(dm.max_province_id());
+    province_table() = delete;
 
-        for (uint i = 0; i < dm.max_province_id(); ++i)
-            vec.emplace_back(province{ static_cast<uint16_t>(i + 1), dm.id_is_seazone(i + 1) });
+    province_table(const mod_vfs& vfs, const default_map& dm, const definitions_table& dt) {
+        vec.reserve(dm.max_province_id() + 1);
+        vec.emplace_back(province{ 0, false });
+
+        char filename[128];
+        path real_path;
+
+        for (uint16_t id = 1; id <= dm.max_province_id(); ++id) {
+            auto&& def = dt[id];
+            bool is_seazone{ dm.id_is_seazone(id) };
+
+            if (!(def.name.empty() || is_seazone)) {
+                sprintf(filename, "%u - %s.txt", id, def.name.c_str());
+                path virt_path{ "history/provinces" };
+                virt_path /= filename;
+
+                if (vfs.resolve_path(&real_path, virt_path)) {
+                    const string spath{ real_path.string() };
+                    pdx::plexer lex{ spath.c_str() };
+                    pdx::block doc{ lex, true };
+
+                    for (auto&& s : doc.stmt_list)
+                        if (s.key_eq("title") && s.val.is_title())
+                            vec.emplace_back(province{ id, is_seazone, s.val.as_c_str() });
+
+                    continue;
+                }
+                else
+                    cerr << "warning: failed to find expected file: " << virt_path.native() << endl;
+            }
+
+            vec.emplace_back(province{ id, is_seazone });
+        }
     }
 
+    province& operator[](uint16_t id) noexcept { return vec[id]; }
+    const province& operator[](uint16_t id) const noexcept { return vec[id]; }
+
+    vec_t::iterator begin() noexcept { return vec.begin() + 1; }
+    vec_t::const_iterator begin() const noexcept { return vec.cbegin() + 1; }
+    vec_t::iterator end() noexcept { return vec.end(); }
+    vec_t::const_iterator end() const noexcept { return vec.cend(); }
+
+    /* convenience methods that handle the pseudo-province-IDs of TYPE_OCEAN & TYPE_IMPASSABLE */
+
     bool is_water(uint16_t id) const noexcept {
-        return id == province_map::TYPE_OCEAN || (id <= vec.size() && vec[id - 1].is_seazone);
+        return id == province_map::TYPE_OCEAN || (id <= province_map::REAL_ID_MAX && vec[id].is_seazone);
     }
 
     bool is_impassable(uint16_t id) const noexcept { return id == province_map::TYPE_IMPASSABLE; }
 
     bool is_wasteland(uint16_t id) const noexcept {
-        return id <= vec.size() && vec[id - 1].county_title.empty() && !vec[id - 1].is_seazone;
+        return id <= province_map::REAL_ID_MAX && !vec[id].county_title && !vec[id].is_seazone;
     }
-
-    province& operator[](uint16_t id) noexcept { return vec[id - 1]; }
-    const province& operator[](uint16_t id) const noexcept { return vec[id - 1]; }
 };
 
 
@@ -135,41 +179,10 @@ int main(int argc, const char** argv) {
 
         /* done with program option processing */
 
-        default_map dm{ vfs };
-        definitions_table def_tbl{ vfs, dm };
-        province_map pm{ vfs, dm, def_tbl };
-        province_table prov_tbl{ dm };
-
-        {
-            char filename[128];
-            uint id = 0;
-
-            for (auto&& d : def_tbl.row_vec) {
-                ++id;
-
-                if (d.name.empty() || prov_tbl[id].is_seazone)
-                    continue;
-
-                sprintf(filename, "%u - %s.txt", id, d.name.c_str());
-
-                path real_path;
-                path virt_path{ "history/provinces" };
-                virt_path /= filename;
-                
-                if (!vfs.resolve_path(&real_path, virt_path)) {
-                    cerr << "warning: failed to find expected file: " << virt_path.native() << endl;
-                    continue;
-                }
-
-                const string spath = real_path.string();
-                pdx::plexer lex(spath.c_str());
-                pdx::block doc(lex, true);
-
-                for (auto&& s : doc.stmt_list)
-                    if (s.key_eq("title"))
-                        prov_tbl[id].county_title = s.val.as_c_str();
-            }
-        }
+        const default_map dm{ vfs };
+        const definitions_table def_tbl{ vfs, dm };
+        const province_map pm{ vfs, dm, def_tbl };
+        const province_table prov_tbl{ vfs, dm, def_tbl };
 
         const char* path = "out.bmp";
         FILE* f;
@@ -212,7 +225,9 @@ int main(int argc, const char** argv) {
 
         auto p_out_map = make_unique<uint8_t[]>( n_map_sz );
 
-        const rgb WATER_COLOR{ 0x5B,0xAD,0xFF };
+        const rgb WATER_COLOR{ 0x5BADFF };
+        const rgb WASTELAND_COLOR{ 0xAAAAAA };
+        const rgb IMPASSABLE_COLOR{ 0x473A28 };
 
         /* draw base map */
 
@@ -222,27 +237,33 @@ int main(int argc, const char** argv) {
             for (uint x = 0; x < n_width; ++x) {
                 uint16_t prov_id = pm.at(x, y);
 
-                if (prov_tbl.is_water(prov_id)) {
-                    p_out_row[3 * x + 0] = WATER_COLOR.blue();
-                    p_out_row[3 * x + 1] = WATER_COLOR.green();
-                    p_out_row[3 * x + 2] = WATER_COLOR.red();
-                }
-                else if (prov_tbl.is_impassable(prov_id)) {
-                    p_out_row[3 * x + 0] = 0x00;
-                    p_out_row[3 * x + 1] = 0x00;
-                    p_out_row[3 * x + 2] = 0x00;
-                }
-                else {
+                rgb color{ 0xFF,0xFF,0xFF };
+
+                if (prov_id <= province_map::REAL_ID_MAX) {
                     const province& prov = prov_tbl[prov_id];
-                    p_out_row[3 * x + 0] = prov.color.blue();
-                    p_out_row[3 * x + 1] = prov.color.green();
-                    p_out_row[3 * x + 2] = prov.color.red();
+
+                    if (prov.color)
+                        color = *prov.color;
+                    else if (prov.is_seazone)
+                        color = WATER_COLOR;
+                    else if (!prov.county_title)
+                        color = WASTELAND_COLOR;
                 }
+                else if (prov_id == province_map::TYPE_OCEAN)
+                    color = WATER_COLOR;
+                else if (prov_id == province_map::TYPE_IMPASSABLE)
+                    color = IMPASSABLE_COLOR;
+
+                p_out_row[3 * x + 0] = color.blue();
+                p_out_row[3 * x + 1] = color.green();
+                p_out_row[3 * x + 2] = color.red();
             }
         }
 
         if (opt_outline_provinces) {
             /* draw province outline: top & left edges */
+
+            const rgb OUTLINE_COLOR{ 0x7F7F7F };
 
             for (uint y = 0; y < n_height; ++y) {
                 auto p_out_row = &p_out_map[n_row_sz * (n_height - 1 - y)];
@@ -270,9 +291,9 @@ int main(int argc, const char** argv) {
                         !prov_tbl.is_water(below_prov_id) ||
                         opt_outline_seazones) {
 
-                        p_out_row[3 * x + 0] = 0x7F;
-                        p_out_row[3 * x + 1] = 0x7F;
-                        p_out_row[3 * x + 2] = 0x7F;
+                        p_out_row[3 * x + 0] = OUTLINE_COLOR.blue();
+                        p_out_row[3 * x + 1] = OUTLINE_COLOR.green();
+                        p_out_row[3 * x + 2] = OUTLINE_COLOR.red();
                     }
                 }
             }

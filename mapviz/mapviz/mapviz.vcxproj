@@ -85,12 +85,14 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <AdditionalIncludeDirectories>C:\lib\boost_1_62_0</AdditionalIncludeDirectories>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,6 +107,11 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\lib\boost_1_62_0</AdditionalIncludeDirectories>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <ControlFlowGuard>false</ControlFlowGuard>
+      <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,6 +128,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\lib\boost_1_62_0</AdditionalIncludeDirectories>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <ControlFlowGuard>false</ControlFlowGuard>
+      <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,6 +151,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\lib\boost_1_62_0</AdditionalIncludeDirectories>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,6 +174,7 @@
     <ClInclude Include="legacy_compat.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="mod_vfs.h" />
+    <ClInclude Include="optional.h" />
     <ClInclude Include="pdx.h" />
     <ClInclude Include="province_map.h" />
     <ClInclude Include="scanner.h" />
