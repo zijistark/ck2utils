@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 
+typedef unsigned int uint;
 namespace fs = boost::filesystem;
 
 class definitions_table {
@@ -30,8 +31,8 @@ public:
     definitions_table(const mod_vfs&, const default_map&);
     void write(const fs::path& path);
 
-    row& operator[](uint16_t id) noexcept { return vec[id-1]; }
-    const row& operator[](uint16_t id) const noexcept { return vec[id-1]; }
+    row& operator[](uint id) noexcept { return vec[id]; }
+    const row& operator[](uint id) const noexcept { return vec[id]; }
 
     vec_t::iterator begin() noexcept { return vec.begin(); }
     vec_t::const_iterator begin() const noexcept { return vec.cbegin(); }
