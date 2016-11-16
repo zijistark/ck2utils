@@ -9,7 +9,8 @@ import tempfile
 import time
 from ck2parser import (rootpath, is_codename, get_province_id_name_map,
                        get_provinces, get_localisation, get_cultures,
-                       prepend_post_comment, Obj, Comment, FullParser)
+                       files, prepend_post_comment, Obj, Comment, SimpleParser,
+                       FullParser)
 from print_time import print_time
 
 PRUNE_BARONIES = False
@@ -81,16 +82,17 @@ def main():
                     #           cap.post_comment.val, capital_name))
                 except KeyError:
                     pass
-                v.ker.post_comment = None
-                _, (nl, _) = v.inline_str(full_parser)
-                if nl >= 36:
-                    comment = 'end ' + n.val
-                    prepend_post_comment(v.ker, comment)
-                if re.match(r'[ekd]_', n.val):
-                    try:
-                        prepend_post_comment(v.kel, localisation[n.val])
-                    except KeyError:
-                        print('@@@ ' + n.val)
+                if v.inline_str(full_parser)[1][0] > 1: # only for multi-line
+                    v.ker.post_comment = None
+                    _, (nl, _) = v.inline_str(full_parser)
+                    if nl >= 36:
+                        comment = 'end ' + n.val
+                        prepend_post_comment(v.ker, comment)
+                    if re.match(r'[ekd]_', n.val):
+                        try:
+                            prepend_post_comment(v.kel, localisation[n.val])
+                        except KeyError:
+                            print('@@@ ' + n.val)
                 baronies_to_remove = []
                 if n.val.startswith('c_'):
                     # if v.kel.post_comment:
@@ -173,7 +175,7 @@ def main():
             if isinstance(v, Obj) and v.has_pairs:
                 update_tree(v, is_def_children)
 
-    for inpath in files('history/titles/*.txt', modpath):
+    for inpath in full_parser.files('history/titles/*.txt'):
         if inpath.stem.startswith('b_'):
             historical_baronies.append(inpath.stem)
 
