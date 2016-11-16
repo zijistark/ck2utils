@@ -559,9 +559,9 @@ class Obj(Stringifiable):
                 if not s[-1].isspace():
                     s += ' '
                     col += 1
-                item_is, (nl_item, col_item) = item.inline_str(parser, indent,
-                                                               col)
-                if (col > indent * parser.tab_width and
+                item_is, (nl_item, col_item) = item.inline_str(parser,
+                                                               indent + 1, col)
+                if (col > (indent + 1) * parser.tab_width and
                     col_item > parser.chars_per_line):
                     if not s[-2].isspace():
                         s = s[:-1]
@@ -569,7 +569,7 @@ class Obj(Stringifiable):
                     nl += 1
                     col = sep_col
                     item_is, (nl_item, col_item) = item.inline_str(parser,
-                                                                   indent, col)
+                        indent + 1, col)
                 s += item_is
                 nl += nl_item
                 col = col_item

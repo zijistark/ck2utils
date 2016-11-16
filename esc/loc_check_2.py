@@ -7,12 +7,14 @@ Scans for:
 * localisation keys with unrecognized cultures
 '''
 
+import pathlib
 import re
-from ck2parser import (rootpath, files, csv_rows, get_cultures,
-                       get_localisation, SimpleParser, NoParseError)
+from ck2parser import (rootpath, files, csv_rows, get_cultures, is_codename,
+                       get_localisation, SimpleParser, FullParser, NoParseError)
 from print_time import print_time
 
 modpath = rootpath / 'SWMH-BETA/SWMH'
+# modpath = pathlib.Path('/cygdrive/c/Users/Nicholas/Documents/Paradox Interactive/Crusader Kings II/mod/Britannia')
 
 def recurse_comments(parser, comments):
     if comments:
@@ -43,8 +45,8 @@ def recurse(parser, tree, comment=False):
 def main():
     simple_parser = SimpleParser()
     full_parser = FullParser()
-    simple_parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
-    full_parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
+    simple_parser.moddirs = [modpath]
+    full_parser.moddirs = [modpath]
     cultures, cult_groups = get_cultures(simple_parser)
     cultures = set(cultures)
     cultures.update(cult_groups)

@@ -35,6 +35,7 @@ import localpaths
 
 # modpaths = []
 modpaths = [localpaths.rootpath / 'SWMH-BETA/SWMH']
+# modpaths = [pathlib.Path('/cygdrive/c/Users/Nicholas/Documents/Paradox Interactive/Crusader Kings II/mod/Lux Invicta v0.6k11')]
 
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
                      quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
@@ -43,12 +44,14 @@ CKII_DIR = localpaths.vanilladir
 
 OUTPUT_FILE = pathlib.Path('C:/Users/Nicholas/Desktop/table.txt')
 
-if modpaths:
+if not modpaths:
+    borders_path = pathlib.Path('C:/Users/Nicholas/Pictures/CKII/'
+                                'borderlayer.png')
+elif modpaths[0].name == 'SWMH':
     borders_path = pathlib.Path('C:/Users/Nicholas/Pictures/CKII/'
                                 'borderlayer_swmh.png')
 else:
-    borders_path = pathlib.Path('C:/Users/Nicholas/Pictures/CKII/'
-                                'borderlayer.png')
+    borders_path = None
 
 class Interval:
     def __init__(self, start, stop):
@@ -249,13 +252,17 @@ def parse(tokens):
     key = unquoted_string | quoted_string | number | date
     value = fwd(lambda: obj | key)
     pair = fwd(lambda: key + op('=') + value)
-    obj = fwd(lambda: op('{') + many(pair | value) + op('}'))
+    obj = fwd(lambda: op('{') + many(pair | value) + (op('}') | endmark))
     toplevel = many(pair | value) + endmark
     return toplevel.parse(list(tokens))
 
 def parse_files(glob):
     for path in files(glob):
-        yield path.stem, parse_file(path)
+        try:
+            yield path.stem, parse_file(path)
+        except funcparserlib.parser.NoParseError:
+            print(path)
+            raise
 
 def parse_file(path):
     with path.open(encoding='cp1252', errors='ignore') as f:
@@ -315,7 +322,11 @@ def process_provinces(provinces_txts):
         if num not in id_name_map or id_name_map[num] != name:
             continue
         v_dict = dict(v)
-        title = Title.get(v_dict['title'])
+        try:
+            title = Title.get(v_dict['title'])
+        except KeyError:
+            print('WARNING: no such title {} for {}'.format(v_dict['title'], num))
+            continue
         title.set_id(int(id_str))
         if title.name == title.codename:
             title.set_name(name)
@@ -359,7 +370,7 @@ def process_titles(titles_txts):
                     title.set_liege(liege, from_when=n1)
                 name_key = v1_dict.get('name')
                 if name_key:
-                    title.add_other_name(localisation[name_key])
+                    title.add_other_name(localisation.get(name_key, name_key))
 
 def parse_csvs(paths, row_func):
     for path in paths:
@@ -376,9 +387,9 @@ def parse_csv(path, row_func):
             row_func(row)
 
 def process_localisation_row(row):
-    if row:
+    if len(row) >= 2:
         key, value, *_ = row
-        if key not in localisation:
+        if '#' not in key and key not in localisation:
             localisation[key] = value
 
 # pre: process_provinces
@@ -531,11 +542,12 @@ def generate_province_map(in_path, out_dir, value):
     colormap = matplotlib.cm.ScalarMappable(cmap=cmap, norm=norm)
     array = numpy.apply_along_axis(province_color, 2, array)
     out_image = PIL.Image.fromarray(array)
-    if border:
+    if border and borders_path:
         borders = PIL.Image.open(str(borders_path))
         out_image.paste(borders, mask=borders)
         # plot_axes.imshow(borders)
-    out_path = out_dir / '{}{}.png'.format('swmh_' if modpaths else '', value)
+    mod = '' if not modpaths else 'swmh_' if modpaths[0].name == 'SWMH' else 'mod_'
+    out_path = out_dir / '{}{}.png'.format(mod, value)
     out_image.save(str(out_path))
     # figure.savefig(str(out_path))
 
@@ -854,15 +866,15 @@ def main():
 
     province_map_out = pathlib.Path('C:/Users/Nicholas/Pictures/CKII')
     maps = [
-        'max_settlements',
-        'defined_baronies',
-        'defined_baronies_minus_max_settlements',
-        '1066_built_holdings',
-        'max_settlements_minus_1066_built_holdings',
-        'max_settlements_divided_by_area',
-        'log_max_settlements_divided_by_area',
+        # 'max_settlements',
+        # 'defined_baronies',
+        # 'defined_baronies_minus_max_settlements',
+        # '1066_built_holdings',
+        # 'max_settlements_minus_1066_built_holdings',
+        # 'max_settlements_divided_by_area',
+        # 'log_max_settlements_divided_by_area',
         '1066_built_holdings_divided_by_area',
-        'log_1066_built_holdings_divided_by_area',
+        # 'log_1066_built_holdings_divided_by_area',
     ]
     for value in maps:
         generate_province_map(map_provinces, province_map_out, value)
