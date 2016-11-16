@@ -142,7 +142,7 @@ def main():
             good = check_title(parser, path.stem, path, titles)
             if (VANILLA_HISTORY_WARN and not good and
                 not any(d in path.parents for d in parser.moddirs)):
-                # newpath = modpath / 'history/titles' / path.name
+                # newpath = parser.moddirs[0] / 'history/titles' / path.name
                 # newpath.open('w').close()
                 print('Should override {} with blank file'.format(
                       '<vanilla>' / path.relative_to(vanilladir)))

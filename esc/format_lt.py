@@ -8,10 +8,9 @@ import print_time
 
 @print_time.print_time
 def main():
-    modpath = pathlib.Path('/cygdrive/c/Program Files (x86)/Steam/SteamApps/'
-                           'common/CK2-previous-versions/2.6.1')
-    out = ck2parser.rootpath / 'landed_titles-2.6.1'
-    simple_parser = ck2parser.SimpleParser()
+    modpath = ck2parser.rootpath / 'SWMH-BETA/SWMH'
+    out = modpath / 'common/landed_titles'
+    simple_parser = ck2parser.SimpleParser(modpath)
     full_parser = ck2parser.FullParser(modpath)
     cultures = ck2parser.get_cultures(simple_parser, groups=False)
     full_parser.fq_keys = cultures
