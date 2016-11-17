@@ -67,8 +67,8 @@ definitions_table::definitions_table(const mod_vfs& vfs, const default_map& dm) 
 
     fclose(f);
 
-    if (vec.size()-1 != dm.max_province_id())
-        throw va_error("%u provinces defined for a map with %u: %s", vec.size()-1, dm.max_province_id(), path);
+    if (size() != dm.max_province_id())
+        throw va_error("%u provinces defined for a map with %u: %s", size(), dm.max_province_id(), path);
 }
 
 
@@ -84,7 +84,7 @@ void definitions_table::write(const fs::path& p) {
 
     uint id = 0;
 
-    for (auto&& r : vec)
+    for (auto&& r : *this)
         fprintf(f, "%u;%hhu;%hhu;%hhu;%s;x\n",
             ++id, r.color.red(), r.color.green(), r.color.blue(), r.name.c_str());
 

@@ -67,7 +67,7 @@ public:
 
                     for (auto&& s : doc.stmt_list)
                         if (s.key_eq("title") && s.val.is_title())
-                            vec.emplace_back(province{ id, is_seazone, s.val.as_c_str() });
+                            vec.emplace_back(province{ id, is_seazone, s.val.as_title() });
 
                     continue;
                 }
@@ -347,7 +347,7 @@ int slice_province_map(slice_vec_t& sv, const province_map& pm) {
         for (int x = 0; x <= width; ++x) {
             auto id = (x < width) ? p_row[x] : 0;
             
-            if (id = province_map::TYPE_IMPASSABLE && cur_slice.a < 0)
+            if (id == province_map::TYPE_IMPASSABLE && cur_slice.a < 0)
                 cur_slice.a = x; // start a slice
             else if (id != province_map::TYPE_IMPASSABLE && cur_slice.a >= 0) {
                 /* finish a slice */
@@ -358,9 +358,12 @@ int slice_province_map(slice_vec_t& sv, const province_map& pm) {
             }
         }
 
+        assert(cur_slice.a == -1);
+        assert(cur_slice.b == -1);
         p_row += width;
     }
 
+    cout << "slice_province_map: { n_pixels => " << n_pixels << ", sv.size() => " << sv.size() << "}" << endl;
     return n_pixels;
 }
 
@@ -393,10 +396,13 @@ int erode_impassable_pixels(province_map& pm, const province_table& pt) {
     erode_direction cur_direction;
     int n_stalled_passes = 0;
     int n_pixels_done = 0;
+    int n_passes = 0;
 
     while (n_pixels_done < n_pixels) {
         int n_pixels_done_this_pass = 0;
         erode_direction start_direction = cur_direction;
+        ++n_passes;
+        cout << "starting pass #" << n_passes << endl;
 
         for (auto&& s : sv) {
             const int y = s.index;

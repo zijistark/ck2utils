@@ -36,8 +36,8 @@ public:
     row& operator[](uint id) noexcept { return vec[id]; }
     const row& operator[](uint id) const noexcept { return vec[id]; }
 
-    vec_t::iterator begin() noexcept { return vec.begin(); }
-    vec_t::const_iterator begin() const noexcept { return vec.cbegin(); }
+    vec_t::iterator begin() noexcept { return vec.begin()+1; }
+    vec_t::const_iterator begin() const noexcept { return vec.cbegin()+1; }
     vec_t::iterator end() noexcept { return vec.end(); }
     vec_t::const_iterator end() const noexcept { return vec.cend(); }
 };
