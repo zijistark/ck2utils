@@ -31,6 +31,8 @@ public:
     definitions_table(const mod_vfs&, const default_map&);
     void write(const fs::path& path);
 
+    size_t size() const noexcept { return vec.size() - 1; }
+
     row& operator[](uint id) noexcept { return vec[id]; }
     const row& operator[](uint id) const noexcept { return vec[id]; }
 

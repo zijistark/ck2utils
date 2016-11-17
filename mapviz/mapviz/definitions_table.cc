@@ -65,11 +65,10 @@ definitions_table::definitions_table(const mod_vfs& vfs, const default_map& dm) 
             break;
     }
 
-  fclose(f);
+    fclose(f);
 
-  if (vec.size() != dm.max_province_id())
-    throw va_error("%u provinces defined for a map with %u: %s",
-		   vec.size(), dm.max_province_id(), path);
+    if (vec.size()-1 != dm.max_province_id())
+        throw va_error("%u provinces defined for a map with %u: %s", vec.size()-1, dm.max_province_id(), path);
 }
 
 

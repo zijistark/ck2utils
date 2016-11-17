@@ -25,7 +25,8 @@ public:
 
     uint      width() const noexcept  { return _n_width; }
     uint      height() const noexcept { return _n_height; }
-    uint16_t* map() const noexcept    { return _p_map; }
+    const uint16_t* map() const noexcept { return _p_map; }
+    uint16_t* map() noexcept { return _p_map; }
 
     uint16_t at(uint x, uint y) const noexcept { return _p_map[ y*_n_width + x ]; }
 };

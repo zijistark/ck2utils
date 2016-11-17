@@ -23,7 +23,7 @@ namespace po = boost::program_options;
 
 struct province {
     /* facts about this province */
-    uint16_t id;
+    uint id;
     bool is_seazone;
     optional<string> county_title;
 
@@ -99,6 +99,9 @@ public:
         return id <= province_map::REAL_ID_MAX && !vec[id].county_title && !vec[id].is_seazone;
     }
 };
+
+
+int erode_impassable_pixels(province_map&, const province_table&);
 
 
 int main(int argc, const char** argv) {
@@ -181,8 +184,12 @@ int main(int argc, const char** argv) {
 
         const default_map dm{ vfs };
         const definitions_table def_tbl{ vfs, dm };
-        const province_map pm{ vfs, dm, def_tbl };
         const province_table prov_tbl{ vfs, dm, def_tbl };
+        province_map pm{ vfs, dm, def_tbl };
+
+        int n_impassable_px_removed = erode_impassable_pixels(pm, prov_tbl);
+        if (n_impassable_px_removed < 0)
+            throw runtime_error("impossible to redistribute impassable pixels on province map");
 
         const char* path = "out.bmp";
         FILE* f;
@@ -216,9 +223,10 @@ int main(int argc, const char** argv) {
         bf_hdr.n_colors = 0;
         bf_hdr.n_important_colors = 0;
 
-        printf("width:  %u\n", n_width);
-        printf("height: %u\n", n_height);
-        printf("size:   %0.2f MiB\n", bf_hdr.n_file_size / 1024.0 / 1024.0);
+        printf("impassable: %d (%0.3f%%)\n", n_impassable_px_removed, 100. * n_impassable_px_removed / (pm.width() * pm.height()));
+        printf("width:      %u\n", n_width);
+        printf("height:     %u\n", n_height);
+        printf("size:       %0.2f MiB\n", bf_hdr.n_file_size / 1024.0 / 1024.0);
 
         if (fwrite(&bf_hdr, sizeof(bf_hdr), 1, f) < 1)
             throw va_error("failed to write bitmap header: %s: %s", strerror(errno), path);
@@ -308,4 +316,129 @@ int main(int argc, const char** argv) {
     }
 
     return 0;
+}
+
+/* slices are discrete intervals along a fixed axis */
+struct slice {
+    int a; // a <= b (always)
+    int b; // a == b for a singleton interval (point)
+    int index; // slice index -- as used here, this is the y-value of an implied line segment
+    constexpr slice(int min, int max, int i) : a(min), b(max), index(i) { }
+    slice() = delete; // no default value semantics are valid
+};
+
+/* we'll want to change this data structure later if we choose to implement slice cutting (will reduce worst-case
+ * computational complexity for highly abnormal input but, as such, is probably not worth the additional work for our
+ * /current/ use case). simplest alternate data structure that guarantees same complexity gain is a doubly-linked list,
+ * while an interval tree is theoretically optimal (but not a good choice here). */
+typedef vector<slice> slice_vec_t;
+
+/* decompose a province_map into slices (x-intervals) of impassable pixels */
+int slice_province_map(slice_vec_t& sv, const province_map& pm) {
+    int n_pixels = 0;
+    const int width = pm.width();
+    const int height = pm.height();
+    auto p_row = pm.map();
+
+    for (int y = 0; y < height; ++y) {
+        const slice no_slice{ -1, -1, y };
+        slice cur_slice{ no_slice };
+
+        for (int x = 0; x <= width; ++x) {
+            auto id = (x < width) ? p_row[x] : 0;
+            
+            if (id = province_map::TYPE_IMPASSABLE && cur_slice.a < 0)
+                cur_slice.a = x; // start a slice
+            else if (id != province_map::TYPE_IMPASSABLE && cur_slice.a >= 0) {
+                /* finish a slice */
+                n_pixels += x - cur_slice.a;
+                cur_slice.b = x - 1;
+                sv.emplace_back(cur_slice);
+                cur_slice = no_slice;
+            }
+        }
+
+        p_row += width;
+    }
+
+    return n_pixels;
+}
+
+struct erode_direction {
+    uint i : 2; // 2-bit unsigned int behavior
+    erode_direction() : i(0) {}
+    erode_direction(uint j) : i(j) {}
+    erode_direction operator++() { return ++i; }
+
+    bool is_north() const noexcept { return i == 0; }
+    bool is_east()  const noexcept { return i == 1; }
+    bool is_south() const noexcept { return i == 2; }
+    bool is_west()  const noexcept { return i == 3; }
+    
+    static const char* DIRECTION[4];
+    operator const char*() noexcept { return DIRECTION[i]; }
+};
+
+const char* erode_direction::DIRECTION[] = { "N","E","S","W" };
+
+/* fairly redistribute impassable pixels into adjacent land provinces */
+int erode_impassable_pixels(province_map& pm, const province_table& pt) {
+    slice_vec_t sv;
+    const int n_pixels = slice_province_map(sv, pm);
+
+    const int x_max = pm.width() - 1;
+    const int y_max = pm.height() - 1;
+    auto p_map = pm.map();
+
+    erode_direction cur_direction;
+    int n_stalled_passes = 0;
+    int n_pixels_done = 0;
+
+    while (n_pixels_done < n_pixels) {
+        int n_pixels_done_this_pass = 0;
+        erode_direction start_direction = cur_direction;
+
+        for (auto&& s : sv) {
+            const int y = s.index;
+
+            for (int x = s.a; x <= s.b; ++x) {
+
+                /* in later passes, we might encounter pixels in the slice that are no longer impassable, because we
+                 * do not presently split slices or even bother shrinking them for now. */
+                if (pm.at(x, y) == province_map::TYPE_IMPASSABLE) {
+                    uint16_t receiver = 0;
+
+                    if (cur_direction.is_north() && y > 0)
+                        receiver = pm.at(x, y - 1);
+                    else if (cur_direction.is_east() && x < x_max)
+                        receiver = pm.at(x + 1, y);
+                    else if (cur_direction.is_south() && y < y_max)
+                        receiver = pm.at(x, y + 1);
+                    else if (cur_direction.is_west() && x > 0)
+                        receiver = pm.at(x - 1, y);
+
+                    if (receiver && receiver <= province_map::REAL_ID_MAX && !pt[receiver].is_seazone) {
+                        p_map[y*pm.width() + x] = receiver; // donate (x,y) to receiver
+                        ++n_pixels_done_this_pass;
+                    }
+                }
+
+                ++cur_direction;
+            }
+        }
+
+        if (n_pixels_done_this_pass == 0) {
+            if (++n_stalled_passes == 4) // have made no progress for 4 cycles (all 4 directional start states tried)
+                return -1; // ... so it is fundamentally impossible for this algorithm to complete on this map
+
+            if (start_direction == cur_direction) // our next pass would've started with the same initial direction
+                ++cur_direction; // and we know that would result in a stalled pass, so we start on the next direction
+        }
+        else {
+            n_stalled_passes = 0;
+            n_pixels_done += n_pixels_done_this_pass;
+        }
+    }
+
+    return n_pixels_done;
 }
