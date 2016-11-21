@@ -16,6 +16,8 @@ croak "file not found: $log_file" unless -e $log_file;
 
 my @title_missing_loc;
 my %title_missing_loc_ignore = ('---' => 1);
+my @char_dup_id;
+my @char_bad_birthdeath_dates;
 my @char_invalid_in_title_history;
 my @char_bad_spouse;
 my @char_bad_father;
@@ -52,6 +54,12 @@ while (<$f>) {
 	}
 	elsif (m|Invalid character (\d+) in history/titles/([\w-]+)\.txt$|) {
 		push @char_invalid_in_title_history, [$1, $2];
+	}
+	elsif (/Duplicate Historical Character! ID:(\d+)$/) {
+		push @char_dup_id, [$1];
+	}
+	elsif (/SERIOUS: Bad Birth and Death dates for character: (.+?) \((\d+)\)$/) {
+		push @char_bad_birthdeath_dates, [$2, $1];
 	}
 	elsif (/Tried to marry wife that does not exist. ID:(\d+) tried to marry ID: (\d+)$/) {
 		push @char_bad_spouse, [$1, $2];
@@ -133,6 +141,30 @@ sub aligned_date {
 	sprintf("%4s.%2s.%2s", $y, $m, $d);
 }
 
+print_data_table(
+	title => "duplicate character ID",
+	data => \@char_dup_id,
+	suppress_header => 1,
+	cols => [
+		{
+			title => "Character ID",
+			left_align => 1,
+		},
+	],
+);
+print_data_table(
+	title => "character has invalid birth/death dates",
+	data => \@char_bad_birthdeath_dates,
+	cols => [
+		{
+			title => "Character ID",
+		},
+		{
+			title => "Name",
+			left_align => 1,
+		},
+	],
+);
 print_data_table(
 	title => "titles missing localisation",
 	data => \@title_missing_loc,
