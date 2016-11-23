@@ -141,20 +141,22 @@ sub aligned_date {
 	sprintf("%4s.%2s.%2s", $y, $m, $d);
 }
 
-print_data_table(
+print_data_tables({
 	title => "duplicate character ID",
 	data => \@char_dup_id,
 	suppress_header => 1,
+	severity => 2,
 	cols => [
 		{
 			title => "Character ID",
 			left_align => 1,
 		},
 	],
-);
-print_data_table(
+},
+{
 	title => "character has invalid birth/death dates",
 	data => \@char_bad_birthdeath_dates,
+	severity => 2,
 	cols => [
 		{
 			title => "Character ID",
@@ -164,10 +166,64 @@ print_data_table(
 			left_align => 1,
 		},
 	],
-);
-print_data_table(
+},
+{
+	title => "province has out-of-place barony",
+	data => \@prov_bad_barony,
+	severity => 2,
+	cols => [
+		{
+			title => "Province Name",
+		},
+		{
+			title => "Barony Title",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "invalid character in title history",
+	data => \@char_invalid_in_title_history,
+	severity => 2,
+	numeric_sort => 1,
+	cols => [
+		{
+			title => "Character ID",
+		},
+		{
+			title => "Title",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "province setup: incorrect title",
+	data => \@prov_setup_bad_title,
+	severity => 2,
+	numeric_sort => 1,
+	cols => [
+		{
+			title => "Province ID",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "province setup: incorrect max_settlements",
+	data => \@prov_setup_bad_max_settlements,
+	severity => 1,
+	numeric_sort => 1,
+	cols => [
+		{
+			title => "Province ID",
+			left_align => 1,
+		},
+	],
+},
+{
 	title => "titles missing localisation",
 	data => \@title_missing_loc,
+	severity => 1,
 	suppress_header => 1,
 	cols => [
 		{
@@ -175,8 +231,36 @@ print_data_table(
 			left_align => 1,
 		},
 	],
-);
-print_data_table(
+},
+{
+	title => "regions with undefined titles",
+	data => \@region_bad_elem,
+	severity => 1,
+	cols => [
+		{
+			title => "Region",
+		},
+		{
+			title => "Title",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "regions with repeated elements",
+	data => \@region_mult_elem,
+	cols => [
+		{
+			title => "Region",
+		},
+		{
+			title => "Element",
+			left_align => 1,
+			observer => \&markup_province,
+		},
+	],
+},
+{
 	title => "invalid spouse for character",
 	data => \@char_bad_spouse,
 	numeric_sort => 1,
@@ -188,9 +272,9 @@ print_data_table(
 			title => "Spouse ID",
 			left_align => 1,
 		},
-	]
-);
-print_data_table(
+	],
+},
+{
 	title => "character has same-sex marriage",
 	data => \@char_samesex_spouse,
 	numeric_sort => 1,
@@ -202,9 +286,9 @@ print_data_table(
 			title => "Spouse ID",
 			left_align => 1,
 		},
-	]
-);
-print_data_table(
+	],
+},
+{
 	title => "invalid father for character",
 	data => \@char_bad_father,
 	numeric_sort => 1,
@@ -215,8 +299,8 @@ print_data_table(
 			left_align => 1,
 		},
 	],
-);
-print_data_table(
+},
+{
 	title => "invalid mother for character",
 	data => \@char_bad_mother,
 	numeric_sort => 1,
@@ -227,8 +311,8 @@ print_data_table(
 			left_align => 1,
 		},
 	],
-);
-print_data_table(
+},
+{
 	title => "character has female father",
 	data => \@char_female_dad,
 	numeric_sort => 1,
@@ -239,8 +323,8 @@ print_data_table(
 			left_align => 1,
 		},
 	],
-);
-print_data_table(
+},
+{
 	title => "character has male mother",
 	data => \@char_male_mom,
 	numeric_sort => 1,
@@ -251,44 +335,8 @@ print_data_table(
 			left_align => 1,
 		},
 	],
-);
-print_data_table(
-	title => "province has out-of-place barony",
-	data => \@prov_bad_barony,
-	numeric_sort => 1,
-	cols => [
-		{
-			title => "Province ID",
-		},
-		{
-			title => "Barony Title",
-			left_align => 1,
-		},
-	]
-);
-print_data_table(
-	title => "province setup: incorrect title",
-	data => \@prov_setup_bad_title,
-	numeric_sort => 1,
-	cols => [
-		{
-			title => "Province ID",
-			left_align => 1,
-		},
-	],
-);
-print_data_table(
-	title => "province setup: incorrect max_settlements",
-	data => \@prov_setup_bad_max_settlements,
-	numeric_sort => 1,
-	cols => [
-		{
-			title => "Province ID",
-			left_align => 1,
-		},
-	],
-);
-print_data_table(
+},
+{
 	title => "landed title held by character with no demesne",
 	data => \@title_unlanded_char,
 	cols => [
@@ -300,24 +348,11 @@ print_data_table(
 			left_align => 1,
 		},
 	],
-);
-print_data_table(
-	title => "invalid character in title history",
-	data => \@char_invalid_in_title_history,
-	numeric_sort => 1,
-	cols => [
-		{
-			title => "Character ID",
-		},
-		{
-			title => "Title",
-			left_align => 1,
-		},
-	]
-);
-print_data_table(
+},
+{
 	title => "title holder not yet born",
 	data => \@title_holder_unborn,
+	severity => 1,
 	cols => [
 		{
 			title => "Title",
@@ -336,11 +371,12 @@ print_data_table(
 			left_align => 1,
 			observer => \&aligned_date,
 		},
-	]
-);
-print_data_table(
+	],
+},
+{
 	title => "title redefinitions",
 	data => \@title_redefined,
+	severity => -1,
 	cols => [
 		{
 			title => "Title",
@@ -353,40 +389,42 @@ print_data_table(
 			left_align => 1,
 		},
 	]
-);
-print_data_table(
-	title => "regions with undefined titles",
-	data => \@region_bad_elem,
-	cols => [
-		{
-			title => "Region",
-		},
-		{
-			title => "Title",
-			left_align => 1,
-		},
-	]
-);
-print_data_table(
-	title => "regions with repeated elements",
-	data => \@region_mult_elem,
-	cols => [
-		{
-			title => "Region",
-		},
-		{
-			title => "Element",
-			left_align => 1,
-			observer => \&markup_province,
-		},
-	]
-);
+});
 
 exit 0;
 
 ########
 
-sub maxlen(@) { length reduce { length($a) > length($b) ? $a : $b } @_ }
+sub print_data_tables {
+	my @tables = @_;
+	my %num_errs_by_severity = map { $_ => 0 } (-1..2);
+	my $num_errs = 0;
+
+	map {
+		$_->{severity} = 0 unless defined $_->{severity};
+		if ($_->{severity} == 2) {
+			$_->{title} = "$_->{title} (!!)";
+		}
+		elsif ($_->{severity} == 1) {
+			$_->{title} = "$_->{title} (!)";
+		}
+		elsif ($_->{severity} < 0) {
+			$_->{title} = "$_->{title} (?)";
+		}
+		$num_errs_by_severity{ $_->{severity} } += scalar @{ $_->{data} };
+		$num_errs += scalar @{ $_->{data} } if $_->{severity} >= 0;
+	} @tables;
+
+	print "(!!) Errors requiring immediate attention: $num_errs_by_severity{2}\n";
+	print " (!) Errors (high priority): $num_errs_by_severity{1}\n";
+	print "     Errors (normal): $num_errs_by_severity{0}\n";
+	print " (?) Warnings: $num_errs_by_severity{-1}\n";
+	print "\nTotal errors: $num_errs\n";
+
+	for my $tbl (sort { $b->{severity} <=> $a->{severity} } grep { @{$_->{data}} } @tables) {
+		print_data_table(%$tbl);
+	}
+}
 
 sub print_data_table {
 	my %tbl = @_;
