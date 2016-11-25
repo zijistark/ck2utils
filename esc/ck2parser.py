@@ -441,7 +441,7 @@ class Obj(Stringifiable):
         else:
             self.kel = kel
             self.contents = contents
-            self.ker = ker
+            self.ker = ker if ker is not None else Op('}')
         self._dictionary = None
 
     def __len__(self):

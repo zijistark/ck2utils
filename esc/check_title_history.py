@@ -13,9 +13,9 @@ CHECK_LIEGE_CONSISTENCY = True
 
 LANDED_TITLES_ORDER = True # if false, date order
 
-PRUNE_UNEXECUTED_HISTORY = False # prune all after last playable start
-PRUNE_IMPOSSIBLE_STARTS = False # implies prev
-PRUNE_NONBOOKMARK_STARTS = False # implies prev
+PRUNE_UNEXECUTED_HISTORY = True # prune all after last playable start
+PRUNE_IMPOSSIBLE_STARTS = True # implies prev
+PRUNE_NONBOOKMARK_STARTS = True # implies prev
 PRUNE_NONERA_STARTS = False # implies prev
 
 PRUNE_ALL_BUT_DATES = [] # overrides above
@@ -23,7 +23,7 @@ PRUNE_ALL_BUT_DATES = [] # overrides above
 PRUNE_ALL_BUT_REGIONS = []
 
 FORMAT_TITLE_HISTORY = False
-CLEANUP_TITLE_HISTORY = True # implies previous, overrides date pruning
+CLEANUP_TITLE_HISTORY = False # implies previous, overrides date pruning
 
 
 class Date(namedtuple('Date', ['y', 'm', 'd'])):
@@ -458,7 +458,10 @@ def main():
                     attr_vals.append((date, value))
                 if (len(potentials) == 1 and len(v) == 1 and
                     not v2.post_comment):
-                    v2.post_comment = potentials[0]
+                    if isinstance(v2, Obj):
+                        v2.kel.post_comment = potentials[0]
+                    else:
+                        v2.post_comment = potentials[0]
                 if n2.pre_comments or v2.post_comment:
                     histories[title].attr_comment[date, (n2.val, value)] = (
                         n2.pre_comments, v2.post_comment)
