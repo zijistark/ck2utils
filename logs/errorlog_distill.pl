@@ -111,7 +111,7 @@ while (<$f>) {
 		$line = get_line($f);
 		$line =~ m|^\tCharacter ID: (\d+), Birth date: ([\d\.]+)$|;
 		my ($char, $birthdate) = ($1, $2);
-		push @title_holder_unborn, [$title, $char, $date, $birthdate];
+		push @title_holder_unborn, [$char, $title, $date, $birthdate];
 	}
 	elsif (/Title Already Exists!$/) {
 		my $line = get_line($f);
@@ -353,12 +353,13 @@ print_data_tables({
 	title => "title holder not yet born",
 	data => \@title_holder_unborn,
 	severity => 1,
+	numeric_sort => 1,
 	cols => [
 		{
-			title => "Title",
+			title => "Character ID",
 		},
 		{
-			title => "Character ID",
+			title => "Title",
 			left_align => 1,
 		},
 		{
@@ -402,15 +403,10 @@ sub print_data_tables {
 
 	map {
 		$_->{severity} = 0 unless defined $_->{severity};
-		if ($_->{severity} == 2) {
-			$_->{title} = "$_->{title} (!!)";
-		}
-		elsif ($_->{severity} == 1) {
-			$_->{title} = "$_->{title} (!)";
-		}
-		elsif ($_->{severity} < 0) {
-			$_->{title} = "$_->{title} (?)";
-		}
+		my $sev = ($_->{severity} == 2) ? " (!!)" :
+				  ($_->{severity} == 1) ? " (!)" :
+				  ($_->{severity}  < 0) ? " (?)" : "";
+		$_->{title} = "$_->{title}$sev" if $sev;
 		$num_errs_by_severity{ $_->{severity} } += scalar @{ $_->{data} };
 		$num_errs += scalar @{ $_->{data} } if $_->{severity} >= 0;
 	} @tables;
@@ -502,9 +498,14 @@ sub print_data_table {
 		? sort { 0+$a->[0] <=> 0+$b->[0] } @{ $tbl{data} }
 		: sort { $a->[0] cmp $b->[0] } @{ $tbl{data} };
 
+	my $last_key = '';
+
 	for my $row (@rows) {
 		no warnings;
-		printf($row_fmt, @$row);
+
+		my $k = shift @$row;
+		printf($row_fmt, (($last_key && $last_key eq $k) ? '' : $k), @$row);
+		$last_key = $k;
 	}
 
 	print "\\", '-' x $data_width, "/\n";
