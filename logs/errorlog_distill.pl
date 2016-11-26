@@ -352,7 +352,6 @@ print_data_tables({
 {
 	title => "title holder not yet born",
 	data => \@title_holder_unborn,
-	severity => 1,
 	numeric_sort => 1,
 	cols => [
 		{
