@@ -503,7 +503,7 @@ sub print_data_table {
 		no warnings;
 
 		my $k = shift @$row;
-		printf($row_fmt, (($last_key && $last_key eq $k) ? '' : $k), @$row);
+		printf($row_fmt, ((scalar @cols > 1 && $last_key && $last_key eq $k) ? '' : $k), @$row);
 		$last_key = $k;
 	}
 
