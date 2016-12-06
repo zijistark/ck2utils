@@ -1,37 +1,43 @@
 // -*- c++ -*-
 
-#ifndef _MDH_DEFINITIONS_TABLE_H_
-#define _MDH_DEFINITIONS_TABLE_H_
+#pragma once
 
 #include "default_map.h"
+#include "mod_vfs.h"
+#include "color.h"
 
 #include <boost/filesystem.hpp>
 
-#include <cstdint>
 #include <string>
 #include <vector>
 
+typedef unsigned int uint;
 namespace fs = boost::filesystem;
 
 class definitions_table {
-
 public:
-
     struct row {
         std::string name;
-        uint8_t red;
-        uint8_t green;
-        uint8_t blue;
-
-        row(const std::string& n, uint8_t r, uint8_t g, uint8_t b)
-        : name(n), red(r), green(g), blue(b) { }
+        rgb color;
+        row() = delete; // a default row in definition.csv makes no sense
+        row(const std::string& n, const rgb& c) : name(n), color(c) { }
     };
 
-    std::vector<row> row_vec;
+private:
+    typedef std::vector<row> vec_t;
+    vec_t vec;
 
-    definitions_table(const default_map&);
+public:
+    definitions_table(const mod_vfs&, const default_map&);
     void write(const fs::path& path);
+
+    size_t size() const noexcept { return vec.size() - 1; }
+
+    row& operator[](uint id) noexcept { return vec[id]; }
+    const row& operator[](uint id) const noexcept { return vec[id]; }
+
+    vec_t::iterator begin() noexcept { return vec.begin()+1; }
+    vec_t::const_iterator begin() const noexcept { return vec.cbegin()+1; }
+    vec_t::iterator end() noexcept { return vec.end(); }
+    vec_t::const_iterator end() const noexcept { return vec.cend(); }
 };
-
-
-#endif
