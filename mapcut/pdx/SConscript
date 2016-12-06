@@ -1,0 +1,9 @@
+# -*- python -*-
+
+env = Environment()
+env.Append(CXXFLAGS="-Wall -Wextra -Wno-unused-function -Wno-unused-parameter -O3 --std=c++17")
+
+sources = ["token.cc", "lexer.cc", "parser.cc", "date.cc"]
+sources += env.CXXFile('scanner.ll') # Our `flex` rules
+
+env.StaticLibrary('pdx', sources)

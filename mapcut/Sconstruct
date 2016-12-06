@@ -1,9 +1,10 @@
 # -*- python -*-
 
+SConscript(['pdx/SConscript'])
+
 env = Environment()
-env.Append(CXXFLAGS="-Wall -Wextra -Wno-unused-function -Wno-unused-parameter -g -O2 --std=c++11")
+env.Append(CXXFLAGS="-Wall -Wextra -s -O3 --std=c++17")
 
-sources = ["main.cc", "token.cc", "lexer.cc", "pdx.cc", "default_map.cc", "definitions_table.cc", "provsetup.cc"]
-sources += env.CXXFile('scanner.ll') # Our `flex` rules
+sources = ["main.cc", "default_map.cc", "definitions_table.cc", "provsetup.cc"]
 
-env.Program('mapcut', sources, LIBS=["boost_filesystem", "boost_system"])
+env.Program('mapcut', sources, LIBS=["pdx", "boost_filesystem", "boost_system"], LIBPATH='./pdx')
