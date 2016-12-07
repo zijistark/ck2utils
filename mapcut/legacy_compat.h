@@ -2,6 +2,7 @@
 
 #pragma once
 
+#ifdef __CYGWIN__
 
 static char* strsep(char** stringp, const char* delim) {
     char* start = *stringp;
@@ -18,3 +19,5 @@ static char* strsep(char** stringp, const char* delim) {
 
     return start;
 }
+
+#endif
