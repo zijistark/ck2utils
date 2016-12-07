@@ -324,7 +324,7 @@ lt_printer::lt_printer(const fs::path& p, const strvec_t& _top_titles, const pdx
 
     if (!os) throw std::runtime_error("Could not write to file: " + p.string());
 
-    os << "# -*- ck2.landed_titles -*-" << std::endl << std::endl;
+    os << "# -*- ck2.landed_titles -*-\n\n";
     print(*p_root_block);
 }
 
@@ -383,7 +383,7 @@ void lt_printer::print(const pdx::statement& s) {
 
     if (opened_code_block) in_code_block = false;
 
-    os << std::endl;
+    os << '\n';
 }
 
 
@@ -404,12 +404,11 @@ void lt_printer::print(const pdx::object& o) {
         if (o.as_block()->empty())
             os << "{}";
         else {
-            os << '{' << std::endl;
+            os << "{\n";
             ++indent;
             print(*o.as_block());
             --indent;
-            os << std::setfill('\t') << std::setw(indent) << "";
-            os << '}';
+            os << std::setfill('\t') << std::setw(indent) << "" << '}';
         }
     }
     else if (o.is_list()) {
