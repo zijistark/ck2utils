@@ -1,7 +1,7 @@
 
 
 #include "definitions_table.h"
-#include "error.h"
+#include "pdx/error.h"
 #include "legacy_compat.h"
 
 #include <stdexcept>
@@ -12,7 +12,7 @@
 #include <cerrno>
 
 
-definitions_table::definitions_table(const mod_vfs& vfs, const default_map& dm) {
+definitions_table::definitions_table(const pdx::vfs& vfs, const default_map& dm) {
 
     vec.reserve(2048);
     vec.emplace_back(row{ "", 0 }); // dummy row for province 0
@@ -74,7 +74,6 @@ definitions_table::definitions_table(const mod_vfs& vfs, const default_map& dm) 
 
 void definitions_table::write(const fs::path& p) {
     const std::string spath = p.string();
-    const char* path = spath.c_str();
     FILE* f;
 
     if ( (f = fopen(spath.c_str(), "wb")) == nullptr )

@@ -2,8 +2,8 @@
 #include "default_map.h"
 #include "definitions_table.h"
 #include "provsetup.h"
-#include "pdx.h"
-#include "error.h"
+#include "pdx/pdx.h"
+#include "pdx/error.h"
 
 #include <boost/filesystem.hpp>
 
@@ -28,8 +28,8 @@ typedef std::unordered_map<std::string, uint> str2id_map_t;
 
 const pdx::block* find_title(const char* title, const pdx::block* p_root);
 void find_titles_under(const pdx::block*, strvec_t& out);
-void fill_county_to_id_map(const default_map&, const definitions_table&, str2id_map_t& out);
-void blank_title_history(const strvec_t&);
+void fill_county_to_id_map(const pdx::vfs&, const default_map&, const definitions_table&, str2id_map_t& out);
+void blank_title_history(const pdx::vfs&, const strvec_t&);
 
 struct {
     uint n_counties_before;
@@ -67,25 +67,26 @@ int main(int argc, char** argv) {
         assert( pdx::title_tier( top_titles[j] ) >= pdx::TIER_COUNT );
     }
 
-
     try {
-      default_map dm(ROOT_DIR);
-        definitions_table def_tbl(dm);
+        pdx::vfs vfs{ VROOT_DIR };
+        vfs.push_mod_path(ROOT_DIR);
+
+        default_map dm(vfs);
+        definitions_table def_tbl(vfs, dm);
         provsetup ps_tbl(ROOT_DIR / "common" / "province_setup" / PROVSETUP_FILE);
 
         str2id_map_t county_to_id_map;
-        fill_county_to_id_map(dm, def_tbl, county_to_id_map);
+        fill_county_to_id_map(vfs, dm, def_tbl, county_to_id_map);
 
         g_stats.n_counties_before = county_to_id_map.size();
 
         const path titles_path = ROOT_DIR / TITLES_PATH;
-        pdx::plexer lex(titles_path.c_str());
-        pdx::block doc(lex, true);
+        pdx::parser parse(titles_path);
 
         strvec_t del_titles;
 
         for (auto top_title : top_titles) {
-            const pdx::block* p_top_title_block = find_title(top_title, &doc);
+            const pdx::block* p_top_title_block = find_title(top_title, parse.root_block());
 
             if (p_top_title_block == nullptr)
                 throw va_error("top de jure title '%s' not found: %s",
@@ -113,7 +114,7 @@ int main(int argc, char** argv) {
             uint id = i->second;
 
             /* blank the province name in definitions to turn it into a wasteland */
-            def_tbl.row_vec[id-1].name = "";
+            def_tbl[id].name = "";
 
             /* blank the province's county title in provsetup to turn into a wasteland */
             std::string& title = ps_tbl.row_vec[id-1].title;
@@ -137,7 +138,7 @@ int main(int argc, char** argv) {
         out_ps_path /= PROVSETUP_FILE;
         ps_tbl.write(out_ps_path);
 
-        blank_title_history(del_titles);
+        blank_title_history(vfs, del_titles);
 
         printf("Counties before cut:   %u\n", g_stats.n_counties_before);
         printf("Counties cut:          %u\n", g_stats.n_counties_cut);
@@ -157,12 +158,13 @@ const pdx::block* find_title(const char* top_title, const pdx::block* p_root) {
 
     uint top_title_tier = pdx::title_tier(top_title);
 
-    for (auto&& s : p_root->stmt_list) {
-        if (s.key.type != pdx::obj::TITLE)
+    for (auto&& s : *p_root) {
+        if ( !(s.key().is_string() && pdx::looks_like_title(s.key().as_string())) )
             continue;
 
-        const pdx::block* p = s.val.as_block();
-        const char* t = s.key.data.s;
+        assert( s.value().is_block() );
+        const pdx::block* p = s.value().as_block();
+        const char* t = s.key().as_string();
 
         if (strcmp(t, top_title) == 0)
             return p; // base case, terminate
@@ -184,31 +186,30 @@ const pdx::block* find_title(const char* top_title, const pdx::block* p_root) {
 
 void find_titles_under(const pdx::block* p_root, strvec_t& found_titles) {
 
-    for (auto&& s : p_root->stmt_list) {
-        if (s.key.type != pdx::obj::TITLE)
+    for (auto&& s : *p_root) {
+        if ( !(s.key().is_string() && pdx::looks_like_title(s.key().as_string())) )
             continue;
 
-        const char* t = s.key.data.s;
+        assert( s.value().is_block() );
+        const char* t = s.key().as_string();
         found_titles.push_back(t);
 
         if (pdx::title_tier(t) > pdx::TIER_BARON)
-            find_titles_under(s.val.as_block(), found_titles);
+            find_titles_under(s.value().as_block(), found_titles);
     }
 }
 
 
 
-void fill_county_to_id_map(const default_map& dm,
+void fill_county_to_id_map(const pdx::vfs& vfs,
+                           const default_map& dm,
                            const definitions_table& def_tbl,
                            str2id_map_t& county_to_id_map) {
-
-    path prov_hist_root = ROOT_DIR / "history/provinces";
-    path prov_hist_vroot = VROOT_DIR / "history/provinces";
 
     char filename[256];
     uint id = 0;
 
-    for (auto&& r : def_tbl.row_vec) {
+    for (auto&& r : def_tbl) {
         ++id;
 
         if (dm.id_is_seazone(id)) // sea | major river
@@ -217,38 +218,20 @@ void fill_county_to_id_map(const default_map& dm,
         if (r.name.empty()) // wasteland | external
             continue;
 
-        sprintf(filename, "%u - %s.txt", id, r.name.c_str());
+        sprintf(filename, "history/provinces/%u - %s.txt", id, r.name.c_str());
+        fs::path real_path;
 
-        path prov_hist_file = prov_hist_root / filename;
-
-        if (!exists(prov_hist_file)) {
-
-            path prov_hist_vfile = prov_hist_vroot / filename;
-
-            if (!exists(prov_hist_vfile))
-                throw va_error("could not find province history file: %s",
-                               filename);
-            else {
-                if (false) {
-                    /* SWMH doesn't want to rely upon inherited vanilla province
-                       history, so fix this situation right now. note that is
-                       definitely not general-purpose behavior. */
-                    copy_file(prov_hist_vfile, prov_hist_file);
-                }
-                else {
-                    prov_hist_file = prov_hist_vfile;
-                }
-            }
-        }
+        if (!vfs.resolve_path(&real_path, filename))
+            continue;
 
         const char* county = nullptr;
 
-        pdx::plexer lex(prov_hist_file.c_str());
-        pdx::block doc(lex, true);
+        pdx::parser parse(real_path);
 
-        for (auto&& s : doc.stmt_list) {
-            if (s.key_eq("title")) {
-                county = s.val.as_title();
+        for (auto&& s : *parse.root_block()) {
+            if (s.key() == "title") {
+                assert( s.value().is_string() && pdx::looks_like_title( s.value().as_string() ) );
+                county = s.value().as_string();
                 assert( pdx::title_tier(county) == pdx::TIER_COUNT );
             }
         }
@@ -263,17 +246,15 @@ void fill_county_to_id_map(const default_map& dm,
         }
 
         if (!county_to_id_map.insert( {county, id} ).second) {
-            throw va_error("county '%s' maps to both province %u and %u (at the least)!",
+            throw va_error("County '%s' maps to both province %u and %u (at the least)!",
                            county, county_to_id_map[county], id);
         }
     }
 }
 
 
-void blank_title_history(const strvec_t& deleted_titles) {
+void blank_title_history(const pdx::vfs& vfs, const strvec_t& deleted_titles) {
 
-    path title_hist_root = ROOT_DIR / "history/titles";
-    path title_hist_vroot = VROOT_DIR / "history/titles";
     path title_hist_oroot = OUT_ROOT_DIR / "history/titles";
 
     if (! create_directories(title_hist_oroot)) {
@@ -288,19 +269,19 @@ void blank_title_history(const strvec_t& deleted_titles) {
     for (auto&& title : deleted_titles) {
 
         std::string filename = title + ".txt";
+        fs::path virt_path = "history/titles" / filename;
 
-        path title_hist_path = title_hist_root / filename;
-        path title_hist_vpath = title_hist_vroot / filename;
+        fs::path real_path;
 
-        if ( exists(title_hist_path) || exists(title_hist_vpath) ) {
+        if ( vfs.resolve_path(&real_path, virt_path) ) {
 
             /* there is indeed reason to add a blank file override for
                this title, so let's get on with it... */
 
-            path title_hist_opath = title_hist_oroot / filename;
+            path title_hist_opath = OUT_ROOT_DIR / virt_path;
             FILE* f;
 
-            if ( (f = fopen(title_hist_opath.c_str(), "w")) == nullptr )
+            if ( (f = fopen(title_hist_opath.string().c_str(), "w")) == nullptr )
                 throw va_error("Failed to blank title history: %s: %s",
                                strerror(errno), title_hist_opath.c_str());
 
@@ -309,5 +290,3 @@ void blank_title_history(const strvec_t& deleted_titles) {
         }
     }
 }
-
-

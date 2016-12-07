@@ -1,35 +1,33 @@
 
 #include "default_map.h"
 
-#include "pdx.h"
-#include "error.h"
+#include "pdx/parser.h"
+#include "pdx/error.h"
 
 #include <cassert>
 
 
-default_map::default_map(const mod_vfs& vfs)
+default_map::default_map(const pdx::vfs& vfs)
 : _max_province_id(0) {
 
     using namespace pdx;
 
-    const std::string spath{ vfs["map/default.map"].string() };
-    plexer lex(spath.c_str());
-    block doc(lex, true);
+    parser parse(vfs["map/default.map"]);
 
-    for (auto&& s : doc.stmt_list) {
-        if (s.key_eq("max_provinces")) {
-            int max_provinces = s.val.as_integer();
+    for (auto&& s : *parse.root_block()) {
+        if (s.key() == "max_provinces") {
+            int max_provinces = s.value().as_integer();
             assert( max_provinces > 1 );
             _max_province_id = max_provinces - 1;
         }
-        else if (s.key_eq("definitions")) {
-            _definitions_path = s.val.as_c_str();
+        else if (s.key() == "definitions") {
+            _definitions_path = s.value().as_string();
         }
-        else if (s.key_eq("provinces")) {
-            _provinces_path = s.val.as_c_str();
+        else if (s.key() == "provinces") {
+            _provinces_path = s.value().as_string();
         }
-        else if (s.key_eq("sea_zones")) {
-            auto&& obj_list = s.val.as_list()->obj_list;
+        else if (s.key() == "sea_zones") {
+            auto&& obj_list = *s.value().as_list();
             assert( obj_list.size() == 2 );
 
             int sea_zone_start = obj_list[0].as_integer();
@@ -40,8 +38,8 @@ default_map::default_map(const mod_vfs& vfs)
             _seazone_vec.emplace_back(uint(sea_zone_start),
                                       uint(sea_zone_end));
         }
-        else if (s.key_eq("major_rivers")) {
-            auto&& obj_list = s.val.as_list()->obj_list;
+        else if (s.key() == "major_rivers") {
+            auto&& obj_list = *s.value().as_list();
 
             for (auto&& o : obj_list) {
                 int major_river_id = o.as_integer();
