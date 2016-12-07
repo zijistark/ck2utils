@@ -159,12 +159,12 @@ const pdx::block* find_title(const char* top_title, const pdx::block* p_root) {
     uint top_title_tier = pdx::title_tier(top_title);
 
     for (auto&& s : *p_root) {
-        if ( !(s.key().is_string() && pdx::looks_like_title(s.key().as_string())) )
+        if ( !(s.key().is_string() && pdx::looks_like_title( s.key().as_string() )) )
             continue;
 
+        const char* t = s.key().as_string();
         assert( s.value().is_block() );
         const pdx::block* p = s.value().as_block();
-        const char* t = s.key().as_string();
 
         if (strcmp(t, top_title) == 0)
             return p; // base case, terminate
@@ -187,15 +187,16 @@ const pdx::block* find_title(const char* top_title, const pdx::block* p_root) {
 void find_titles_under(const pdx::block* p_root, strvec_t& found_titles) {
 
     for (auto&& s : *p_root) {
-        if ( !(s.key().is_string() && pdx::looks_like_title(s.key().as_string())) )
+        if ( !(s.key().is_string() && pdx::looks_like_title( s.key().as_string() )) )
             continue;
 
-        assert( s.value().is_block() );
         const char* t = s.key().as_string();
         found_titles.push_back(t);
+        assert( s.value().is_block() );
+        auto p_block = s.value().as_block();
 
         if (pdx::title_tier(t) > pdx::TIER_BARON)
-            find_titles_under(s.value().as_block(), found_titles);
+            find_titles_under(p_block, found_titles);
     }
 }
 

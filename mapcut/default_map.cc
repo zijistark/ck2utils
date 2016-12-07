@@ -45,7 +45,7 @@ default_map::default_map(const pdx::vfs& vfs)
             auto&& obj_list = *s.value().as_list();
 
             for (auto&& o : obj_list) {
-                assert( s.value().is_integer() );
+                assert( o.is_integer() );
                 int major_river_id = o.as_integer();
                 assert( major_river_id > 0 );
                 _major_river_set.insert(major_river_id);
