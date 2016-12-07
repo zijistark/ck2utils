@@ -98,6 +98,12 @@ public:
     bool operator==(date d) const noexcept { return is_date() && as_date() == d; }
     bool operator==(fp3 f)  const noexcept { return is_number() && as_number() == f; }
 
+    bool operator!=(const char* s)        const noexcept { return !is_string() || strcmp(as_string(), s); }
+    bool operator!=(const std::string& s) const noexcept { return !is_string() || s != as_string(); }
+    bool operator!=(int i)  const noexcept { return !is_integer() || as_integer() != i; }
+    bool operator!=(date d) const noexcept { return !is_date() && as_date() != d; }
+    bool operator!=(fp3 f)  const noexcept { return !is_number() && as_number() != f; }
+
     void print(std::ostream&, uint indent = 0) const;
 };
 

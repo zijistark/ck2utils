@@ -12,48 +12,61 @@
 #include <cstring>
 #include <string>
 #include <unordered_map>
+#include <fstream>
+#include <iomanip>
+#include <algorithm>
+
 
 using namespace boost::filesystem;
 
 
 /* TODO: use Boost::ProgramOptions (or just a config file), and end this nonsense */
+/*
 const path VROOT_DIR("/var/local/vanilla-ck2");
 const path ROOT_DIR("/var/local/git/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("/var/local/git/MiniSWMH/MiniSWMH");
+*/
 
-/*
 const path VROOT_DIR("/home/ziji/vanilla");
 const path ROOT_DIR("/home/ziji/g/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("/home/ziji/g/MiniSWMH/MiniSWMH");
-*/
 
-const path TITLES_PATH("common/landed_titles/swmh_landed_titles.txt"); // only uses this landed_titles file
+
+const path TITLES_FILE("swmh_landed_titles.txt"); // only uses this landed_titles file
 const path PROVSETUP_FILE("00_province_setup.txt"); // only uses this prov_setup file
+
 
 typedef std::vector<std::string> strvec_t;
 typedef std::unordered_map<std::string, uint> str2id_map_t;
+
 
 const pdx::block* find_title(const char* title, const pdx::block* p_root);
 void find_titles_under(const pdx::block*, strvec_t& out);
 void fill_county_to_id_map(const pdx::vfs&, const default_map&, const definitions_table&, str2id_map_t& out);
 void blank_title_history(const pdx::vfs&, const strvec_t&);
 
+
+class lt_printer {
+    std::ofstream os;
+    strvec_t      top_titles;
+    uint          indent;
+    bool          in_code_block;
+
+    void print(const pdx::block&);
+    void print(const pdx::list&);
+    void print(const pdx::statement&);
+    void print(const pdx::object&);
+
+public:
+    lt_printer(const fs::path& out_path, const strvec_t& top_titles, const pdx::block* p_root_block);
+};
+
+
 struct {
     uint n_counties_before;
     uint n_counties_cut;
     uint n_titles_cut;
     uint n_title_hist_blanked;
-
-    /* all wishful thinking below (FOR NOW!) */
-    uint n_adjacencies_before;
-    uint n_adjacencies_cut;
-    uint n_title_hist_rewritten;
-    uint n_regions_modified;
-    uint n_regions_cut;
-    uint n_island_regions_modified;
-    uint n_island_regions_cut;
-    uint n_invalidated_prov_refs;
-    uint n_invalidated_title_refs;
 } g_stats;
 
 
@@ -64,14 +77,14 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    const char* top_titles[argc-1];
+    strvec_t top_titles;
+    top_titles.reserve(argc - 1);
 
     for (int i = 1; i < argc; ++i) {
-        const int j = i-1;
-        top_titles[j] = argv[i];
-
-        assert( pdx::looks_like_title( top_titles[j] ) );
-        assert( pdx::title_tier( top_titles[j] ) >= pdx::TIER_COUNT );
+        const char* t = argv[i];
+        assert( pdx::looks_like_title(t) );
+        assert( pdx::title_tier(t) >= pdx::TIER_COUNT );
+        top_titles.emplace_back(t);
     }
 
     try {
@@ -80,24 +93,20 @@ int main(int argc, char** argv) {
 
         default_map dm(vfs);
         definitions_table def_tbl(vfs, dm);
-        provsetup ps_tbl(ROOT_DIR / "common" / "province_setup" / PROVSETUP_FILE);
+        provsetup ps_tbl( vfs["common/province_setup" / PROVSETUP_FILE] );
 
         str2id_map_t county_to_id_map;
         fill_county_to_id_map(vfs, dm, def_tbl, county_to_id_map);
-
         g_stats.n_counties_before = county_to_id_map.size();
 
-        const path titles_path = ROOT_DIR / TITLES_PATH;
-        pdx::parser parse(titles_path);
-
+        pdx::parser parse( vfs["common/landed_titles" / TITLES_FILE] );
         strvec_t del_titles;
 
-        for (auto top_title : top_titles) {
-            const pdx::block* p_top_title_block = find_title(top_title, parse.root_block());
+        for (auto&& top_title : top_titles) {
+            const pdx::block* p_top_title_block = find_title(top_title.c_str(), parse.root_block());
 
             if (p_top_title_block == nullptr)
-                throw va_error("Top de jure title '%s' not found: %s",
-                               top_title, titles_path.c_str());
+                throw va_error("Top de jure title '%s' not found!", top_title.c_str());
 
             del_titles.emplace_back(top_title);
             find_titles_under(p_top_title_block, del_titles);
@@ -135,16 +144,25 @@ int main(int argc, char** argv) {
             ++g_stats.n_counties_cut;
         }
 
+        /* write definition file */
         path out_def_path(OUT_ROOT_DIR / "map");
         create_directories(out_def_path);
         out_def_path /= dm.definitions_path();
         def_tbl.write(out_def_path);
 
+        /* write province_setup file */
         path out_ps_path(OUT_ROOT_DIR / "common" / "province_setup");
         create_directories(out_ps_path);
         out_ps_path /= PROVSETUP_FILE;
         ps_tbl.write(out_ps_path);
 
+        /* rewrite landed_titles */
+        path out_lt_path(OUT_ROOT_DIR / "common" / "landed_titles");
+        create_directories(out_lt_path);
+        out_lt_path /= TITLES_FILE;
+        lt_printer ltp( out_lt_path, top_titles, parse.root_block() );
+
+        /* blank as much title history as necessary */
         blank_title_history(vfs, del_titles);
 
         printf("Counties before cut:   %u\n", g_stats.n_counties_before);
@@ -297,4 +315,94 @@ void blank_title_history(const pdx::vfs& vfs, const strvec_t& deleted_titles) {
             ++g_stats.n_title_hist_blanked;
         }
     }
+}
+
+
+
+lt_printer::lt_printer(const fs::path& p, const strvec_t& _top_titles, const pdx::block* p_root_block)
+    : os(p.string()), top_titles(_top_titles), indent(0), in_code_block(false) {
+
+    if (!os) throw std::runtime_error("Could not write to file: " + p.string());
+
+    os << "# -*- ck2.landed_titles -*-" << std::endl << std::endl;
+    print(*p_root_block);
+}
+
+
+void lt_printer::print(const pdx::block& b) {
+    for (auto&& stmt : b) print(stmt);
+}
+
+
+void lt_printer::print(const pdx::list& l) {
+    for (auto&& obj : l) {
+        print(obj);
+        os << ' ';
+    }
+}
+
+
+void lt_printer::print(const pdx::statement& s) {
+    const pdx::object& k = s.key();
+    const pdx::object& v = s.value();
+
+    if (k.is_string() && v.is_block()) {
+        /* I'm unhinged... */
+        const std::string t{ k.as_string() };
+
+        if (std::find(top_titles.begin(), top_titles.end(), t) != top_titles.end())
+            return; // oh, and this is an AST subtree filter.
+    }
+
+    os << std::setfill(' ') << std::setw(indent) << "";
+    print(k);
+    os << " = ";
+
+    /* note that the more correct approach to match my intention with force-quoting would involve loading
+     * valid culture tags and simply hashing k into a map of them */
+
+    bool force_quote = (
+        k.is_string() && v.is_string() && // both k,v are strings
+        !pdx::looks_like_title(k.as_string()) && // k isn't a title tag
+        v != "yes" && v != "no" && // v isn't boolean
+        /* special keywords to avoid for k */
+        k != "culture" && k != "religion" && k != "controls_religion" && k != "mercenary_type" &&
+        k != "graphical_culture"
+    );
+
+    if (force_quote) os << '"' << v.as_string() << '"';
+    else print(v);
+
+    os << std::endl;
+}
+
+
+void lt_printer::print(const pdx::object& o) {
+    if (o.is_string()) {
+        if (strpbrk(o.as_string(), " \t\r\n'"))
+            os << '"' << o.as_string() << '"';
+        else
+            os << o.as_string();
+    }
+    else if (o.is_integer())
+        os << o.as_integer();
+    else if (o.is_date())
+        os << o.as_date();
+    else if (o.is_decimal())
+        os << o.as_decimal();
+    else if (o.is_block()) {
+        os << '{' << std::endl;
+        indent += 4;
+        print(*o.as_block());
+        indent -= 4;
+        os << std::setfill(' ') << std::setw(indent) << "";
+        os << '}';
+    }
+    else if (o.is_list()) {
+        os << "{ ";
+        print(*o.as_list());
+        os << '}';
+    }
+    else
+        assert(false && "Unhandled object type");
 }
