@@ -361,7 +361,7 @@ void lt_printer::print(const pdx::statement& s) {
         }
     }
 
-    os << std::setfill(' ') << std::setw(indent) << "";
+    os << std::setfill('\t') << std::setw(indent) << "";
     print(k);
     os << " = ";
 
@@ -401,12 +401,16 @@ void lt_printer::print(const pdx::object& o) {
     else if (o.is_decimal())
         os << o.as_decimal();
     else if (o.is_block()) {
-        os << '{' << std::endl;
-        indent += 4;
-        print(*o.as_block());
-        indent -= 4;
-        os << std::setfill(' ') << std::setw(indent) << "";
-        os << '}';
+        if (o.as_block()->empty())
+            os << "{}";
+        else {
+            os << '{' << std::endl;
+            ++indent;
+            print(*o.as_block());
+            --indent;
+            os << std::setfill('\t') << std::setw(indent) << "";
+            os << '}';
+        }
     }
     else if (o.is_list()) {
         os << "{ ";

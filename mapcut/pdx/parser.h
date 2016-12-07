@@ -124,6 +124,7 @@ public:
     const object& operator[](size_t i) const { return _vec[i]; }
 
     vec_t::size_type      size() const  { return _vec.size(); }
+    bool                  empty() const { return size() == 0; }
     vec_t::iterator       begin()       { return _vec.begin(); }
     vec_t::iterator       end()         { return _vec.end(); }
     vec_t::const_iterator begin() const { return _vec.cbegin(); }
@@ -161,6 +162,7 @@ public:
     void print(std::ostream&, uint indent = 0) const;
 
     vec_t::size_type      size() const  { return _vec.size(); }
+    bool                  empty() const { return size() == 0; }
     vec_t::iterator       begin()       { return _vec.begin(); }
     vec_t::iterator       end()         { return _vec.end(); }
     vec_t::const_iterator begin() const { return _vec.cbegin(); }
