@@ -346,12 +346,19 @@ void lt_printer::print(const pdx::statement& s) {
     const pdx::object& k = s.key();
     const pdx::object& v = s.value();
 
+    bool opened_code_block = false;
+
     if (k.is_string() && v.is_block()) {
         /* I'm unhinged... */
         const std::string t{ k.as_string() };
 
         if (std::find(top_titles.begin(), top_titles.end(), t) != top_titles.end())
             return; // oh, and this is an AST subtree filter.
+
+        if (!in_code_block && (k == "allow" || k == "gain_effect")) {
+            in_code_block = true;
+            opened_code_block = true;
+        }
     }
 
     os << std::setfill(' ') << std::setw(indent) << "";
@@ -363,15 +370,18 @@ void lt_printer::print(const pdx::statement& s) {
 
     bool force_quote = (
         k.is_string() && v.is_string() && // both k,v are strings
-        !pdx::looks_like_title(k.as_string()) && // k isn't a title tag
+        !in_code_block && // we're not somewhere in an arbitrary code block
         v != "yes" && v != "no" && // v isn't boolean
-        /* special keywords to avoid for k */
+        /* special keywords whose values we should not force-quote */
         k != "culture" && k != "religion" && k != "controls_religion" && k != "mercenary_type" &&
-        k != "graphical_culture"
+        k != "title" && k != "title_female" && k != "title_prefix" && k != "foa" && k != "foa_female" &&
+        k != "graphical_culture" && k != "name_tier" && k != "holy_site" && k != "pentarchy"
     );
 
     if (force_quote) os << '"' << v.as_string() << '"';
     else print(v);
+
+    if (opened_code_block) in_code_block = false;
 
     os << std::endl;
 }
