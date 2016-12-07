@@ -16,14 +16,17 @@ default_map::default_map(const pdx::vfs& vfs)
 
     for (auto&& s : *parse.root_block()) {
         if (s.key() == "max_provinces") {
+            assert( s.value().is_integer() );
             int max_provinces = s.value().as_integer();
             assert( max_provinces > 1 );
             _max_province_id = max_provinces - 1;
         }
         else if (s.key() == "definitions") {
+            assert( s.value().is_string() );
             _definitions_path = s.value().as_string();
         }
         else if (s.key() == "provinces") {
+            assert( s.value().is_string() );
             _provinces_path = s.value().as_string();
         }
         else if (s.key() == "sea_zones") {
@@ -42,6 +45,7 @@ default_map::default_map(const pdx::vfs& vfs)
             auto&& obj_list = *s.value().as_list();
 
             for (auto&& o : obj_list) {
+                assert( s.value().is_integer() );
                 int major_river_id = o.as_integer();
                 assert( major_river_id > 0 );
                 _major_river_set.insert(major_river_id);
