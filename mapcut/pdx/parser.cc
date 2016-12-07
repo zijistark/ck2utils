@@ -65,6 +65,7 @@ block::block(parser& lex, bool is_root, bool is_save) {
             if (tok.type == token::CLOSE) {
                 /* empty block */
                 val = object{ std::make_unique<block>() };
+                _vec.emplace_back(key, val);
                 continue;
             }
             else if (tok.type == token::OPEN) {
@@ -253,7 +254,7 @@ void statement::print(std::ostream& os, uint indent) const {
 void object::print(std::ostream& os, uint indent) const {
 
     if (type == STRING) {
-        if (strpbrk(as_string(), " \t\xA0\r\n\'")) // not the only time to quote, but whatever
+        if (strpbrk(as_string(), " \t\r\n\'"))
             os << '"' << as_string() << '"';
         else
             os << as_string();

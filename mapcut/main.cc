@@ -20,6 +20,13 @@ using namespace boost::filesystem;
 const path VROOT_DIR("/var/local/vanilla-ck2");
 const path ROOT_DIR("/var/local/git/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("/var/local/git/MiniSWMH/MiniSWMH");
+
+/*
+const path VROOT_DIR("/home/ziji/vanilla");
+const path ROOT_DIR("/home/ziji/g/SWMH-BETA/SWMH");
+const path OUT_ROOT_DIR("/home/ziji/g/MiniSWMH/MiniSWMH");
+*/
+
 const path TITLES_PATH("common/landed_titles/swmh_landed_titles.txt"); // only uses this landed_titles file
 const path PROVSETUP_FILE("00_province_setup.txt"); // only uses this prov_setup file
 
@@ -89,7 +96,7 @@ int main(int argc, char** argv) {
             const pdx::block* p_top_title_block = find_title(top_title, parse.root_block());
 
             if (p_top_title_block == nullptr)
-                throw va_error("top de jure title '%s' not found: %s",
+                throw va_error("Top de jure title '%s' not found: %s",
                                top_title, titles_path.c_str());
 
             del_titles.emplace_back(top_title);
@@ -109,7 +116,7 @@ int main(int argc, char** argv) {
             auto i = county_to_id_map.find(t);
 
             if (i == county_to_id_map.end())
-                throw va_error("county not assigned in province history: %s", t.c_str());
+                throw va_error("County not assigned in province history: %s", t.c_str());
 
             uint id = i->second;
 
@@ -120,7 +127,7 @@ int main(int argc, char** argv) {
             std::string& title = ps_tbl.row_vec[id-1].title;
 
             if (title != t)
-                throw va_error("province_setup: province %u assigned as %s but it should be %s",
+                throw va_error("province_setup: Province %u assigned as %s but it should be %s",
                                id, title.c_str(), t.c_str());
 
             title = "";
@@ -193,7 +200,7 @@ void find_titles_under(const pdx::block* p_root, strvec_t& found_titles) {
         const char* t = s.key().as_string();
         found_titles.push_back(t);
         assert( s.value().is_block() );
-        auto p_block = s.value().as_block();
+        const pdx::block* p_block = s.value().as_block();
 
         if (pdx::title_tier(t) > pdx::TIER_BARON)
             find_titles_under(p_block, found_titles);
