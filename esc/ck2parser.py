@@ -651,6 +651,11 @@ class SimpleParser:
         self.no_fold_keys = []
         self.no_fold_to_depth = -1
         self.newlines_to_depth = -1
+        self.cachedir = cachedir / self.__class__.__name__
+        try:
+            self.cachedir.mkdir(parents=True) # 3.5 pls
+        except FileExistsError:
+            pass
         self.setup_parser()
 
     def __del__(self):
@@ -683,9 +688,10 @@ class SimpleParser:
     def get_cachepath(self, path):
         m = hashlib.md5()
         m.update(bytes(path))
+        cachedir = self.cachedir
         name = m.hexdigest()
         if vanilladir in path.parents:
-            return cachedir / 'vanilla' / self.__class__.__name__ / name, False
+            return self.cachedir / 'vanilla' / name, False
         for repo_path, (latest_commit, dirty_paths) in self.repos.items():
             if repo_path in path.parents:
                 break
@@ -695,45 +701,27 @@ class SimpleParser:
                 repo = git.Repo(str(path.parent), odbt=git.GitCmdObjectDB,
                                 search_parent_directories=True)
             except git.InvalidGitRepositoryError:
-                return cachedir / self.__class__.__name__ / name, False
+                return self.cachedir / name, False
             repo_path = pathlib.Path(repo.working_tree_dir)
-            repo_cachedir = cachedir / repo_path.name / self.__class__.__name__
-            try:
-                repo_cachedir.mkdir(parents=True) # 3.5 pls
-            except FileExistsError:
-                pass
             tracked_files = set(repo.git.ls_files(z=True).split('\x00')[:-1])
-            history_cache_path = repo_cachedir / '../history_cache'
-            last_commit = repo.head.commit.hexsha[:8]
-            try:
-                with history_cache_path.open('rb') as f:
-                    prev_last_commit, latest_commit = pickle.load(f)
-                    update = prev_last_commit != last_commit
-                    revs = prev_last_commit + '..'
-            except FileNotFoundError:
-                latest_commit = {}
-                update = True
-                revs = None
-            if update:
-                log_output = repo.git.log(revs, m=True, pretty='format:%h',
-                                          z=True, name_only=True)
-                log_iter = iter(log_output.split('\x00'))
-                for entry in log_iter:
+            latest_commit = {}
+            log_output = repo.git.log('.', m=True, pretty='format:%h', z=True,
+                                      name_only=True)
+            log_iter = iter(log_output.split('\x00'))
+            for entry in log_iter:
+                try:
+                    commit, file_str = entry.split('\n', maxsplit=1)
+                except ValueError:
+                    continue
+                while file_str:
                     try:
-                        commit, file_str = entry.split('\n', maxsplit=1)
-                    except ValueError:
-                        continue
-                    while file_str:
-                        try:
-                            tracked_files.remove(file_str)
-                            latest_commit[file_str] = commit
-                        except KeyError:
-                            pass
-                        file_str = next(log_iter)
-                    if not revs and not tracked_files:
-                        break
-                with history_cache_path.open('wb') as f:
-                    pickle.dump((last_commit, latest_commit), f, protocol=-1)
+                        tracked_files.remove(file_str)
+                        latest_commit[file_str] = commit
+                    except KeyError:
+                        pass
+                    file_str = next(log_iter)
+                if not tracked_files:
+                    break
             dirty_paths = []
             status_output = repo.git.status(z=True)
             status_iter = iter(status_output.split('\x00')[:-1])
@@ -745,7 +733,7 @@ class SimpleParser:
             print('Repo {} processed in {:g} s'.format(
                   repo_path.name, time.time() - repo_init_start),
                   file=sys.stderr)
-        repo_cachedir = cachedir / repo_path.name / self.__class__.__name__
+        repo_cachedir = self.cachedir / repo_path.name
         path = path.relative_to(repo_path)
         if not any(p == path or p in path.parents for p in dirty_paths):
             return repo_cachedir / latest_commit[str(path)] / name, True
