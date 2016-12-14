@@ -755,7 +755,11 @@ class SimpleParser:
 
     def parse_file(self, path, encoding='cp1252', errors=None, memcache=None,
                    diskcache=None):
-        path = path.resolve()
+        try:
+            path = path.resolve()
+        except AttributeError:
+            return self.parse_file(self.file(path),
+                                   encoding, errors, memcache, diskcache)
         if memcache is None:
             memcache = self.memcache_default
         if diskcache is None:
