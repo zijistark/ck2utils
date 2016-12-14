@@ -89,7 +89,7 @@ def main():
                 old_adjacencies.append((int(row[0]), int(row[1]), int(row[3])))
         except ValueError:
             pass
-    print('{} probable correct river adjacencies'.format(len(river_adjacencies)))
+    num_adj = len(river_adjacencies)
     false_pos = []
     for one, two, river in old_adjacencies:
         try:
@@ -97,6 +97,8 @@ def main():
                                      if two < one else (one, two, river))
         except ValueError:
             false_pos.append((one, two, river))
+    print('{} probable correct river adjacencies'
+          .format(num_adj - len(river_adjacencies)))
     if false_pos:
         print('{} probable wrong river adjacencies:'.format(len(false_pos)),
               end='\n\t')
