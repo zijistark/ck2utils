@@ -2,17 +2,21 @@
 
 from collections import defaultdict
 import csv
-from itertools import combinations, tee
+from itertools import combinations
+from pathlib import Path
+import sys
 import networkx as nx
 import numpy as np
 from PIL import Image
-from ck2parser import rootpath, csv_rows, get_localisation, SimpleParser
+from ck2parser import rootpath, csv_rows, SimpleParser
 from print_time import print_time
 
 
 @print_time
 def main():
-    parser = SimpleParser(rootpath / 'SWMH-BETA/SWMH')
+    modpath = (Path(sys.argv[1])
+               if len(sys.argv) > 1 else rootpath / 'SWMH-BETA/SWMH')
+    parser = SimpleParser(modpath)
     rgb_id_map = {}
     id_name_map = {}
     default_tree = parser.parse_file('map/default.map')
@@ -39,18 +43,14 @@ def main():
     province_graph = nx.Graph()
     provinces_path = parser.file('map/' + default_tree['provinces'].val)
     a = np.array(Image.open(str(provinces_path)))
-    prov_position = {}
-    for n, v in parser.parse_file('map/' + default_tree['positions'].val):
-        pos = v['position'].contents
-        prov_position[n.val] = int(pos[2].val), a.shape[0] - int(pos[3].val)
     for i, j in np.ndindex(a.shape[0] - 1, a.shape[1] - 1):
-        province = rgb_id_map.get(tuple(a[i, j]), 0)
+        province = rgb_id_map.get(tuple(a[i, j]))
         if province in land_or_river:
             province_graph.add_node(province)
             if province in rivers:
                 rivers[province][0].append((i, j))
             for coords in ((i, j + 1), (i + 1, j)):
-                neighbor = rgb_id_map.get(tuple(a[coords]), 0)
+                neighbor = rgb_id_map.get(tuple(a[coords]))
                 if neighbor != province and neighbor in land_or_river:
                     province_graph.add_edge(province, neighbor)
                     if province in rivers and neighbor not in rivers:
@@ -59,6 +59,12 @@ def main():
                         rivers[neighbor][1].append((i, j))
     river_adjacencies = defaultdict(set)
     for river, (river_px, border_px) in rivers.items():
+        if not river_px:
+            print('WARNING: no area for {}'.format(river))
+            continue
+        if not border_px:
+            print('WARNING: no border for {}'.format(river))
+            continue
         for i0, j0 in river_px:
             min_item, min_val = None, float('inf')
             for i1, j1 in border_px:
@@ -71,7 +77,7 @@ def main():
             province = rgb_id_map[tuple(px)]
             for coords in [(i0 - 1, j0), (i0, j0 - 1),
                            (i0, j0 + 1), (i0 + 1, j0)]:
-                neighbor = rgb_id_map[tuple(a[coords])]
+                neighbor = rgb_id_map.get(tuple(a[coords]))
                 if (neighbor != province and neighbor in id_county_map and
                     not province_graph.has_edge(province, neighbor)):
                     if neighbor < province:

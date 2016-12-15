@@ -95,7 +95,7 @@ def process_history(parser, build, extra_keys):
                 if glob == 'history/provinces/*' and n.val == 'title':
                     number, name = inpath.stem.split(' - ')
                     number = int(number)
-                    if id_name[number] == name:
+                    if id_name.get(number) == name:
                         prov_title['PROV{}'.format(number)] = v.val
             if mutated:
                 outpath = make_outpath(build, inpath, vanilladir,
@@ -276,7 +276,7 @@ def main():
                 if outrow:
                     outrows.append(outrow)
 
-    outpath = build / 'localisation' / '00_testing override.csv'
+    outpath = build / 'localisation' / '0 testing override.csv'
     with outpath.open('w', encoding='cp1252', newline='') as csvfile:
         csv.writer(csvfile, dialect='ckii').writerows(outrows)
 
