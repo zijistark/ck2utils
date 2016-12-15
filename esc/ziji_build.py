@@ -35,7 +35,8 @@ AUDIT = False
 # if true, blank ALL localisations
 NUKE_IT_FROM_ORBIT = False
 
-COUNTY_TITLE_NAMES = True
+COUNTY_TITLE_NAMES = False
+PROVINCE_HISTORY_NAMES = True
 
 def make_outpath(outroot, inpath, *roots):
     for i, root in enumerate(roots):
@@ -103,7 +104,7 @@ def process_history(parser, build, extra_keys):
                     f.write(tree.str(parser))
     # if critical_error:
     #     raise SystemExit()
-    return prov_title
+    return id_name, prov_title
 
 def get_governments(parser):
     governments = []
@@ -187,7 +188,7 @@ def main():
                 f.write(tree.str(parser))
 
     # process history
-    prov_title = process_history(parser, build, extra_keys)
+    id_name, prov_title = process_history(parser, build, extra_keys)
 
     if NUKE_IT_FROM_ORBIT:
         outrows = [[''] * 15]
@@ -227,7 +228,12 @@ def main():
             prov_id = int(prov_match.group(1))
             if not (0 < prov_id < max_provs):
                 return None
-            outrow[1] = prov_title.get(key, '') if COUNTY_TITLE_NAMES else ''
+            if COUNTY_TITLE_NAMES:
+                outrow[1] = prov_title.get(key, '')
+            elif PROVINCE_HISTORY_NAMES:
+                outrow[1] = '{} ({})'.format(id_name[int(key[4:])], key[4:])
+            else:
+                outrow[1] = ''
         elif re.fullmatch(misc_regex, key):
             pass
         elif re.fullmatch(noble_regex, key):
