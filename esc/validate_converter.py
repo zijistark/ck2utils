@@ -1,34 +1,34 @@
 #!/usr/bin/env python3
 
-import collections
-import csv
-import pathlib
 import re
-import ck2parser
-import print_time
+from ck2parser import vanilladir, rootpath, SimpleParser, is_codename
+from print_time import print_time
 
 
-@print_time.print_time
+@print_time
 def main():
-    ck2root = ck2parser.vanilladir
-    eu4root = pathlib.Path('/cygdrive/c/SteamLibrary/steamapps/common/Europa Universalis IV')
-    parser = ck2parser.SimpleParser()
-    parser.moddirs.append(ck2parser.rootpath / 'SWMH-BETA/SWMH')
+    ck2root = vanilladir
+    eu4root = ck2root / '../Europa Universalis IV'
+    parser = SimpleParser()
+    # parser.moddirs.append(rootpath / 'SWMH-BETA/SWMH')
     ck2titles = set()
     for _, tree in parser.parse_files('common/landed_titles/*'):
         dfs = list(tree)
         while dfs:
             n, v = dfs.pop()
-            if ck2parser.is_codename(n.val):
+            if is_codename(n.val):
                 ck2titles.add(n.val)
                 dfs.extend(v)
-    eu4histories = {}
+    eu4provhistories = {}
     for path in (eu4root / 'history/provinces').iterdir():
         num = re.match(r'\d+', path.stem).group()
-        eu4histories[num] = path.stem
-    bad_ck2_id = set()
-    bad_eu4_id = set()
-    bad_filename = set()
+        eu4provhistories[num] = path.stem
+    eu4taghistories = {}
+    for path in (eu4root / 'history/countries').iterdir():
+        eu4taghistories[path.stem[:3]] = path.stem
+    bad_ck2_id_prov = set()
+    bad_eu4_id_prov = set()
+    bad_filename_prov = set()
     with open('province_table.csv', encoding='cp1252') as f:
         for line in f:
             try:
@@ -38,13 +38,30 @@ def main():
             if any('#' in x for x in [ck2title, eu4id, filename]):
                 continue
             if ck2title not in ck2titles:
-                bad_ck2_id.add(ck2title)
-            if eu4id not in eu4histories:
-                bad_eu4_id.add(eu4id)
-            elif filename != eu4histories[eu4id]:
-                bad_filename.add(filename)
+                bad_ck2_id_prov.add(ck2title)
+            if eu4id not in eu4provhistories:
+                bad_eu4_id_prov.add(eu4id)
+            elif filename != eu4provhistories[eu4id]:
+                bad_filename_prov.add(filename)
+    bad_ck2_id_tag = set()
+    bad_eu4_tag_tag = set()
+    bad_eu4_file_tag = set()
+    with open('nation_table.csv', encoding='cp1252') as f:
+        for line in f:
+            try:
+                ck2title, eu4tag, eu4file, *_ = line.split(';')
+            except ValueError:
+                continue
+            if any('#' in x for x in [ck2title, eu4tag, eu4file]):
+                continue
+            if ck2title not in ck2titles:
+                bad_ck2_id_tag.add(ck2title)
+            if eu4tag not in eu4taghistories:
+                bad_eu4_tag_tag.add(eu4tag)
+            elif eu4tag + ' - ' + eu4file != eu4taghistories[eu4tag]:
+                bad_eu4_file_tag.add(eu4file)
     ### ERRORS WITH VCF AND SWMH:
-    # bad_ck2_id -= {
+    # bad_ck2_id_prov -= {
     #     'b_kathmandu', 'c_acalapura', 'c_aj_bogd', 'c_aksu', 'c_al_aqabah', 'c_al_habbariyah', 'c_al_mafraq',
     #     'c_alampur', 'c_alodia', 'c_altay', 'c_amaravati', 'c_anxi', 'c_aral', 'c_armail', 'c_asayita', 'c_avhaz',
     #     'c_balkonda', 'c_bam', 'c_bamiyan', 'c_banavasi', 'c_bandhugadha', 'c_barasuru', 'c_baygal', 'c_bidar',
@@ -85,7 +102,7 @@ def main():
     #     'd_tondai_nadu', 'd_tosali', 'd_udayagiri', 'd_vanga', 'd_varendra', 'd_vengi', 'd_vidharba', 'd_wag',
     #     'd_warangal'
     # }
-    # bad_filename -= {
+    # bad_filename_prov -= {
     #     '101 - Liguria', '104 - Lombardia', '1066 - Altai Uriankhai', '1071 - Irtesh', '1110 - Agadir',
     #     '1137 - Wagadugu', '1208 - Haud', '1214 - Wollo', '1233 - Kargah', '1234 - Nubia', '131 - Zagorje15',
     #     '1318 - Szepes', '140 - Usora', '148 - Macedonia', '150 - Bulgaria', '151 - Thrace', '154 - Szepes',
@@ -117,15 +134,26 @@ def main():
     #     '69 - Konstanz', '740 - Malwa', '767 - Wystuc', '77 - Pfalz'
     # }
     with open('validation.txt', 'w') as f:
-        if bad_ck2_id:
+        print('### province_table.csv ###', file=f)
+        if bad_ck2_id_prov:
             print('Invalid CK2 titles:\n\t', end='', file=f)
-            print(*sorted(bad_ck2_id), sep=' ', file=f)
-        if bad_eu4_id:
+            print(*sorted(bad_ck2_id_prov), sep=' ', file=f)
+        if bad_eu4_id_prov:
             print('Invalid EU4 IDs:\n\t', end='', file=f)
-            print(*sorted(bad_eu4_id), sep=' ', file=f)
-        if bad_filename:
+            print(*sorted(bad_eu4_id_prov), sep=' ', file=f)
+        if bad_filename_prov:
             print('Invalid filenames:\n\t', end='', file=f)
-            print(*sorted(bad_filename), sep='\n\t', file=f)
+            print(*sorted(bad_filename_prov), sep='\n\t', file=f)
+        print('### nation_table.csv ###', file=f)
+        if bad_ck2_id_tag:
+            print('Invalid CK2 titles:\n\t', end='', file=f)
+            print(*sorted(bad_ck2_id_tag), sep=' ', file=f)
+        if bad_eu4_tag_tag:
+            print('Invalid EU4 tags:\n\t', end='', file=f)
+            print(*sorted(bad_eu4_tag_tag), sep=' ', file=f)
+        if bad_eu4_file_tag:
+            print('Invalid filenames:\n\t', end='', file=f)
+            print(*sorted(bad_eu4_file_tag), sep='\n\t', file=f)
 
 
 
