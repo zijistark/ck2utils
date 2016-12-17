@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import collections
 import csv
 import os
 import shutil
@@ -18,7 +17,7 @@ def main():
     defs_name = default_map['definitions'].val
     # max_provinces = int(default_map['max_provinces'].val)
     prov_num_name_map = {}
-    defs_path = next(files('map/' + defs_name, parser.moddirs))
+    defs_path = parser.file('map/' + defs_name)
     def_rows = list(csv_rows(defs_path))
     defs_change = False
     for def_row in def_rows:
@@ -30,8 +29,7 @@ def main():
         if name == '':
             continue
         try:
-            hist_path = next(files('history/provinces/' + hist_name,
-                                   parser.moddirs))
+            hist_path = parser.file('history/provinces/' + hist_name)
         except StopIteration:
             continue
         # if it's a vanilla file, it should be copied to SWMH.
@@ -90,7 +88,7 @@ def main():
     # then, for all visible vanilla title history,
     # if it matches a title definition copy it
     # if it doesn't, override it with a blank file
-    for path in files('history/titles/*', parser.moddirs):
+    for path in parser.files('history/titles/*'):
         title = path.stem
         if vanilladir in path.parents:
             new_path = modpath / path.relative_to(vanilladir)
