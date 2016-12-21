@@ -47,5 +47,5 @@ _PDX_NAMESPACE_END
 
 
 inline std::ostream& operator<<(std::ostream& os, pdx::date d) {
-    return os << d.year() << '.' << d.month() << '.' << d.day();
+    return os << (uint32_t)d.year() << '.' << (uint32_t)d.month() << '.' << (uint32_t)d.day();
 }
