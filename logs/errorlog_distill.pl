@@ -22,6 +22,8 @@ my @char_invalid_in_title_history;
 my @char_bad_spouse;
 my @char_bad_father;
 my @char_bad_mother;
+my @char_bad_religion;
+my @char_bad_culture;
 my @char_male_mom;
 my @char_female_dad;
 my @char_samesex_spouse;
@@ -69,6 +71,12 @@ while (<$f>) {
 	}
 	elsif (/Bad Mother for character: (.+?) \((\d+)\)$/) {
 		push @char_bad_mother, [$2];
+	}
+	elsif (m{Failed to read religionchange for character (\d+) to TAG: ([\w\-]+)$}) {
+		push @char_bad_religion, [$1, $2];
+	}
+	elsif (m{Failed to read culturechange for character (\d+) to TAG: ([\w\-]+)$}) { # error not seen [recently] but inferred
+		push @char_bad_culture, [$1, $2];
 	}
 	elsif (/Character ID:(\d+) has a female father!$/) {
 		push @char_female_dad, [$1];
@@ -163,6 +171,34 @@ print_data_tables({
 		},
 		{
 			title => "Name",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "character has invalid religion",
+	data => \@char_bad_religion,
+	severity => 1,
+	cols => [
+		{
+			title => "Character ID",
+		},
+		{
+			title => "Religion",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "character has invalid culture",
+	data => \@char_bad_culture,
+	severity => 1,
+	cols => [
+		{
+			title => "Character ID",
+		},
+		{
+			title => "Culture",
 			left_align => 1,
 		},
 	],
