@@ -86,7 +86,7 @@ def get_provinces(parser):
 
 def get_localisation(moddirs=(), basedir=vanilladir, ordered=False):
     locs = collections.OrderedDict() if ordered else {}
-    loc_glob = 'localisation/*'
+    loc_glob = 'localisation/*.csv'
     for path in files(loc_glob, moddirs, basedir=basedir):
         for row in csv_rows(path):
             try:
@@ -338,14 +338,14 @@ class Pair(Stringifiable):
         super().__init__()
         if len(args) == 3:
             self.key = args[0]
-            self.tis = args[1]
+            self.op = args[1]
             self.value = args[2]
         elif len(args) == 2:
             if isinstance(args[0], Stringifiable):
                 self.key = args[0]
             else:
                 self.key = String(args[0])
-            self.tis = Op('=')
+            self.op = Op('=')
             if isinstance(args[1], Stringifiable):
                 self.value = args[1]
             else:
@@ -355,7 +355,7 @@ class Pair(Stringifiable):
                 self.key = args[0]
             else:
                 self.key = String(args[0])
-            self.tis = Op('=')
+            self.op = Op('=')
             self.value = Obj([])
 
     @classmethod
@@ -376,7 +376,7 @@ class Pair(Stringifiable):
 
     @property
     def has_comments(self):
-        return any(x.has_comments for x in (self.key, self.tis, self.value))
+        return any(x.has_comments for x in (self.key, self.op, self.value))
 
     def str(self, parser, indent=0):
         s = indent * '\t'
@@ -402,21 +402,21 @@ class Pair(Stringifiable):
         if not s[-1].isspace():
             s += ' '
             col += 1
-        tis_is, (nl_tis, col_tis) = self.tis.inline_str(parser, indent, col)
-        if col > indent * parser.tab_width and col_tis > parser.chars_per_line:
+        op_is, (nl_op, col_op) = self.op.inline_str(parser, indent, col)
+        if col > indent * parser.tab_width and col_op > parser.chars_per_line:
             if not s[-2].isspace():
                 s = s[:-1]
-            tis_s = self.tis.str(parser, indent)
-            s += '\n' + tis_s
-            nl += 1 + tis_s.count('\n')
+            op_s = self.op.str(parser, indent)
+            s += '\n' + op_s
+            nl += 1 + op_s.count('\n')
             col = indent * parser.tab_width
         else:
-            if tis_is[0] == '\n':
+            if op_is[0] == '\n':
                 s = s[:-1]
                 col -= 1
-            s += tis_is
-            nl += nl_tis
-            col = col_tis
+            s += op_is
+            nl += nl_op
+            col = col_op
         if not s[-1].isspace():
             s += ' '
             col += 1
@@ -588,9 +588,10 @@ class SimpleTokenizer:
     specs = [
         ('Comment', (r'#.*',)),
         ('Space', (r'\s+',)),
-        ('Op', (r'[={}]',)),
+        ('Brace', (r'[{}]',)),
+        ('Op', (r'[<=>]=?',)),
         ('String', (r'".*?"',)),
-        ('Key', (r'[^\s"#={}]+',))
+        ('Key', (r'[^\s"#<=>{}]+',))
     ]
     useless = ['Comment', 'Space']
     t = staticmethod(make_tokenizer(specs))
@@ -600,9 +601,9 @@ class SimpleTokenizer:
         for x in cls.t(string):
             if x.type not in cls.useless:
                 if x.type == 'Key':
-                    if re.fullmatch(r'\d*\.\d*\.\d*', x.value):
+                    if re.fullmatch(r'-?\d*\.\d*\.\d*', x.value):
                         x.type = 'Date'
-                    elif re.fullmatch(r'\d+(\.\d+)?', x.value):
+                    elif re.fullmatch(r'-?\d+(\.\d+)?', x.value):
                         x.type = 'Number'
                     else:
                         x.type = 'Name'
@@ -622,11 +623,12 @@ class FullTokenizer(SimpleTokenizer):
         ('comment', (r'#(.*\S)?',)),
         ('whitespace', (r'[ \t]+',)),
         ('newline', (r'\r?\n',)),
-        ('op', (r'[={}]',)),
-        ('date', (r'\d*\.\d*\.\d*',)),
-        ('number', (r'\d+(\.\d+)?(?!\w)',)),
+        ('brace', (r'[{}]',)),
+        ('op', (r'[<=>]=?',)),
+        ('date', (r'-?\d*\.\d*\.\d*',)),
+        ('number', (r'-?\d+(\.\d+)?(?!\w)',)),
         ('quoted_string', (r'"[^"#\r\n]*"',)),
-        ('unquoted_string', (r'[^\s"#={}]+',))
+        ('unquoted_string', (r'[^\s"#<=>{}]+',))
     ]
     useless = ['whitespace']
     t = staticmethod(make_tokenizer(specs))
@@ -667,16 +669,18 @@ class SimpleParser:
         unarg = lambda f: lambda x: f(*x)
         tokval = lambda x: x.value
         toktype = lambda t: some(lambda x: x.type == t) >> tokval
-        op = lambda s: a(Token('Op', s)) >> tokval >> Op
+        kel = a(Token('Brace', '{')) >> tokval >> Op
+        ker = a(Token('Brace', '}')) >> tokval >> Op
+        op = toktype('Op') >> Op
         number = toktype('Number') >> Number
         date = toktype('Date') >> Date
         name = toktype('Name') >> String
         string = toktype('String') >> (lambda s: s[1:-1]) >> String
         key = date | number | name
         pair = forward_decl()
-        obj = (op('{') + many(pair | string | key) +
-               (op('}') | skip(finished)) >> unarg(Obj))
-        pair.define(key + op('=') + (obj | string | key) >> unarg(Pair))
+        obj = (kel + many(pair | string | key) +
+               (ker | skip(finished)) >> unarg(Obj))
+        pair.define(key + op + (obj | string | key) >> unarg(Pair))
         self.toplevel = many(pair) + skip(finished) >> TopLevel
 
     def flush(self, path=None):
@@ -816,7 +820,6 @@ class FullParser(SimpleParser):
         unquote = lambda s: s[1:-1]
         tokval = lambda x: x.value
         toktype = lambda t: some(lambda x: x.type == t) >> tokval
-        op = lambda s: commented(a(Token('op', s)) >> tokval) >> unarg(Op)
         nl = skip(many(toktype('newline')))
         end = nl + skip(finished)
         comment = toktype('comment')
@@ -825,12 +828,15 @@ class FullParser(SimpleParser):
                            unarg(String))
         quoted_string = (commented(toktype('quoted_string') >> unquote) >>
                          unarg(String))
+        kel = commented(a(Token('brace', '{')) >> tokval) >> unarg(Op)
+        ker = commented(a(Token('brace', '}')) >> tokval) >> unarg(Op)
+        op = commented(toktype('op')) >> unarg(Op)
         number = commented(toktype('number')) >> unarg(Number)
         date = commented(toktype('date')) >> unarg(Date)
         key = unquoted_string | date | number
         value = forward_decl()
-        pair = key + op('=') + value >> unarg(Pair)
-        obj = op('{') + (many(pair | value)) + (op('}') | end) >> unarg(Obj)
+        pair = key + op + value >> unarg(Pair)
+        obj = kel + (many(pair | value)) + (ker | end) >> unarg(Obj)
         value.define(obj | key | quoted_string)
         self.toplevel = (many(pair) + many(nl + comment) + end >>
                          unarg(TopLevel))

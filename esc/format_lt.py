@@ -6,12 +6,21 @@ import tempfile
 import ck2parser
 import print_time
 
+# warning: clobbers output folder
+
 @print_time.print_time
 def main():
+    # ck2parser.vanilladir = pathlib.Path(
+    # '/cygdrive/c/Program Files (x86)/Steam/SteamApps/common/CK2-previous-versions/2.6.3')
+    simple_parser = ck2parser.SimpleParser()
+    full_parser = ck2parser.FullParser()
     modpath = ck2parser.rootpath / 'SWMH-BETA/SWMH'
+    simple_parser.moddirs = [modpath]
+    full_parser.moddirs = [modpath]
     out = modpath / 'common/landed_titles'
-    simple_parser = ck2parser.SimpleParser(modpath)
-    full_parser = ck2parser.FullParser(modpath)
+    # simple_parser.diskcache_default = False
+    # full_parser.diskcache_default = False
+    # out = ck2parser.rootpath / 'landed_titles-2.6.3'
     cultures = ck2parser.get_cultures(simple_parser, groups=False)
     full_parser.fq_keys = cultures
 
