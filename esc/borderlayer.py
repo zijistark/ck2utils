@@ -18,7 +18,7 @@ def main():
     b = np.zeros((a.shape[0], a.shape[1], 4), np.uint8)
     for i, j in np.ndindex(a.shape[:2]):
         pixel = tuple(a[i, j])
-        if pixel:
+        if any(pixel):
             for coords in [(i - 1, j - 1), (i - 1, j), (i, j - 1)]:
                 try:
                     neighbor = tuple(a[coords])
