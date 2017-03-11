@@ -37,7 +37,13 @@ def check_titles(parser, path, titles):
     def recurse(tree):
         if tree.has_pairs:
             for p in tree:
-                n, v = p
+                try:
+                    n, v = p
+                except TypeError:
+                    if (path.name == 'mnm_hermetics_events.txt' and
+                        p.val in ['random', 70]):
+                        continue
+                    raise
                 v_is_obj = isinstance(v, Obj)
                 check_title(parser, n, path, titles, v_is_obj, p)
                 if v_is_obj:
