@@ -14,21 +14,13 @@ def main():
         parser.moddirs.append(Path(sys.argv[1]))
     default_tree = parser.parse_file('map/default.map')
     provinces_path = parser.file('map/' + default_tree['provinces'].val)
-    a = np.array(Image.open(str(provinces_path)))
-    b = np.zeros((a.shape[0], a.shape[1], 4), np.uint8)
-    for i, j in np.ndindex(a.shape[:2]):
-        pixel = tuple(a[i, j])
-        if any(pixel):
-            for coords in [(i - 1, j - 1), (i - 1, j), (i, j - 1)]:
-                try:
-                    neighbor = tuple(a[coords])
-                except IndexError:
-                    continue
-                if neighbor != pixel:
-                    b[i, j, 3] = 255
-                    break
-        else:
-            b[i, j, 3] = 255
+    a = np.array(Image.open(str(provinces_path))) # provinces.bmp
+    n = np.pad(a, ((1, 0), (0, 0), (0, 0)), 'edge')[:-1] # shifted south 1 pixel
+    w = np.pad(a, ((0, 0), (1, 0), (0, 0)), 'edge')[:, :-1]  # shifted east 1 pixel
+    nw = np.pad(a, ((1, 0), (1, 0), (0, 0)), 'edge')[:-1, :-1]  # shifted both 1 pixel
+    b = np.zeros((a.shape[0], a.shape[1], 4), np.uint8)  # output RGBA
+    mask = np.any((a != n) | (a != w) | (a != nw), axis=2) # get boolean mask of border pixels
+    b[:, :, 3][mask] = 255 # set border pixel transparency to opaque
     out_image = Image.fromarray(b)
     mod = parser.moddirs[0].name.lower() + '_' if parser.moddirs else ''
     out_path = rootpath / (mod + 'borderlayer.png')
