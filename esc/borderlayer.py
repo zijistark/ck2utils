@@ -20,6 +20,7 @@ def main():
     nw = np.pad(a, ((1, 0), (1, 0), (0, 0)), 'edge')[:-1, :-1]  # shifted both 1 pixel
     b = np.zeros((a.shape[0], a.shape[1], 4), np.uint8)  # output RGBA
     mask = np.any((a != n) | (a != w) | (a != nw), axis=2) # get boolean mask of border pixels
+    mask[np.nonzero(np.all(a == 0, axis=2))] = True
     b[:, :, 3][mask] = 255 # set border pixel transparency to opaque
     out_image = Image.fromarray(b)
     mod = parser.moddirs[0].name.lower() + '_' if parser.moddirs else ''
