@@ -48,6 +48,7 @@ def main():
     for number in sorted(rgb_number_map.values()):
         print(number, end='\r', file=sys.stderr)
         size = draw_txt.textsize(str(number), font=font)
+        size = size[0], size[1] - 6
         c = np.nonzero(b == number)
         center = np.mean(c[1]), np.mean(c[0])
         pos = [int(round(max(0, min(center[0] - size[0] / 2,
@@ -74,42 +75,8 @@ def main():
             g = (f[0] - pos[1]) ** 2 + (f[1] - pos[0]) ** 2
             pos[:2] = np.transpose(f)[np.argmin(g)][::-1] + [x1, y1]
             pos[2:] = pos[0] + size[0], pos[1] + size[1]
-        # queue = deque([tuple(pos[:2])])
-        # visited = set()
-        # while queue:
-        #     print(number, len(queue), len(visited), file=sys.stderr)
-        #     x, y = queue.popleft()
-        #     if e[y, x]:
-        #         break
-        #     visited.add((x, y))
-        #     for x2, y2 in [(x, y - 1), (x - 1, y), (x + 1, y), (x, y + 1)]:
-        #         if (0 <= x2 < image.width and 0 <= y2 < image.height and
-        #             (x2, y2) not in visited):
-        #             queue.append((x2, y2))
-        # else:
-        #     x, y = pos[:2]
-        # pos[:2] = x, y
-        # pos[2:] = pos[0] + size[0], pos[1] + size[1]
-        # rad = 0
-        # ang = -15
-        # opos = list(pos)
-        # while True:
-        #     if (0 <= pos[0] and pos[2] <= image.width and
-        #         0 <= pos[1] and pos[3] <= image.height):
-        #         for pos2 in labels:
-        #             if (pos[2] > pos2[0] and pos[0] < pos2[2] and
-        #                 pos[1] < pos2[3] and pos[3] > pos2[1]):
-        #                 break
-        #         else:
-        #             break
-        #     ang = (ang + 15) % 360
-        #     if ang == 0:
-        #         rad += 2
-        #     pos[0] = opos[0] + rad * math.cos(math.radians(ang))
-        #     pos[1] = opos[1] + rad * math.sin(math.radians(ang))
-        #     pos[2:] = pos[0] + size[0], pos[1] + size[1]
-        draw_txt.text(tuple(pos[:2]), str(number), font=font,
-                      fill=(255, 255, 255, 255))
+        draw_txt.text((pos[0], pos[1] - 6), str(number),
+                      fill=(255, 255, 255, 255), font=font)
         labels.append(pos)
         x = int(round(pos[0] + size[0] / 2))
         y = int(round(pos[1] + size[1] / 2))
