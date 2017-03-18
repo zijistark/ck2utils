@@ -43,12 +43,14 @@ def main():
     txt = Image.new('RGBA', image.size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
     draw_txt = ImageDraw.Draw(txt)
+    # dot = Image.new('RGBA', image.size, (0, 0, 0, 0))
+    # draw_dot = ImageDraw.Draw(dot)
     font = ImageFont.truetype(str(rootpath / 'ck2utils/esc/NANOTYPE.ttf'), 16)
     labels = []
     for number in sorted(rgb_number_map.values()):
-        print(number, end='\r', file=sys.stderr)
+        print('\r' + str(number), end='', file=sys.stderr)
         size = draw_txt.textsize(str(number), font=font)
-        size = size[0], size[1] - 6
+        size = size[0] - 1, size[1] - 6
         c = np.nonzero(b == number)
         center = np.mean(c[1]), np.mean(c[0])
         pos = [int(round(max(0, min(center[0] - size[0] / 2,
@@ -58,8 +60,8 @@ def main():
         pos[2:] = pos[0] + size[0], pos[1] + size[1]
         e = np.ones_like(b, dtype=bool)
         for pos2 in labels:
-            rows = slice(max(pos2[1] - size[1], 0), pos2[3])
-            cols = slice(max(pos2[0] - size[0], 0), pos2[2])
+            rows = slice(max(pos2[1] - size[1] - 1, 0), pos2[3] + 2)
+            cols = slice(max(pos2[0] - size[0] - 1, 0), pos2[2] + 2)
             e[rows, cols] = False
         x1, x2 = max(0, pos[0] - 1), min(pos[0] + 2, image.width)
         y1, y2 = max(0, pos[1] - 1), min(pos[1] + 2, image.height)
@@ -88,6 +90,13 @@ def main():
             if start != dest:
                 draw.line([start, dest], fill=(192, 192, 192))
     print('', file=sys.stderr)
+    # draw_dot.text((100, 300 - 6), '123', fill=(255, 255, 255, 255), font=font)
+    # size = draw_txt.textsize('123', font=font)
+    # size = size[0] - 1, size[1] - 6
+    # draw_dot.rectangle([(100, 300), (100 + size[0], 300 + size[1])],
+    #                    outline=(0, 0, 0, 255))
+    # draw_dot.point([(100, 300)], fill=(255, 0, 0, 255))
+    # image.paste(dot, mask=dot)
     image.paste(txt, mask=txt)
     mod = parser.moddirs[0].name.lower() + '_' if parser.moddirs else ''
     out_path = rootpath / (mod + 'province_id_map.png')
