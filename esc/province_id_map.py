@@ -35,7 +35,7 @@ def main():
             try:
                 if 'title' in parser.parse_file(path).dictionary:
                     counties.add(number)
-                    rgb_map[rgb] = np.uint8((255, 255, 255))
+                    rgb_map[rgb] = np.uint8((127, 127, 127))
             except StopIteration:
                 pass
     for n, v in default_tree:
@@ -74,7 +74,7 @@ def main():
             pos[:2] = np.transpose(f)[np.argmin(g)][::-1] + [x1, y1]
             pos[2:] = pos[0] + size[0], pos[1] + size[1]
         draw_txt.text((pos[0], pos[1] - 6), str(number),
-                      fill=(255, 0, 0, 255), font=font)
+                      fill=(255, 255, 255, 255), font=font)
         for size2 in e:
             rows = slice(max(pos[1] - size2[1] - 1, 0), pos[3] + 2)
             cols = slice(max(pos[0] - size2[0] - 1, 0), pos[2] + 2)
