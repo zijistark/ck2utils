@@ -11,17 +11,17 @@ _PDX_NAMESPACE_BEGIN
 #pragma pack(push, 1)
 
 class date {
-    uint16_t _y;
-    uint8_t  _m;
-    uint8_t  _d;
+    int16_t _y;
+    int8_t  _m;
+    int8_t  _d;
 
 public:
     date(char* src, const file_location&, error_queue&); // only for use on mutable date-strings known to be well-formed
-    date(uint16_t year, uint8_t month, uint8_t day) : _y(year), _m(month), _d(day) {}
+    date(int16_t year, int8_t month, int8_t day) : _y(year), _m(month), _d(day) {}
 
-    uint16_t year()  const noexcept { return _y; }
-    uint8_t  month() const noexcept { return _m; }
-    uint8_t  day()   const noexcept { return _d; }
+    int16_t year()  const noexcept { return _y; }
+    int8_t  month() const noexcept { return _m; }
+    int8_t  day()   const noexcept { return _d; }
 
     bool operator<(const date& o) const noexcept {
         if (_y < o._y) return true;
@@ -47,5 +47,5 @@ _PDX_NAMESPACE_END
 
 
 inline std::ostream& operator<<(std::ostream& os, pdx::date d) {
-    return os << (uint32_t)d.year() << '.' << (uint32_t)d.month() << '.' << (uint32_t)d.day();
+    return os << (int)d.year() << '.' << (int)d.month() << '.' << (int)d.day();
 }

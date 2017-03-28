@@ -5,7 +5,7 @@
 
 #include <iomanip>
 #include <ctype.h>
-#include <string.h>
+#include <cstring>
 
 
 _PDX_NAMESPACE_BEGIN

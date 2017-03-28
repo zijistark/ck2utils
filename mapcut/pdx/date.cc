@@ -26,21 +26,24 @@ date::date(char* src, const file_location& loc, error_queue& errors) {
      * be permissive of all other problems w/ date components so that we can later report what was actually parsed.
      */
 
-    const char* name[3] = { "year",     "month",   "day" };
-    const uint   max[3] = { UINT16_MAX, UINT8_MAX, UINT8_MAX };
+    const char* name[3] = { "year", "month", "day" };
+    const int   min[3]  = { INT16_MIN, INT8_MIN, INT8_MIN };
+    const int   max[3]  = { INT16_MAX, INT8_MAX, INT8_MAX };
 
-    uint num[3]; // must be unsigned due to lexical analysis
+    int num[3];
 
     for (int i = 0; i < 3; ++i) {
-        num[i] = (unsigned) atoi( part[i] );
+        num[i] = atoi( part[i] );
 
         if (num[i] > max[i])
-            errors.push(loc, "Cannot represent %s %u (maximum is %u) in date value", name[i], num[i], max[i]);
+            errors.push(loc, "Cannot represent %s %d (maximum is %d) in date value", name[i], num[i], max[i]);
+        if (num[i] < min[i])
+            errors.push(loc, "Cannot represent %s %d (minimum is %d) in date value", name[i], num[i], max[i]);
     }
 
-    _y = static_cast<uint16_t>( num[0] );
-    _m = static_cast<uint8_t> ( num[1] );
-    _d = static_cast<uint8_t> ( num[2] );
+    _y = static_cast<int16_t>( num[0] );
+    _m = static_cast<int8_t> ( num[1] );
+    _d = static_cast<int8_t> ( num[2] );
 }
 
 
