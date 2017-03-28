@@ -131,19 +131,29 @@ public:
     vec_t::const_iterator end() const   { return _vec.cend(); }
 };
 
+enum class opcode {
+    EQ,  // =
+    LT,  // <
+    GT,  // >
+    LTE, // <=
+    GTE, // >=
+    EQ2, // ==
+};
 
-/* STATEMENT -- statements are pairs of objects */
+/* STATEMENT -- statements are pairs of objects and an operator/separator */
 
 class statement {
     object _k;
     object _v;
+    opcode _op;
 
 public:
     statement() = delete;
-    statement(object& k, object& v) : _k(std::move(k)), _v(std::move(v)) {}
+    statement(object& k, object& v, opcode op) : _k(std::move(k)), _v(std::move(v)), _op(op) {}
 
-    const object& key()   const noexcept { return _k; }
-    const object& value() const noexcept { return _v; }
+    const object&  key()   const noexcept { return _k; }
+    const object&  value() const noexcept { return _v; }
+    opcode         op()    const noexcept { return _op; }
 
     void print(std::ostream&, uint indent = 0) const;
 };

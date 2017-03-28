@@ -54,7 +54,7 @@ contexts:
       # these guys are really annoying without being context-limited (and having a color scheme that gives me more than 3-4 choices):
 #    - match: \b(factor|value|count|amount|days|months|years)\b
 #      scope: keyword.control.ck2script
-    - match: \b((hidden_|custom_)?tooltip)\b
+    - match: \b(hidden_tooltip|custom_tooltip|hidden_trigger|hidden_effect)\b
       scope: keyword.control.ck2script
     - match: \b(AND|OR|NOT|NOR|NAND|and|or|not|nor|nand|calc_true_if)\b
       scope: support.constant.ck2script
@@ -66,7 +66,9 @@ contexts:
     - match: \b((character|long_character|narrative|letter|diploresponse|province|unit|repeat)_event)\b
       scope: keyword.control.ck2script
       # top-level event context flags/paramters:
-    - match: \b(is_triggered_only|major|desc|is_friendly|picture|border|title|(show_(ROOT|root))|(hide_(window|from|FROM|new))|(show(_from|_FROM){2,4}))\b
+    - match: \b(((show_(ROOT|root))|(hide_(window|from|FROM|new))|(show(_from|_FROM){2,4})))\b
+      scope: keyword.control.ck2script
+    - match: \b(is_triggered_only|major|desc|is_friendly|picture|border|title|notification)\b
       scope: keyword.control.ck2script
       # top-level event effect blocks
     - match: \b(immediate|option)\b

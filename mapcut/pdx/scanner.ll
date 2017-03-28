@@ -17,17 +17,17 @@ QSTR    \"[^"\n]*\"
 DATE    [0-9]{1,4}\.[0-9]{1,2}\.[0-9]{1,2}
 %%
 
-{DATE}          { return pdx::token::DATE; }
-"\""{DATE}"\""  { return pdx::token::QDATE; }
-"-"?{D}+"."{D}* { return pdx::token::DECIMAL; }
-"-"?{D}+        { return pdx::token::INTEGER; }
-"="             { return pdx::token::EQ; }
-"{"             { return pdx::token::OPEN; }
-"}"             { return pdx::token::CLOSE; }
-{STR}           { return pdx::token::STR; }
-{QSTR}          { return pdx::token::QSTR; }
-"#".*           { return pdx::token::COMMENT; }
-{WS}+           /* skip */
-.               { return pdx::token::FAIL; }
+{DATE}                     { return pdx::token::DATE; }
+"\""{DATE}"\""             { return pdx::token::QDATE; }
+("-"|"+")?{D}+"."{D}*      { return pdx::token::DECIMAL; }
+("-"|"+")?{D}+             { return pdx::token::INTEGER; }
+"=="|"="|">"|">="|"<"|"<=" { return pdx::token::OPERATOR; }
+"{"                        { return pdx::token::OPEN; }
+"}"                        { return pdx::token::CLOSE; }
+{STR}                      { return pdx::token::STR; }
+{QSTR}                     { return pdx::token::QSTR; }
+"#".*                      { return pdx::token::COMMENT; }
+{WS}+                      /* skip */
+.                          { return pdx::token::FAIL; }
 
 %%

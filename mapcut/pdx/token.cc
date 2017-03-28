@@ -4,7 +4,7 @@
 const char* pdx::token::TYPE_MAP[] = {
     "EOF",
     "INTEGER",
-    "EQ",
+    "OPERATOR",
     "OPEN",
     "CLOSE",
     "STR",

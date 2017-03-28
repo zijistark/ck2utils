@@ -5,6 +5,7 @@
 
 #include <iomanip>
 #include <ctype.h>
+#include <string.h>
 
 
 _PDX_NAMESPACE_BEGIN
@@ -48,7 +49,12 @@ block::block(parser& lex, bool is_root, bool is_save) {
 
         /* ...done with key */
 
-        lex.next_expected(&tok, token::EQ);
+        lex.next_expected(&tok, token::OPERATOR);
+        opcode op = (strcmp(tok.text, "=") == 0) ? opcode::EQ :
+                    (strcmp(tok.text, "<") == 0) ? opcode::LT :
+                    (strcmp(tok.text, ">") == 0) ? opcode::GT :
+                    (strcmp(tok.text, "<=") == 0) ? opcode::LTE :
+                    (strcmp(tok.text, ">=") == 0) ? opcode::GTE : opcode::EQ2;
 
         /* on to value... */
         object val;
@@ -65,7 +71,7 @@ block::block(parser& lex, bool is_root, bool is_save) {
             if (tok.type == token::CLOSE) {
                 /* empty block */
                 val = object{ std::make_unique<block>() };
-                _vec.emplace_back(key, val);
+                _vec.emplace_back(key, val, op);
                 continue;
             }
             else if (tok.type == token::OPEN) {
@@ -82,7 +88,7 @@ block::block(parser& lex, bool is_root, bool is_save) {
 
             lex.save_and_lookahead(&tok);
 
-            if (tok.type != token::EQ || double_open)
+            if (tok.type != token::OPERATOR || double_open)
                 val = object{ std::make_unique<list>(lex) }; // by God, this is (probably) a list!
             else
                 val = object{ std::make_unique<block>(lex) }; // presumably block, so recurse
@@ -100,10 +106,7 @@ block::block(parser& lex, bool is_root, bool is_save) {
         else
             lex.unexpected_token(tok);
 
-        // TODO: RHS (val) should support fixed-point decimal types; I haven't decided whether to make integers
-        // and fixed-point decimal all use the same 64-bit type yet.
-
-        _vec.emplace_back(key, val);
+        _vec.emplace_back(key, val, op);
     }
 }
 
