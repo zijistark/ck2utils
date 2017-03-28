@@ -38,7 +38,7 @@ date::date(char* src, const file_location& loc, error_queue& errors) {
         if (num[i] > max[i])
             errors.push(loc, "Cannot represent %s %d (maximum is %d) in date value", name[i], num[i], max[i]);
         if (num[i] < min[i])
-            errors.push(loc, "Cannot represent %s %d (minimum is %d) in date value", name[i], num[i], max[i]);
+            errors.push(loc, "Cannot represent %s %d (minimum is %d) in date value", name[i], num[i], min[i]);
     }
 
     _y = static_cast<int16_t>( num[0] );
