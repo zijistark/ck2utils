@@ -112,6 +112,9 @@ fp_decimal<D>::fp_decimal(char* src, const file_location& loc, error_queue& erro
         is_negative = true;
         ++s_i;
     }
+    else if (*src == '+') {
+        ++s_i;
+    }
 
     char* s_radix_pt = strchr(src, '.');
     assert( s_radix_pt && s_radix_pt != s_i ); // guaranteed by DECIMAL token
