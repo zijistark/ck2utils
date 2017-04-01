@@ -2,6 +2,7 @@
 #include "default_map.h"
 #include "definitions_table.h"
 #include "provsetup.h"
+#include "region_file.h"
 #include "pdx/pdx.h"
 #include "pdx/error.h"
 
@@ -22,15 +23,15 @@ using namespace boost::filesystem;
 
 /* TODO: use Boost::ProgramOptions (or just a config file), and end this nonsense */
 
-/*
 const path VROOT_DIR("/var/local/vanilla-ck2");
 const path ROOT_DIR("/var/local/git/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("/var/local/git/MiniSWMH/MiniSWMH");
-*/
 
+/*
 const path VROOT_DIR("/home/ziji/vanilla");
 const path ROOT_DIR("/home/ziji/g/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("/home/ziji/g/MiniSWMH/MiniSWMH");
+*/
 
 const path TITLES_FILE("swmh_landed_titles.txt"); // only uses this landed_titles file
 const path PROVSETUP_FILE("00_province_setup.txt"); // only uses this prov_setup file
@@ -93,6 +94,7 @@ int main(int argc, char** argv) {
 
         default_map dm(vfs);
         definitions_table def_tbl(vfs, dm);
+        region_file regions( vfs["map/geographical_region.txt"] );
         provsetup ps_tbl( vfs["common/province_setup" / PROVSETUP_FILE] );
 
         str2id_map_t county_to_id_map;
@@ -102,7 +104,7 @@ int main(int argc, char** argv) {
         pdx::parser parse( vfs["common/landed_titles" / TITLES_FILE] );
         strvec_t del_titles;
 
-        for (auto&& top_title : top_titles) {
+        for (const auto& top_title : top_titles) {
             const pdx::block* p_top_title_block = find_title(top_title.c_str(), parse.root_block());
 
             if (p_top_title_block == nullptr)
@@ -115,11 +117,20 @@ int main(int argc, char** argv) {
         g_stats.n_titles_cut = del_titles.size();
         g_stats.n_counties_cut = 0;
 
+
         /* for every deleted county title, convert its associated province into
            wasteland */
 
-        for (auto&& t : del_titles) {
-            if (pdx::title_tier(t.c_str()) != pdx::TIER_COUNT)
+        for (const auto& t : del_titles) {
+            uint tier = pdx::title_tier(t.c_str());
+
+            if (tier == pdx::TIER_DUKE) {
+                /* delete duchy titles from the geographical region file */
+                regions.delete_duchy(t);
+                continue;
+            }
+
+            if (tier != pdx::TIER_COUNT)
                 continue;
 
             auto i = county_to_id_map.find(t);
@@ -129,7 +140,10 @@ int main(int argc, char** argv) {
 
             uint id = i->second;
 
-            /* blank the province name in definitions to turn it into a wasteland */
+            /* delete any trace of the county from the geographical region file */
+            regions.delete_county(t, (signed)id);
+
+            /* blank the province "name" in definitions to turn it into a wasteland */
             def_tbl[id].name = "";
 
             /* blank the province's county title in provsetup to turn into a wasteland */
@@ -149,6 +163,9 @@ int main(int argc, char** argv) {
         create_directories(out_def_path);
         out_def_path /= dm.definitions_path();
         def_tbl.write(out_def_path);
+
+        /* write new region file (already just ensured its directories were created) */
+        regions.write(OUT_ROOT_DIR / "map" / "geographical_region.txt");
 
         /* write province_setup file */
         path out_ps_path(OUT_ROOT_DIR / "common" / "province_setup");
@@ -224,7 +241,6 @@ void find_titles_under(const pdx::block* p_root, strvec_t& found_titles) {
             find_titles_under(p_block, found_titles);
     }
 }
-
 
 
 void fill_county_to_id_map(const pdx::vfs& vfs,
