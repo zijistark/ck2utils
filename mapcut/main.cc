@@ -26,11 +26,17 @@ using namespace boost::filesystem;
 const path VROOT_DIR("/var/local/vanilla-ck2");
 const path ROOT_DIR("/var/local/git/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("/var/local/git/MiniSWMH/MiniSWMH");
+const path EMF_ROOT_DIR("/var/local/git/EMF/EMF");
+const path EMF_SWMH_ROOT_DIR("/var/local/git/EMF/EMF+SWMH");
+const path EMF_OUT_ROOT_DIR("/var/local/git/EMF/EMF+MiniSWMH");
 
 /*
 const path VROOT_DIR("/home/ziji/vanilla");
 const path ROOT_DIR("/home/ziji/g/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("/home/ziji/g/MiniSWMH/MiniSWMH");
+const path EMF_ROOT_DIR("/home/ziji/g/EMF/EMF");
+const path EMF_SWMH_ROOT_DIR("/home/ziji/g/EMF/EMF+SWMH");
+const path EMF_OUT_ROOT_DIR("/home/ziji/g/EMF/EMF+MiniSWMH");
 */
 
 const path TITLES_FILE("swmh_landed_titles.txt"); // only uses this landed_titles file
@@ -78,11 +84,18 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    bool emf = false;
     strvec_t top_titles;
     top_titles.reserve(argc - 1);
 
     for (int i = 1; i < argc; ++i) {
         const char* t = argv[i];
+
+        if (strcmp(t, "--emf") == 0) {
+            emf = true;
+            continue;
+        }
+
         assert( pdx::looks_like_title(t) );
         assert( pdx::title_tier(t) >= pdx::TIER_COUNT );
         top_titles.emplace_back(t);
@@ -91,6 +104,11 @@ int main(int argc, char** argv) {
     try {
         pdx::vfs vfs{ VROOT_DIR };
         vfs.push_mod_path(ROOT_DIR);
+
+        if (emf) {
+            vfs.push_mod_path(EMF_ROOT_DIR);
+            vfs.push_mod_path(EMF_SWMH_ROOT_DIR);
+        }
 
         default_map dm(vfs);
         definitions_table def_tbl(vfs, dm);
@@ -158,34 +176,37 @@ int main(int argc, char** argv) {
             ++g_stats.n_counties_cut;
         }
 
-        /* write definition file */
-        path out_def_path(OUT_ROOT_DIR / "map");
-        create_directories(out_def_path);
-        out_def_path /= dm.definitions_path();
-        def_tbl.write(out_def_path);
+        path out_root = (emf) ? EMF_OUT_ROOT_DIR : OUT_ROOT_DIR;
+        path out_map_root(out_root / "map");
+        create_directories(out_map_root);
 
         /* write new region file (already just ensured its directories were created) */
-        regions.write(OUT_ROOT_DIR / "map" / "geographical_region.txt");
+        regions.write(out_map_root / "geographical_region.txt");
 
-        /* write province_setup file */
-        path out_ps_path(OUT_ROOT_DIR / "common" / "province_setup");
-        create_directories(out_ps_path);
-        out_ps_path /= PROVSETUP_FILE;
-        ps_tbl.write(out_ps_path);
+        if (!emf) {
+            /* write definition file */
+            def_tbl.write( out_map_root / dm.definitions_path() );
 
-        /* rewrite landed_titles */
-        path out_lt_path(OUT_ROOT_DIR / "common" / "landed_titles");
-        create_directories(out_lt_path);
-        out_lt_path /= TITLES_FILE;
-        lt_printer ltp( out_lt_path, top_titles, parse.root_block() );
+            /* write province_setup file */
+            path out_ps_path(out_root / "common" / "province_setup");
+            create_directories(out_ps_path);
+            out_ps_path /= PROVSETUP_FILE;
+            ps_tbl.write(out_ps_path);
 
-        /* blank as much title history as necessary */
-        blank_title_history(vfs, del_titles);
+            /* rewrite landed_titles */
+            path out_lt_path(out_root / "common" / "landed_titles");
+            create_directories(out_lt_path);
+            out_lt_path /= TITLES_FILE;
+            lt_printer ltp( out_lt_path, top_titles, parse.root_block() );
+
+            /* blank as much title history as necessary */
+            blank_title_history(vfs, del_titles);
+        }
 
         printf("Counties before cut:   %u\n", g_stats.n_counties_before);
         printf("Counties cut:          %u\n", g_stats.n_counties_cut);
         printf("Titles cut:            %u\n", g_stats.n_titles_cut);
-        printf("Blanked title history: %u\n", g_stats.n_title_hist_blanked);
+        if (!emf) printf("Blanked title history: %u\n", g_stats.n_title_hist_blanked);
     }
     catch (std::exception& e) {
         fprintf(stderr, "fatal: %s\n", e.what());
