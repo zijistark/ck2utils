@@ -3,6 +3,7 @@
 #include "definitions_table.h"
 #include "provsetup.h"
 #include "region_file.h"
+#include "island_region_file.h"
 #include "pdx/pdx.h"
 #include "pdx/error.h"
 
@@ -22,22 +23,22 @@ using namespace boost::filesystem;
 
 
 /* TODO: use Boost::ProgramOptions (or just a config file), and end this nonsense */
-
+/*
 const path VROOT_DIR("/var/local/vanilla-ck2");
 const path ROOT_DIR("/var/local/git/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("/var/local/git/MiniSWMH/MiniSWMH");
 const path EMF_ROOT_DIR("/var/local/git/EMF/EMF");
 const path EMF_SWMH_ROOT_DIR("/var/local/git/EMF/EMF+SWMH");
 const path EMF_OUT_ROOT_DIR("/var/local/git/EMF/EMF+MiniSWMH");
+*/
 
-/*
 const path VROOT_DIR("/home/ziji/vanilla");
 const path ROOT_DIR("/home/ziji/g/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("/home/ziji/g/MiniSWMH/MiniSWMH");
 const path EMF_ROOT_DIR("/home/ziji/g/EMF/EMF");
 const path EMF_SWMH_ROOT_DIR("/home/ziji/g/EMF/EMF+SWMH");
 const path EMF_OUT_ROOT_DIR("/home/ziji/g/EMF/EMF+MiniSWMH");
-*/
+
 
 const path TITLES_FILE("swmh_landed_titles.txt"); // only uses this landed_titles file
 const path PROVSETUP_FILE("00_province_setup.txt"); // only uses this prov_setup file
@@ -112,7 +113,8 @@ int main(int argc, char** argv) {
 
         default_map dm(vfs);
         definitions_table def_tbl(vfs, dm);
-        region_file regions( vfs["map/geographical_region.txt"] );
+        region_file regions(vfs, dm);
+        island_region_file island_regions(vfs, dm);
         provsetup ps_tbl( vfs["common/province_setup" / PROVSETUP_FILE] );
 
         str2id_map_t county_to_id_map;
@@ -158,8 +160,9 @@ int main(int argc, char** argv) {
 
             uint id = i->second;
 
-            /* delete any trace of the county from the geographical region file */
-            regions.delete_county(t, (signed)id);
+            /* delete any trace of the county from the geographical region file or island region file */
+            regions.delete_county(t, id);
+            island_regions.delete_province(id);
 
             /* blank the province "name" in definitions to turn it into a wasteland */
             def_tbl[id].name = "";
@@ -181,11 +184,14 @@ int main(int argc, char** argv) {
         create_directories(out_map_root);
 
         /* write new region file (already just ensured its directories were created) */
-        regions.write(out_map_root / "geographical_region.txt");
+        regions.write(out_map_root / dm.geographical_region_path());
 
         if (!emf) {
             /* write definition file */
-            def_tbl.write( out_map_root / dm.definitions_path() );
+            def_tbl.write(out_map_root / dm.definitions_path());
+
+            /* island_region file */
+            island_regions.write(out_map_root / dm.island_region_path());
 
             /* write province_setup file */
             path out_ps_path(out_root / "common" / "province_setup");

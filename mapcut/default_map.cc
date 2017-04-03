@@ -29,6 +29,14 @@ default_map::default_map(const pdx::vfs& vfs)
             assert( s.value().is_string() );
             _provinces_path = s.value().as_string();
         }
+        else if (s.key() == "geographical_region") {
+            assert( s.value().is_string() );
+            _georegion_path = s.value().as_string();
+        }
+        else if (s.key() == "region") {
+            assert( s.value().is_string() );
+            _island_region_path = s.value().as_string();
+        }
         else if (s.key() == "sea_zones") {
             auto&& obj_list = *s.value().as_list();
             assert( obj_list.size() == 2 );
@@ -44,7 +52,7 @@ default_map::default_map(const pdx::vfs& vfs)
         else if (s.key() == "major_rivers") {
             auto&& obj_list = *s.value().as_list();
 
-            for (auto&& o : obj_list) {
+            for (const auto& o : obj_list) {
                 assert( o.is_integer() );
                 int major_river_id = o.as_integer();
                 assert( major_river_id > 0 );

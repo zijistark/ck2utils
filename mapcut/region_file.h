@@ -2,6 +2,9 @@
 
 #pragma once
 
+#include "default_map.h"
+#include "pdx/vfs.h"
+
 #include <boost/filesystem.hpp>
 #include <vector>
 #include <string>
@@ -19,14 +22,14 @@ private:
      * input order, and these containers are quite small in practice, so we KISS here and just
      * use vectors. */
     typedef std::vector<std::string> strvec_t;
-    typedef std::vector<int> intvec_t;
+    typedef std::vector<unsigned int> uintvec_t;
 
     struct region {
         std::string name;
         strvec_t    regions;
         strvec_t    duchies;
         strvec_t    counties;
-        intvec_t    provinces;
+        uintvec_t   provinces;
 
         region(const std::string& _name) : name(_name) {}
         bool empty() const noexcept {
@@ -40,10 +43,10 @@ private:
     void delete_region(const std::string& region);
 
 public:
-    region_file(const fs::path&);
+    region_file(const pdx::vfs& vfs, const default_map& dm);
     void write(const fs::path&);
 
     /* remove a county or duchy from the region_file */
     void delete_duchy(const std::string& title);
-    void delete_county(const std::string& title, int province_id);
+    void delete_county(const std::string& title, unsigned int province_id);
 };

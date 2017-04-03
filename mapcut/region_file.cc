@@ -6,11 +6,9 @@
 #include <algorithm>
 #include <fstream>
 #include <cstring>
-#include <cerrno>
 
-region_file::region_file(const fs::path& in_path) {
-    /* the usual rigamorole for [basic] windows wchar path compat */
-    const std::string spath = in_path.string();
+region_file::region_file(const pdx::vfs& vfs, const default_map& dm) {
+    const std::string spath = vfs["map" / dm.geographical_region_path()].string();
     const char* path = spath.c_str();
 
     pdx::parser parse(path);
@@ -68,6 +66,8 @@ unique_ptr<region_file::region> region_file::parse_region(const char* name, cons
             for (const auto& e : *v) {
                 if (!e.is_integer())
                     throw va_error("unexpected non-integer value when expecting province ID in region '%s': %s", name, path);
+                if (e.as_integer() <= 0)
+                    throw va_error("invalid province ID (must be positive and nonzero) in region '%s': %s", name, path);
 
                 p_region->provinces.emplace_back(e.as_integer());
             }
@@ -105,7 +105,7 @@ void region_file::delete_duchy(const std::string& title) {
     }
 }
 
-void region_file::delete_county(const std::string& title, int province_id) {
+void region_file::delete_county(const std::string& title, unsigned int province_id) {
     for (auto&& r : _regions) {
         if (r->empty()) continue;
 
