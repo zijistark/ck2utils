@@ -3,7 +3,6 @@
 #include "definitions_table.h"
 #include "provsetup.h"
 #include "region_file.h"
-#include "island_region_file.h"
 #include "pdx/pdx.h"
 #include "pdx/error.h"
 
@@ -113,8 +112,8 @@ int main(int argc, char** argv) {
 
         default_map dm(vfs);
         definitions_table def_tbl(vfs, dm);
-        region_file regions(vfs, dm);
-        island_region_file island_regions(vfs, dm);
+        region_file geo_regions( vfs["map" / dm.geographical_region_path()] );
+        region_file island_regions( vfs["map" / dm.island_region_path()] );
         provsetup ps_tbl( vfs["common/province_setup" / PROVSETUP_FILE] );
 
         str2id_map_t county_to_id_map;
@@ -146,7 +145,8 @@ int main(int argc, char** argv) {
 
             if (tier == pdx::TIER_DUKE) {
                 /* delete duchy titles from the geographical region file */
-                regions.delete_duchy(t);
+                geo_regions.delete_duchy(t);
+                island_regions.delete_duchy(t);
                 continue;
             }
 
@@ -161,7 +161,10 @@ int main(int argc, char** argv) {
             uint id = i->second;
 
             /* delete any trace of the county from the geographical region file or island region file */
-            regions.delete_county(t, id);
+
+            geo_regions.delete_county(t);
+            geo_regions.delete_province(id);
+            island_regions.delete_county(t);
             island_regions.delete_province(id);
 
             /* blank the province "name" in definitions to turn it into a wasteland */
@@ -184,14 +187,14 @@ int main(int argc, char** argv) {
         create_directories(out_map_root);
 
         /* write new region file (already just ensured its directories were created) */
-        regions.write(out_map_root / dm.geographical_region_path());
+        geo_regions.write(out_map_root / dm.geographical_region_path());
 
         if (!emf) {
+            /* write island_region file */
+            island_regions.write(out_map_root / dm.island_region_path());
+
             /* write definition file */
             def_tbl.write(out_map_root / dm.definitions_path());
-
-            /* island_region file */
-            island_regions.write(out_map_root / dm.island_region_path());
 
             /* write province_setup file */
             path out_ps_path(out_root / "common" / "province_setup");

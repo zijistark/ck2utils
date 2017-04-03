@@ -7,8 +7,8 @@
 #include <fstream>
 #include <cstring>
 
-region_file::region_file(const pdx::vfs& vfs, const default_map& dm) {
-    const std::string spath = vfs["map" / dm.geographical_region_path()].string();
+region_file::region_file(const fs::path& in_path) {
+    const std::string spath = in_path.string();
     const char* path = spath.c_str();
 
     pdx::parser parse(path);
@@ -79,9 +79,19 @@ unique_ptr<region_file::region> region_file::parse_region(const char* name, cons
     return p_region;
 }
 
-/* remove references in other regions to the given region */
+
 void region_file::delete_region(const std::string& region_name) {
     for (auto&& r : _regions) {
+        if (r->name == region_name) {
+            /* this is just here for completeness; we don't currently use this method
+             * to actually empty regions, just remove references to emptied regions. */
+            r->regions.clear();
+            r->duchies.clear();
+            r->counties.clear();
+            r->provinces.clear();
+            continue;
+        }
+
         if (r->empty()) continue; // ignore empty regions
 
         // remove any reference to the deleted region from this region's region set
@@ -92,6 +102,7 @@ void region_file::delete_region(const std::string& region_name) {
             delete_region(r->name); // it's time to recurse and do it again with this region
     }
 }
+
 
 void region_file::delete_duchy(const std::string& title) {
     for (auto&& r : _regions) {
@@ -105,18 +116,13 @@ void region_file::delete_duchy(const std::string& title) {
     }
 }
 
-void region_file::delete_county(const std::string& title, unsigned int province_id) {
+
+void region_file::delete_county(const std::string& title) {
     for (auto&& r : _regions) {
         if (r->empty()) continue;
 
-        {
-            auto& vec = r->counties;
-            vec.erase(std::remove(vec.begin(), vec.end(), title), vec.end());
-        }
-        {
-            auto& vec = r->provinces;
-            vec.erase(std::remove(vec.begin(), vec.end(), province_id), vec.end());
-        }
+        auto& vec = r->counties;
+        vec.erase(std::remove(vec.begin(), vec.end(), title), vec.end());
 
         if (r->empty())
             delete_region(r->name);
@@ -124,9 +130,31 @@ void region_file::delete_county(const std::string& title, unsigned int province_
 }
 
 
+void region_file::delete_province(unsigned int province_id) {
+    for (auto&& r : _regions) {
+        if (r->empty()) continue;
+
+        auto& vec = r->provinces;
+        vec.erase(std::remove(vec.begin(), vec.end(), province_id), vec.end());
+
+        if (r->empty())
+            delete_region(r->name);
+    }
+}
+
+static constexpr int num_digits(unsigned int n) { // obviously only applicable to province IDs
+    return (n >= 10000) ? 5 :
+           (n >= 1000) ? 4 :
+           (n >= 100) ? 3 :
+           (n >= 10) ? 2 : 1;
+}
+
 void region_file::write(const fs::path& out_path) {
     std::ofstream os(out_path.string());
-    if (!os) throw std::runtime_error("could not write to file: " + out_path.string());
+    if (!os) throw std::runtime_error("Could not write to file: " + out_path.string());
+
+    const int TAB_WIDTH = 8;
+    const int MAX_LINE_LEN = 72;
 
     /* NOTE: we use \n instead of std::endl intentionally (UNIX format) */
 
@@ -154,8 +182,23 @@ void region_file::write(const fs::path& out_path) {
         }
         if (!pr->provinces.empty()) {
             os << "\tprovinces = {\n";
-            for (const auto& e : pr->provinces) os << "\t\t" << e << "\n";
-            os << "\t}\n";
+
+            os << "\t\t";
+            int cur_line_len = TAB_WIDTH*2;
+
+            for (const auto& e : pr->provinces) {
+                int e_len = num_digits(e) + 1; // assume a space following it
+
+                if (e_len + cur_line_len > MAX_LINE_LEN) {
+                    os << "\n\t\t";
+                    cur_line_len = TAB_WIDTH*2;
+                }
+
+                os << e << " ";
+                cur_line_len += e_len;
+            }
+
+            os << "\n\t}\n";
         }
 
         os << "}\n";

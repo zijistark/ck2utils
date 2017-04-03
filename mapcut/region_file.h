@@ -2,9 +2,6 @@
 
 #pragma once
 
-#include "default_map.h"
-#include "pdx/vfs.h"
-
 #include <boost/filesystem.hpp>
 #include <vector>
 #include <string>
@@ -40,13 +37,13 @@ private:
     std::vector< unique_ptr<region> > _regions;
 
     unique_ptr<region> parse_region(const char* name, const pdx::block* block, const char* path);
-    void delete_region(const std::string& region);
 
 public:
-    region_file(const pdx::vfs& vfs, const default_map& dm);
+    region_file(const fs::path&);
     void write(const fs::path&);
 
-    /* remove a county or duchy from the region_file */
+    void delete_region(const std::string& region);
     void delete_duchy(const std::string& title);
-    void delete_county(const std::string& title, unsigned int province_id);
+    void delete_county(const std::string& title);
+    void delete_province(unsigned int province_id);
 };
