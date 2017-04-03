@@ -174,9 +174,12 @@ class Stringifiable:
 
 class TopLevel(Stringifiable):
 
-    def __init__(self, contents, post_comments=None):
+    def __init__(self, contents=None, post_comments=None):
         super().__init__()
-        self.contents = contents
+        if contents is None:
+            self.contents = []
+        else:
+            self.contents = contents
         if post_comments is None:
             self.post_comments = []
         else:
@@ -348,6 +351,8 @@ class Pair(Stringifiable):
             self.op = Op('=')
             if isinstance(args[1], Stringifiable):
                 self.value = args[1]
+            elif isinstance(args[1], list):
+                self.value = Obj(args[1])
             else:
                 self.value = String(args[1])
         else:
@@ -357,18 +362,6 @@ class Pair(Stringifiable):
                 self.key = String(args[0])
             self.op = Op('=')
             self.value = Obj([])
-
-    @classmethod
-    def from_kv(cls, key, value):
-        if not isinstance(key, Stringifiable):
-            key = String(key)
-        if not isinstance(value, Stringifiable):
-            value = String(value)
-        return cls(key, Op('='), value)
-
-    @classmethod
-    def with_empty_obj(cls, key):
-        return cls(key, Obj([]))
 
     def __iter__(self):
         yield self.key

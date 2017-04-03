@@ -19,12 +19,12 @@ def mutate_cb(cb_pair):
         least_index = min(index, least_index)
         tree.contents.remove(can_use)
     except StopIteration:
-        can_use = Pair.with_empty_obj('can_use')
+        can_use = Pair('can_use')
     if third_party:
         trigger_name = 'emf_cb_thirdparty_can_use_trigger'
     else:
         trigger_name = 'emf_cb_can_use_trigger'
-    trigger = Pair.from_kv(trigger_name, 'yes')
+    trigger = Pair(trigger_name, 'yes')
     if not can_use.value.has_pair(trigger_name, 'yes'):
         can_use.value.contents.insert(0, trigger)
     # remove & handle can_use_gui
@@ -38,12 +38,12 @@ def mutate_cb(cb_pair):
             least_index = min(index, least_index)
             tree.contents.remove(can_use_gui)
         except StopIteration:
-            can_use_gui = Pair.with_empty_obj('can_use_gui')
+            can_use_gui = Pair('can_use_gui')
         if third_party:
             trigger_name = 'emf_cb_thirdparty_can_use_gui_trigger'
         else:
             trigger_name = 'emf_cb_can_use_gui_trigger'
-        trigger = Pair.from_kv(trigger_name, 'yes')
+        trigger = Pair(trigger_name, 'yes')
         if not can_use_gui.value.has_pair(trigger_name, 'yes'):
             can_use_gui.value.contents.insert(0, trigger)
     # remove & handle can_use_title
@@ -61,7 +61,7 @@ def mutate_cb(cb_pair):
                     'emf_cb_thirdparty_can_use_de_jure_title_trigger')
             else:
                 trigger_name = 'emf_cb_can_use_de_jure_title_trigger'
-            trigger = Pair.from_kv(trigger_name, 'yes')
+            trigger = Pair(trigger_name, 'yes')
             if not can_use_title.value.has_pair(trigger_name, 'yes'):
                 can_use_title.value.contents.insert(0, trigger)
         else:
@@ -69,7 +69,7 @@ def mutate_cb(cb_pair):
                 trigger_name = 'emf_cb_thirdparty_can_use_title_trigger'
             else:
                 trigger_name = 'emf_cb_can_use_title_trigger'
-            trigger = Pair.from_kv(trigger_name, 'yes')
+            trigger = Pair(trigger_name, 'yes')
             if not can_use_title.value.has_pair(trigger_name, 'yes'):
                 can_use_title.value.contents.append(trigger)
     # reinsert
@@ -94,7 +94,7 @@ def mutate_cb(cb_pair):
         effect_name = 'emf_cb_thirdparty_on_success_posttitle_effect'
     else:
         effect_name = 'emf_cb_on_success_posttitle_effect'
-    effect = Pair.from_kv(effect_name, 'yes')
+    effect = Pair(effect_name, 'yes')
     if not on_success_posttitle.value.has_pair(effect_name, 'yes'):
         on_success_posttitle.value.contents.append(effect)
 

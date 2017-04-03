@@ -34,12 +34,12 @@ def process_title(title_pair):
     else:
         return
     if allow is None:
-        allow = Pair.with_empty_obj('allow')
+        allow = Pair('allow')
         tree.contents.append(allow)
     if allow.value.has_pair('always', 'no'):
         print(title)
     if not allow.value.has_pair(trigger_name, 'yes'):
-        allow.value.contents.append(Pair.from_kv(trigger_name, 'yes'))
+        allow.value.contents.append(Pair(trigger_name, 'yes'))
 
 @print_time.print_time
 def main():

@@ -92,11 +92,10 @@ class TitleHistory:
                             if (i > 0 and vs[i - 1][1] != 0 and
                                 vs[i - 1][1][0] != v[0]):
                                 self.history[date].append(
-                                    Pair.from_kv('clear_tribute_suzerain',
-                                                 vs[i - 1][1][0]))
-                            v = Obj([Pair.from_kv('who', v[0]),
-                                     Pair.from_kv('percentage',
-                                                  Number(str(v[1])))])
+                                    Pair('clear_tribute_suzerain',
+                                         vs[i - 1][1][0]))
+                            v = Obj([Pair('who', v[0]),
+                                     Pair.'percentage', Number(str(v[1])))])
                             item = 'set_tribute_suzerain', v
                     elif k in ('name', 'adjective') and v == '':
                         item = 'reset_{}'.format(k), 'yes'
@@ -104,7 +103,7 @@ class TitleHistory:
                         item = k, v
                     if isinstance(item[1], int):
                         item = item[0], Number(str(item[1]))
-                    pair = Pair.from_kv(item[0], item[1])
+                    pair = Pair(item[0], item[1])
                     if isinstance(item[1], Number):
                         item = item[0], item[1].val
                     if (date, item) in self.attr_comment:
@@ -118,7 +117,7 @@ class TitleHistory:
             obj = Obj(items)
             obj.ker.pre_comments = self.date_ker_comments[date]
             date = ASTDate(self.date_comments[date], str(date), None)
-            date_pair = Pair.from_kv(date, obj)
+            date_pair = Pair(date, obj)
             contents.append(date_pair)
         self.tree = TopLevel(contents)
         self.tree.post_comments = self.post_comments
@@ -198,7 +197,7 @@ class TitleHistory:
                         next_thing.pre_comments[:0] = comments
                 else:
                     obj.contents.remove(prev_holder_pair)
-                    no_holder_pair = Pair.from_kv('holder', Number(0))
+                    no_holder_pair = Pair('holder', Number(0))
                     pair_is, _ = prev_holder_pair.inline_str(0, parser, 0)
                     comments = [Comment(s)
                                 for s in pair_is.split('\n') if s]
@@ -214,19 +213,19 @@ class TitleHistory:
                         obj.contents.append(prev_holder_pair)
                         obj.contents.sort(key=self.keys_sort_key)
                     else:
-                        self.tree.contents.append(Pair.from_kv(
+                        self.tree.contents.append(Pair(
                             ASTDate(str(end)), Obj([prev_holder_pair])))
                         self.tree.contents.sort(key=lambda x: x.key.val)
                 next_begin = next((b for b, e in dead_holders if b > begin),
                                   Date.LATEST)
                 if next_begin < date:
-                    no_holder_pair = Pair.from_kv('holder', Number(0))
+                    no_holder_pair = Pair('holder', Number(0))
                     if end in self.tree.dictionary:
                         obj = self.tree[end]
                         obj.contents.append(no_holder_pair)
                         obj.contents.sort(key=self.keys_sort_key)
                     else:
-                        self.tree.contents.append(Pair.from_kv(
+                        self.tree.contents.append(Pair(
                             ASTDate(str(end)), Obj([no_holder_pair])))
                         self.tree.contents.sort(key=lambda x: x.key.val)
             elif begin < date:
@@ -236,19 +235,19 @@ class TitleHistory:
                         date_pair.key = ASTDate(str(begin))
                     else:
                         date_pair.value.contents.remove(holder_pair)
-                        date_pair = Pair.from_kv(ASTDate(str(begin)),
-                                                 Obj([holder_pair]))
+                        date_pair = Pair(ASTDate(str(begin)),
+                                         Obj([holder_pair]))
                         self.tree.contents.append(date_pair)
                     self.tree.contents.sort(key=lambda x: x.key.val)
                     i = self.tree.contents.index(date_pair)
                 else:
-                    no_holder_pair = Pair.from_kv('holder', Number(0))
+                    no_holder_pair = Pair('holder', Number(0))
                     if begin in self.tree.dictionary:
                         obj = self.tree[begin]
                         obj.contents.append(no_holder_pair)
                         obj.contents.sort(key=self.keys_sort_key)
                     else:
-                        self.tree.contents.append(Pair.from_kv(
+                        self.tree.contents.append(Pair(
                             ASTDate(str(begin)), Obj([no_holder_pair])))
                         self.tree.contents.sort(key=lambda x: x.key.val)
                         i += 1
