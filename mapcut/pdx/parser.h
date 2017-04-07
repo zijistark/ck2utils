@@ -14,6 +14,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <algorithm>
 #include <boost/filesystem.hpp>
 
 
@@ -177,6 +178,16 @@ public:
     vec_t::iterator       end()         { return _vec.end(); }
     vec_t::const_iterator begin() const { return _vec.cbegin(); }
     vec_t::const_iterator end() const   { return _vec.cend(); }
+
+    /* convenience map-like accessor (though the implementation is linear search) for string-type statement keys */
+    vec_t::iterator       operator[](const char* key) noexcept {
+        return std::find_if(_vec.begin(), _vec.end(),
+                            [key](const statement& s) -> bool { return s.key() == key; });
+    }
+    vec_t::const_iterator operator[](const char* key) const noexcept {
+        return std::find_if(_vec.cbegin(), _vec.cend(),
+                            [key](const statement& s) -> bool { return s.key() == key; });
+    }
 };
 
 
