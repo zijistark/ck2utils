@@ -63,7 +63,7 @@ contexts:
     - match: \b(if|trigger_switch|limit|on_trigger)\b
       scope: keyword.control.ck2script
       # types of "events" (repeat_event is strictly a command and not also an actual event type)
-    - match: \b((character|long_character|narrative|letter|diploresponse|province|unit|repeat)_event)\b
+    - match: \b((character|long_character|narrative|letter|diploresponse|province|unit|repeat|society_quest)_event)\b
       scope: keyword.control.ck2script
       # top-level event context flags/paramters:
     - match: \b(((show_(ROOT|root))|(hide_(window|from|FROM|new))|(show(_from|_FROM){2,4})))\b
@@ -71,12 +71,17 @@ contexts:
     - match: \b(is_triggered_only|major|desc|is_friendly|picture|border|title|notification)\b
       scope: keyword.control.ck2script
       # top-level event effect blocks
-    - match: \b(immediate|option)\b
+    - match: \b(immediate|option|after)\b
       scope: keyword.control.ck2script
       # top-level event trigger blocks
     - match: \b(trigger|major_trigger)\b
       scope: keyword.control.ck2script
+      # CUSTOMIZABLE_LOCALISATION
+    - match: \b(defined_text|text|localisation_key)\b
+      scope: keyword.control.ck2script
       # FUTURE DECISION/LAW CONTEXT:
+    - match: \b(decisions|title_decisions|settlement_decisions|targett?ed_decisions|plot_decisions|society_decisions)\b # top-level
+      scope: keyword.control.ck2script
     - match: \b(allow|potential|from_potential|revoke_allowed)\b # triggers
       scope: keyword.control.ck2script
     - match: \b(effect|pass_effect)\b # effects
