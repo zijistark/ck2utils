@@ -3,6 +3,7 @@
 #include "definitions_table.h"
 #include "provsetup.h"
 #include "region_file.h"
+#include "adjacencies_file.h"
 #include "pdx/pdx.h"
 #include "pdx/error.h"
 
@@ -22,6 +23,7 @@ using namespace boost::filesystem;
 
 
 /* TODO: use Boost::ProgramOptions (or just a config file), and end this nonsense */
+
 const path VROOT_DIR("/var/local/vanilla-ck2");
 const path ROOT_DIR("/var/local/git/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("/var/local/git/MiniSWMH/MiniSWMH");
@@ -72,10 +74,13 @@ struct {
     uint n_counties_cut;
     uint n_titles_cut;
     uint n_title_hist_blanked;
+    uint n_adjacencies_cut;
 } g_stats;
 
 
 int main(int argc, char** argv) {
+
+    memset(&g_stats, 0, sizeof(g_stats));
 
     if (argc < 2) {
         fprintf(stderr, "USAGE:\n  %s TITLE [TITLE ...]\n\nTITLE: top de jure title to remove (if plural, should not overlap)\n", argv[0]);
@@ -112,6 +117,7 @@ int main(int argc, char** argv) {
         definitions_table def_tbl(vfs, dm);
         region_file geo_regions( vfs["map" / dm.geographical_region_path()] );
         region_file island_regions( vfs["map" / dm.island_region_path()] );
+        adjacencies_file adjacencies( vfs["map" / dm.adjacencies_path()] );
         provsetup ps_tbl( vfs["common/province_setup" / PROVSETUP_FILE] );
 
         str2id_map_t county_to_id_map;
@@ -132,8 +138,6 @@ int main(int argc, char** argv) {
         }
 
         g_stats.n_titles_cut = del_titles.size();
-        g_stats.n_counties_cut = 0;
-
 
         /* for every deleted county title, convert its associated province into
            wasteland */
@@ -165,6 +169,16 @@ int main(int argc, char** argv) {
             island_regions.delete_county(t);
             island_regions.delete_province(id);
 
+            /* remove any special adjacencies that are from or to the deleted province (through is permitted) */
+
+            for (auto&& adj : adjacencies) {
+                if (adj.deleted) continue;
+                if (adj.from == (signed)id || adj.to == (signed)id) {
+                    adj.deleted = true;
+                    ++g_stats.n_adjacencies_cut;
+                }
+            }
+
             /* blank the province "name" in definitions to turn it into a wasteland */
             def_tbl[id].name = "";
 
@@ -188,6 +202,9 @@ int main(int argc, char** argv) {
         geo_regions.write(out_map_root / dm.geographical_region_path());
 
         if (!emf) {
+            /* write special adjacencies file */
+            adjacencies.write(out_map_root / dm.adjacencies_path());
+
             /* write island_region file */
             island_regions.write(out_map_root / dm.island_region_path());
 
@@ -210,10 +227,11 @@ int main(int argc, char** argv) {
             blank_title_history(vfs, del_titles);
         }
 
-        printf("Counties before cut:   %u\n", g_stats.n_counties_before);
-        printf("Counties cut:          %u\n", g_stats.n_counties_cut);
-        printf("Titles cut:            %u\n", g_stats.n_titles_cut);
-        if (!emf) printf("Blanked title history: %u\n", g_stats.n_title_hist_blanked);
+        printf("Counties before cut:     %u\n", g_stats.n_counties_before);
+        printf("Counties cut:            %u\n", g_stats.n_counties_cut);
+        printf("Titles cut:              %u\n", g_stats.n_titles_cut);
+        printf("Blanked title histories: %u\n", g_stats.n_title_hist_blanked);
+        printf("Special adjacencies cut: %u\n", g_stats.n_adjacencies_cut);
     }
     catch (std::exception& e) {
         fprintf(stderr, "fatal: %s\n", e.what());
@@ -228,7 +246,7 @@ const pdx::block* find_title(const char* top_title, const pdx::block* p_root) {
 
     uint top_title_tier = pdx::title_tier(top_title);
 
-    for (auto&& s : *p_root) {
+    for (const auto& s : *p_root) {
         if ( !(s.key().is_string() && pdx::looks_like_title( s.key().as_string() )) )
             continue;
 
@@ -256,7 +274,7 @@ const pdx::block* find_title(const char* top_title, const pdx::block* p_root) {
 
 void find_titles_under(const pdx::block* p_root, strvec_t& found_titles) {
 
-    for (auto&& s : *p_root) {
+    for (const auto& s : *p_root) {
         if ( !(s.key().is_string() && pdx::looks_like_title( s.key().as_string() )) )
             continue;
 
@@ -298,7 +316,7 @@ void fill_county_to_id_map(const pdx::vfs& vfs,
 
         pdx::parser parse(real_path);
 
-        for (auto&& s : *parse.root_block()) {
+        for (const auto& s : *parse.root_block()) {
             if (s.key() == "title") {
                 assert( s.value().is_string() && pdx::looks_like_title( s.value().as_string() ) );
                 county = s.value().as_string();
@@ -330,13 +348,11 @@ void blank_title_history(const pdx::vfs& vfs, const strvec_t& deleted_titles) {
     if (! create_directories(title_hist_oroot)) {
         // output directory preexisted, so we need to ensure that it's clean first
 
-        for (auto&& e : directory_iterator(title_hist_oroot))
+        for (const auto& e : directory_iterator(title_hist_oroot))
             remove(e.path());
     }
 
-    g_stats.n_title_hist_blanked = 0;
-
-    for (auto&& title : deleted_titles) {
+    for (const auto& title : deleted_titles) {
 
         std::string filename = title + ".txt";
         fs::path virt_path = "history/titles" / filename;
@@ -374,12 +390,12 @@ lt_printer::lt_printer(const fs::path& p, const strvec_t& _top_titles, const pdx
 
 
 void lt_printer::print(const pdx::block& b) {
-    for (auto&& stmt : b) print(stmt);
+    for (const auto& stmt : b) print(stmt);
 }
 
 
 void lt_printer::print(const pdx::list& l) {
-    for (auto&& obj : l) {
+    for (const auto& obj : l) {
         print(obj);
         os << ' ';
     }

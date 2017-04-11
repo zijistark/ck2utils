@@ -37,6 +37,10 @@ default_map::default_map(const pdx::vfs& vfs)
             assert( s.value().is_string() );
             _island_region_path = s.value().as_string();
         }
+        else if (s.key() == "adjacencies") {
+            assert( s.value().is_string() );
+            _adjacencies_path = s.value().as_string();
+        }
         else if (s.key() == "sea_zones") {
             auto&& obj_list = *s.value().as_list();
             assert( obj_list.size() == 2 );

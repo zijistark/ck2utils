@@ -23,6 +23,7 @@ class default_map {
     fs::path      _provinces_path;
     fs::path      _georegion_path;
     fs::path      _island_region_path;
+    fs::path      _adjacencies_path;
     id_pair_vec_t _seazone_vec;
     id_set_t      _major_river_set;
 
@@ -35,6 +36,7 @@ public:
     const fs::path& provinces_path()           const noexcept { return _provinces_path; }
     const fs::path& geographical_region_path() const noexcept { return _georegion_path; }
     const fs::path& island_region_path()       const noexcept { return _island_region_path; }
+    const fs::path& adjacencies_path()         const noexcept { return _adjacencies_path; }
 
     const id_pair_vec_t& seazone_vec() const noexcept { return _seazone_vec; }
     const id_set_t& major_river_set()  const noexcept { return _major_river_set; }
