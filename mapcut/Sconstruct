@@ -1,10 +1,10 @@
 # -*- python -*-
 
-SConscript(['pdx/SConscript'])
+SConscript(['../lib/pdx/SConscript'])
 
 env = Environment()
 env.Append(CXXFLAGS="-Wall -Wextra -s -O3 --std=c++17")
 
 sources = ["main.cc", "default_map.cc", "definitions_table.cc", "provsetup.cc", "region_file.cc", "adjacencies_file.cc"]
 
-env.Program('mapcut', sources, LIBS=["pdx", "boost_filesystem", "boost_system"], LIBPATH='./pdx')
+env.Program('mapcut', sources, LIBS=["pdx", "boost_filesystem", "boost_system"], LIBPATH='../lib/pdx')
