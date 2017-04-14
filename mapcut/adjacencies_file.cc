@@ -1,6 +1,6 @@
 
 #include "adjacencies_file.h"
-#include "pdx/error.h"
+#include <pdx/error.h>
 
 #include <stdexcept>
 #include <memory>

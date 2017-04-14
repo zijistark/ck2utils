@@ -2,7 +2,7 @@
 #ifndef _MDH_DEFAULT_MAP_H_
 #define _MDH_DEFAULT_MAP_H_
 
-#include "pdx/vfs.h"
+#include <pdx/vfs.h>
 
 #include <boost/filesystem.hpp>
 

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "default_map.h"
-#include "pdx/vfs.h"
+#include <pdx/vfs.h>
 #include "color.h"
 
 #include <boost/filesystem.hpp>

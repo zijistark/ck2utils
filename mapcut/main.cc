@@ -4,8 +4,8 @@
 #include "provsetup.h"
 #include "region_file.h"
 #include "adjacencies_file.h"
-#include "pdx/pdx.h"
-#include "pdx/error.h"
+#include <pdx/pdx.h>
+#include <pdx/error.h>
 
 #include <boost/filesystem.hpp>
 

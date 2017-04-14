@@ -1,0 +1,11 @@
+
+env = Environment()
+env.Append(CXXFLAGS='--std=c++17 -Wall -Wextra -s -O3')
+sources = [
+    'token.cc',
+    'lexer.cc',
+    'parser.cc',
+    'date.cc',
+    env.CXXFile('scanner.ll'),
+]
+env.StaticLibrary('pdx', sources)

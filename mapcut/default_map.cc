@@ -1,8 +1,8 @@
 
 #include "default_map.h"
 
-#include "pdx/parser.h"
-#include "pdx/error.h"
+#include <pdx/parser.h>
+#include <pdx/error.h>
 
 #include <cassert>
 

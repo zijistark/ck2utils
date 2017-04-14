@@ -568,7 +568,7 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 1 "scanner.ll"
 #define YY_NO_UNISTD_H 1
 
 #line 574 "<stdout>"
@@ -788,7 +788,7 @@ YY_DECL
 		}
 
 	{
-#line 18 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 18 "scanner.ll"
 
 
 #line 794 "<stdout>"
@@ -856,68 +856,68 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 20 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 20 "scanner.ll"
 { return pdx::token::DATE; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 21 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 21 "scanner.ll"
 { return pdx::token::QDATE; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 22 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 22 "scanner.ll"
 { return pdx::token::DECIMAL; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 23 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 23 "scanner.ll"
 { return pdx::token::INTEGER; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 24 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 24 "scanner.ll"
 { return pdx::token::OPERATOR; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 25 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 25 "scanner.ll"
 { return pdx::token::OPEN; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 26 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 26 "scanner.ll"
 { return pdx::token::CLOSE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 27 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 27 "scanner.ll"
 { return pdx::token::STR; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 28 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 28 "scanner.ll"
 { return pdx::token::QSTR; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 29 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 29 "scanner.ll"
 { return pdx::token::COMMENT; }
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 30 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 30 "scanner.ll"
 /* skip */
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 31 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 31 "scanner.ll"
 { return pdx::token::FAIL; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 33 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 33 "scanner.ll"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
 #line 923 "<stdout>"
@@ -1934,6 +1934,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 33 "/home/ziji/g/ck2utils/lib/pdx/scanner.ll"
+#line 33 "scanner.ll"
 
 
