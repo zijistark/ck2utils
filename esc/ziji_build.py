@@ -35,8 +35,8 @@ AUDIT = False
 # if true, blank ALL localisations
 NUKE_IT_FROM_ORBIT = False
 
-COUNTY_TITLE_NAMES = False
-PROVINCE_HISTORY_NAMES = True
+COUNTY_TITLE_NAMES = True
+PROVINCE_HISTORY_NAMES = False
 
 def make_outpath(outroot, inpath, *roots):
     for i, root in enumerate(roots):
@@ -194,7 +194,7 @@ def main():
         outrows = [[''] * 15]
         outrows[0][:6] = ['#CODE', 'ENGLISH', 'FRENCH', 'GERMAN', '', 'SPANISH']
         outrows[0][-1] = 'x'
-        inpaths = list(files('localisation/*', parser.moddirs))
+        inpaths = list(files('localisation/*.csv', parser.moddirs))
         for inpath in inpaths:
             outpath = build / 'localisation' / inpath.name
             with outpath.open('w', encoding='cp1252', newline='') as csvfile:
@@ -268,7 +268,7 @@ def main():
     outrows[0][-1] = 'x'
 
     keys_seen = set()
-    for path in files('localisation/*', parser.moddirs):
+    for path in files('localisation/*.csv', parser.moddirs):
         for row in csv_rows(path):
             if len(row) >= 2 and row[0] not in keys_seen:
                 keys_seen.add(row[0])

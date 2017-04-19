@@ -63,7 +63,8 @@ def get_province_id_name_map(parser):
     _, tree = next(parser.parse_files('map/default.map'))
     defs = tree['definitions'].val
     id_name_map = {}
-    defs_path = next(files('map/' + defs, parser.moddirs))
+    defs_path = next(files('map/' + defs, parser.moddirs,
+                           basedir=parser.basedir))
     for row in csv_rows(defs_path):
         try:
             id_name_map[int(row[0])] = row[4]
@@ -73,7 +74,8 @@ def get_province_id_name_map(parser):
 
 def get_provinces(parser):
     id_name = get_province_id_name_map(parser)
-    for path in files('history/provinces/*', parser.moddirs):
+    for path in files('history/provinces/*', parser.moddirs,
+                      basedir=parser.basedir):
         number, name = path.stem.split(' - ')
         number = int(number)
         if id_name.get(number) == name:
@@ -737,7 +739,8 @@ class SimpleParser:
         return repo_cachedir / name, False
 
     def files(self, glob, reverse=False):
-        yield from files(glob, self.moddirs, reverse=reverse)
+        yield from files(glob, self.moddirs, basedir=self.basedir,
+                         reverse=reverse)
 
     def file(self, *args):
         return next(self.files(*args))
