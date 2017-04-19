@@ -5,6 +5,7 @@
 
 #include "error_queue.h"
 #include "cstr_pool.h"
+#include "cstr.h"
 #include "lexer.h"
 #include "date.h"
 #include "fp_decimal.h"
@@ -15,6 +16,7 @@
 #include <memory>
 #include <string>
 #include <algorithm>
+#include <unordered_map>
 #include <boost/filesystem.hpp>
 
 
@@ -22,14 +24,13 @@ _PDX_NAMESPACE_BEGIN
 
 
 using std::unique_ptr;
-
 typedef fp_decimal<3> fp3;
-
-/* OBJECT -- generic "any"-type parse tree data element */
-
 class block;
 class list;
 class parser;
+
+
+/* OBJECT -- generic "any"-type parse tree data element (superset of pdx::scalar) */
 
 class object {
     enum {
@@ -38,7 +39,7 @@ class object {
         DATE,
         DECIMAL,
         BLOCK,
-        LIST
+        LIST,
     } type;
 
     union data_union {
@@ -132,6 +133,7 @@ public:
     vec_t::const_iterator end() const   { return _vec.cend(); }
 };
 
+
 enum class opcode {
     EQ,  // =
     LT,  // <
@@ -140,6 +142,7 @@ enum class opcode {
     GTE, // >=
     EQ2, // ==
 };
+
 
 /* STATEMENT -- statements are pairs of objects and an operator/separator */
 
@@ -163,8 +166,33 @@ public:
 /* BLOCK -- blocks contain N statements */
 
 class block {
+    /* we maintain two data structures for different ways of efficiently accessing
+     * the statements in a block. a linear vector is the master data structure;
+     * it actually owns the statement objects, which means that when it is
+     * destroyed, so too are any memory resources associated with the objects
+     * in its statements.
+     *
+     * the secondary data structure fulfills a more specialized use case: it maps
+     * LHS string-type keys to an index into the statement vector to which the
+     * key corresponds, if such a key occurs in this block. if it can occur
+     * multiple times, then this block was not constructed via the RHS-merge
+     * parsing method (i.e., folderization), and this access pattern may be a
+     * lot less helpful. in such cases, the final occurrence of the key in
+     * this block will be stored in the hash-map.
+     *
+     * string-type keys are the only type of keys for which I've encountered a
+     * realistic use case for the hash-map access pattern, so rather than create
+     * a generalized scalar any-type (like pdx::object but only for scalar data
+     * types, or more generally, copy-constructible data types) and hash-map via
+     * that any-type, I've simply chosen to stick to string keys for now.
+     */
+
+    // linear vector of statements
     typedef std::vector<statement> vec_t;
     vec_t _vec;
+
+    // hash-map of LHS keys to their corresponding statement's index in _vec
+    std::unordered_map<cstr, vec_t::difference_type> _map;
 
 public:
     block() { }
@@ -179,14 +207,17 @@ public:
     vec_t::const_iterator begin() const { return _vec.cbegin(); }
     vec_t::const_iterator end() const   { return _vec.cend(); }
 
-    /* convenience map-like accessor (though the implementation is linear search) for string-type statement keys */
-    vec_t::iterator       operator[](const char* key) noexcept {
-        return std::find_if(_vec.begin(), _vec.end(),
-                            [key](const statement& s) -> bool { return s.key() == key; });
+    /* map accessor for statements by LHS statement key (if string-type)
+     * if not found, returns this object's end iterator.
+     * if found, returns a valid iterator which can be dereferenced. */
+    vec_t::iterator find_key(const char* key) noexcept {
+        auto i = _map.find(key);
+        return (i != _map.end()) ? std::next(begin(), i->second) : end();
     }
-    vec_t::const_iterator operator[](const char* key) const noexcept {
-        return std::find_if(_vec.cbegin(), _vec.cend(),
-                            [key](const statement& s) -> bool { return s.key() == key; });
+
+    vec_t::const_iterator find_key(const char* key) const noexcept {
+        auto i = _map.find(key);
+        return (i != _map.end()) ? std::next(begin(), i->second) : end();
     }
 };
 
