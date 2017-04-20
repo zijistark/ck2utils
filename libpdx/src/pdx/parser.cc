@@ -107,6 +107,9 @@ block::block(parser& lex, bool is_root, bool is_save) {
             lex.unexpected_token(tok);
 
         _vec.emplace_back(key, val, op);
+
+        if (key.is_string())
+            _map[key.as_string()] = _vec.size() - 1;
     }
 }
 
