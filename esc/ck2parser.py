@@ -742,16 +742,17 @@ class SimpleParser:
         yield from files(glob, self.moddirs, basedir=self.basedir,
                          reverse=reverse)
 
-    def file(self, *args):
-        return next(self.files(*args))
+    def file(self, *args, **kwargs):
+        return next(self.files(*args, **kwargs))
 
-    def parse_files(self, glob, moddirs=None, basedir=None, **kwargs):
+    def parse_files(self, glob, basedir=None, moddirs=None, **kwargs):
         if moddirs is None:
             moddirs = self.moddirs
         if basedir is None:
             basedir = self.basedir
         for path in files(glob, moddirs, basedir=basedir):
-            yield path, self.parse_file(path, **kwargs)
+            if path.is_file():
+                yield path, self.parse_file(path, **kwargs)
 
     def parse_file(self, path, encoding='cp1252', errors=None, memcache=None,
                    diskcache=None):
@@ -807,6 +808,10 @@ class SimpleParser:
         tree = self.toplevel.parse(tokens)
         return tree
 
+    def write(self, tree, path):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open('w', encoding='cp1252', newline='\r\n') as f:
+            f.write(tree.str(self))
 
 class FullParser(SimpleParser):
     tokenizer = FullTokenizer
