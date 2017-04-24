@@ -28,9 +28,9 @@ def process_title(title_pair):
     if title == 'e_null':
         return
     if title.startswith('e'):
-        trigger_name = 'title_emperor_basic_allow_trigger'
+        trigger_name = 'title_emperor_basic_allow'
     elif title.startswith('k'):
-        trigger_name = 'title_king_basic_allow_trigger'
+        trigger_name = 'title_king_basic_allow'
     else:
         return
     if allow is None:
