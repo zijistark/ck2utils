@@ -648,6 +648,7 @@ class SimpleParser:
         self.no_fold_keys = []
         self.no_fold_to_depth = -1
         self.newlines_to_depth = -1
+        self.ignore_cache = False
         self.cachedir = cachedir / self.__class__.__name__
         try:
             self.cachedir.mkdir(parents=True) # 3.5 pls
@@ -765,39 +766,42 @@ class SimpleParser:
             memcache = self.memcache_default
         if diskcache is None:
             diskcache = self.diskcache_default
-        if path in self.parse_tree_cache:
-            return self.parse_tree_cache[path]
-        cachepath, is_indexed = self.get_cachepath(path)
-        try:
-            if cachepath.exists() and (is_indexed or
-                                       (os.path.getmtime(str(cachepath)) >=
-                                        os.path.getmtime(str(path)))):
-                with cachepath.open('rb') as f:
-                    tree = pickle.load(f, fix_imports=False)
-                    if memcache:
-                        self.parse_tree_cache[path] = tree
-                    self.cache_hits += 1
-                    return tree
-        except (pickle.PickleError, AttributeError, EOFError, ImportError,
-                IndexError):
-            print('Error retrieving cache for {}'.format(path),
-                  file=sys.stderr)
-            traceback.print_exc()
-            pass
-        self.cache_misses += 1
+        if not self.ignore_cache:
+            if not path in self.parse_tree_cache:
+                return self.parse_tree_cache[path]
+            cachepath, is_indexed = self.get_cachepath(path)
+            try:
+                if cachepath.exists() and (is_indexed or
+                                           (os.path.getmtime(str(cachepath)) >=
+                                            os.path.getmtime(str(path)))):
+                    with cachepath.open('rb') as f:
+                        tree = pickle.load(f, fix_imports=False)
+                        if memcache:
+                            self.parse_tree_cache[path] = tree
+                        self.cache_hits += 1
+                        return tree
+            except (pickle.PickleError, AttributeError, EOFError, ImportError,
+                    IndexError):
+                print('Error retrieving cache for {}'.format(path),
+                      file=sys.stderr)
+                traceback.print_exc()
+                pass
+            self.cache_misses += 1
         with path.open(encoding=encoding, errors=errors) as f:
             try:
                 tree = self.parse(f.read())
-                if diskcache:
-                    try:
-                        cachepath.parent.mkdir(parents=True) # 3.5 pls
-                    except FileExistsError:
-                        pass
-                    # possible todo: put this i/o in another thread
-                    with cachepath.open('wb') as f:
-                        pickle.dump(tree, f, protocol=-1, fix_imports=False)
-                if memcache:
-                    self.parse_tree_cache[path] = tree
+                if not self.ignore_cache:
+                    if diskcache:
+                        try:
+                            cachepath.parent.mkdir(parents=True) # 3.5 pls
+                        except FileExistsError:
+                            pass
+                        # possible todo: put this i/o in another thread
+                        with cachepath.open('wb') as f:
+                            pickle.dump(tree, f, protocol=-1,
+                                        fix_imports=False)
+                    if memcache:
+                        self.parse_tree_cache[path] = tree
                 return tree
             except:
                 print(path, file=sys.stderr)
