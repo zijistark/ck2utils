@@ -767,7 +767,7 @@ class SimpleParser:
         if diskcache is None:
             diskcache = self.diskcache_default
         if not self.ignore_cache:
-            if not path in self.parse_tree_cache:
+            if path in self.parse_tree_cache:
                 return self.parse_tree_cache[path]
             cachepath, is_indexed = self.get_cachepath(path)
             try:

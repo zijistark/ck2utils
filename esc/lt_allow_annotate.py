@@ -5,7 +5,7 @@ from ck2parser import rootpath, get_cultures, Pair, SimpleParser, FullParser
 import print_time
 
 MODPATHS = [rootpath / 'SWMH-BETA/SWMH', rootpath / 'EMF/EMF+Vanilla']
-FORMAT_ONLY = False
+FORMAT_ONLY = True
 
 def process_title(title_pair):
     title, tree = title_pair.key.val, title_pair.value
@@ -36,8 +36,10 @@ def process_title(title_pair):
     if allow is None:
         allow = Pair('allow')
         tree.contents.append(allow)
-    if allow.value.has_pair('always', 'no'):
-        print(title)
+    for pair in reversed(allow.value.contents):
+        if pair.key.val == 'always' and pair.value.val == 'no':
+            allow.value.contents.remove(pair)
+            print(title)
     if not allow.value.has_pair(trigger_name, 'yes'):
         allow.value.contents.append(Pair(trigger_name, 'yes'))
 
@@ -50,11 +52,10 @@ def main():
         cultures = get_cultures(simple_parser, groups=False)
         full_parser.fq_keys = cultures
         for path, tree in full_parser.parse_files('common/landed_titles/*',
-                                                  basedir=modpath):
+                                                  modpath):
             for title_pair in tree:
                 process_title(title_pair)
-            with path.open('w', encoding='cp1252', newline='\r\n') as f:
-                f.write(tree.str(full_parser))
+            full_parser.write(tree, path)
 
 if __name__ == '__main__':
     main()
