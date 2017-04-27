@@ -1,0 +1,12 @@
+
+env = Environment()
+env.Append(CXXFLAGS='--std=c++17 -Wall -s -O3')
+
+# TODO: Add a custom builder that exists on _both_ Windows and Linux/cygwin for
+# env.CXXFile-like functionality (that is, generate scanner.cc from scanner.ll,
+# namely-- but on pure Windows too). In the meantime, since our lexer rarely
+# updates and is indeed a code generator, we regenerate it manually instead of here.
+
+sources = Glob('pdx/*.cc')
+
+env.StaticLibrary('pdx', sources)

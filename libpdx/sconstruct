@@ -1,0 +1,4 @@
+# -*- python -*-
+
+SConscript('src/sconscript', variant_dir='build', duplicate=0)
+SConscript('tests/sconscript', variant_dir='test-build', duplicate=0)
