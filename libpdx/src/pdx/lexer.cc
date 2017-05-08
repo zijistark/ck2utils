@@ -21,6 +21,13 @@ lexer::lexer(const char* pathname)
 }
 
 
+lexer::~lexer() noexcept {
+    yyin = nullptr;
+    yylineno = 0;
+    yyrestart(yyin);
+}
+
+
 bool lexer::next(token* p_tok) {
     uint type;
 

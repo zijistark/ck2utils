@@ -27,6 +27,7 @@ class lexer {
 
 public:
     lexer() = delete;
+    ~lexer() noexcept;
     lexer(const char* path);
     lexer(const std::string& path) : lexer(path.c_str()) {}
     lexer(const fs::path& path) : lexer(path.string().c_str()) {}
