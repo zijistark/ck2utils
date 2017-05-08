@@ -39,6 +39,7 @@ bool lexer::next(token* p_tok) {
         p_tok->text = 0;
         yyin = nullptr;
         yylineno = 0;
+        yyrestart(yyin);
         return false;
     }
 
