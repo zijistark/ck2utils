@@ -7,6 +7,8 @@ from PIL import Image, ImageFont, ImageDraw
 from ck2parser import rootpath, csv_rows, SimpleParser
 from print_time import print_time
 
+WATER = False
+
 @print_time
 def main():
     parser = SimpleParser()
@@ -48,12 +50,13 @@ def main():
     b = np.apply_along_axis(lambda x: rgb_number_map[tuple(x)], 2, a)
     a = np.apply_along_axis(lambda x: rgb_map[tuple(x)], 2, a)
     txt = Image.new('RGBA', image.size, (0, 0, 0, 0))
-    draw = ImageDraw.Draw(image)
+    lines = Image.new('RGBA', image.size, (0, 0, 0, 0))
     draw_txt = ImageDraw.Draw(txt)
+    draw_lines = ImageDraw.Draw(lines)
     font = ImageFont.truetype(str(rootpath / 'ck2utils/esc/NANOTYPE.ttf'), 16)
     e = {(n * 4 - 1, 5): np.ones_like(b, bool) for n in range(1, 5)}
     for number in sorted(rgb_number_map.values()):
-        if number not in counties:
+        if number == 0 or (number not in counties) ^ WATER:
             continue
         print('\r' + str(number), end='', file=sys.stderr)
         size = len(str(number)) * 4 - 1, 5
@@ -87,15 +90,18 @@ def main():
             start = (max(pos[0] - 1, min(dest[0], pos[2])),
                      max(pos[1] - 1, min(dest[1], pos[3])))
             if start != dest:
-                draw.line([start, dest], fill=(192, 192, 192))
+                print('\rline drawn for {}'.format(number), file=sys.stderr)
+                draw_lines.line([start, dest], fill=(192, 192, 192))
     print('', file=sys.stderr)
     out = Image.fromarray(a)
     mod = parser.moddirs[0].name.lower() + '_' if parser.moddirs else ''
     borders_path = rootpath / (mod + 'borderlayer.png')
     borders = Image.open(str(borders_path))
     out.paste(borders, mask=borders)
+    out.paste(lines, mask=lines)
     out.paste(txt, mask=txt)
-    out_path = rootpath / (mod + 'province_id_map.png')
+    mode = '_water' if WATER else ''
+    out_path = rootpath / (mod + 'province_id_map' + mode + '.png')
     out.save(str(out_path))
 
 if __name__ == '__main__':
