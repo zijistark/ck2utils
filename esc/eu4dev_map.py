@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
 
 from pathlib import Path
+import re
 import sys
+import matplotlib
+import matplotlib.cm
+import matplotlib.colors
 import numpy as np
 from PIL import Image, ImageFont, ImageDraw
 from ck2parser import rootpath, csv_rows, SimpleParser
 from localpaths import eu4dir
 from print_time import print_time
+
+# VALUE_FUNC, NAME = lambda dev: sum(dev), '' # total development
+# VALUE_FUNC, NAME = lambda dev: dev[0], 'tax'
+# VALUE_FUNC, NAME = lambda dev: dev[1], 'prod'
+VALUE_FUNC, NAME = lambda dev: dev[2], 'man'
 
 @print_time
 def main():
@@ -33,6 +42,58 @@ def main():
             number_rgb_map[number] = rgb
             counties.add(number)
             rgb_map[tuple(rgb)] = np.uint8((127, 127, 127)) # normal province
+
+    province_value = {}
+    vmin, vmax = 0, 0
+    for path in parser.files('history/provinces/*'):
+        match = re.match(r'\d+', path.stem)
+        if not match:
+            continue
+        number = int(match.group())
+        if number >= max_provinces:
+            continue
+        if number in province_value:
+            print('extra province history {}'.format(path), file=sys.stderr)
+            continue
+        tree = parser.parse_file(path)
+        # history = {}
+        dev = [0, 0, 0]
+        for n, v in tree:
+            if n.val == 'base_tax':
+                dev[0] = v.val
+            elif n.val == 'base_production':
+                dev[1] = v.val
+            elif n.val == 'base_manpower':
+                dev[2] = v.val
+            # elif isinstance(n.val, tuple):
+            #     new_dev = [-1, -1, -1]
+            #     for n2, v2 in v:
+            #         if n2.val == 'base_tax':
+            #             new_dev[0] = v2.val
+            #         elif n2.val == 'base_production':
+            #             new_dev[1] = v2.val
+            #         elif n2.val == 'base_manpower':
+            #             new_dev[2] = v2.val
+            #     if any(x != -1 for x in new_dev):
+            #         history[n.val] = new_dev
+        # if history:
+        #     for date, date_dev in sorted(history.items()):
+        #         if date > (1444, 11, 11):
+        #             break
+        #         print('actual history for prov {}'.format(number),
+        #               file=sys.stderr)
+        #         for i in range(3):
+        #             dev[i] = date_dev[i] if date_dev[i] > -1 else dev[i]
+        province_value[number] = VALUE_FUNC(dev)
+        vmax = max(vmax, province_value[number])
+
+    cmap = matplotlib.cm.get_cmap('plasma')
+    norm = matplotlib.colors.Normalize(vmin, vmax * 4 / 3)
+    colormap = matplotlib.cm.ScalarMappable(cmap=cmap, norm=norm)
+    for number, value in province_value.items():
+        color = np.uint8(colormap.to_rgba(value, bytes=True)[:3])
+        rgb_map[number_rgb_map[number]] = color
+
     for n in parser.parse_file(climate_path)['impassable']:
         rgb_map[number_rgb_map[int(n.val)]] = np.uint8((36, 36, 36)) # desert
         counties.discard(int(n.val))
@@ -56,12 +117,14 @@ def main():
     draw_txt = ImageDraw.Draw(txt)
     draw_lines = ImageDraw.Draw(lines)
     font = ImageFont.truetype(str(rootpath / 'ck2utils/esc/NANOTYPE.ttf'), 16)
-    e = {(n * 4 - 1, 5): np.ones_like(b, bool) for n in range(1, 5)}
+    maxlen = len(str(vmax))
+    e = {(n * 4 - 1, 5): np.ones_like(b, bool) for n in range(1, maxlen + 1)}
     for number in sorted(rgb_number_map.values()):
         if number not in counties:
             continue
         print('\r' + str(number), end='', file=sys.stderr)
-        size = len(str(number)) * 4 - 1, 5
+        value = province_value[number]
+        size = len(str(value)) * 4 - 1, 5
         c = np.nonzero(b == number)
         center = np.mean(c[1]), np.mean(c[0])
         pos = [int(round(max(0, min(center[0] - size[0] / 2,
@@ -78,7 +141,7 @@ def main():
             g = (f[0] - pos[1]) ** 2 + (f[1] - pos[0]) ** 2
             pos[:2] = np.transpose(f)[np.argmin(g)][::-1] + [x1, y1]
             pos[2:] = pos[0] + size[0], pos[1] + size[1]
-        draw_txt.text((pos[0], pos[1] - 6), str(number),
+        draw_txt.text((pos[0], pos[1] - 6), str(value),
                       fill=(255, 255, 255, 255), font=font)
         for size2 in e:
             rows = slice(max(pos[1] - size2[1] - 1, 0), pos[3] + 2)
@@ -102,7 +165,7 @@ def main():
     out.paste(borders, mask=borders)
     out.paste(lines, mask=lines)
     out.paste(txt, mask=txt)
-    out_path = rootpath / (mod + 'eu4province_id_map.png')
+    out_path = rootpath / (mod + 'eu4dev{}_map.png'.format(NAME))
     out.save(str(out_path))
 
 if __name__ == '__main__':

@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
 
+from collections import defaultdict
 from pathlib import Path
+import re
 import sys
+import matplotlib
+import matplotlib.cm
+import matplotlib.colors
 import numpy as np
 from PIL import Image, ImageFont, ImageDraw
 from ck2parser import rootpath, csv_rows, SimpleParser
 from localpaths import eu4dir
 from print_time import print_time
+
+VALUE_FUNC, NAME = lambda natives: natives[0] * 100, 'pop'
+# VALUE_FUNC, NAME = lambda natives: natives[1], 'agg'
 
 @print_time
 def main():
@@ -33,6 +41,86 @@ def main():
             number_rgb_map[number] = rgb
             counties.add(number)
             rgb_map[tuple(rgb)] = np.uint8((127, 127, 127)) # normal province
+
+    migratory_govs = set()
+    for _, tree in parser.parse_files('common/governments/*'):
+        for n, v in tree:
+            if v.has_pair('allow_migration', 'yes'):
+                migratory_govs.add(n.val)
+
+    migratory_provs = {}
+    for path, tree in parser.parse_files('history/countries/*'):
+        tag = path.stem[:3]
+        gov = None
+        history = defaultdict(list)
+        for n, v in tree:
+            if n.val == 'government':
+                gov = v.val
+            elif isinstance(n.val, tuple) and n.val <= (1444, 11, 11):
+                history[n.val].extend(v)
+        for _, v in sorted(history.items()):
+            for n2, v2 in v:
+                if n2.val == 'government':
+                    gov = v2.val
+        if gov in migratory_govs:
+            migratory_provs[tag] = []
+
+    province_value = {}
+    vmin, vmax = 0, 0
+    for path in parser.files('history/provinces/*'):
+        match = re.match(r'\d+', path.stem)
+        if not match:
+            continue
+        number = int(match.group())
+        if number >= max_provinces:
+            continue
+        if number in province_value:
+            print('extra province history {}'.format(path), file=sys.stderr)
+            continue
+        tree = parser.parse_file(path)
+        natives = [0, 0]
+        owner = None
+        history = defaultdict(list)
+        for n, v in tree:
+            if n.val == 'owner':
+                owner = v.val
+            elif n.val == 'native_size':
+                natives[0] = v.val
+            elif n.val == 'native_hostileness':
+                natives[1] = v.val
+            elif isinstance(n.val, tuple) and n.val <= (1444, 11, 11):
+                history[n.val].extend(v)
+        for _, v in sorted(history.items()):
+            for n2, v2 in v:
+                if n2.val == 'owner':
+                    owner = v2.val
+                elif n2.val == 'native_size':
+                    natives[0] = v2.val
+                elif n2.val == 'native_hostileness':
+                    natives[1] = v2.val
+        if owner in migratory_provs:
+            migratory_provs[owner].append(number)
+        if owner is None or owner in migratory_provs:
+            province_value[number] = VALUE_FUNC(natives)
+        else:
+            province_value[number] = -1
+        vmax = max(vmax, province_value[number])
+
+    for tag, provs in migratory_provs.items():
+        if len(provs) > 1:
+            for prov in provs:
+                province_value[prov] = -1
+
+    cmap = matplotlib.cm.get_cmap('plasma')
+    norm = matplotlib.colors.Normalize(vmin, vmax * 4 / 3)
+    colormap = matplotlib.cm.ScalarMappable(cmap=cmap, norm=norm)
+    for number, value in province_value.items():
+        if value < 0:
+            color = np.uint8((127, 127, 127))
+        else:
+            color = np.uint8(colormap.to_rgba(value, bytes=True)[:3])
+        rgb_map[number_rgb_map[number]] = color
+
     for n in parser.parse_file(climate_path)['impassable']:
         rgb_map[number_rgb_map[int(n.val)]] = np.uint8((36, 36, 36)) # desert
         counties.discard(int(n.val))
@@ -56,12 +144,16 @@ def main():
     draw_txt = ImageDraw.Draw(txt)
     draw_lines = ImageDraw.Draw(lines)
     font = ImageFont.truetype(str(rootpath / 'ck2utils/esc/NANOTYPE.ttf'), 16)
-    e = {(n * 4 - 1, 5): np.ones_like(b, bool) for n in range(1, 5)}
+    maxlen = len(str(vmax))
+    e = {(n * 4 - 1, 5): np.ones_like(b, bool) for n in range(1, maxlen + 1)}
     for number in sorted(rgb_number_map.values()):
         if number not in counties:
             continue
         print('\r' + str(number), end='', file=sys.stderr)
-        size = len(str(number)) * 4 - 1, 5
+        value = province_value[number]
+        if value < 0:
+            continue
+        size = len(str(value)) * 4 - 1, 5
         c = np.nonzero(b == number)
         center = np.mean(c[1]), np.mean(c[0])
         pos = [int(round(max(0, min(center[0] - size[0] / 2,
@@ -78,7 +170,7 @@ def main():
             g = (f[0] - pos[1]) ** 2 + (f[1] - pos[0]) ** 2
             pos[:2] = np.transpose(f)[np.argmin(g)][::-1] + [x1, y1]
             pos[2:] = pos[0] + size[0], pos[1] + size[1]
-        draw_txt.text((pos[0], pos[1] - 6), str(number),
+        draw_txt.text((pos[0], pos[1] - 6), str(value),
                       fill=(255, 255, 255, 255), font=font)
         for size2 in e:
             rows = slice(max(pos[1] - size2[1] - 1, 0), pos[3] + 2)
@@ -102,7 +194,7 @@ def main():
     out.paste(borders, mask=borders)
     out.paste(lines, mask=lines)
     out.paste(txt, mask=txt)
-    out_path = rootpath / (mod + 'eu4province_id_map.png')
+    out_path = rootpath / (mod + 'eu4native{}_map.png'.format(NAME))
     out.save(str(out_path))
 
 if __name__ == '__main__':
