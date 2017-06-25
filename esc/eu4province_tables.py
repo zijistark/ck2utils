@@ -4,7 +4,7 @@ from collections import OrderedDict
 import re
 import numpy as np
 from PIL import Image
-from ck2parser import rootpath, csv_rows, SimpleParser, csv_rows, Pair, Obj
+from ck2parser import rootpath, csv_rows, SimpleParser, Pair, Obj
 from localpaths import eu4dir
 from print_time import print_time
 
@@ -67,7 +67,9 @@ def analyze_provinces():
             inland_sea_nums.update(n2.val for n2 in v['color'])
 
     pa = np.array(Image.open(str(map_path('provinces'))))
-    pa = np.apply_along_axis(lambda x: provinces_rgb_map[tuple(x)], 2, pa)
+    pa = pa.view('u1,u1,u1')[..., 0]
+    pa = np.vectorize(lambda x: provinces_rgb_map[tuple(x)],
+                      otypes=[np.uint16])(pa)
     ta = np.array(Image.open(str(map_path('terrain'))))
     provs_not_found = []
     for number in provinces:

@@ -15,13 +15,17 @@ def main():
     if len(sys.argv) > 1:
         parser.moddirs.append(Path(sys.argv[1]))
     rgb_number_map = {}
-    number_rgb_map = {}
     default_tree = parser.parse_file('map/default.map')
     provinces_path = parser.file('map/' + default_tree['provinces'].val)
     climate_path = parser.file('map/' + default_tree['climate'].val)
     max_provinces = default_tree['max_provinces'].val
-    counties = set()
-    rgb_map = {}
+    provs_to_label = set()
+    colors = {
+        'land': np.uint8((127, 127, 127)),
+        'sea': np.uint8((51, 67, 85)),
+        'desert': np.uint8((36, 36, 36))
+    }
+    prov_color_lut = np.full(max_provinces, colors['land'], '3u1')
     for row in csv_rows(parser.file('map/' + default_tree['definitions'].val)):
         try:
             number = int(row[0])
@@ -30,36 +34,29 @@ def main():
         if number < max_provinces:
             rgb = tuple(np.uint8(row[1:4]))
             rgb_number_map[rgb] = np.uint16(number)
-            number_rgb_map[number] = rgb
-            counties.add(number)
-            rgb_map[tuple(rgb)] = np.uint8((127, 127, 127)) # normal province
+            provs_to_label.add(number)
     for n in parser.parse_file(climate_path)['impassable']:
-        rgb_map[number_rgb_map[int(n.val)]] = np.uint8((36, 36, 36)) # desert
-        counties.discard(int(n.val))
+        prov_color_lut[int(n.val)] = colors['desert']
+        provs_to_label.discard(int(n.val))
     for n in default_tree['sea_starts']:
-        rgb_map[number_rgb_map[int(n.val)]] = np.uint8((51, 67, 85)) # sea
-        counties.discard(int(n.val))
+        prov_color_lut[int(n.val)] = colors['sea']
+        provs_to_label.discard(int(n.val))
     for n in default_tree['lakes']:
-        try:
-            rgb_map[number_rgb_map[int(n.val)]] = np.uint8((51, 67, 85)) # sea
-            counties.discard(int(n.val))
-        except KeyError:
-            pass
+        prov_color_lut[int(n.val)] = colors['sea']
+        provs_to_label.discard(int(n.val))
     for n in default_tree['only_used_for_random']:
-        counties.discard(int(n.val))
+        provs_to_label.discard(int(n.val))
     image = Image.open(str(provinces_path))
-    a = np.array(image)
-    b = np.apply_along_axis(lambda x: rgb_number_map[tuple(x)], 2, a)
-    a = np.apply_along_axis(lambda x: rgb_map[tuple(x)], 2, a)
+    a = np.array(image).view('u1,u1,u1')[..., 0]
+    b = np.vectorize(lambda x: rgb_number_map[tuple(x)], otypes=[np.uint16])(a)
     txt = Image.new('RGBA', image.size, (0, 0, 0, 0))
     lines = Image.new('RGBA', image.size, (0, 0, 0, 0))
     draw_txt = ImageDraw.Draw(txt)
     draw_lines = ImageDraw.Draw(lines)
     font = ImageFont.truetype(str(rootpath / 'ck2utils/esc/NANOTYPE.ttf'), 16)
-    e = {(n * 4 - 1, 5): np.ones_like(b, bool) for n in range(1, 5)}
-    for number in sorted(rgb_number_map.values()):
-        if number not in counties:
-            continue
+    maxlen = len(str(max(provs_to_label)))
+    e = {(n * 4 - 1, 5): np.ones_like(b, bool) for n in range(1, maxlen + 1)}
+    for number in sorted(provs_to_label):
         print('\r' + str(number), end='', file=sys.stderr)
         size = len(str(number)) * 4 - 1, 5
         c = np.nonzero(b == number)
@@ -95,7 +92,7 @@ def main():
                 print('\rline drawn for {}'.format(number), file=sys.stderr)
                 draw_lines.line([start, dest], fill=(192, 192, 192))
     print('', file=sys.stderr)
-    out = Image.fromarray(a)
+    out = Image.fromarray(prov_color_lut[b])
     mod = parser.moddirs[0].name.lower() + '_' if parser.moddirs else ''
     borders_path = rootpath / (mod + 'eu4borderlayer.png')
     borders = Image.open(str(borders_path))
