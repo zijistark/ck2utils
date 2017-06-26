@@ -4,7 +4,6 @@ from collections import defaultdict
 from pathlib import Path
 import re
 import sys
-import matplotlib
 import matplotlib.cm
 import matplotlib.colors
 import numpy as np
@@ -75,14 +74,13 @@ def main():
         if number in province_values:
             print('extra province history {}'.format(path), file=sys.stderr)
             continue
-        tree = parser.parse_file(path)
         properties = {
             'owner': 'XXX',
             'native_size': 0,
             'native_hostileness': 0
         }
         history = defaultdict(list)
-        for n, v in tree:
+        for n, v in parser.parse_file(path):
             if n.val in properties:
                 properties[n.val] = v.val
             elif isinstance(n.val, tuple) and n.val <= (1444, 11, 11):

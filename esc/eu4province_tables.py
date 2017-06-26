@@ -136,11 +136,10 @@ def analyze_provinces():
         number = int(match.group())
         if number >= max_provinces:
             continue
-        tree = parser.parse_file(path)
         history = {}
         values = {}
         modifiers = []
-        for n, v in tree:
+        for n, v in parser.parse_file(path):
             if isinstance(n.val, tuple):
                 if n.val <= (1444, 11, 11):
                     history[n.val] = {}, []
