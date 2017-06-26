@@ -143,6 +143,8 @@ def main():
             value = province_value[number]
             size = len(str(value)) * 4 - 1, 5
             c = np.nonzero(b == number)
+            if len(c[0]) == 0:
+                continue
             center = np.mean(c[1]), np.mean(c[0])
             pos = [int(round(max(0, min(center[0] - size[0] / 2,
                                         image.width - size[0])))),

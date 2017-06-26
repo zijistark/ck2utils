@@ -15,7 +15,7 @@ def main():
     default_tree = parser.parse_file('map/default.map')
     provinces_path = parser.file('map/' + default_tree['provinces'].val)
     max_provinces = default_tree['max_provinces'].val
-    county_provs = set()
+    inhabited_provs = set()
     colors = {
         'land': np.uint8((127, 127, 127)),
         'sea': np.uint8((51, 67, 85)),
@@ -40,7 +40,7 @@ def main():
             path = 'history/provinces/{} - {}.txt'.format(number, row[4])
             try:
                 if 'title' in parser.parse_file(path).dictionary:
-                    county_provs.add(number)
+                    inhabited_provs.add(number)
                     prov_color_lut[number] = colors['land']
             except StopIteration:
                 pass
@@ -48,7 +48,7 @@ def main():
         if n.val == 'sea_zones':
             i, j = (int(n2.val) for n2 in v)
             prov_color_lut[i:j + 1] = colors['sea']
-    noncounty_provs = set(range(1, max_provinces)) - county_provs
+    uninhabited_provs = set(range(1, max_provinces)) - inhabited_provs
 
     image = Image.open(str(provinces_path))
     a = np.array(image).view(dtype='u1,u1,u1')[..., 0]
@@ -58,7 +58,7 @@ def main():
     borders_path = rootpath / (mod + 'borderlayer.png')
     borders = Image.open(str(borders_path))
 
-    for provs, water in [(county_provs, False), (noncounty_provs, True)]:
+    for provs, mode in [(inhabited_provs, ''), (uninhabited_provs, '_water')]:
         txt = Image.new('RGBA', image.size, (0, 0, 0, 0))
         lines = Image.new('RGBA', image.size, (0, 0, 0, 0))
         draw_txt = ImageDraw.Draw(txt)
@@ -70,6 +70,8 @@ def main():
             print('\r' + str(number), end='', file=sys.stderr)
             size = len(str(number)) * 4 - 1, 5
             c = np.nonzero(b == number)
+            if len(c[0]) == 0:
+                continue
             center = np.mean(c[1]), np.mean(c[0])
             pos = [int(round(max(0, min(center[0] - size[0] / 2,
                                         image.width - size[0])))),
@@ -107,7 +109,6 @@ def main():
         out.paste(borders, mask=borders)
         out.paste(lines, mask=lines)
         out.paste(txt, mask=txt)
-        mode = '_water' if water else ''
         out_path = rootpath / (mod + 'province_id_map' + mode + '.png')
         out.save(str(out_path))
 
