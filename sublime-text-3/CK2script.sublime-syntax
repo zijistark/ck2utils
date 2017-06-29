@@ -47,6 +47,16 @@ contexts:
         4: variable.other.ck2script
     - match: \b(event_target:[a-zA-Z]\w*)\b
       scope: variable.other.ck2script
+    - match: \b(flag)\s*=\s*(\w+)\b # e.g., had_title_flag = { flag = gumdrops days = 7 } -- highlight 'gumdrops' like a var
+      captures:
+#       1: keyword.control.ck2script
+        2: variable.other.ck2script
+    - match: \b((set|clr|has)_(character|province|title|artifact|global)_flag)\s*=\s*(\w+)\b
+      captures:
+        1: keyword.control.ck2script
+        4: variable.other.ck2script
+    - match: \bhad_(character|province|title|artifact|global)_flag\b
+      scope: keyword.control.ck2script
     - match: \b(ROOT|root|(FROM){1,4}|(from){1,4}|(PREV){1,4}|(prev){1,4}|(ROOT_(FROM){1,4})|(root_(from){1,4})|(ROOT_(from){1,4})|(root_(FROM){1,4})|THIS|this)\b
       scope: variable.language.ck2script
     - match: \b((mult_)?modifier|modifier|additive_modifier|additive_power_diff_modifier|additive_opinion_modifier)\b
@@ -69,6 +79,11 @@ contexts:
     - match: \b(((show_(ROOT|root))|(hide_(window|from|FROM|new))|(show(_from|_FROM){2,4})))\b
       scope: keyword.control.ck2script
     - match: \b(is_triggered_only|major|desc|is_friendly|picture|border|title|notification)\b
+      scope: keyword.control.ck2script
+      # event pre-triggers
+    - match: \b(only_(independent|playable|rulers|capable|men|women)|capable_only|is_patrician|ai|war|is_married)\b
+      scope: keyword.control.ck2script
+    - match: \b(friends|rivals|has_dlc|lacks_dlc|is_part_of_plot|is_in_society|prisoner|min_age|max_age)\b
       scope: keyword.control.ck2script
       # top-level event effect blocks
     - match: \b(immediate|option|after)\b
