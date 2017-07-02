@@ -5,7 +5,9 @@ from ck2parser import rootpath, get_cultures, Pair, SimpleParser, FullParser
 import print_time
 
 MODPATHS = [rootpath / 'SWMH-BETA/SWMH', rootpath / 'EMF/EMF+Vanilla']
-FORMAT_ONLY = True
+FORMAT_ONLY = False
+
+ALWAYS_NO_TITLES = ['e_sunni', 'e_shiite', 'k_avaria', 'k_lombardy']
 
 def process_title(title_pair):
     title, tree = title_pair.key.val, title_pair.value
@@ -25,12 +27,14 @@ def process_title(title_pair):
         return
     if any(p.key.val == 'controls_religion' for p in tree):
         return
-    if title == 'e_null':
+    if title == 'e_null' or title in ALWAYS_NO_TITLES:
         return
     if title.startswith('e'):
         trigger_name = 'title_emperor_basic_allow'
     elif title.startswith('k'):
         trigger_name = 'title_king_basic_allow'
+    elif title.startswith('d'):
+        trigger_name = 'title_duke_basic_allow'
     else:
         return
     if allow is None:
