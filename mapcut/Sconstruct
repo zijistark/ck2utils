@@ -5,7 +5,7 @@ SConscript('../libpdx/SConstruct')
 env = Environment()
 env.Append(CXXFLAGS='--std=c++17 -Wall -Wextra -s -Os')
 env.Append(CPPPATH='../libpdx/src')
-env.Append(LIBPATH='../libpdx/build/pdx')
+env.Append(LIBPATH='../libpdx/build')
 
 sources = ['main.cc', 'default_map.cc', 'definitions_table.cc', 'provsetup.cc', 'region_file.cc', 'adjacencies_file.cc']
 
