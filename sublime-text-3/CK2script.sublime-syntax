@@ -48,18 +48,10 @@ contexts:
         4: variable.other.ck2script
     - match: \b(event_target:[a-zA-Z]\w*)\b
       scope: variable.other.ck2script
-    - match: \b((has|remove)_(character|province|holding)_modifier)\s*=\s*(\w+)\b
+    - match: \b(((has|remove)_(character|province|holding)_modifier)|(add_|remove_)?trait|flag|name|modifier|has_any_opinion_modifier|has_(minor|job)_title|has_plot|in_faction|leads_faction)\s*=\s*(\w+)\b
       captures:
         1: keyword.control.ck2script
-        4: variable.other.ck2script
-    - match: \b((add_|remove_)?trait)\s*=\s*(\w+)\b
-      captures:
-        1: keyword.control.ck2script
-        3: variable.other.ck2script
-    - match: \b(flag|name|modifier)\s*=\s*(\w+)\b # e.g., had_title_flag = { flag = gumdrops days = 7 } -- highlight 'gumdrops' like a var
-      captures:
-        1: keyword.control.ck2script
-        2: variable.other.ck2script
+        7: variable.other.ck2script
     - match: \b((set|clr|has)_(character|province|title|artifact|global)_flag)\s*=\s*(\w+)\b
       captures:
         1: keyword.control.ck2script
@@ -73,11 +65,11 @@ contexts:
       # these guys are really annoying without being context-limited (and having a color scheme that gives me more than 3-4 choices):
 #    - match: \b(factor|value|count|amount|days|months|years)\b
 #      scope: keyword.control.ck2script
-    - match: \b(hidden_tooltip|custom_tooltip|hidden_trigger|hidden_effect)\b
+    - match: \b(tooltip|hidden_tooltip|custom_tooltip|hidden_trigger|hidden_effect)\b
       scope: keyword.control.ck2script
     - match: \b(AND|OR|NOT|NOR|NAND|and|or|not|nor|nand|calc_true_if)\b
       scope: support.constant.ck2script
-    - match: \b(yes|no)\b
+    - match: \b(yes|no|BARON|COUNT|DUKE|KING|EMPEROR|baron|count|duke|king|emperor|none)\b
       scope: support.constant.ck2script
     - match: \b(if|trigger_switch|limit|on_trigger|while|break)\b
       scope: keyword.control.ck2script
@@ -112,19 +104,40 @@ contexts:
       scope: keyword.control.ck2script
     - match: \b(realm_size|ruled_years|in_revolt|can_hold_title|holding_type|government|(num_of_(realm_counties|settlements|buildings|baron_titles|count_titles|count_titles_in_realm|duke_titles|king_titles|emperor_titles|children|claims|consorts|dynasty_members|faction_backers|lovers|max_settlements|friends|plot_backers|prisoners|rivals|titles|trade_posts|trade_post_diff|traits|unique_dynasty_vassals|vassals)))\b
       scope: keyword.control.ck2script
-    - match: \b(((owner_)?under_(FROM|FROMFROM|ROOT|PREV|PREVPREV))|is_de_jure_title|is_ascetic_trigger|is_inaccessible_trigger)\b
-      scope: keyword.control.ck2script # these ones are actually scripted triggers
-    - match: \b(add_(character|province|holding)_modifier|duration|days|months|years|who|which|value|count|change)\b
+    - match: \b(add_(character|province|holding)_modifier|has_game_rule|has_game_started|is_father_real_father|is_pregnant|is_married|is_consort|is_lover|age|is_adult|is_incapable|is_marriage_adult|has_(job|minor)_title|is_close_relative|pays_tribute_to|month_of_birth|day_of_birth|artifact_type|secret_religion(_group)?|true_religion(_group)?|religion(_group)?|conquest_culture|culture(_group)?|is_within_diplo_range|is_friend|is_rival|is_guardian)\b
+      scope: keyword.control.ck2script
+    - match: \b(is_ill|has_(any_)?building|has_focus|has_ambition|has_autocephaly|religion_allows_female_temple_holders|has_raised_standing_troops|has_(earmarked_)?regiments|has_secret_religion|is_vice_royalty|holds_favor_on|owes_favor_to|relative_income_to_liege|relative_power|faction_power|among_most_powerful_vassals|relative_power_to_liege|(scaled_)?wealth|has_trade_post|has_owner|has_holder|port|borders_major_river|borders_lake|terrain)\b
+      scope: keyword.control.ck2script
+    - match: \b(society_rank|is_quest_target|has_quest|rank|society|has_(any_)?building|in_command|is_attacker|war|plot_power|can_swap_job_title|death_reason|killer|is_councillor|has_disease|is_occupied|distance|is_heretic|is_allowed_to_loot|combat_rating|)\b
+      scope: keyword.control.ck2script
+      # these ones are actually scripted triggers from HIP/EMF core code (all scripted triggers should get a diff color too -- which means re-parsing the scripted triggers folder on the VFS regularly):
+    - match: \b(((owner_)?under_(FROM|FROMFROM|ROOT|PREV|PREVPREV))|is_de_jure_title)\b
       scope: keyword.control.ck2script
       # general scopes ( ideally would be a different color )
     - match: \b(dejure_liege_title|defacto_liege_title|rightful_religious_head_scope|religion_head|primary_title|succ_law_title|crownlaw_title|current_heir|supported_claimant|supported_claimant_title|capital_scope|capital_holding)\b
       scope: keyword.control.ck2script
-    - match: \b(owner|ruler|holder_scope|liege|top_liege|((father|mother)(_even_if_dead)?)|attacker|defender|location|new_character|new_artifact|county|duchy|kingdom|empire|clan_title|family_palace|most_prestigious_clan_vassal|strongest_clan_vassal|most_popular_vassal)\b
+    - match: \b(owner|ruler|holder_scope|top_liege|liege_before_war|((father|mother)(_even_if_dead)?)|attacker|defender|location|new_(character|artifact|title)|county|duchy|kingdom|empire|clan_title|family_palace|most_prestigious_clan_vassal|strongest_clan_vassal|most_popular_vassal)\b
       scope: keyword.control.ck2script
-    - match: \b((any_(direct_)?de_jure_vassal)|(any_de_jure_liege_title)|((any|random)_(demesne|realm)_(title|province))|((any|random)_province_holding)|(any_de_jure_vassal)|any_attacker|any_defender|)\b
+    - match: \b((any_(direct_)?de_jure_vassal_title)|(any_de_jure_liege_title)|((any|random)_(demesne|realm)_(title|province))|((any|random)_province_holding)|((any|random)_neighbor_province))\b
+      scope: keyword.control.ck2script
+    - match: \b(suzerain|attacker|defender|band_creator|best_crusade_claimant|biggest_realm_size_relative|(left|center|right)_flank_leader|controller|dynasty_head|educator|employer|liege|enemy|father_of_unborn|guardian|heir_under_(seniority|primogeniture)_law|highest_ranked_relative|host|killer|liege_before_war|lover|mercenary_employer|most_participating_(attacker|crusader|defender)|parent_religion_head|plot_target_char|preferred_war_target|real_father(_even_if_dead)?|reincarnation_scope|regent|spouse(_even_if_dead)?|top_liege|trade_post_owner|job_(chancellor|marshal|treasurer|spymaster|spiritual)|title_to_get_rid_of)\b
+      scope: keyword.control.ck2script
+    - match: \b(blood_brother|crusade_target|invasion_target|plot_target_title|realm|thirdparty_title_scope|plot_target_province|sea_zone|siege|quest_target)\b
+      scope: keyword.control.ck2script
+      # these scopes all have any & random versions
+    - match: \b(((any|random)_(artifact|character|rival|consort|trade_post|friend|voter|ward|opinion_modifier_target|non_aggression_pact_character|lover|((un)?known_)?enemy_plotter|close_relative|backed_character|landed_title|claim|potential_tribal_county|(neighbor_)?province))|((any|random)_(child|spouse|sibling|dynasty_member)(_even_if_dead)?))\b
+      scope: keyword.control.ck2script
+      # these scopes all have any & random versions -- unit scopes
+    - match: \b(any|random)_(army|fleet|unit)\b
+      scope: keyword.control.ck2script
+      # these scopes only have any_ versions (no random_); might want to have a slightly different saturation or something for these when highlighting, kinda like the multi-scopes that exclude ROOT
+    - match: \bany_(war|claimant|attacker|defender|de_jure_vassal|faction_backer|favor_(holder|ower)|known_plotter|liege|plot_backer|plotter|previous_holder|suzerain|unique_dynasty_vassal|title|heir_title|mercenary_band|pretender_title|trade_route_province)\b
       scope: keyword.control.ck2script
       # scopes that exclude ROOT
     - match: \b((any|random)_province_(character|lord)|((any|random)_courtier(_or_vassal)?)|(any|random)_host_courtier|((any|random)_realm_(lord|character))|(any|random)_current_enemy|(any|random)_vassal|(any|random)_dynasty_member|(any|random)_(independent|playable)_ruler)\b
+      scope: keyword.control.ck2script
+      # these are the names of parameters for numerous triggers & effects which have multiple named parameters possible
+    - match: \b(target|type|target_type|who|where|which|amount|value|count|percentage|duration|days|months|years|hidden|inherit|tooltip|random|chance|factor|casus_belli|tier|thirdparty_title|infamy|as_if_liege|first|second|enemy|title|is_religious|same_religion|is_crusade|to|min|max|multiplier)\b
       scope: keyword.control.ck2script
       # top-level event trigger blocks
     - match: \b(trigger|major_trigger)\b
