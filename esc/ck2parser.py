@@ -53,6 +53,8 @@ def get_religions(parser, groups=True):
     religion_groups = []
     for _, tree in parser.parse_files('common/religions/*'):
         for n, v in tree:
+            if n.val == 'secret_religion_visibility_trigger':
+                continue
             religion_groups.append(n.val)
             religions.extend(n2.val for n2, v2 in v
                              if (isinstance(v2, Obj) and
