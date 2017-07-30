@@ -10,7 +10,7 @@ all:
 	# 	CK2_EMF-Vanilla.sublime-syntax \
 	# 	CK2_SWMH.sublime-syntax ; \
 	# do cp CK2.sublime-syntax $$i -vf ; done 
-	$(SOURCE_DIR)/update_syntax_vars.py
+	# $(SOURCE_DIR)/update_syntax_vars.py
 	rsync -rthhi \
 		--exclude=/*/ \
 		--exclude=/.*/ \

@@ -135,7 +135,20 @@
 				<key>fontStyle</key>
 				<string>bold</string>
 				<key>foreground</key>
-				<string>#66ffff</string>
+				<string>#3399FF</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Keyword</string>
+			<key>scope</key>
+			<string>keyword.control</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#ccbb8f</string>
 			</dict>
 		</dict>
 		<dict>
@@ -206,8 +219,10 @@
 			<string>variable.language.ck2script</string>
 			<key>settings</key>
 			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
 				<key>foreground</key>
-				<string>#3399ff</string>
+				<string>#33d6ff</string>
 			</dict>
 		</dict>
 		<dict>
@@ -228,8 +243,34 @@
 			<string>support.constant.ck2script</string>
 			<key>settings</key>
 			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
 				<key>foreground</key>
-				<string>#BB0000</string>
+				<string>#44BA2C</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Literal</string>
+			<key>scope</key>
+			<string>support.constant.ck2script</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#44BA2C</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Boolean Logic Operator</string>
+			<key>scope</key>
+			<string>keyword.operator.ck2script</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#009999</string>
 			</dict>
 		</dict>
 		<dict>
