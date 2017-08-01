@@ -220,6 +220,9 @@ contexts:
       scope: variable.language.ck2script
     - match: '\b{{vOpBool}}\b'
       scope: keyword.operator.logical.ck2script keyword.operator.word.ck2script
+      # these are the names of parameters for numerous triggers & effects which have multiple named parameters possible
+    - match: \b(target|type|target_type|who|where|which|amount|value|count|percentage|duration|days|months|years|hidden|inherit|crime|disable_non_aggression_pacts|move|cooldown|tooltip|random|chance|factor|casus_belli|tier|thirdparty_title|infamy|as_if_liege|first|second|enemy|title|is_religious|same_religion|is_crusade|to|min|max|multiplier)\b
+      scope: keyword.control.ck2script
     - match: '\b{{vLiteralTier}}\b'
       scope: support.constant.tier.ck2script
     - match: '\b({{vLiteralBool}}|{{vLiteralNull}})\b'
@@ -302,9 +305,6 @@ contexts:
       scope: keyword.control.ck2script
       # scopes that exclude ROOT
     - match: \b((any|random)_province_(character|lord)|((any|random)_courtier(_or_vassal)?)|(any|random)_host_courtier|((any|random)_realm_(lord|character))|(any|random)_current_enemy|(any|random)_vassal|(any|random)_dynasty_member|(any|random)_(independent|playable)_ruler)\b
-      scope: keyword.control.ck2script
-      # these are the names of parameters for numerous triggers & effects which have multiple named parameters possible
-    - match: \b(target|type|target_type|who|where|which|amount|value|count|percentage|duration|days|months|years|hidden|inherit|crime|disable_non_aggression_pacts|move|cooldown|count|tooltip|random|chance|factor|casus_belli|tier|thirdparty_title|infamy|as_if_liege|first|second|enemy|title|is_religious|same_religion|is_crusade|to|min|max|multiplier)\b
       scope: keyword.control.ck2script
       # top-level event trigger blocks
     - match: \b(trigger|major_trigger)\b
