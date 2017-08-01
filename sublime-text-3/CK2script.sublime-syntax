@@ -131,7 +131,8 @@ variables:
       num_fitting_characters_for_title
     | num_of_
           (?: (?: baron | count | duke | king | emperor )? _titles )
-      | ( buildings
+      | (?:
+          buildings
         | children
         | claims
         | consorts
