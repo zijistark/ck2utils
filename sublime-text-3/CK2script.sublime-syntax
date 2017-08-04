@@ -156,18 +156,86 @@ variables:
         )
     | among_most_powerful_vassals
     )
-  vTriggerTarget: |-
+  vTTriggerTarget: |-
     (?x:
-      is_ (?x: allowed | preferred) _holding_type
-    | is_married
-    | can_marry
+      is_ (?: allowed | preferred) _holding_type
     )
-  vTriggerBool: |-
+  vTTriggerBool: |-
     (?x:
-      in_command
+      adventurer
+    | controls_religion
+    | has_holder
+    | has_owner
+    | has_siege
+    | holy_order
+    | is_contested
+    | is_feudal
+    | is_landless_type_title
+    | is_primary_type_title
+    | is_occupied
+    | is_nomadic
+    | is_republic
+    | is_theocracy
+    | is_tribal
+    | mercenary
+    | rebel
+    )
+  vCTriggerTarget: |-
+    (?x:
+      can_marry
+    | dynasty
+    | is_child_of
+    | is_father
     | is_married
+    | is_mother
+    | is_primary_heir
+    | sibling
+    )
+  vCTriggerBool: |-
+    (?x:
+      controls_religion
+    | has_guardian
+    | has_regent
+    | holy_order
+    | in_command
+    | in_seclusion
+    | is_adult
+    | is_dying
+    | is_father_real_father
+    | is_female
+    | is_feudal
+    | is_incapable
+    | is_landed
+    | is_marriage_adult
+    | is_married
+    | is_merchant_republic
+    | is_multiplayer_host_character
+    | is_nomadic
+    | is_patrician
+    | is_primary_heir
+    | is_pregnant
+    | is_pretender
+    | is_playable
+    | is_republic
+    | is_ruler
+    | is_save_game
+    | is_theocracy
+    | is_tribal
+    | is_voter
+    | mercenary
     | war
     )
+  vAnyTriggerBool: |-
+    (?x:
+      multiplayer
+    )
+  vAnyTriggerInt: |-
+    (?x:
+      year
+      month
+    )
+  vTriggerBool: '(?x: {{vTTriggerBool}} | {{vCTriggerBool}} | {{vAnyTriggerBool}} )'
+  vTriggerTarget: '(?x: {{vTTriggerTarget}} | {{vCTriggerTarget}} )'
 
 contexts:
   main:
@@ -221,7 +289,7 @@ contexts:
     - match: '\b{{vOpBool}}\b'
       scope: keyword.operator.logical.ck2script keyword.operator.word.ck2script
       # these are the names of parameters for numerous triggers & effects which have multiple named parameters possible
-    - match: \b(target|type|target_type|who|where|which|amount|value|count|percentage|duration|days|months|years|hidden|inherit|crime|disable_non_aggression_pacts|move|cooldown|tooltip|random|chance|factor|casus_belli|tier|thirdparty_title|infamy|as_if_liege|first|second|enemy|title|is_religious|same_religion|is_crusade|to|min|max|multiplier)\b
+    - match: \b(target|type|target_type|who|where|which|amount|value|count|attribute|percentage|duration|days|months|years|hidden|inherit|crime|disable_non_aggression_pacts|move|cooldown|tooltip|random|chance|factor|casus_belli|tier|thirdparty_title|infamy|as_if_liege|first|second|enemy|title|is_religious|same_religion|is_crusade|to|min|max|multiplier)\b
       scope: keyword.control.ck2script
     - match: '\b{{vLiteralTier}}\b'
       scope: support.constant.tier.ck2script
@@ -256,17 +324,21 @@ contexts:
       captures:
         1: support.function.ck2script
         2: constant.numeric.integer.ck2script
+    - match: '\b({{vTriggerBool}})\s*=\s*({{vLiteralBool}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.numeric.integer.ck2script
     - match: '\b({{vTriggerTarget}})\s*=\s*({{vTarget}})\b'
       captures:
         1: support.function.ck2script
         2: variable.language.ck2script
-    - match: \b(is_republic|is_merchant_republic|is_tribal|is_nomadic|is_feudal|is_theocracy|mercenary|holy_order|rebel|temporary|clan|adventurer|is_primary_type_title|is_landless_type_title|controls_religion)\b
+    - match: \b(temporary|clan)\b
       scope: keyword.control.ck2script
     - match: \b((is_primary_holder_title(_tier)?)|tier|real_tier|lower_tier_than|lower_real_tier_than|higher_tier_than|higher_real_tier_than|is_titular|is_de_jure_title|de_facto_liege|de_facto_liege_title)\b
       scope: keyword.control.ck2script
     - match: \b(character|title|province|province_id|dynasty|region|de_jure_liege|de_jure_liege_or_above|de_jure_vassal_or_below|has_landed_title|holder|always|is_liege_or_above|is_vassal_or_below|is_liege_of|vassal_of|same_realm|same_liege)\b
       scope: keyword.control.ck2script
-    - match: \b(has_(strong_|weak_)?claim|claimed_by|has_holder|has_owner|((reverse_)?(remove_)?opinion)|((reverse_)?has_opinion_modifier)|independent|is_landed|has_regent|is_adult|is_playable|is_ruler|is_female|is_incapable)\b
+    - match: \b(has_(strong_|weak_)?claim|claimed_by|((reverse_)?(remove_)?opinion)|((reverse_)?has_opinion_modifier)|opinion_diff|their_opinion|personal_opinion)\b
       scope: keyword.control.ck2script
     - match: \b(is_land|conquest_culture|((reverse_)?realm_levy_diff)|trait|(is_primary_war_(defender|attacker))|war_with|is_tributary|pays_tribute_to|create_(title|character|artifact|(random_(soldier|priest|steward|diplomat|intriguer)))|has_law|is_allied_with|sibling|num_of_holy_sites)\b
       scope: keyword.control.ck2script
