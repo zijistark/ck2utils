@@ -159,19 +159,25 @@ variables:
   vTTriggerTarget: |-
     (?x:
       is_ (?: allowed | preferred) _holding_type
+    | conquest_culture
+    | culture
+    | religion
     )
   vTTriggerBool: |-
     (?x:
       adventurer
+    | clan
     | controls_religion
     | has_holder
     | has_owner
     | has_siege
     | holy_order
     | is_contested
+    | is_conquered
     | is_feudal
     | is_landless_type_title
     | is_primary_type_title
+    | is_tribal_type_title
     | is_occupied
     | is_nomadic
     | is_republic
@@ -179,23 +185,36 @@ variables:
     | is_tribal
     | mercenary
     | rebel
+    | temporary
+    )
+  vPTriggerTarget: |-
+    (?x:
+      culture
+    | has_owner
+    | is_land
+    | religion
     )
   vCTriggerTarget: |-
     (?x:
       can_marry
+    | character
+    | culture
     | dynasty
     | is_child_of
     | is_father
     | is_married
     | is_mother
     | is_primary_heir
+    | religion
     | sibling
     )
   vCTriggerBool: |-
     (?x:
       controls_religion
+    | clan
     | has_guardian
     | has_regent
+    | has_secret_religion
     | holy_order
     | in_command
     | in_seclusion
@@ -213,26 +232,34 @@ variables:
     | is_nomadic
     | is_patrician
     | is_primary_heir
+    | is_primary_war_attacker
+    | is_primary_war_defender
     | is_pregnant
     | is_pretender
     | is_playable
     | is_republic
     | is_ruler
-    | is_save_game
     | is_theocracy
     | is_tribal
     | is_voter
     | mercenary
+    | rebel
     | war
     )
   vAnyTriggerBool: |-
     (?x:
       multiplayer
+    | is_save_game
+    | has_game_started
     )
   vAnyTriggerInt: |-
     (?x:
       year
       month
+    )
+  vAnyTriggerID: |-
+    (?x:
+      has_global_flag
     )
   vTriggerBool: '(?x: {{vTTriggerBool}} | {{vCTriggerBool}} | {{vAnyTriggerBool}} )'
   vTriggerTarget: '(?x: {{vTTriggerTarget}} | {{vCTriggerTarget}} )'

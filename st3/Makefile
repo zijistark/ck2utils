@@ -1,4 +1,4 @@
-SOURCE_DIR:=$(REPO_ROOT)/ck2utils/sublime-text-3
+SOURCE_DIR:=$(REPO_ROOT)/ck2utils/st3
 INSTALL_DIR:="$(shell cygpath $$APPDATA)"/"Sublime Text 3"/Packages/User
 
 all:
