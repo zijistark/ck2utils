@@ -1,7 +1,7 @@
 // -*- c++ -*-
 
 #pragma once
-#include "pdx_common.h"
+#include "common.h"
 
 #include "error_queue.h"
 #include "cstr_pool.h"
@@ -20,7 +20,7 @@
 #include <boost/filesystem.hpp>
 
 
-_PDX_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN
 
 
 using std::unique_ptr;
@@ -30,7 +30,7 @@ class list;
 class parser;
 
 
-/* OBJECT -- generic "any"-type parse tree data element (superset of pdx::scalar) */
+/* OBJECT -- generic "any"-type parse tree data element (superset of ck2::scalar) */
 
 class object {
     enum {
@@ -182,7 +182,7 @@ class block {
      *
      * string-type keys are the only type of keys for which I've encountered a
      * realistic use case for the hash-map access pattern, so rather than create
-     * a generalized scalar any-type (like pdx::object but only for scalar data
+     * a generalized scalar any-type (like ck2::object but only for scalar data
      * types, or more generally, copy-constructible data types) and hash-map via
      * that any-type, I've simply chosen to stick to string keys for now.
      */
@@ -294,10 +294,10 @@ inline uint title_tier(const char* s) {
 bool looks_like_title(const char*);
 
 
-_PDX_NAMESPACE_END
+_CK2_NAMESPACE_END
 
 
-inline std::ostream& operator<<(std::ostream& os, const pdx::block& a) { a.print(os); return os; }
-inline std::ostream& operator<<(std::ostream& os, const pdx::list& a) { a.print(os); return os; }
-inline std::ostream& operator<<(std::ostream& os, const pdx::statement& a) { a.print(os); return os; }
-inline std::ostream& operator<<(std::ostream& os, const pdx::object& a) { a.print(os); return os; }
+inline std::ostream& operator<<(std::ostream& os, const ck2::block& a) { a.print(os); return os; }
+inline std::ostream& operator<<(std::ostream& os, const ck2::list& a) { a.print(os); return os; }
+inline std::ostream& operator<<(std::ostream& os, const ck2::statement& a) { a.print(os); return os; }
+inline std::ostream& operator<<(std::ostream& os, const ck2::object& a) { a.print(os); return os; }

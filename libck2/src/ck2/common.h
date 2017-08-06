@@ -1,18 +1,18 @@
 // -*- c++ -*-
 
-#ifndef _PDX_COMMON_H_
-#define _PDX_COMMON_H_
+#ifndef _CK2_COMMON_H_
+#define _CK2_COMMON_H_
 
 
-#define _PDX_NAMESPACE_BEGIN namespace pdx {
-#define _PDX_NAMESPACE_END }
+#define _CK2_NAMESPACE_BEGIN namespace ck2 {
+#define _CK2_NAMESPACE_END }
 
 
 #include <cstdint>
 #include <ostream>
 
 
-_PDX_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN
 
 
 typedef unsigned int uint;
@@ -49,7 +49,7 @@ struct generate_int_array {
 };
 
 
-_PDX_NAMESPACE_END
+_CK2_NAMESPACE_END
 
 
 #endif

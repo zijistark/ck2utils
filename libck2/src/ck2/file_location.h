@@ -1,10 +1,10 @@
 // -*- c++ -*-
 
 #pragma once
-#include "pdx_common.h"
+#include "common.h"
 
 
-_PDX_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN
 
 
 struct file_location {
@@ -19,4 +19,4 @@ struct file_location {
 };
 
 
-_PDX_NAMESPACE_END
+_CK2_NAMESPACE_END

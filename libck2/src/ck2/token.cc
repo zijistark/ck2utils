@@ -1,7 +1,7 @@
 
 #include "token.h"
 
-const char* pdx::token::TYPE_MAP[] = {
+const char* ck2::token::TYPE_MAP[] = {
     "EOF",
     "INTEGER",
     "OPERATOR",

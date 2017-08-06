@@ -1,7 +1,7 @@
 // -*- c++ -*-
 
 #pragma once
-#include "pdx_common.h"
+#include "common.h"
 
 #include <string>
 #include <vector>
@@ -11,7 +11,7 @@
 #include "file_location.h"
 
 
-_PDX_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN
 
 
 struct error {
@@ -55,4 +55,4 @@ public:
 };
 
 
-_PDX_NAMESPACE_END
+_CK2_NAMESPACE_END

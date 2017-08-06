@@ -8,7 +8,7 @@
 #include <cstring>
 
 
-_PDX_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN
 
 
 block::block(parser& lex, bool is_root, bool is_save) {
@@ -79,7 +79,7 @@ block::block(parser& lex, bool is_root, bool is_save) {
 
                 /* NOTE: technically, due to the structure of the language, we could NOT check
                    for a double-open at all and still handle lists of blocks. this is because no
-                   well-formed PDX script will ever have an EQ token following an OPEN, so a
+                   well-formed CK2 script will ever have an EQ token following an OPEN, so a
                    list is always detected and the lookahead mechanism functions as
                    expected. nevertheless, in the interest of the explicit... */
 
@@ -307,4 +307,4 @@ bool looks_like_title(const char* s) {
 }
 
 
-_PDX_NAMESPACE_END
+_CK2_NAMESPACE_END

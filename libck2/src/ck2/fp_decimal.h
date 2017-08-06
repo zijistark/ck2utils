@@ -1,9 +1,9 @@
 // -*- c++ -*-
 
-/* pdx::fp_decimal -- a class to represent parsed fixed-point decimal numbers accurately (i.e., fractional base-10^-N
+/* ck2::fp_decimal -- a class to represent parsed fixed-point decimal numbers accurately (i.e., fractional base-10^-N
  * component so that any parsed decimal number can be represented exactly).
  *
- * like with pdx::date, our string input constructor assumes that the number-string is well-formed.
+ * like with ck2::date, our string input constructor assumes that the number-string is well-formed.
  *
  * NOTE: currently, fp_decimal DOES NOT IMPLEMENT ARITHMETIC AT ALL, although it is prepared for that functionality.
  *       this is because native fixed point decimal arithmetic is simply not required for current use cases, and if
@@ -11,11 +11,11 @@
  */
 
 #pragma once
-#include "pdx_common.h"
+#include "common.h"
 #include "error_queue.h"
 
 
-_PDX_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN
 
 
 /* exp10<N> -- static computation of the Nth power of 10 */
@@ -73,7 +73,7 @@ private:
 };
 
 
-_PDX_NAMESPACE_END
+_CK2_NAMESPACE_END
 
 
 #include <cstring>
@@ -82,7 +82,7 @@ _PDX_NAMESPACE_END
 
 
 template<unsigned int D>
-std::ostream& operator<<(std::ostream& os, pdx::fp_decimal<D> fp) {
+std::ostream& operator<<(std::ostream& os, ck2::fp_decimal<D> fp) {
     os << fp.integral();
 
     if (int f = abs(fp.fractional()))
@@ -92,7 +92,7 @@ std::ostream& operator<<(std::ostream& os, pdx::fp_decimal<D> fp) {
 }
 
 
-_PDX_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN
 
 
 /* construct from well-formed c-string. as mentioned, this conversion routine is intended to be run by the parser after
@@ -175,4 +175,4 @@ fp_decimal<D>::fp_decimal(char* src, const file_location& loc, error_queue& erro
 }
 
 
-_PDX_NAMESPACE_END
+_CK2_NAMESPACE_END

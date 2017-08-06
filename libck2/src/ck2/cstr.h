@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "pdx_common.h"
+#include "common.h"
 #include <cstring>
 
 
-_PDX_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN
 
 
 /* CSTR -- light wrapper class for a pointer to a zero-terminated, C-style string.
@@ -32,21 +32,21 @@ public:
 };
 
 
-_PDX_NAMESPACE_END
+_CK2_NAMESPACE_END
 
 
-/* inject std::hash<pdx::cstr> specialization */
+/* inject std::hash<ck2::cstr> specialization */
 
 namespace std {
-    template<> struct hash<pdx::cstr> {
-        typedef pdx::cstr argument_type;
+    template<> struct hash<ck2::cstr> {
+        typedef ck2::cstr argument_type;
         typedef size_t result_type;
 
         static_assert(sizeof(size_t) == 8,
-                      "pdx::cstr's hash implementation requires 64-bit target to function correctly");
+                      "ck2::cstr's hash implementation requires 64-bit target to function correctly");
 
         /* FNV/1a algorithm applied to null-terminated string with unknown length, 64-bit */
-        size_t operator()(const pdx::cstr& cs) const noexcept {
+        size_t operator()(const ck2::cstr& cs) const noexcept {
             size_t hash = 0xCBF29CE484222325;
             auto ptr = cs.data();
 

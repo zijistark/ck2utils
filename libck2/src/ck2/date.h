@@ -1,11 +1,11 @@
 // -*- c++ -*-
 
 #pragma once
-#include "pdx_common.h"
+#include "common.h"
 #include "error_queue.h"
 
 
-_PDX_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN
 
 
 #pragma pack(push, 1)
@@ -43,9 +43,9 @@ public:
 #pragma pack(pop)
 
 
-_PDX_NAMESPACE_END
+_CK2_NAMESPACE_END
 
 
-inline std::ostream& operator<<(std::ostream& os, pdx::date d) {
+inline std::ostream& operator<<(std::ostream& os, ck2::date d) {
     return os << (int)d.year() << '.' << (int)d.month() << '.' << (int)d.day();
 }

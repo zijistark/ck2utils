@@ -1,10 +1,10 @@
 // -*- c++ -*-
 
 #pragma once
-#include "pdx_common.h"
+#include "common.h"
 
 
-_PDX_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN
 
 
 struct token {
@@ -35,4 +35,4 @@ struct token {
 };
 
 
-_PDX_NAMESPACE_END
+_CK2_NAMESPACE_END

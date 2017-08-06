@@ -6,7 +6,7 @@
 #include "error.h"
 
 
-_PDX_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN
 
 
 lexer::lexer(const char* pathname)
@@ -78,4 +78,4 @@ bool lexer::next(token* p_tok) {
 
 
 
-_PDX_NAMESPACE_END
+_CK2_NAMESPACE_END
