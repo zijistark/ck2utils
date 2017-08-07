@@ -56,21 +56,25 @@ struct generate_int_array {
 
 
 // stark_fast_strncpy
-// - copy not more than `length` characters from the string `src` (including any NULL terminator) to the buffer `dst`
-// - precondition: `length` <= strlen(src); we do not check the actual length ourselves for performance reasons.
-// - precondition: - `dst_sz` is the max size of the memory for `dst` (not max length but max length + null terminator)
+
+// - copy not more than `length` characters from the string `src` (including any NULL terminator) to the string `dst`
+// - precondition: `length <= strlen(src)`; we do not check the actual length ourselves for performance reasons.
+// - precondition: `dst_sz` is the max size of the memory for `dst` (not max length but max length + null terminator)
 // - returns actual number of characters copied (might be less than requested `length`)
 // - `dst` is always NULL-terminated when done
-// - the memory ranges occupied by the strings `src` and `dst` may never overlap; if they, do UNDEFINED BEHAVIOR!
-// - resolves would-be buffer overflow of `dst` with truncation (the return value will be less than `length`)
+// - the memory ranges of the strings `src` and `dst` may never overlap; if they do, UNDEFINED BEHAVIOR! CHAOS! SIN!
+// - resolves would-be buffer overflow of `dst` with truncation; return value will then be less than `length`.
 // - gives literally optimal performance when the length of `src` is already known (or length of some prefix of `src`)
-// --> dst will never be unnecessarily padded with NULLs at end & memcpy is optimized for general case (SIMD, etc.)
+// --> `dst` will never be unnecessarily padded with NULLs at end & memcpy is intensively optimized (SIMD, etc.).
+
+// motivation for creation: strncpy is practically obsolete and broken -- but it's also slow due to a poor POSIX
+// standardization choice, sprintf and similar are also slower, and of course, strcpy can overflow its output buffer.
 size_t stark_fast_strncpy(char* dst, size_t dst_sz, const char* src, size_t length) {
     if (length == 0 || dst_sz == 0) return 0;
     size_t n = (length > dst_sz) ? dst_sz : length;
     memcpy(dst, src, n);
     // make SURE `dst` is NULL-terminated (`src` doesn't have to be -- also matters if copying only a prefix of `src`)
-    dst[n-1] = '\0';
+    dst[n] = '\0';
     return n;
 }
 
