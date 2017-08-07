@@ -93,15 +93,13 @@ class object {
     void destroy() noexcept; // helper for dtor & move-assignment
 
 public:
-    object() : _type(NIL) {};
-
-    object(char* s, const floc& fl) : _type(STRING),  _loc(fl) { _data.s = s; init(); }
-    object(int i,   const floc& fl) : _type(INTEGER), _loc(fl) { _data.i = i; init(); }
-    object(date d,  const floc& fl) : _type(DATE),    _loc(fl) { _data.d = d; init(); }
-    object(fp3 f,   const floc& fl) : _type(DECIMAL), _loc(fl) { _data.f = f; init(); }
-    // object()                     : _type(EMPTY)   { memset(&_data, 0, sizeof(_data)); init(); }
-    object(unique_ptr<block> up, const floc& fl) : _type(BLOCK), _loc(fl) { new (&_data.up_block) unique_ptr<block>(std::move(up)); init(); }
-    object(unique_ptr<list> up,  const floc& fl) : _type(LIST),  _loc(fl) { new (&_data.up_list) unique_ptr<list>(std::move(up)); init(); }
+    object(const floc& fl = floc()) : _type(NIL),     _loc(fl) {}
+    object(char* s, const floc& fl) : _type(STRING),  _loc(fl) {}
+    object(int i,   const floc& fl) : _type(INTEGER), _loc(fl) {}
+    object(date d,  const floc& fl) : _type(DATE),    _loc(fl) {}
+    object(fp3 f,   const floc& fl) : _type(DECIMAL), _loc(fl) {}
+    object(unique_ptr<block> up, const floc& fl) : _type(BLOCK), _loc(fl) { new (&_data.up_block) unique_ptr<block>(std::move(up)); }
+    object(unique_ptr<list> up,  const floc& fl) : _type(LIST),  _loc(fl) { new (&_data.up_list) unique_ptr<list>(std::move(up)); }
 
     /* move-assignment operator */
     object& operator=(object&& other);

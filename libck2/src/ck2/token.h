@@ -43,10 +43,8 @@ public:
     token(uint type = END) : _type(type) { _text[0] = '\0'; }
 
     token(uint type, const char* text, size_t text_len = SIZE_MAX) : _type(type) {
-        if (text_len == SIZE_MAX)
-            text_len = strlen(text);
-
-        stark_fast_strncpy(&_text[0], TEXT_MAX_SZ, text, text_len + 1);
+        if (text_len == SIZE_MAX) text_len = strlen(text);
+        mdh_strncpy<TEXT_MAX_SZ>(&_text[0], text, text_len + 1);
     }
 
     uint type()              const noexcept { return _type; }

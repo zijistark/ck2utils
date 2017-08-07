@@ -55,26 +55,29 @@ struct generate_int_array {
 };
 
 
-// stark_fast_strncpy
+// mdh_strncpy
 
-// - copy not more than `length` characters from the string `src` (including any NULL terminator) to the string `dst`
+// copy not more than `length` characters from the string `src` (including any NULL terminator) to the string `dst`
+// while never overflowing the `DST_SZ` memory available to `dst`. return value: actual amount of characters copied.
+
 // - precondition: `length <= strlen(src)`; we do not check the actual length ourselves for performance reasons.
-// - precondition: `dst_sz` is the max size of the memory for `dst` (not max length but max length + null terminator)
-// - returns actual number of characters copied (might be less than requested `length`)
-// - `dst` is always NULL-terminated when done
-// - the memory ranges of the strings `src` and `dst` may never overlap; if they do, UNDEFINED BEHAVIOR! CHAOS! SIN!
-// - resolves would-be buffer overflow of `dst` with truncation; return value will then be less than `length`.
-// - gives literally optimal performance when the length of `src` is already known (or length of some prefix of `src`)
-// --> `dst` will never be unnecessarily padded with NULLs at end & memcpy is intensively optimized (SIMD, etc.).
+// - precondition: `DST_SZ` is the max size of the memory for `dst` (not max length but max length + null terminator)
+// - precondition: the memory backing `src` and `dst` may not overlap; if it does, UNDEFINED BEHAVIOR! CHAOS! SIN!
+
+// - `dst` is always NULL-terminated when done (unlike strncpy)
+// - performance of the bounded copy should be virtually as good as you can get.
+// --> `dst` will never be unnecessarily padded with O(N) NULLs in a lot of cases (unlike strncpy)
+// --> memcpy is intensively optimized for non-overlapping block memory transfer (SIMD, etc.)
+// --> DST_SZ is a compile-time constant, cutting a bit of overhead sometimes. [might want a dynamic variant, however.]
 
 // motivation for creation: strncpy is practically obsolete and broken -- but it's also slow due to a poor POSIX
 // standardization choice, sprintf and similar are also slower, and of course, strcpy can overflow its output buffer.
-size_t stark_fast_strncpy(char* dst, size_t dst_sz, const char* src, size_t length) {
-    if (length == 0 || dst_sz == 0) return 0;
-    size_t n = (length > dst_sz) ? dst_sz : length;
+template<const size_t DST_SZ>
+static inline size_t mdh_strncpy(char* dst, const char* src, size_t length) {
+    static_assert(DST_SZ > 0, "cannot copy into a zero-length buffer");
+    size_t n = (length > DST_SZ) ? DST_SZ : length;
     memcpy(dst, src, n);
-    // make SURE `dst` is NULL-terminated (`src` doesn't have to be -- also matters if copying only a prefix of `src`)
-    dst[n] = '\0';
+    dst[n] = '\0'; // only sometimes necessary (when not using as a replacement for strcpy on well-formed input)
     return n;
 }
 

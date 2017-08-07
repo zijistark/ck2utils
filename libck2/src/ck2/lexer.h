@@ -129,7 +129,7 @@ void lexer<TokenLookahead>::read_token_into(token& t) {
     if (len > 0 && p_txt[ len-1 ] == '\n') p_txt[ len -= 1 ] = '\0';
     if (len > 0 && p_txt[ len-1 ] == '\r') p_txt[ len -= 1 ] = '\0';
 
-    stark_fast_strncpy(t.text(), token::TEXT_MAX_SZ, p_txt, len+1); // if ret val is <= len, then token was truncated
+    mdh_strncpy<token::TEXT_MAX_SZ>(t.text(), p_txt, len + 1);
 }
 
 template<const size_t TokenLookahead>
