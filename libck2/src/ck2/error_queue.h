@@ -17,18 +17,18 @@ _CK2_NAMESPACE_BEGIN
 struct error {
     /* will want to add more useful fields to this in the future than just an opaque character msg */
     enum priority : uint { NORMAL = 0, WARNING } _prio;
-    file_location _location;
+    floc _location;
     char _msg[256]; // probably want this dynamically-allocated w/ move-semantics but ehhh
 
     template<class... Args>
-    error(priority prio, const file_location& location, const char* format, Args&&... args)
+    error(priority prio, const floc& location, const char* format, Args&&... args)
         : _prio(prio), _location(location)
     {
         snprintf(&_msg[0], sizeof(_msg), format, std::forward<Args>(args)...);
     }
 
     template<class... Args>
-    error(const file_location& location, const char* format, Args&&... args)
+    error(const floc& location, const char* format, Args&&... args)
         : _prio(priority::NORMAL), _location(location)
     {
         snprintf(&_msg[0], sizeof(_msg), format, std::forward<Args>(args)...);

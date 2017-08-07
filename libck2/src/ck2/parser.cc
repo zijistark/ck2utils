@@ -15,22 +15,18 @@ block::block(parser& lex, bool is_root, bool is_save) {
 
     if (is_root && is_save) {
         /* skip over CK2txt header (savegames only) */
-        token t;
-        lex.next_expected(&t, token::STR);
+        lex.next_expected(token::STR);
     }
 
-    while (1) {
-        token tok;
+    while (true) {
+        token& tA = lex.next(is_root);
 
-        lex.next(&tok, is_root);
-
-        if (tok.type == token::END)
+        if (tA.type() == token::END)
             return;
 
-        if (tok.type == token::CLOSE) {
+        if (tA.type() == token::CLOSE) {
             if (is_root && !is_save) // closing braces are only bad at root level
-                throw va_error("Unmatched closing brace in %s (before line %u)",
-                               lex.pathname(), lex.line());
+                throw va_parse_error(tA.location(), "Unmatched closing brace");
 
             // otherwise, they mean it's time return to the previous block
             return;
@@ -38,73 +34,60 @@ block::block(parser& lex, bool is_root, bool is_save) {
 
         object key;
 
-        if (tok.type == token::STR)
-            key = object{ lex.strdup(tok.text) };
-        else if (tok.type == token::DATE)
-            key = object{ date{ tok.text, lex.location(), lex.errors() } };
-        else if (tok.type == token::INTEGER)
-            key = object{ atoi(tok.text) };
+        if (tA.type() == token::STR)
+            key = object{ lex.strdup(tA.text()), tA.location() };
+        else if (tA.type() == token::DATE)
+            key = object{ date{ tA.text(), tA.location(), lex.errors() }, tA.location() };
+        else if (tA.type() == token::INTEGER)
+            key = object{ atoi(tA.text()), tA.location() };
         else
-            lex.unexpected_token(tok);
+            lex.unexpected_token(tA);
 
         /* ...done with key */
 
-        lex.next_expected(&tok, token::OPERATOR);
-        opcode op = (strcmp(tok.text, "=") == 0) ? opcode::EQ :
-                    (strcmp(tok.text, "<") == 0) ? opcode::LT :
-                    (strcmp(tok.text, ">") == 0) ? opcode::GT :
-                    (strcmp(tok.text, "<=") == 0) ? opcode::LTE :
-                    (strcmp(tok.text, ">=") == 0) ? opcode::GTE : opcode::EQ2;
+        token& tB = lex.next_expected(token::OPERATOR);
+        opcode op = (strcmp(tB.text(), "=") == 0) ? opcode::EQ :
+                    (strcmp(tB.text(), "<") == 0) ? opcode::LT :
+                    (strcmp(tB.text(), ">") == 0) ? opcode::GT :
+                    (strcmp(tB.text(), "<=") == 0) ? opcode::LTE :
+                    (strcmp(tB.text(), ">=") == 0) ? opcode::GTE : opcode::EQ2;
+
+        // FIXME: we need to also record the file location of the operator token! [for completeness]
 
         /* on to value... */
         object val;
-        lex.next(&tok);
+        token& tC = lex.next();
 
-        if (tok.type == token::OPEN) {
+        if (tC.type() == token::OPEN) {
+            // need to do token lookahead for 2 tokens to determine whether this is opening a list or a block
 
-            /* need to do token lookahead for 2 tokens to determine whether this is opening a
-               generic list or a recursive block of statements */
+            token& t1 = lex.peek(1);
+            token& t2 = lex.peek(2);
 
-            lex.next(&tok);
-            bool double_open = false;
-
-            if (tok.type == token::CLOSE) {
-                /* empty block */
-                val = object{ std::make_unique<block>() };
+            if (t1.type() == token::CLOSE) { // empty block (or list, but we choose to see it as a block)
+                // FIXME: optimize: empty blocks are a waste of memory and cycles and ambiguous with empty lists, so add
+                // a static object type (i.e., one of the possible dynamic types for ck2::object) that codifies an empty
+                // block OR list
+                val = object{ std::make_unique<block>(), tC.location() };
                 _vec.emplace_back(key, val, op);
                 continue;
             }
-            else if (tok.type == token::OPEN) {
-                /* special case for a list of blocks (only matters for savegames) */
 
-                /* NOTE: technically, due to the structure of the language, we could NOT check
-                   for a double-open at all and still handle lists of blocks. this is because no
-                   well-formed CK2 script will ever have an EQ token following an OPEN, so a
-                   list is always detected and the lookahead mechanism functions as
-                   expected. nevertheless, in the interest of the explicit... */
-
-                double_open = true;
-            }
-
-            lex.save_and_lookahead(&tok);
-
-            if (tok.type != token::OPERATOR || double_open)
-                val = object{ std::make_unique<list>(lex) }; // by God, this is (probably) a list!
-            else
-                val = object{ std::make_unique<block>(lex) }; // presumably block, so recurse
-
-            /* ... will handle its own closing brace */
+            if (t2.type() != token::OPERATOR) // everything but an operator in this position implies this will be a list
+                val = object{ std::make_unique<list>(lex), tC.location() };
+            else // but with the operator in position, it's definitely a block
+                val = object{ std::make_unique<block>(lex), tC.location() };
         }
-        else if (tok.type == token::STR || tok.type == token::QSTR)
-            val = object{ lex.strdup(tok.text) };
-        else if (tok.type == token::QDATE || tok.type == token::DATE)
-            val = object{ date{ tok.text, lex.location(), lex.errors() } };
-        else if (tok.type == token::DECIMAL)
-            val = object{ fp3{ tok.text, lex.location(), lex.errors() } };
-        else if (tok.type == token::INTEGER)
-            val = object{ atoi(tok.text) };
+        else if (tC.type() == token::STR || tC.type() == token::QSTR)
+            val = object{ lex.strdup(tC.text()), tC.location() };
+        else if (tC.type() == token::QDATE || tC.type() == token::DATE)
+            val = object{ date{ tC.text(), tC.location(), lex.errors() }, tC.location() };
+        else if (tC.type() == token::DECIMAL)
+            val = object{ fp3{ tC.text(), tC.location(), lex.errors() }, tC.location() };
+        else if (tC.type() == token::INTEGER)
+            val = object{ atoi(tC.text()), tC.location() };
         else
-            lex.unexpected_token(tok);
+            lex.unexpected_token(tC);
 
         _vec.emplace_back(key, val, op);
 
@@ -115,14 +98,16 @@ block::block(parser& lex, bool is_root, bool is_save) {
 
 
 void object::destroy() noexcept {
-    switch (type) {
+    switch (_type) {
+        case NIL:
         case STRING:
         case INTEGER:
         case DATE:
         case DECIMAL:
+        // case EMPTY:
             break;
-        case BLOCK: data.up_block.~unique_ptr<block>(); break;
-        case LIST:  data.up_list.~unique_ptr<list>(); break;
+        case BLOCK: _data.up_block.~unique_ptr<block>(); break;
+        case LIST:  _data.up_list.~unique_ptr<list>(); break;
     }
 }
 
@@ -132,105 +117,76 @@ object& object::operator=(object&& other) {
 
     /* destroy our current resources, then move resources from other, and return new self */
     destroy();
-    type = other.type;
+    _type = other._type;
+    // _precomment = other._precomment;
+    // _postcomment = other._postcomment;
 
-    switch (other.type) {
-        case STRING:  data.s = other.data.s; break;
-        case INTEGER: data.i = other.data.i; break;
-        case DATE:    data.d = other.data.d; break;
-        case DECIMAL: data.f = other.data.f; break;
-        case BLOCK:   new (&data.up_block) unique_ptr<block>(std::move(other.data.up_block)); break;
-        case LIST:    new (&data.up_list)  unique_ptr<list>(std::move(other.data.up_list)); break;
+    switch (other._type) {
+        case NIL: break;
+        case STRING:  _data.s = other._data.s; break;
+        case INTEGER: _data.i = other._data.i; break;
+        case DATE:    _data.d = other._data.d; break;
+        case DECIMAL: _data.f = other._data.f; break;
+//        case EMPTY:   memset(&_data, 0, sizeof(_data)); break;
+        case BLOCK:   new (&_data.up_block) unique_ptr<block>(std::move(other._data.up_block)); break;
+        case LIST:    new (&_data.up_list)  unique_ptr<list>(std::move(other._data.up_list));   break;
     }
 
+    _loc = other._loc;
     return *this;
 }
 
 
 list::list(parser& lex) {
-    token t;
-
     while (true) {
-        lex.next(&t);
+        token& t = lex.next();
 
-        if (t.type == token::QSTR || t.type == token::STR)
-            _vec.emplace_back( lex.strdup(t.text) );
-        else if (t.type == token::INTEGER)
-            _vec.emplace_back( atoi(t.text) );
-        else if (t.type == token::DECIMAL)
-            _vec.emplace_back( fp3{ t.text, lex.location(), lex.errors() } );
-        else if (t.type == token::OPEN)
-            _vec.emplace_back( std::make_unique<block>(lex) );
-        else if (t.type != token::CLOSE)
+        if (t.type() == token::QSTR || t.type() == token::STR)
+            _vec.emplace_back( lex.strdup(t.text()), t.location() );
+        else if (t.type() == token::INTEGER)
+            _vec.emplace_back( atoi(t.text()), t.location() );
+        else if (t.type() == token::DECIMAL)
+            _vec.emplace_back( fp3{ t.text(), t.location(), lex.errors() }, t.location() );
+        else if (t.type() == token::OPEN)
+            _vec.emplace_back( std::make_unique<block>(lex), t.location() );
+        else if (t.type() != token::CLOSE)
             lex.unexpected_token(t);
         else
             return;
     }
 }
 
-void parser::next_expected(token* p_tok, uint type) {
-    next(p_tok);
+token& parser::next_expected(uint type) {
+    token& t = next();
 
-    if (p_tok->type != type)
-        throw va_error("Expected %s token but got token %s at %s:L%d",
-                                     token::TYPE_MAP[type], p_tok->type_name(), pathname(), line());
+    if (t.type() != type)
+        throw va_parse_error(t.location(), "Expected %s token but got %s token",
+                             token::TYPE_MAP[type], t.type_name());
+
+    return t;
 }
 
 
 void parser::unexpected_token(const token& t) const {
-    throw va_error("Unexpected token %s at %s:L%d",
-                                 t.type_name(), pathname(), line());
+    throw va_parse_error(t.location(), "Unexpected token %s", t.type_name());
 }
 
 
-void parser::next(token* p_tok, bool eof_ok) {
-    while (1) {
-        switch (_state) {
-            case NORMAL:
-                lexer::next(p_tok);
-                break;
-            case TOK1:
-                p_tok->type = _tok1.type;
-                p_tok->text = _tok1.text;
-                _state = TOK2;
-                break;
-            case TOK2:
-                p_tok->type = _tok2.type;
-                p_tok->text = _tok2.text;
-                _state = NORMAL;
-                break;
-        }
+token& parser::next(bool eof_ok) {
+    while (true) {
+        token& t = super::next();
 
-        if (p_tok->type == token::END) {
-            if (!eof_ok)
-                throw va_error("Unexpected EOF at %s:L%d", pathname(), line());
-            else
-                return;
-        }
+        if (t.type() == token::END && !eof_ok)
+            throw va_parse_error(t.location(), "Unexpected EOF");
 
-        if (p_tok->type == token::FAIL)
-            throw va_error("Unrecognized token at %s:L%d", pathname(), line());
+        if (t.type() == token::FAIL)
+            throw va_parse_error(t.location(), "Unrecognized token");
 
-        if (p_tok->type == token::COMMENT)
-            continue;
+        if (t.type() == token::COMMENT)
+            continue; // FIXME
 
-        return;
+        return t;
     }
-}
-
-
-void parser::save_and_lookahead(token* p_tok) {
-    /* save our two tokens of lookahead */
-    _tok1.type = p_tok->type;
-    strcpy(_tok1.text, p_tok->text); // buffer overflows are myths
-
-    next(p_tok);
-
-    _tok2.type = p_tok->type;
-    strcpy(_tok2.text, p_tok->text);
-
-    /* set lexer to read from the saved tokens first */
-    _state = TOK1;
 }
 
 
@@ -259,25 +215,25 @@ void statement::print(std::ostream& os, uint indent) const {
 
 void object::print(std::ostream& os, uint indent) const {
 
-    if (type == STRING) {
+    if (_type == STRING) {
         if (strpbrk(as_string(), " \t\r\n\'"))
             os << '"' << as_string() << '"';
         else
             os << as_string();
     }
-    else if (type == INTEGER)
+    else if (_type == INTEGER)
         os << as_integer();
-    else if (type == DATE)
+    else if (_type == DATE)
         os << as_date();
-    else if (type == DECIMAL)
+    else if (_type == DECIMAL)
         os << as_decimal();
-    else if (type == BLOCK) {
+    else if (_type == BLOCK) {
         os << '{' << std::endl;
         as_block()->print(os, indent + 4);
         os << std::setfill(' ') << std::setw(indent) << "";
         os << '}';
     }
-    else if (type == LIST) {
+    else if (_type == LIST) {
         os << "{ ";
         as_list()->print(os, indent);
         os << '}';

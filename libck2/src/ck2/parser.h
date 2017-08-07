@@ -29,18 +29,47 @@ class block;
 class list;
 class parser;
 
+/* COMMENT_BLOCK -- a list of lines of contiguous freestanding comments */
 
-/* OBJECT -- generic "any"-type parse tree data element (superset of ck2::scalar) */
+// allows blank lines to be in the list under certain sane circumstances (in
+// order to heuristically improve [whitespace] information retention when/if
+// rewriting the comments after modifying the AST). they will be represented
+// as nullptr.
+
+// class comment_block {
+//     using vec_t = std::vector<char*>;
+//     vec_t _vec; // of lines of text considered to be part of a commented region
+
+// public:
+//     comment_block(char* first_line) { append_line(first_line); }
+
+//     void append_line(char* line) { _vec.push_back(line); }
+
+//     void append_blank(int n_blank_lines = 1) {
+//         for (int i = n_blank_lines; i > 0; --i) _vec.push_back(nullptr);
+//     }
+
+//     vec_t::size_type      size()  const noexcept { return _vec.size(); }
+//     bool                  empty() const noexcept { return size() == 0; }
+//     vec_t::iterator       begin()       noexcept { return _vec.begin(); }
+//     vec_t::iterator       end()         noexcept { return _vec.end(); }
+//     vec_t::const_iterator begin() const noexcept { return _vec.cbegin(); }
+//     vec_t::const_iterator end()   const noexcept { return _vec.cend(); }
+// };
+
+
+/* OBJECT -- generic "any"-type syntax tree node */
 
 class object {
     enum {
+        NIL,
         STRING,
         INTEGER,
         DATE,
         DECIMAL,
         BLOCK,
         LIST,
-    } type;
+    } _type;
 
     union data_union {
         char* s;
@@ -53,18 +82,26 @@ class object {
         /* tell C++ that we'll manage the nontrivial union members outside of this union */
         data_union() {}
         ~data_union() {}
-    } data;
+    } _data;
 
+    floc _loc;
+
+    // unique_ptr<comment_block> _up_precomments;
+    // char* _postcomment;
+
+    void init() noexcept { } // _postcomment = nullptr; }
     void destroy() noexcept; // helper for dtor & move-assignment
 
 public:
+    object() : _type(NIL) {};
 
-    object(char* s = nullptr)    : type(STRING)  { data.s = s; }
-    object(int i)                : type(INTEGER) { data.i = i; }
-    object(date d)               : type(DATE)    { data.d = d; }
-    object(fp3 f)                : type(DECIMAL) { data.f = f; }
-    object(unique_ptr<block> up) : type(BLOCK)   { new (&data.up_block) unique_ptr<block>(std::move(up)); }
-    object(unique_ptr<list> up)  : type(LIST)    { new (&data.up_list) unique_ptr<list>(std::move(up)); }
+    object(char* s, const floc& fl) : _type(STRING),  _loc(fl) { _data.s = s; init(); }
+    object(int i,   const floc& fl) : _type(INTEGER), _loc(fl) { _data.i = i; init(); }
+    object(date d,  const floc& fl) : _type(DATE),    _loc(fl) { _data.d = d; init(); }
+    object(fp3 f,   const floc& fl) : _type(DECIMAL), _loc(fl) { _data.f = f; init(); }
+    // object()                     : _type(EMPTY)   { memset(&_data, 0, sizeof(_data)); init(); }
+    object(unique_ptr<block> up, const floc& fl) : _type(BLOCK), _loc(fl) { new (&_data.up_block) unique_ptr<block>(std::move(up)); init(); }
+    object(unique_ptr<list> up,  const floc& fl) : _type(LIST),  _loc(fl) { new (&_data.up_list) unique_ptr<list>(std::move(up)); init(); }
 
     /* move-assignment operator */
     object& operator=(object&& other);
@@ -75,23 +112,32 @@ public:
     /* destructor */
     ~object() { destroy(); }
 
+    floc const& location() const noexcept { return _loc; }
+    floc&       location()       noexcept { return _loc; }
+    // const comment_block* precomments() const noexcept { return _up_precomments.get(); }
+    // const char*          postcomment() const noexcept { return _postcomment; }
+
     /* type accessors */
-    bool is_string()  const noexcept { return type == STRING; }
-    bool is_integer() const noexcept { return type == INTEGER; }
-    bool is_date()    const noexcept { return type == DATE; }
-    bool is_decimal() const noexcept { return type == DECIMAL; }
-    bool is_block()   const noexcept { return type == BLOCK; }
-    bool is_list()    const noexcept { return type == LIST; }
+    bool is_string()  const noexcept { return _type == STRING; }
+    bool is_integer() const noexcept { return _type == INTEGER; }
+    bool is_date()    const noexcept { return _type == DATE; }
+    bool is_decimal() const noexcept { return _type == DECIMAL; }
+    // bool is_empty()   const noexcept { return _type == EMPTY; }
+    bool is_block()   const noexcept { return _type == BLOCK; }
+    bool is_list()    const noexcept { return _type == LIST; }
     bool is_number()  const noexcept { return is_integer() || is_decimal(); }
 
     /* data accessors (unchecked type) */
-    char*  as_string()  const noexcept { return data.s; }
-    int    as_integer() const noexcept { return data.i; }
-    date   as_date()    const noexcept { return data.d; }
-    fp3    as_decimal() const noexcept { return data.f; }
-    block* as_block()   const noexcept { return data.up_block.get(); }
-    list*  as_list()    const noexcept { return data.up_list.get(); }
-    fp3    as_number()  const noexcept { return (is_decimal()) ? data.f : fp3(data.i); }
+    char*  as_string()  const noexcept { return _data.s; }
+    int    as_integer() const noexcept { return _data.i; }
+    date   as_date()    const noexcept { return _data.d; }
+    fp3    as_decimal() const noexcept { return _data.f; }
+    block* as_block()   const noexcept { return _data.up_block.get(); }
+    list*  as_list()    const noexcept { return _data.up_list.get(); }
+    fp3    as_number()  const noexcept { return (is_decimal()) ? _data.f : fp3(_data.i); }
+
+    // void set_precomments(unique_ptr<comment_block> up) noexcept { _up_precomments = std::move(up); }
+    // void set_postcomment(char* str) noexcept { _postcomment = str; }
 
     /* convenience equality operator overloads */
     bool operator==(const char* s)        const noexcept { return is_string() && strcmp(as_string(), s) == 0; }
@@ -99,12 +145,6 @@ public:
     bool operator==(int i)  const noexcept { return is_integer() && as_integer() == i; }
     bool operator==(date d) const noexcept { return is_date() && as_date() == d; }
     bool operator==(fp3 f)  const noexcept { return is_number() && as_number() == f; }
-
-    bool operator!=(const char* s)        const noexcept { return !is_string() || strcmp(as_string(), s); }
-    bool operator!=(const std::string& s) const noexcept { return !is_string() || s != as_string(); }
-    bool operator!=(int i)  const noexcept { return !is_integer() || as_integer() != i; }
-    bool operator!=(date d) const noexcept { return !is_date() || as_date() != d; }
-    bool operator!=(fp3 f)  const noexcept { return !is_number() || as_number() != f; }
 
     void print(std::ostream&, uint indent = 0) const;
 };
@@ -122,15 +162,15 @@ public:
 
     void print(std::ostream&, uint indent = 0) const;
 
-    object&       operator[](size_t i)       { return _vec[i]; }
-    const object& operator[](size_t i) const { return _vec[i]; }
+    object&       operator[](size_t i)       noexcept { return _vec[i]; }
+    const object& operator[](size_t i) const noexcept { return _vec[i]; }
 
-    vec_t::size_type      size() const  { return _vec.size(); }
-    bool                  empty() const { return size() == 0; }
-    vec_t::iterator       begin()       { return _vec.begin(); }
-    vec_t::iterator       end()         { return _vec.end(); }
-    vec_t::const_iterator begin() const { return _vec.cbegin(); }
-    vec_t::const_iterator end() const   { return _vec.cend(); }
+    vec_t::size_type      size()  const noexcept { return _vec.size(); }
+    bool                  empty() const noexcept { return size() == 0; }
+    vec_t::iterator       begin()       noexcept { return _vec.begin(); }
+    vec_t::iterator       end()         noexcept { return _vec.end(); }
+    vec_t::const_iterator begin() const noexcept { return _vec.cbegin(); }
+    vec_t::const_iterator end()   const noexcept { return _vec.cend(); }
 };
 
 
@@ -200,12 +240,12 @@ public:
 
     void print(std::ostream&, uint indent = 0) const;
 
-    vec_t::size_type      size() const  { return _vec.size(); }
-    bool                  empty() const { return size() == 0; }
-    vec_t::iterator       begin()       { return _vec.begin(); }
-    vec_t::iterator       end()         { return _vec.end(); }
-    vec_t::const_iterator begin() const { return _vec.cbegin(); }
-    vec_t::const_iterator end() const   { return _vec.cend(); }
+    vec_t::size_type      size()  const noexcept { return _vec.size(); }
+    bool                  empty() const noexcept { return size() == 0; }
+    vec_t::iterator       begin()       noexcept { return _vec.begin(); }
+    vec_t::iterator       end()         noexcept { return _vec.end(); }
+    vec_t::const_iterator begin() const noexcept { return _vec.cbegin(); }
+    vec_t::const_iterator end()   const noexcept { return _vec.cend(); }
 
     /* map accessor for statements by LHS statement key (if string-type)
      * if not found, returns this object's end iterator.
@@ -222,22 +262,17 @@ public:
 };
 
 
-/* PARSER -- construct a parse tree whose resources are owned by the parser via the parser's constructor */
+/* PARSER -- construct a parse tree from a file whose resources are owned by the parser object */
 
-class parser : public lexer {
-    struct saved_token : public token {
-        char buf[128];
-        saved_token() : token(token::END, &buf[0]) { }
-    };
+class parser : public lexer<2> { // derives from a lexer with 2 tokens of lookahead
+    typedef lexer<2> super;
+    // we keep a raw pointer to the last-parsed object so that we may associate a comment token following it
+    // on the same line with the object as a postcomment.
+    //object* _last_parsed_object;
 
-    enum {
-        NORMAL, // read from lexer::next(...)
-        TOK1,   // read from tok1, then tok2
-        TOK2,   // read from tok2, then lexer::next()
-    } _state;
-
-    saved_token _tok1;
-    saved_token _tok2;
+    /* we accrue free-standing comments here before associating them with a
+     * pdx::object later in the parse (as precomments to it) */
+    //unique_ptr<comment_block> up_comments;
 
     cstr_pool<char> _string_pool;
     unique_ptr<block> _up_root_block;
@@ -249,17 +284,21 @@ protected:
 
     char* strdup(const char* s) { return _string_pool.strdup(s); }
 
-    void next(token*, bool eof_ok = false);
-    void next_expected(token*, uint type);
-    void unexpected_token(const token&) const;
-    void save_and_lookahead(token*);
+    token& next(bool eof_ok = false);
+    token& next_expected(uint type);
+    void   unexpected_token(const token&) const;
+
+    // at current point in input token stream, consume all consecutive comment tokens and attach them to the
+    // appropriate AST objects, leaving us to definitely not deal with a comment token next.
+    // void consume_comments(); FIXME
 
 public:
     parser() = delete;
-    parser(const char* p, bool is_save = false)
-        : lexer(p), _state(NORMAL) { _up_root_block = std::make_unique<block>(*this, true, is_save); }
     parser(const std::string& p, bool is_save = false) : parser(p.c_str(), is_save) {}
     parser(const fs::path& p, bool is_save = false) : parser(p.string().c_str(), is_save) {}
+    parser(const char* p, bool is_save = false) : lexer(p) { //, _last_parsed_object(nullptr) {
+        _up_root_block = std::make_unique<block>(*this, true, is_save);
+    }
 
     block* root_block() noexcept { return _up_root_block.get(); }
     error_queue& errors() noexcept { return _errors; }

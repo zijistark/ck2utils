@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "ck2/common.h"
-
 #include "ck2/vfs.h"
 #include "ck2/date.h"
 #include "ck2/fp_decimal.h"

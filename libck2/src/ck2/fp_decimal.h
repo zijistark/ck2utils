@@ -41,7 +41,7 @@ public:
     static const int32_t invalid = INT32_MIN; // cannot be represented in any fp_decimal<D in 1..9>, so we'll use it as our NaN
 
 public:
-    fp_decimal(char* src, const file_location&, error_queue&); // for construction while parsing
+    fp_decimal(char* src, const floc&, error_queue&); // for construction while parsing
     fp_decimal(double f) : _m( f * scale + 0.5 )  {}
     fp_decimal(float f)  : _m( f * scale + 0.5f ) {}
     fp_decimal(int i)    : _m( i * scale ) {}
@@ -103,7 +103,7 @@ _CK2_NAMESPACE_BEGIN
  * DECIMAL: -?[0-9]+\.[0-9]*
  */
 template<uint D>
-fp_decimal<D>::fp_decimal(char* src, const file_location& loc, error_queue& errors) {
+fp_decimal<D>::fp_decimal(char* src, const floc& loc, error_queue& errors) {
 
     bool is_negative = false;
     const char* s_i = src;

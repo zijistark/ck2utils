@@ -3,7 +3,6 @@
 #pragma once
 
 #include "common.h"
-#include <cstring>
 
 
 _CK2_NAMESPACE_BEGIN
@@ -14,14 +13,17 @@ _CK2_NAMESPACE_BEGIN
  *         with equality, comparison/ordering, and hash functionality.
  *
  * it might be useful in the future to template this class for different types
- * of characters, but I've no use case presently.
+ * of characters (e.g., at least for mutable C-strings), but I've no use case presently.
  */
 
 class cstr {
-    char const* _ptr;
+    const char*  _ptr;
 
 public:
-    cstr(char const* ptr = nullptr) : _ptr(ptr) {}
+    cstr(const char* ptr = nullptr) : _ptr(ptr) {}
+
+    bool empty() const noexcept { return (_ptr == nullptr || _ptr[0] == '\0'); }
+    bool null()  const noexcept { return (_ptr == nullptr); }
 
     /* equivalence & lexicographical ordering */
     bool operator==(const cstr& other) const noexcept { return strcmp(_ptr, other._ptr) == 0; }

@@ -16,7 +16,7 @@ class date {
     int8_t  _d;
 
 public:
-    date(char* src, const file_location&, error_queue&); // only for use on mutable date-strings known to be well-formed
+    date(char* src, const floc&, error_queue&); // only for use on mutable date-strings known to be well-formed
     date(int16_t year, int8_t month, int8_t day) : _y(year), _m(month), _d(day) {}
 
     int16_t year()  const noexcept { return _y; }
