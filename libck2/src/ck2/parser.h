@@ -116,11 +116,11 @@ public:
     // const char*          postcomment() const noexcept { return _postcomment; }
 
     /* type accessors */
+    bool is_null()    const noexcept { return _type == NIL; }
     bool is_string()  const noexcept { return _type == STRING; }
     bool is_integer() const noexcept { return _type == INTEGER; }
     bool is_date()    const noexcept { return _type == DATE; }
     bool is_decimal() const noexcept { return _type == DECIMAL; }
-    // bool is_empty()   const noexcept { return _type == EMPTY; }
     bool is_block()   const noexcept { return _type == BLOCK; }
     bool is_list()    const noexcept { return _type == LIST; }
     bool is_number()  const noexcept { return is_integer() || is_decimal(); }
@@ -129,10 +129,9 @@ public:
     char*  as_string()  const noexcept { return _data.s; }
     int    as_integer() const noexcept { return _data.i; }
     date   as_date()    const noexcept { return _data.d; }
-    fp3    as_decimal() const noexcept { return _data.f; }
+    fp3    as_decimal() const noexcept { return (is_integer()) ? fp3(_data.i) : _data.f; }
     block* as_block()   const noexcept { return _data.up_block.get(); }
     list*  as_list()    const noexcept { return _data.up_list.get(); }
-    fp3    as_number()  const noexcept { return (is_decimal()) ? _data.f : fp3(_data.i); }
 
     // void set_precomments(unique_ptr<comment_block> up) noexcept { _up_precomments = std::move(up); }
     // void set_postcomment(char* str) noexcept { _postcomment = str; }
@@ -142,7 +141,7 @@ public:
     bool operator==(const std::string& s) const noexcept { return is_string() && s == as_string(); }
     bool operator==(int i)  const noexcept { return is_integer() && as_integer() == i; }
     bool operator==(date d) const noexcept { return is_date() && as_date() == d; }
-    bool operator==(fp3 f)  const noexcept { return is_number() && as_number() == f; }
+    bool operator==(fp3 f)  const noexcept { return is_number() && as_decimal() == f; }
 
     void print(std::ostream&, uint indent = 0) const;
 };
