@@ -160,6 +160,14 @@ public:
     bool operator==(fp3 f)   const noexcept { return is_number() && as_decimal() == f; }
     bool operator==(binop o) const noexcept { return is_binary_op() && as_binary_op() == o; }
 
+    /* inequality operator overloads (OK, do I really have to be this explicit by default, C++?) */
+    bool operator!=(const char* arg)        const noexcept { return !(*this == arg); }
+    bool operator!=(const std::string& arg) const noexcept { return !(*this == arg); }
+    bool operator!=(int arg)   const noexcept { return !(*this == arg); }
+    bool operator!=(date arg)  const noexcept { return !(*this == arg); }
+    bool operator!=(fp3 arg)   const noexcept { return !(*this == arg); }
+    bool operator!=(binop arg) const noexcept { return !(*this == arg); }
+
     void print(std::ostream&, uint indent = 0) const;
 };
 
