@@ -5,7 +5,7 @@
 #include <cstdlib>
 
 
-_CK2_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 /* construct a `date` from a well-formed date-string non-const `src` (we assume the str is thrown away, as we modify it)
@@ -47,4 +47,4 @@ date::date(char* src, const floc& loc, error_queue& errors) {
 }
 
 
-_CK2_NAMESPACE_END
+_CK2_NAMESPACE_END;

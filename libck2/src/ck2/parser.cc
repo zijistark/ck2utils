@@ -5,10 +5,9 @@
 
 #include <iomanip>
 #include <ctype.h>
-#include <cstring>
 
 
-_CK2_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 block::block(parser& lex, bool is_root, bool is_save) {
@@ -263,4 +262,4 @@ bool looks_like_title(const char* s) {
 }
 
 
-_CK2_NAMESPACE_END
+_CK2_NAMESPACE_END;

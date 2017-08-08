@@ -8,7 +8,7 @@
 #include <boost/filesystem.hpp>
 
 
-_CK2_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 namespace fs = boost::filesystem;
@@ -53,4 +53,4 @@ public:
 };
 
 
-_CK2_NAMESPACE_END
+_CK2_NAMESPACE_END;

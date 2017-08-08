@@ -11,7 +11,7 @@
 #include "file_location.h"
 
 
-_CK2_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 struct error {
@@ -55,4 +55,4 @@ public:
 };
 
 
-_CK2_NAMESPACE_END
+_CK2_NAMESPACE_END;

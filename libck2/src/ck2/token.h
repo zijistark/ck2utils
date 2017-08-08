@@ -4,7 +4,7 @@
 #include "common.h"
 #include "file_location.h"
 
-_CK2_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 class token {
@@ -58,4 +58,4 @@ public:
 };
 
 
-_CK2_NAMESPACE_END
+_CK2_NAMESPACE_END;

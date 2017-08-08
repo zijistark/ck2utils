@@ -12,7 +12,7 @@
 #include <cstdlib>
 
 
-_CK2_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 class va_error : public std::exception {
@@ -67,4 +67,4 @@ public:
 
 
 
-_CK2_NAMESPACE_END
+_CK2_NAMESPACE_END;

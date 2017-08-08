@@ -4,7 +4,7 @@
 #include "common.h"
 
 
-_CK2_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 class file_location {
@@ -31,4 +31,4 @@ public:
 using floc = file_location;
 
 
-_CK2_NAMESPACE_END
+_CK2_NAMESPACE_END;

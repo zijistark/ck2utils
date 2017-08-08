@@ -20,7 +20,7 @@
 #include <boost/filesystem.hpp>
 
 
-_CK2_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 using std::unique_ptr;
@@ -331,7 +331,7 @@ inline uint title_tier(const char* s) {
 bool looks_like_title(const char*);
 
 
-_CK2_NAMESPACE_END
+_CK2_NAMESPACE_END;
 
 
 inline std::ostream& operator<<(std::ostream& os, const ck2::block& a) { a.print(os); return os; }

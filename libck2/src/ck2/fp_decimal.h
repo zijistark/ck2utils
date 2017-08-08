@@ -15,7 +15,7 @@
 #include "error_queue.h"
 
 
-_CK2_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 /* exp10<N> -- static computation of the Nth power of 10 */
@@ -73,7 +73,7 @@ private:
 };
 
 
-_CK2_NAMESPACE_END
+_CK2_NAMESPACE_END;
 
 
 #include <cstring>
@@ -92,7 +92,7 @@ std::ostream& operator<<(std::ostream& os, ck2::fp_decimal<D> fp) {
 }
 
 
-_CK2_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 /* construct from well-formed c-string. as mentioned, this conversion routine is intended to be run by the parser after
@@ -175,4 +175,4 @@ fp_decimal<D>::fp_decimal(char* src, const floc& loc, error_queue& errors) {
 }
 
 
-_CK2_NAMESPACE_END
+_CK2_NAMESPACE_END;

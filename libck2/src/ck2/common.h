@@ -14,7 +14,7 @@
 #include <cstring>
 
 
-_CK2_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 typedef unsigned int uint;
@@ -81,7 +81,7 @@ static inline size_t mdh_strncpy(char* dst, const char* src, size_t length) {
     return n;
 }
 
-_CK2_NAMESPACE_END
+_CK2_NAMESPACE_END;
 
 
 #endif

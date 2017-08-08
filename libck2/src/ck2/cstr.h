@@ -5,7 +5,7 @@
 #include "common.h"
 
 
-_CK2_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 /* CSTR -- light wrapper class for a pointer to a zero-terminated, C-style string.
@@ -34,7 +34,7 @@ public:
 };
 
 
-_CK2_NAMESPACE_END
+_CK2_NAMESPACE_END;
 
 
 /* inject std::hash<ck2::cstr> specialization */

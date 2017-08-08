@@ -5,7 +5,7 @@
 #include "error_queue.h"
 
 
-_CK2_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 #pragma pack(push, 1)
@@ -43,7 +43,7 @@ public:
 #pragma pack(pop)
 
 
-_CK2_NAMESPACE_END
+_CK2_NAMESPACE_END;
 
 
 inline std::ostream& operator<<(std::ostream& os, ck2::date d) {
