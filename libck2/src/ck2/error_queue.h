@@ -46,12 +46,12 @@ public:
     template<class... Args>
     void push(Args&&... args) { _vec.emplace_back( std::forward<Args>(args)... ); }
 
-    vec_t::size_type      size() const  { return _vec.size(); }
-    bool                  empty() const { return size() == 0; }
-    vec_t::iterator       begin()       { return _vec.begin(); }
-    vec_t::iterator       end()         { return _vec.end(); }
-    vec_t::const_iterator begin() const { return _vec.cbegin(); }
-    vec_t::const_iterator end() const   { return _vec.cend(); }
+    vec_t::size_type      size()  const noexcept { return _vec.size(); }
+    bool                  empty() const noexcept { return size() == 0; }
+    vec_t::iterator       begin()       noexcept { return _vec.begin(); }
+    vec_t::iterator       end()         noexcept { return _vec.end(); }
+    vec_t::const_iterator begin() const noexcept { return _vec.cbegin(); }
+    vec_t::const_iterator end()   const noexcept { return _vec.cend(); }
 };
 
 

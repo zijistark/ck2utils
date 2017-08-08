@@ -275,7 +275,7 @@ class parser : public lexer<2> { // derives from a lexer with 2 tokens of lookah
     //object* _last_parsed_object;
 
     /* we accrue free-standing comments here before associating them with a
-     * pdx::object later in the parse (as precomments to it) */
+     * ck2::object later in the parse (as precomments to it) */
     //unique_ptr<comment_block> up_comments;
 
     cstr_pool<char> _string_pool;

@@ -21,8 +21,8 @@ public:
     const char* pathname() const noexcept { return _pathname; }
     uint        line()     const noexcept { return _line; }
 
-    void set_pathname(const char* path) noexcept { _pathname = path; }
-    void set_line(uint line)            noexcept { _line = line; }
+    void pathname(const char* path) noexcept { _pathname = path; }
+    void line(uint line)            noexcept { _line = line; }
 };
 
 

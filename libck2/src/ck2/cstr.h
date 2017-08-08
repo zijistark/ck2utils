@@ -27,7 +27,7 @@ public:
 
     /* equivalence & lexicographical ordering */
     bool operator==(const cstr& other) const noexcept { return strcmp(_ptr, other._ptr) == 0; }
-    bool operator<(const cstr& other) const noexcept { return strcmp(_ptr, other._ptr) < 0; }
+    bool operator<(const cstr& other)  const noexcept { return strcmp(_ptr, other._ptr) < 0; }
 
     /* gimme that pointer back! */
     char const* data() const noexcept { return _ptr; }

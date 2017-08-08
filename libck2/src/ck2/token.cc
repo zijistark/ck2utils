@@ -2,7 +2,7 @@
 #include "token.h"
 
 const char* ck2::token::TYPE_MAP[] = {
-    "END",
+    "EOF",
     "INTEGER",
     "OPERATOR",
     "OPEN",
