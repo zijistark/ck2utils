@@ -58,6 +58,15 @@ class parser;
 // };
 
 
+enum class binary_op : int {
+    EQ,  // =
+    LT,  // <
+    GT,  // >
+    LTE, // <=
+    GTE, // >=
+    EQ2, // ==
+};
+
 /* OBJECT -- generic "any"-type syntax tree node */
 
 class object {
@@ -67,15 +76,19 @@ class object {
         INTEGER,
         DATE,
         DECIMAL,
+        BINARY_OP,
         BLOCK,
         LIST,
     } _type;
+
+    using binop = binary_op;
 
     union data_union {
         char* s;
         int   i;
         date  d;
         fp3   f;
+        binop o;
         unique_ptr<block> up_block;
         unique_ptr<list>  up_list;
 
@@ -93,11 +106,12 @@ class object {
     void destroy() noexcept; // helper for dtor & move-assignment
 
 public:
-    object(const floc& fl = floc()) : _type(NIL),     _loc(fl) {}
-    object(char* s, const floc& fl) : _type(STRING),  _loc(fl) {}
-    object(int i,   const floc& fl) : _type(INTEGER), _loc(fl) {}
-    object(date d,  const floc& fl) : _type(DATE),    _loc(fl) {}
-    object(fp3 f,   const floc& fl) : _type(DECIMAL), _loc(fl) {}
+    object(const floc& fl = floc()) : _type(NIL),       _loc(fl) {}
+    object(char* s, const floc& fl) : _type(STRING),    _loc(fl) { _data.s = s; }
+    object(int i,   const floc& fl) : _type(INTEGER),   _loc(fl) { _data.i = i; }
+    object(date d,  const floc& fl) : _type(DATE),      _loc(fl) { _data.d = d; }
+    object(fp3 f,   const floc& fl) : _type(DECIMAL),   _loc(fl) { _data.f = f; }
+    object(binop o, const floc& fl) : _type(BINARY_OP), _loc(fl) { _data.o = o; }
     object(unique_ptr<block> up, const floc& fl) : _type(BLOCK), _loc(fl) { new (&_data.up_block) unique_ptr<block>(std::move(up)); }
     object(unique_ptr<list> up,  const floc& fl) : _type(LIST),  _loc(fl) { new (&_data.up_list) unique_ptr<list>(std::move(up)); }
 
@@ -116,22 +130,24 @@ public:
     // const char*          postcomment() const noexcept { return _postcomment; }
 
     /* type accessors */
-    bool is_null()    const noexcept { return _type == NIL; }
-    bool is_string()  const noexcept { return _type == STRING; }
-    bool is_integer() const noexcept { return _type == INTEGER; }
-    bool is_date()    const noexcept { return _type == DATE; }
-    bool is_decimal() const noexcept { return _type == DECIMAL; }
-    bool is_block()   const noexcept { return _type == BLOCK; }
-    bool is_list()    const noexcept { return _type == LIST; }
-    bool is_number()  const noexcept { return is_integer() || is_decimal(); }
+    bool is_null()      const noexcept { return _type == NIL; }
+    bool is_string()    const noexcept { return _type == STRING; }
+    bool is_integer()   const noexcept { return _type == INTEGER; }
+    bool is_date()      const noexcept { return _type == DATE; }
+    bool is_decimal()   const noexcept { return _type == DECIMAL; }
+    bool is_binary_op() const noexcept { return _type == BINARY_OP; }
+    bool is_block()     const noexcept { return _type == BLOCK; }
+    bool is_list()      const noexcept { return _type == LIST; }
+    bool is_number()    const noexcept { return is_integer() || is_decimal(); }
 
     /* data accessors (unchecked type) */
-    char*  as_string()  const noexcept { return _data.s; }
-    int    as_integer() const noexcept { return _data.i; }
-    date   as_date()    const noexcept { return _data.d; }
-    fp3    as_decimal() const noexcept { return (is_integer()) ? fp3(_data.i) : _data.f; }
-    block* as_block()   const noexcept { return _data.up_block.get(); }
-    list*  as_list()    const noexcept { return _data.up_list.get(); }
+    char*  as_string()    const noexcept { return _data.s; }
+    int    as_integer()   const noexcept { return _data.i; }
+    date   as_date()      const noexcept { return _data.d; }
+    fp3    as_decimal()   const noexcept { return (is_integer()) ? fp3(_data.i) : _data.f; }
+    binop  as_binary_op() const noexcept { return _data.o; }
+    block* as_block()     const noexcept { return _data.up_block.get(); }
+    list*  as_list()      const noexcept { return _data.up_list.get(); }
 
     // void set_precomments(unique_ptr<comment_block> up) noexcept { _up_precomments = std::move(up); }
     // void set_postcomment(char* str) noexcept { _postcomment = str; }
@@ -139,9 +155,10 @@ public:
     /* convenience equality operator overloads */
     bool operator==(const char* s)        const noexcept { return is_string() && strcmp(as_string(), s) == 0; }
     bool operator==(const std::string& s) const noexcept { return is_string() && s == as_string(); }
-    bool operator==(int i)  const noexcept { return is_integer() && as_integer() == i; }
-    bool operator==(date d) const noexcept { return is_date() && as_date() == d; }
-    bool operator==(fp3 f)  const noexcept { return is_number() && as_decimal() == f; }
+    bool operator==(int i)   const noexcept { return is_integer() && as_integer() == i; }
+    bool operator==(date d)  const noexcept { return is_date() && as_date() == d; }
+    bool operator==(fp3 f)   const noexcept { return is_number() && as_decimal() == f; }
+    bool operator==(binop o) const noexcept { return is_binary_op() && as_binary_op() == o; }
 
     void print(std::ostream&, uint indent = 0) const;
 };
@@ -171,30 +188,20 @@ public:
 };
 
 
-enum class opcode {
-    EQ,  // =
-    LT,  // <
-    GT,  // >
-    LTE, // <=
-    GTE, // >=
-    EQ2, // ==
-};
-
-
 /* STATEMENT -- statements are pairs of objects and an operator/separator */
 
 class statement {
     object _k;
+    object _op;
     object _v;
-    opcode _op;
 
 public:
     statement() = delete;
-    statement(object& k, object& v, opcode op) : _k(std::move(k)), _v(std::move(v)), _op(op) {}
+    statement(object& k, object& op, object& v) : _k(std::move(k)), _op(std::move(op)), _v(std::move(v)) {}
 
-    const object&  key()   const noexcept { return _k; }
-    const object&  value() const noexcept { return _v; }
-    opcode         op()    const noexcept { return _op; }
+    object const& key()   const noexcept { return _k; }
+    object const& op()    const noexcept { return _op; }
+    object const& value() const noexcept { return _v; }
 
     void print(std::ostream&, uint indent = 0) const;
 };

@@ -10,6 +10,22 @@
 _CK2_NAMESPACE_BEGIN;
 
 
+struct binary_op_text {
+    const char* text;
+    binary_op op;
+};
+
+const binary_op_text BINARY_OP_TABLE[] = {
+    { "=",  binary_op::EQ },
+    { "<",  binary_op::LT },
+    { ">",  binary_op::GT },
+    { "<=", binary_op::LTE },
+    { ">=", binary_op::GTE },
+    { "==", binary_op::EQ2 },
+    { nullptr, binary_op::EQ }, // sentinel
+};
+
+
 block::block(parser& lex, bool is_root, bool is_save) {
 
     if (is_root && is_save) {
@@ -45,11 +61,16 @@ block::block(parser& lex, bool is_root, bool is_save) {
         /* ...done with key */
 
         token& tB = lex.next_expected(token::OPERATOR);
-        opcode op = (strcmp(tB.text(), "=") == 0) ? opcode::EQ :
-                    (strcmp(tB.text(), "<") == 0) ? opcode::LT :
-                    (strcmp(tB.text(), ">") == 0) ? opcode::GT :
-                    (strcmp(tB.text(), "<=") == 0) ? opcode::LTE :
-                    (strcmp(tB.text(), ">=") == 0) ? opcode::GTE : opcode::EQ2;
+        object op;
+
+        for (const binary_op_text* p = BINARY_OP_TABLE; p->text; ++p) {
+            if (strcmp(tB.text(), p->text) == 0) {
+                op = object{ p->op, tB.location() };
+                break;
+            }
+        }
+
+        assert( op.is_binary_op() || !"Invalid token when expecting binary operator" );
 
         // FIXME: we need to also record the file location of the operator token! [for completeness]
 
@@ -88,7 +109,7 @@ block::block(parser& lex, bool is_root, bool is_save) {
         else
             lex.unexpected_token(tC);
 
-        _vec.emplace_back(key, val, op);
+        _vec.emplace_back(key, op, val);
 
         if (key.is_string())
             _map[key.as_string()] = _vec.size() - 1;
@@ -103,7 +124,7 @@ void object::destroy() noexcept {
         case INTEGER:
         case DATE:
         case DECIMAL:
-        // case EMPTY:
+        case BINARY_OP:
             break;
         case BLOCK: _data.up_block.~unique_ptr<block>(); break;
         case LIST:  _data.up_list.~unique_ptr<list>(); break;
@@ -121,14 +142,14 @@ object& object::operator=(object&& other) {
     // _postcomment = other._postcomment;
 
     switch (other._type) {
-        case NIL: break;
-        case STRING:  _data.s = other._data.s; break;
-        case INTEGER: _data.i = other._data.i; break;
-        case DATE:    _data.d = other._data.d; break;
-        case DECIMAL: _data.f = other._data.f; break;
-//        case EMPTY:   memset(&_data, 0, sizeof(_data)); break;
-        case BLOCK:   new (&_data.up_block) unique_ptr<block>(std::move(other._data.up_block)); break;
-        case LIST:    new (&_data.up_list)  unique_ptr<list>(std::move(other._data.up_list));   break;
+        case NIL:       break;
+        case STRING:    _data.s = other._data.s; break;
+        case INTEGER:   _data.i = other._data.i; break;
+        case DATE:      _data.d = other._data.d; break;
+        case DECIMAL:   _data.f = other._data.f; break;
+        case BINARY_OP: _data.o = other._data.o; break;
+        case BLOCK:     new (&_data.up_block) unique_ptr<block>(std::move(other._data.up_block)); break;
+        case LIST:      new (&_data.up_list)  unique_ptr<list>(std::move(other._data.up_list));   break;
     }
 
     _loc = other._loc;
