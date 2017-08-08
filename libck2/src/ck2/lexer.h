@@ -67,16 +67,14 @@ public:
     // caller keeps asking us for tokens. [basically, the token queue is always full, if even only with END tokens.]
     token& next();
 
-    // peek into the token lookahead queue by logical position of token. position 0 is simply the next token were we to
-    // call next(...), and position 1 would be the further next in the input stream, and so on. if the input stream has
-    // ended (EOF or unmatched text) sometime before the lookahead token at which we're peeking, we'll just see an END
-    // token. [again, basically, the token queue is always full of *something* valid.]
-    //
-    // NOTE: position must be less than or equal to the TokenLookahead lexer class template parameter, or else
-    // UNDEFINED BEHAVIOR (unless compiler doesn't optimize away the assert below -- still, though)!
-    token& peek(uint position) noexcept {
-        assert( position <= TokenLookahead && "cannot peek at position greater than lexer's TokenLookahead" );
-        return _tq[ (_head_idx + position) % TokenQueueSize ];
+    // peek into the token lookahead queue by logical index, Position, of token. position 0 is simply the next token
+    // were we to call next(...), and position 1 would be second to next in the input stream (the 1st lookahead token),
+    // and so on. if the input stream has ended (EOF or unmatched text) sometime before the lookahead token at which
+    // we're peeking, we'll just see an END token -- no harm, no foul.
+    template<const uint Position>
+    token& peek() noexcept {
+        static_assert(Position <= TokenLookahead, "cannot peek at position greater than lexer's configured number of lookahead tokens");
+        return _tq[ (_head_idx + Position) % TokenQueueSize ];
     }
 };
 

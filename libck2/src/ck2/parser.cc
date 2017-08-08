@@ -58,10 +58,10 @@ block::block(parser& lex, bool is_root, bool is_save) {
         token& tC = lex.next();
 
         if (tC.type() == token::OPEN) {
-            // need to do token lookahead for 2 tokens to determine whether this is opening a list or a block
+            // need to lookahead 2 tokens to determine whether this is opening a list or a block
 
-            token& t1 = lex.peek(1);
-            token& t2 = lex.peek(2);
+            token& t1 = lex.peek<1>();
+            token& t2 = lex.peek<2>();
 
             if (t1.type() == token::CLOSE) { // empty block (or list, but we choose to see it as a block)
                 // FIXME: optimize: empty blocks are a waste of memory and cycles and ambiguous with empty lists, so add
