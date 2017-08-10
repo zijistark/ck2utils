@@ -52,6 +52,41 @@ class lexer {
         yyrestart(yyin);
     }
 
+    const char* state_name() const noexcept {
+        return (_state == NORMAL) ? "NORMAL" : (_state == FAILED) ? "FAILED" : "DONE";
+    }
+
+    void dump_queue() const {
+        printf("[");
+
+        for (uint i = 0; i < TokenLookahead; ++i) {
+            dump_queue_token(_tq[ (_head_idx + i) % TokenQueueSize ]);
+            printf(", ");
+        }
+
+        dump_queue_token(_tq[ (_head_idx + TokenLookahead) % TokenQueueSize ]);
+        printf("]\n");
+    }
+
+    void dump_queue_token(const token& t) const {
+        static const size_t PREVIEW_MAX_LEN = 20;
+        static const size_t PREVIEW_MAX_SZ = PREVIEW_MAX_LEN + 1;
+        char preview[PREVIEW_MAX_SZ + 3];
+        size_t text_len = 0;
+
+        if (t.text() && (text_len = strlen(t.text()))) {
+
+            preview[0] = '\0';
+            size_t ideal_n = text_len + 1;
+            size_t n = mdh_strncpy<PREVIEW_MAX_SZ>(&preview[0], t.text(), ideal_n);
+            if (n != ideal_n) strcat(preview, "...");
+
+            printf("%s: '%s'", t.type_name(), preview);
+        }
+        else
+            printf("%s", t.type_name());
+    }
+
 protected:
     const char* pathname() const noexcept { return _pathname; }
 
@@ -85,7 +120,10 @@ lexer<TokenLookahead>::lexer(const char* pathname)
       _pathname(pathname),
       _state(NORMAL),
       _head_idx(0),
-      _tail_idx(0) {
+      _tail_idx(TokenLookahead + 1) {
+
+    printf("ctor {  # head=%u, tail=%u, %s\n    ", _head_idx, _tail_idx, state_name());
+    dump_queue();
 
     if (_f.get() == nullptr)
         throw va_error("Could not open file: %s", pathname);
@@ -95,6 +133,8 @@ lexer<TokenLookahead>::lexer(const char* pathname)
 
     // pre-fill token queue [fully-constructed lexer object invariant: token queue is always full of valid tokens]
     for (size_t i = 0; i <= TokenLookahead; ++i) enqueue_token();
+    printf("}  # head=%u, tail=%u, %s\n", _head_idx, _tail_idx, state_name());
+    dump_queue();
 }
 
 
@@ -132,31 +172,35 @@ void lexer<TokenLookahead>::read_token_into(token& t) {
 
 template<const size_t TokenLookahead>
 void lexer<TokenLookahead>::enqueue_token() {
-    auto next_idx = (_tail_idx + 1) % TokenQueueSize;
+    uint next_idx = (_tail_idx + 1) % TokenQueueSize;
     token& next_tok = _tq[next_idx];
     token& tail_tok = _tq[_tail_idx];
 
     _tail_idx = next_idx;
 
-    if (_state == FAILED)
-        _state = DONE;
-
-    if (_state == DONE) {
+    if (_state == FAILED || _state == DONE) {
         next_tok.type( token::END );
         next_tok.location( tail_tok.location() );
-        return;
+        if (_state == DONE) strcpy(next_tok.text(), "");
+        _state = DONE;
     }
+    else
+        read_token_into(next_tok);
 
     // _state == NORMAL
-    read_token_into(next_tok);
 }
 
 
 template<const size_t TokenLookahead>
 token& lexer<TokenLookahead>::next() {
+    printf("next {  # %s\n    ", state_name());
+    dump_queue();
     enqueue_token();
     token& head_tok = _tq[_head_idx];
+    printf("    returning %s\n", head_tok.type_name());
     _head_idx = (_head_idx + 1) % TokenQueueSize;
+    printf("}  # %s\n", state_name());
+    dump_queue();
     return head_tok;
 }
 

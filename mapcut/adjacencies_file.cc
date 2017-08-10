@@ -1,6 +1,6 @@
 
 #include "adjacencies_file.h"
-#include <pdx/error.h>
+#include <ck2/error.h>
 
 #include <stdexcept>
 #include <memory>
@@ -21,7 +21,7 @@ static int column_to_int(const char* col, const char* col_name, unsigned int n_l
     int r = atoi(col);
 
     if (r == 0) // 0 is not a valid input integer for this file type (and also atoi's error return code)
-        throw va_error("Value in column '%s' not a valid integer input on line %u: %s", col_name, n_line, path);
+        throw ck2::va_error("Value in column '%s' not a valid integer input on line %u: %s", col_name, n_line, path);
 
     return r;
 }
@@ -34,7 +34,7 @@ adjacencies_file::adjacencies_file(const fs::path& in_path) {
     unique_file_ptr ufp( std::fopen(path, "rb"), std::fclose );
 
     if ( ufp.get() == nullptr )
-        throw va_error("Could not open adjacencies file: %s: %s", strerror(errno), path);
+        throw ck2::va_error("Could not open adjacencies file: %s: %s", strerror(errno), path);
 
     char buf[256];
     unsigned int n_line = 0;
@@ -60,7 +60,7 @@ adjacencies_file::adjacencies_file(const fs::path& in_path) {
             char* prev_end = strchr(cols[c-1], ';');
 
             if (prev_end == nullptr)
-                throw va_error("Adjacency entry on line %u has insufficient amount of columns: %s", n_line, path);
+                throw ck2::va_error("Adjacency entry on line %u has insufficient amount of columns: %s", n_line, path);
 
             *prev_end = '\0';
             cols[c] = prev_end + 1;

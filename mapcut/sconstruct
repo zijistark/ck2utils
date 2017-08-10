@@ -1,0 +1,13 @@
+# -*- python -*-
+
+SConscript('../libck2/sconstruct')
+
+env = Environment()
+env.Append(CXXFLAGS='--std=c++17 -Wall -Wextra -g -O2')
+env.Append(CPPPATH='../libck2/src')
+env.Append(LIBPATH='../libck2/build')
+
+sources = ['main.cc', 'default_map.cc', 'definitions_table.cc', 'provsetup.cc', 'region_file.cc', 'adjacencies_file.cc']
+
+env.Program('mapcut', sources, LIBS=['ck2', 'boost_filesystem', 'boost_system'])
+#env.Program('test_escaping', ['test.cc'])

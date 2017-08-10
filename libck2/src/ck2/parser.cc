@@ -72,28 +72,24 @@ block::block(parser& lex, bool is_root, bool is_save) {
 
         assert( op.is_binary_op() || !"Invalid token when expecting binary operator" );
 
-        // FIXME: we need to also record the file location of the operator token! [for completeness]
-
         /* on to value... */
         object val;
         token& tC = lex.next();
 
         if (tC.type() == token::OPEN) {
-            // need to lookahead 2 tokens to determine whether this is opening a list or a block
+            // need to lookahead at the next token and the first lookahead token to determine whether this OPEN is
+            // opening a list or a block
 
-            token& t1 = lex.peek<1>();
-            token& t2 = lex.peek<2>();
+            token& t1 = lex.peek<0>(); // like next() but doesn't modify the lexer's token queue at all
+            token& t2 = lex.peek<1>();
 
             if (t1.type() == token::CLOSE) { // empty block (or list, but we choose to see it as a block)
                 // FIXME: optimize: empty blocks are a waste of memory and cycles and ambiguous with empty lists, so add
                 // a static object type (i.e., one of the possible dynamic types for ck2::object) that codifies an empty
                 // block OR list
                 val = object{ std::make_unique<block>(), tC.location() };
-                _vec.emplace_back(key, val, op);
-                continue;
             }
-
-            if (t2.type() != token::OPERATOR) // everything but an operator in this position implies this will be a list
+            else if (t2.type() != token::OPERATOR) // all but an operator in this position implies this will be a list
                 val = object{ std::make_unique<list>(lex), tC.location() };
             else // but with the operator in position, it's definitely a block
                 val = object{ std::make_unique<block>(lex), tC.location() };
@@ -176,12 +172,32 @@ list::list(parser& lex) {
     }
 }
 
+
 token& parser::next_expected(uint type) {
     token& t = next();
 
-    if (t.type() != type)
-        throw va_parse_error(t.location(), "Expected %s token but got %s token",
-                             token::TYPE_MAP[type], t.type_name());
+    if (t.type() != type) {
+        // // allocate enough space to be able to hex-escape (i.e., \xFF) every character in the text (4 chars per char).
+        // char val_text[token::TEXT_MAX_LEN*4 + 1];
+        // val_text[0] = '\0';
+
+        // const char* pre_val_text = "";
+        // const char* post_val_text = "";
+
+        // // END tokens don't have defined text components (i.e., it might be stale data), so be careful of those.
+
+        // if (t.type() != token::END && strcmp(t.text(), "") != 0) {
+        //     pre_val_text = " (text: \"";
+        //     auto len = mdh_escape_string<'"'>(&val_text[0], t.text());
+        //     post_val_text = (len == ) ? "\")";
+        // }
+
+        // throw va_parse_error(t.location(), "Expected %s token but got %s%s%s%s",
+        //                      token::TYPE_MAP[type], t.type_name(), pre_val_text, val_text, post_val_text);
+
+        throw va_parse_error(t.location(), "Expected %s token but got %s (value: %s)",
+                             token::TYPE_MAP[type], t.type_name(), t.text());
+    }
 
     return t;
 }

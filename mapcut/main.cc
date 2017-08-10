@@ -4,8 +4,8 @@
 #include "provsetup.h"
 #include "region_file.h"
 #include "adjacencies_file.h"
-#include <pdx.h>
-#include <pdx/error.h>
+#include <ck2.h>
+#include <ck2/error.h>
 
 #include <boost/filesystem.hpp>
 
@@ -48,10 +48,10 @@ typedef std::vector<std::string> strvec_t;
 typedef std::unordered_map<std::string, uint> str2id_map_t;
 
 
-const pdx::block* find_title(const char* title, const pdx::block* p_root);
-void find_titles_under(const pdx::block*, strvec_t& out);
-void fill_county_to_id_map(const pdx::vfs&, const default_map&, const definitions_table&, str2id_map_t& out);
-void blank_title_history(const pdx::vfs&, const strvec_t&);
+const ck2::block* find_title(const char* title, const ck2::block* p_root);
+void find_titles_under(const ck2::block*, strvec_t& out);
+void fill_county_to_id_map(const ck2::vfs&, const default_map&, const definitions_table&, str2id_map_t& out);
+void blank_title_history(const ck2::vfs&, const strvec_t&);
 
 
 class lt_printer {
@@ -60,13 +60,13 @@ class lt_printer {
     uint          indent;
     bool          in_code_block;
 
-    void print(const pdx::block&);
-    void print(const pdx::list&);
-    void print(const pdx::statement&);
-    void print(const pdx::object&);
+    void print(const ck2::block&);
+    void print(const ck2::list&);
+    void print(const ck2::statement&);
+    void print(const ck2::object&);
 
 public:
-    lt_printer(const fs::path& out_path, const strvec_t& top_titles, const pdx::block* p_root_block);
+    lt_printer(const fs::path& out_path, const strvec_t& top_titles, const ck2::block* p_root_block);
 };
 
 
@@ -100,13 +100,13 @@ int main(int argc, char** argv) {
             continue;
         }
 
-        assert( pdx::looks_like_title(t) );
-        assert( pdx::title_tier(t) >= pdx::TIER_COUNT );
+        assert( ck2::looks_like_title(t) );
+        assert( ck2::title_tier(t) >= ck2::TIER_COUNT );
         top_titles.emplace_back(t);
     }
 
     try {
-        pdx::vfs vfs{ VROOT_DIR };
+        ck2::vfs vfs{ VROOT_DIR };
         vfs.push_mod_path(ROOT_DIR);
 
         if (emf) {
@@ -125,14 +125,14 @@ int main(int argc, char** argv) {
         fill_county_to_id_map(vfs, dm, def_tbl, county_to_id_map);
         g_stats.n_counties_before = county_to_id_map.size();
 
-        pdx::parser parse( vfs["common/landed_titles" / TITLES_FILE] );
+        ck2::parser parse( vfs["common/landed_titles" / TITLES_FILE] );
         strvec_t del_titles;
 
         for (const auto& top_title : top_titles) {
-            const pdx::block* p_top_title_block = find_title(top_title.c_str(), parse.root_block());
+            const ck2::block* p_top_title_block = find_title(top_title.c_str(), parse.root_block());
 
             if (p_top_title_block == nullptr)
-                throw va_error("Top de jure title '%s' not found!", top_title.c_str());
+                throw ck2::va_error("Top de jure title '%s' not found!", top_title.c_str());
 
             del_titles.emplace_back(top_title);
             find_titles_under(p_top_title_block, del_titles);
@@ -144,22 +144,22 @@ int main(int argc, char** argv) {
            wasteland */
 
         for (const auto& t : del_titles) {
-            uint tier = pdx::title_tier(t.c_str());
+            uint tier = ck2::title_tier(t.c_str());
 
-            if (tier == pdx::TIER_DUKE) {
+            if (tier == ck2::TIER_DUKE) {
                 /* delete duchy titles from the geographical region file */
                 geo_regions.delete_duchy(t);
                 island_regions.delete_duchy(t);
                 continue;
             }
 
-            if (tier != pdx::TIER_COUNT)
+            if (tier != ck2::TIER_COUNT)
                 continue;
 
             auto i = county_to_id_map.find(t);
 
             if (i == county_to_id_map.end())
-                throw va_error("County not assigned in province history: %s", t.c_str());
+                throw ck2::va_error("County not assigned in province history: %s", t.c_str());
 
             uint id = i->second;
 
@@ -187,7 +187,7 @@ int main(int argc, char** argv) {
             std::string& title = ps_tbl.row_vec[id-1].title;
 
             if (title != t)
-                throw va_error("province_setup: Province %u assigned as %s but it should be %s",
+                throw ck2::va_error("province_setup: Province %u assigned as %s but it should be %s",
                                id, title.c_str(), t.c_str());
 
             title = "";
@@ -243,24 +243,24 @@ int main(int argc, char** argv) {
 }
 
 
-const pdx::block* find_title(const char* top_title, const pdx::block* p_root) {
+const ck2::block* find_title(const char* top_title, const ck2::block* p_root) {
 
-    uint top_title_tier = pdx::title_tier(top_title);
+    uint top_title_tier = ck2::title_tier(top_title);
 
     for (const auto& s : *p_root) {
-        if ( !(s.key().is_string() && pdx::looks_like_title( s.key().as_string() )) )
+        if ( !(s.key().is_string() && ck2::looks_like_title( s.key().as_string() )) )
             continue;
 
         const char* t = s.key().as_string();
         assert( s.value().is_block() );
-        const pdx::block* p = s.value().as_block();
+        const ck2::block* p = s.value().as_block();
 
         if (strcmp(t, top_title) == 0)
             return p; // base case, terminate
 
         /* recursive case... */
 
-        if (pdx::title_tier(t) <= top_title_tier)
+        if (ck2::title_tier(t) <= top_title_tier)
             continue; // skip recursion, because the title's tier is too low
 
         p = find_title(top_title, p); // recurse into title block
@@ -273,24 +273,24 @@ const pdx::block* find_title(const char* top_title, const pdx::block* p_root) {
 }
 
 
-void find_titles_under(const pdx::block* p_root, strvec_t& found_titles) {
+void find_titles_under(const ck2::block* p_root, strvec_t& found_titles) {
 
     for (const auto& s : *p_root) {
-        if ( !(s.key().is_string() && pdx::looks_like_title( s.key().as_string() )) )
+        if ( !(s.key().is_string() && ck2::looks_like_title( s.key().as_string() )) )
             continue;
 
         const char* t = s.key().as_string();
         found_titles.push_back(t);
         assert( s.value().is_block() );
-        const pdx::block* p_block = s.value().as_block();
+        const ck2::block* p_block = s.value().as_block();
 
-        if (pdx::title_tier(t) > pdx::TIER_BARON)
+        if (ck2::title_tier(t) > ck2::TIER_BARON)
             find_titles_under(p_block, found_titles);
     }
 }
 
 
-void fill_county_to_id_map(const pdx::vfs& vfs,
+void fill_county_to_id_map(const ck2::vfs& vfs,
                            const default_map& dm,
                            const definitions_table& def_tbl,
                            str2id_map_t& county_to_id_map) {
@@ -315,13 +315,13 @@ void fill_county_to_id_map(const pdx::vfs& vfs,
 
         const char* county = nullptr;
 
-        pdx::parser parse(real_path);
+        ck2::parser parse(real_path);
 
         for (const auto& s : *parse.root_block()) {
             if (s.key() == "title") {
-                assert( s.value().is_string() && pdx::looks_like_title( s.value().as_string() ) );
+                assert( s.value().is_string() && ck2::looks_like_title( s.value().as_string() ) );
                 county = s.value().as_string();
-                assert( pdx::title_tier(county) == pdx::TIER_COUNT );
+                assert( ck2::title_tier(county) == ck2::TIER_COUNT );
             }
         }
 
@@ -335,14 +335,14 @@ void fill_county_to_id_map(const pdx::vfs& vfs,
         }
 
         if (!county_to_id_map.insert( {county, id} ).second) {
-            throw va_error("County '%s' maps to both province %u and %u (at the least)!",
+            throw ck2::va_error("County '%s' maps to both province %u and %u (at the least)!",
                            county, county_to_id_map[county], id);
         }
     }
 }
 
 
-void blank_title_history(const pdx::vfs& vfs, const strvec_t& deleted_titles) {
+void blank_title_history(const ck2::vfs& vfs, const strvec_t& deleted_titles) {
 
     path title_hist_oroot = OUT_ROOT_DIR / "history/titles";
 
@@ -369,7 +369,7 @@ void blank_title_history(const pdx::vfs& vfs, const strvec_t& deleted_titles) {
             FILE* f;
 
             if ( (f = fopen(title_hist_opath.string().c_str(), "w")) == nullptr )
-                throw va_error("Failed to blank title history: %s: %s",
+                throw ck2::va_error("Failed to blank title history: %s: %s",
                                strerror(errno), title_hist_opath.c_str());
 
             fclose(f);
@@ -380,7 +380,7 @@ void blank_title_history(const pdx::vfs& vfs, const strvec_t& deleted_titles) {
 
 
 
-lt_printer::lt_printer(const fs::path& p, const strvec_t& _top_titles, const pdx::block* p_root_block)
+lt_printer::lt_printer(const fs::path& p, const strvec_t& _top_titles, const ck2::block* p_root_block)
     : os(p.string()), top_titles(_top_titles), indent(0), in_code_block(false) {
 
     if (!os) throw std::runtime_error("Could not write to file: " + p.string());
@@ -390,12 +390,12 @@ lt_printer::lt_printer(const fs::path& p, const strvec_t& _top_titles, const pdx
 }
 
 
-void lt_printer::print(const pdx::block& b) {
+void lt_printer::print(const ck2::block& b) {
     for (const auto& stmt : b) print(stmt);
 }
 
 
-void lt_printer::print(const pdx::list& l) {
+void lt_printer::print(const ck2::list& l) {
     for (const auto& obj : l) {
         print(obj);
         os << ' ';
@@ -403,9 +403,9 @@ void lt_printer::print(const pdx::list& l) {
 }
 
 
-void lt_printer::print(const pdx::statement& s) {
-    const pdx::object& k = s.key();
-    const pdx::object& v = s.value();
+void lt_printer::print(const ck2::statement& s) {
+    const ck2::object& k = s.key();
+    const ck2::object& v = s.value();
 
     bool opened_code_block = false;
 
@@ -448,7 +448,7 @@ void lt_printer::print(const pdx::statement& s) {
 }
 
 
-void lt_printer::print(const pdx::object& o) {
+void lt_printer::print(const ck2::object& o) {
     if (o.is_string()) {
         if (strpbrk(o.as_string(), " \t\r\n'"))
             os << '"' << o.as_string() << '"';

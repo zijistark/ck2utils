@@ -276,8 +276,8 @@ public:
 
 /* PARSER -- construct a parse tree from a file whose resources are owned by the parser object */
 
-class parser : public lexer<2> { // derives from a lexer with 2 tokens of lookahead
-    typedef lexer<2> super;
+class parser : public lexer<1> { // derives from a lexer with 1 token of lookahead
+    typedef lexer<1> super;
     // we keep a raw pointer to the last-parsed object so that we may associate a comment token following it
     // on the same line with the object as a postcomment.
     //object* _last_parsed_object;

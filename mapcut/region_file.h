@@ -10,7 +10,7 @@
 namespace fs = boost::filesystem;
 using std::unique_ptr;
 
-namespace pdx { class block; }
+namespace ck2 { class block; }
 
 
 class region_file {
@@ -36,7 +36,7 @@ private:
 
     std::vector< unique_ptr<region> > _regions;
 
-    unique_ptr<region> parse_region(const char* name, const pdx::block* block, const char* path);
+    unique_ptr<region> parse_region(const char* name, const ck2::block* block, const char* path);
 
 public:
     region_file(const fs::path&);

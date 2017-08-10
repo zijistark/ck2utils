@@ -3,7 +3,7 @@
 #pragma once
 
 #include "default_map.h"
-#include <pdx/vfs.h>
+#include <ck2/vfs.h>
 #include "color.h"
 
 #include <boost/filesystem.hpp>
@@ -28,7 +28,7 @@ private:
     vec_t vec;
 
 public:
-    definitions_table(const pdx::vfs&, const default_map&);
+    definitions_table(const ck2::vfs&, const default_map&);
     void write(const fs::path& path);
 
     size_t size() const noexcept { return vec.size() - 1; }

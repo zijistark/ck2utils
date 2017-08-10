@@ -2,7 +2,7 @@
 #ifndef _MDH_DEFAULT_MAP_H_
 #define _MDH_DEFAULT_MAP_H_
 
-#include <pdx/vfs.h>
+#include <ck2/vfs.h>
 
 #include <boost/filesystem.hpp>
 
@@ -28,7 +28,7 @@ class default_map {
     id_set_t      _major_river_set;
 
 public:
-    default_map(const pdx::vfs& vfs);
+    default_map(const ck2::vfs& vfs);
 
     uint max_province_id() const noexcept { return _max_province_id; }
 

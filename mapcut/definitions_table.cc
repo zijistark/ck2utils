@@ -1,7 +1,7 @@
 
 
 #include "definitions_table.h"
-#include <pdx/error.h>
+#include <ck2/error.h>
 #include "legacy_compat.h"
 
 #include <stdexcept>
@@ -12,7 +12,7 @@
 #include <cerrno>
 
 
-definitions_table::definitions_table(const pdx::vfs& vfs, const default_map& dm) {
+definitions_table::definitions_table(const ck2::vfs& vfs, const default_map& dm) {
 
     vec.reserve(2048);
     vec.emplace_back(row{ "", 0 }); // dummy row for province 0
@@ -22,7 +22,7 @@ definitions_table::definitions_table(const pdx::vfs& vfs, const default_map& dm)
     FILE* f;
 
     if ( (f = fopen(path, "rb")) == nullptr )
-        throw va_error("could not open definitions file: %s: %s", strerror(errno), path);
+        throw ck2::va_error("could not open definitions file: %s: %s", strerror(errno), path);
 
     char buf[256];
     uint n_line = 0;
@@ -44,7 +44,7 @@ definitions_table::definitions_table(const pdx::vfs& vfs, const default_map& dm)
 
         for (uint x = 0; x < N_COLS; ++x) {
             if ( (n_str[x] = strsep(&p, ";")) == nullptr)
-                throw va_error("not enough columns on line %u: %s", n_line, path);
+                throw ck2::va_error("not enough columns on line %u: %s", n_line, path);
         }
 
         const uint N_INT_COLS = N_COLS - 1;
@@ -53,11 +53,11 @@ definitions_table::definitions_table(const pdx::vfs& vfs, const default_map& dm)
 
         for (uint x = 0; x < N_INT_COLS; ++x) {
             n[x] = strtol(n_str[x], &p, 10);
-            if (*p) throw va_error("malformed integer value on line %u: %s", n_line, path);
+            if (*p) throw ck2::va_error("malformed integer value on line %u: %s", n_line, path);
         }
 
         if (n[0] != n_line-1)
-            throw va_error("unexpected province ID %u on line %u: %s", n[0], n_line, path);
+            throw ck2::va_error("unexpected province ID %u on line %u: %s", n[0], n_line, path);
 
         vec.emplace_back(n_str[4], rgb{ n[1], n[2], n[3] });
 
@@ -68,7 +68,7 @@ definitions_table::definitions_table(const pdx::vfs& vfs, const default_map& dm)
     fclose(f);
 
     if (size() != dm.max_province_id())
-        throw va_error("%u provinces defined for a map with %u: %s", size(), dm.max_province_id(), path);
+        throw ck2::va_error("%u provinces defined for a map with %u: %s", size(), dm.max_province_id(), path);
 }
 
 
@@ -77,7 +77,7 @@ void definitions_table::write(const fs::path& p) {
     FILE* f;
 
     if ( (f = fopen(spath.c_str(), "wb")) == nullptr )
-        throw va_error("could not write to file: %s: %s", strerror(errno), spath.c_str());
+        throw ck2::va_error("could not write to file: %s: %s", strerror(errno), spath.c_str());
 
     fprintf(f, "province;red;green;blue;x;x\n");
 

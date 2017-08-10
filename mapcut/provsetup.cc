@@ -1,8 +1,8 @@
 
 
 #include "provsetup.h"
-#include <pdx/parser.h>
-#include <pdx/error.h>
+#include <ck2/parser.h>
+#include <ck2/error.h>
 
 #include <cassert>
 #include <cstdio>
@@ -15,28 +15,28 @@ provsetup::provsetup(const fs::path& in_path) {
 
     const std::string spath = in_path.string();
     const char* path = spath.c_str();
-    pdx::parser parse(path);
+    ck2::parser parse(path);
 
     int id = 1;
 
     for (auto&& s : *parse.root_block()) {
         if (!s.key().is_integer())
-            throw va_error("province_setup: unexpected non-integer where province ID %d expected: %s", id, path);
+            throw ck2::va_error("province_setup: unexpected non-integer where province ID %d expected: %s", id, path);
 
         const int prvid = s.key().as_integer();
 
         if (prvid != id)
-            throw va_error("province_setup: unexpected province ID %d found where ID %d expected: %s", prvid, id, path);
+            throw ck2::va_error("province_setup: unexpected province ID %d found where ID %d expected: %s", prvid, id, path);
 
         if (!s.value().is_block())
-            throw va_error("province_setup: unexpected non-block value for province ID %d: %s", id, path);
+            throw ck2::va_error("province_setup: unexpected non-block value for province ID %d: %s", id, path);
 
-        const pdx::block* p_block = s.value().as_block();
+        const ck2::block* p_block = s.value().as_block();
         row r;
 
         for (auto&& ps : *p_block) {
             if (!ps.key().is_string())
-                throw va_error("province_setup: unexpected non-string key inside province %d: %s", id, path);
+                throw ck2::va_error("province_setup: unexpected non-string key inside province %d: %s", id, path);
 
             if (ps.key() == "title") {
                 assert( ps.value().is_string() );
@@ -55,13 +55,13 @@ provsetup::provsetup(const fs::path& in_path) {
         if (r.title.empty())
             r.max_settlements = 7;
         else
-            assert( pdx::title_tier(r.title.c_str()) == pdx::TIER_COUNT );
+            assert( ck2::title_tier(r.title.c_str()) == ck2::TIER_COUNT );
 
         if (r.max_settlements <= 0)
-            throw va_error("province_setup: invalid max_settlements defined for province %d: %s", id, path);
+            throw ck2::va_error("province_setup: invalid max_settlements defined for province %d: %s", id, path);
 
         if (r.terrain.empty())
-            throw va_error("province_setup: no terrain type defined for province %d: %s", id, path);
+            throw ck2::va_error("province_setup: no terrain type defined for province %d: %s", id, path);
 
         row_vec.emplace_back(r);
         ++id;
@@ -76,7 +76,7 @@ void provsetup::write(const fs::path& out_path) {
     FILE* f;
 
     if ( (f = fopen(path, "wb")) == nullptr )
-        throw va_error("could not write to file: %s: %s",
+        throw ck2::va_error("could not write to file: %s: %s",
                        strerror(errno), path);
 
     unsigned int id = 0;
