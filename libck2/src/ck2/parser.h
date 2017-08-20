@@ -276,8 +276,7 @@ public:
 
 /* PARSER -- construct a parse tree from a file whose resources are owned by the parser object */
 
-class parser : public lexer<1> { // derives from a lexer with 1 token of lookahead
-    typedef lexer<1> super;
+class parser {
     // we keep a raw pointer to the last-parsed object so that we may associate a comment token following it
     // on the same line with the object as a postcomment.
     //object* _last_parsed_object;
@@ -286,29 +285,69 @@ class parser : public lexer<1> { // derives from a lexer with 1 token of lookahe
      * ck2::object later in the parse (as precomments to it) */
     //unique_ptr<comment_block> up_comments;
 
+protected:
+    /* friends only for access to our cstr_pool AFAIK */
+    friend class block;
+    friend class list;
+
+    lexer _lex;
     cstr_pool<char> _string_pool;
     unique_ptr<block> _up_root_block;
     error_queue _errors;
 
-protected:
-    friend class block;
-    friend class list;
-
     char* strdup(const char* s) { return _string_pool.strdup(s); }
 
-    token& next(bool eof_ok = false);
-    token& next_expected(uint type);
-    void   unexpected_token(const token&) const;
+    static const uint NUM_LOOKAHEAD_TOKENS = 1;
+    static const uint TQ_SZ = NUM_LOOKAHEAD_TOKENS + 1; // +1 for the "freebie" lookahead token, the next/current token
+    static const uint TEXT_MAX_SZ = 512; // size of preallocated token text buffers (511 max length)
 
-    // at current point in input token stream, consume all consecutive comment tokens and attach them to the
-    // appropriate AST objects, leaving us to definitely not deal with a comment token next.
-    // void consume_comments(); FIXME
+    bool  _tq_done; // have we read everything from the input stream?
+    uint  _tq_head_idx; // index of head of token queue (i.e., next to be handed to user)
+    uint  _tq_n; // number of tokens actually in the queue (i.e., that have not been consumed and have been enqueued)
+    token _tq[TQ_SZ];
+    char  _tq_text[TQ_SZ][TEXT_MAX_SZ]; // text buffers for saving tokens from input scanner; parallel to _tq
+
+    void enqueue_token() {
+        assert( !_tq_done );
+        uint slot = (_tq_head_idx + _tq_n++) % TQ_SZ;
+        _tq_done = _lex.read_token_into(_tq[slot], TEXT_MAX_SZ);
+    }
+
+    // fill the token queue such that its effective size is at least `sz`. returns false if that couldn't be satisfied.
+    // preconditions: _tq_n <= sz <= TQ_SZ
+    bool fill_token_queue(uint sz) {
+        assert(_tq_n < sz);
+        for (uint needed = sz - _tq_n; needed > 0 && !_tq_done; --needed)
+            enqueue_token();
+        return _tq_n == sz;
+    }
+
+    bool next(token*, bool eof_ok = false);
+    void next_expected(token*, uint type);
+    void unexpected_token(const token&) const;
+
+    // peek into the token lookahead queue by logical index, POS, of token. position 0 is simply the next token were we
+    // to call next(...), and position 1 would be second to next in the input stream (the 1st lookahead token), and so
+    // on. if the input stream has ended (EOF, unmatched text) sometime before the lookahead token at which we're
+    // peeking, we'll return a nullptr.
+    template<const uint POS>
+    token* peek() noexcept {
+        static_assert(POS <= NUM_LOOKAHEAD_TOKENS, "cannot peek at position greater than parser's number of lookahead tokens");
+        return (POS >= _tq_n && !fill_token_queue(POS + 1)) ? nullptr : &_tq[ (_tq_head_idx + POS) % TQ_SZ ];
+    }
 
 public:
     parser() = delete;
     parser(const std::string& p, bool is_save = false) : parser(p.c_str(), is_save) {}
     parser(const fs::path& p, bool is_save = false) : parser(p.string().c_str(), is_save) {}
-    parser(const char* p, bool is_save = false) : lexer(p) { //, _last_parsed_object(nullptr) {
+    parser(const char* p, bool is_save = false) : _lex(p), _tq_done(false), _tq_head_idx(0), _tq_n(0) {
+        // hook our preallocated token text buffers into the lookahead queue
+        for (uint i = TQ_SZ; i > 0; --i) {
+            _tq_text[i][0] = '\0';
+            _tq[i].text(_tq_text[i], 0);
+        }
+
+        // a parser is nothing without its implicit root block for the file it represents: here, real men get work done.
         _up_root_block = std::make_unique<block>(*this, true, is_save);
     }
 

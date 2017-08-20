@@ -3,7 +3,6 @@
 #ifndef _CK2_COMMON_H_
 #define _CK2_COMMON_H_
 
-// TODO: define these 2 macros s.t. it can have a semicolon after it so as not to confuse syntax highlighters.
 #define _CK2_NAMESPACE_BEGIN namespace ck2 {
 #define _CK2_NAMESPACE_END }
 
@@ -72,14 +71,13 @@ struct generate_int_array {
 
 // motivation for creation: strncpy is practically obsolete and broken -- but it's also slow due to a poor POSIX
 // standardization choice, sprintf and similar are also slower, and of course, strcpy can overflow its output buffer.
-template<const size_t DST_SZ>
-static inline size_t mdh_strncpy(char* dst, const char* src, size_t length) {
-    static_assert(DST_SZ > 0, "cannot copy into a zero-length buffer");
-    size_t n = (length > DST_SZ) ? DST_SZ : length;
+static inline size_t mdh_strncpy(char* dst, size_t dst_sz, const char* src, size_t length) {
+    size_t n = (length > dst_sz) ? dst_sz : length;
     memcpy(dst, src, n);
     dst[n] = '\0'; // only sometimes necessary (when not using as a replacement for strcpy on well-formed input)
     return n;
 }
+
 
 _CK2_NAMESPACE_END;
 

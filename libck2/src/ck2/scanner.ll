@@ -26,7 +26,7 @@ DATE    -?[0-9]{1,4}\.[0-9]{1,2}\.[0-9]{1,2}
 "}"                        { return ck2::token::CLOSE; }
 {STR}                      { return ck2::token::STR; }
 {QSTR}                     { return ck2::token::QSTR; }
-"#".*                      { return ck2::token::COMMENT; }
+"#".*                      /* skip */
 {WS}+                      /* skip */
 .                          { return ck2::token::FAIL; }
 

@@ -831,7 +831,7 @@ YY_RULE_SETUP
 case 10:
 YY_RULE_SETUP
 #line 29 "scanner.ll"
-{ return ck2::token::COMMENT; }
+/* skip */
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */

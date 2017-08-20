@@ -11,7 +11,6 @@ const char* ck2::token::TYPE_MAP[] = {
     "QSTR",
     "DATE",
     "QDATE",
-    "COMMENT",
     "DECIMAL",
     "FAIL",
 };

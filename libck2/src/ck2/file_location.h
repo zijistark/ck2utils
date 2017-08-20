@@ -8,21 +8,22 @@ _CK2_NAMESPACE_BEGIN;
 
 
 class file_location {
-    const char* _pathname;
     uint        _line;
+    const char* _pathname;
 
-    // column index tracking will be added when we migrate from the flex scanner to a quex scanner
+    // column index tracking will be added when we migrate from the flex scanner to a quex scanner; we could do it now,
+    // but it's more of a PITA.
     // uint column;
 
 public:
 
-    file_location(const char* path = "", uint line = 0) : _pathname(path), _line(line) {}
+    file_location(const char* path = "", uint line = 0) : _line(line), _pathname(path) {}
 
-    const char* pathname() const noexcept { return _pathname; }
     uint        line()     const noexcept { return _line; }
+    const char* pathname() const noexcept { return _pathname; }
 
-    void pathname(const char* path) noexcept { _pathname = path; }
     void line(uint line)            noexcept { _line = line; }
+    void pathname(const char* path) noexcept { _pathname = path; }
 };
 
 

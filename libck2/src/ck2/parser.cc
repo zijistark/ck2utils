@@ -15,33 +15,34 @@ struct binary_op_text {
     binary_op op;
 };
 
-const binary_op_text BINARY_OP_TABLE[] = {
+const binary_op_text BINOP_TBL[] = {
     { "=",  binary_op::EQ },
     { "<",  binary_op::LT },
     { ">",  binary_op::GT },
     { "<=", binary_op::LTE },
     { ">=", binary_op::GTE },
     { "==", binary_op::EQ2 },
-    { nullptr, binary_op::EQ }, // sentinel
 };
 
 
-block::block(parser& lex, bool is_root, bool is_save) {
+block::block(parser& prs, bool is_root, bool is_save) {
+    token t;
 
     if (is_root && is_save) {
         /* skip over CK2txt header (savegames only) */
-        lex.next_expected(token::STR);
+        prs.next_expected(&t, token::STR);
     }
 
     while (true) {
-        token& tA = lex.next(is_root);
+        // FIXME: this will get optimized out when debugging is disabled, so...
+        assert( prs.next(&t, is_root) && "Parser didn't terminate when it encountered an END/FAIL token!" );
 
-        if (tA.type() == token::END)
+        if (t.type() == token::END)
             return;
 
-        if (tA.type() == token::CLOSE) {
+        if (t.type() == token::CLOSE) {
             if (is_root && !is_save) // closing braces are only bad at root level
-                throw va_parse_error(tA.location(), "Unmatched closing brace");
+                throw va_parse_error(t.location(), "Unmatched closing brace");
 
             // otherwise, they mean it's time return to the previous block
             return;
@@ -49,23 +50,24 @@ block::block(parser& lex, bool is_root, bool is_save) {
 
         object key;
 
-        if (tA.type() == token::STR)
-            key = object{ lex.strdup(tA.text()), tA.location() };
-        else if (tA.type() == token::DATE)
-            key = object{ date{ tA.text(), tA.location(), lex.errors() }, tA.location() };
-        else if (tA.type() == token::INTEGER)
-            key = object{ atoi(tA.text()), tA.location() };
+        if (t.type() == token::STR)
+            key = object{ prs.strdup(t.text()), t.location() };
+        else if (t.type() == token::DATE)
+            key = object{ date{ t.text(), t.location(), prs.errors() }, t.location() };
+        else if (t.type() == token::INTEGER)
+            key = object{ atoi(t.text()), t.location() };
         else
-            lex.unexpected_token(tA);
+            prs.unexpected_token(t);
 
         /* ...done with key */
 
-        token& tB = lex.next_expected(token::OPERATOR);
+        prs.next_expected(&t, token::OPERATOR);
         object op;
 
-        for (const binary_op_text* p = BINARY_OP_TABLE; p->text; ++p) {
-            if (strcmp(tB.text(), p->text) == 0) {
-                op = object{ p->op, tB.location() };
+        for (auto i = sizeof(BINOP_TBL)/sizeof(BINOP_TBL[0]); i > 0; --i) {
+            const binary_op_text& bop = BINOP_TBL[i];
+            if (strcmp(t.text(), bop.text) == 0) {
+                op = object{ bop.op, t.location() };
                 break;
             }
         }
@@ -74,36 +76,37 @@ block::block(parser& lex, bool is_root, bool is_save) {
 
         /* on to value... */
         object val;
-        token& tC = lex.next();
+        prs.next(&t);
 
-        if (tC.type() == token::OPEN) {
+        if (t.type() == token::OPEN) {
             // need to lookahead at the next token and the first lookahead token to determine whether this OPEN is
             // opening a list or a block
 
-            token& t1 = lex.peek<0>(); // like next() but doesn't modify the lexer's token queue at all
-            token& t2 = lex.peek<1>();
+            token* pt1 = prs.peek<0>(); // like next() but doesn't modify the input
+            token* pt2 = prs.peek<1>(); // ... whereas this is time travel
 
-            if (t1.type() == token::CLOSE) { // empty block (or list, but we choose to see it as a block)
+            if (pt1 && pt1->type() == token::CLOSE) { // empty block (or list, but we choose to see it as a block)
                 // FIXME: optimize: empty blocks are a waste of memory and cycles and ambiguous with empty lists, so add
                 // a static object type (i.e., one of the possible dynamic types for ck2::object) that codifies an empty
                 // block OR list
-                val = object{ std::make_unique<block>(), tC.location() };
+                val = object{ std::make_unique<block>(), t.location() };
             }
-            else if (t2.type() != token::OPERATOR) // all but an operator in this position implies this will be a list
-                val = object{ std::make_unique<list>(lex), tC.location() };
+            // all but an operator in this position implies this will be a list
+            else if (pt2 && pt2->type() != token::OPERATOR)
+                val = object{ std::make_unique<list>(prs), t.location() };
             else // but with the operator in position, it's definitely a block
-                val = object{ std::make_unique<block>(lex), tC.location() };
+                val = object{ std::make_unique<block>(prs), t.location() };
         }
-        else if (tC.type() == token::STR || tC.type() == token::QSTR)
-            val = object{ lex.strdup(tC.text()), tC.location() };
-        else if (tC.type() == token::QDATE || tC.type() == token::DATE)
-            val = object{ date{ tC.text(), tC.location(), lex.errors() }, tC.location() };
-        else if (tC.type() == token::DECIMAL)
-            val = object{ fp3{ tC.text(), tC.location(), lex.errors() }, tC.location() };
-        else if (tC.type() == token::INTEGER)
-            val = object{ atoi(tC.text()), tC.location() };
+        else if (t.type() == token::STR || t.type() == token::QSTR)
+            val = object{ prs.strdup(t.text()), t.location() };
+        else if (t.type() == token::QDATE || t.type() == token::DATE)
+            val = object{ date{ t.text(), t.location(), prs.errors() }, t.location() };
+        else if (t.type() == token::DECIMAL)
+            val = object{ fp3{ t.text(), t.location(), prs.errors() }, t.location() };
+        else if (t.type() == token::INTEGER)
+            val = object{ atoi(t.text()), t.location() };
         else
-            lex.unexpected_token(tC);
+            prs.unexpected_token(t);
 
         _vec.emplace_back(key, op, val);
 
@@ -153,53 +156,33 @@ object& object::operator=(object&& other) {
 }
 
 
-list::list(parser& lex) {
+list::list(parser& prs) {
+    token t;
     while (true) {
-        token& t = lex.next();
+        prs.next(&t);
 
         if (t.type() == token::QSTR || t.type() == token::STR)
-            _vec.emplace_back( lex.strdup(t.text()), t.location() );
+            _vec.emplace_back( prs.strdup(t.text()), t.location() );
         else if (t.type() == token::INTEGER)
             _vec.emplace_back( atoi(t.text()), t.location() );
         else if (t.type() == token::DECIMAL)
-            _vec.emplace_back( fp3{ t.text(), t.location(), lex.errors() }, t.location() );
+            _vec.emplace_back( fp3{ t.text(), t.location(), prs.errors() }, t.location() );
         else if (t.type() == token::OPEN)
-            _vec.emplace_back( std::make_unique<block>(lex), t.location() );
+            _vec.emplace_back( std::make_unique<block>(prs), t.location() );
         else if (t.type() != token::CLOSE)
-            lex.unexpected_token(t);
+            prs.unexpected_token(t);
         else
             return;
     }
 }
 
 
-token& parser::next_expected(uint type) {
-    token& t = next();
+void parser::next_expected(token* p_tok, uint type) {
+    next(p_tok, (type == token::END));
 
-    if (t.type() != type) {
-        // // allocate enough space to be able to hex-escape (i.e., \xFF) every character in the text (4 chars per char).
-        // char val_text[token::TEXT_MAX_LEN*4 + 1];
-        // val_text[0] = '\0';
-
-        // const char* pre_val_text = "";
-        // const char* post_val_text = "";
-
-        // // END tokens don't have defined text components (i.e., it might be stale data), so be careful of those.
-
-        // if (t.type() != token::END && strcmp(t.text(), "") != 0) {
-        //     pre_val_text = " (text: \"";
-        //     auto len = mdh_escape_string<'"'>(&val_text[0], t.text());
-        //     post_val_text = (len == ) ? "\")";
-        // }
-
-        // throw va_parse_error(t.location(), "Expected %s token but got %s%s%s%s",
-        //                      token::TYPE_MAP[type], t.type_name(), pre_val_text, val_text, post_val_text);
-
-        throw va_parse_error(t.location(), "Expected %s token but got %s (value: %s)",
-                             token::TYPE_MAP[type], t.type_name(), t.text());
-    }
-
-    return t;
+    if (p_tok->type() != type)
+        throw va_parse_error(p_tok->location(), "Expected %s token but got %s",
+                             token::TYPE_MAP[type], p_tok->type_name());
 }
 
 
@@ -208,21 +191,37 @@ void parser::unexpected_token(const token& t) const {
 }
 
 
-token& parser::next(bool eof_ok) {
-    while (true) {
-        token& t = super::next();
-
-        if (t.type() == token::END && !eof_ok)
-            throw va_parse_error(t.location(), "Unexpected EOF");
-
-        if (t.type() == token::FAIL)
-            throw va_parse_error(t.location(), "Unrecognized token");
-
-        if (t.type() == token::COMMENT)
-            continue; // FIXME
-
-        return t;
+bool parser::next(token* p_tok, bool eof_ok) {
+    if (_tq_n == 0) {
+        if (_tq_done) return false;
+        // nothing in queue and not done, so read directly from scanner buffer into p_tok (avoids token text copy)
+        _tq_done = _lex.read_token_into(*p_tok);
     }
+    else {
+        // token(s) are in lookahead queue, so drain that rather than lexer. as long as there are tokens in the queue,
+        // we've got work to do (regardless of _tq_done).
+
+        // NOTE: here we are passing out token objects that have token text buffer pointers into our preallocated
+        // _tq_text[]. how will the buffers make it back into the token queue? they never leave. remember, we have a bit
+        // of an odd contract regarding the internal token text buffers: the user is allowed to mutate the pointed-to
+        // memory, but they cannot change to what buffer is pointed (only we do that), and the text buffer itself might
+        // be overwritten as soon as the next call to this method.
+
+        // FIXME: (re: above) also, the buffer could be overwritten by peek()ing past the currently-queued tokens,
+        // because that would initiate filling of the nec. amount of tokens from input into the queue. This can be
+        // smoothed over by adding a "spare" token element to the "end" of the circular queue, so solve it.
+        *p_tok = _tq[_tq_head_idx];
+        _tq_head_idx = (_tq_head_idx + 1) % TQ_SZ;
+        --_tq_n;
+    }
+
+    if (p_tok->type() == token::END && !eof_ok)
+        throw va_parse_error(p_tok->location(), "Unexpected EOF");
+
+    if (p_tok->type() == token::FAIL)
+        throw va_parse_error(p_tok->location(), "Unrecognized input");
+
+    return true;
 }
 
 
