@@ -269,15 +269,13 @@ protected:
     char  _tq_text[TQ_SZ][TEXT_MAX_SZ]; // text buffers for saving tokens from input scanner; parallel to _tq
 
     void enqueue_token() {
-        assert( !_tq_done );
         uint slot = (_tq_head_idx + _tq_n++) % TQ_SZ;
-        _tq_done = _lex.read_token_into(_tq[slot], TEXT_MAX_SZ);
+        _tq_done = !( _lex.read_token_into(_tq[slot], TEXT_MAX_SZ) );
     }
 
     // fill the token queue such that its effective size is at least `sz`. returns false if that couldn't be satisfied.
     // preconditions: _tq_n <= sz <= TQ_SZ
     bool fill_token_queue(uint sz) {
-        assert(_tq_n < sz);
         for (uint needed = sz - _tq_n; needed > 0 && !_tq_done; --needed)
             enqueue_token();
         return _tq_n == sz;
@@ -303,7 +301,7 @@ public:
     parser(const fs::path& p, bool is_save = false) : parser(p.string().c_str(), is_save) {}
     parser(const char* p, bool is_save = false) : _lex(p), _tq_done(false), _tq_head_idx(0), _tq_n(0) {
         // hook our preallocated token text buffers into the lookahead queue
-        for (uint i = TQ_SZ; i > 0; --i) {
+        for (uint i = 0; i < TQ_SZ; ++i) {
             _tq_text[i][0] = '\0';
             _tq[i].text(_tq_text[i], 0);
         }

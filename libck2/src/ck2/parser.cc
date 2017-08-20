@@ -35,7 +35,9 @@ block::block(parser& prs, bool is_root, bool is_save) {
 
     while (true) {
         // FIXME: this will get optimized out when debugging is disabled, so...
-        assert( prs.next(&t, is_root) && "Parser didn't terminate when it encountered an END/FAIL token!" );
+        //assert( prs.next(&t, is_root) && "Parser didn't terminate when it encountered an END/FAIL token!" );
+
+        prs.next(&t, is_root);
 
         if (t.type() == token::END)
             return;
@@ -77,8 +79,7 @@ block::block(parser& prs, bool is_root, bool is_save) {
         prs.next(&t);
 
         if (t.type() == token::OPEN) {
-            // need to lookahead at the next token and the first lookahead token to determine whether this OPEN is
-            // opening a list or a block
+            // currently our only token lookahead case required
 
             token* pt1 = prs.peek<0>(); // like next() but doesn't modify the input
             token* pt2 = prs.peek<1>(); // ... whereas this is time travel
@@ -86,7 +87,8 @@ block::block(parser& prs, bool is_root, bool is_save) {
             if (pt1 && pt1->type() == token::CLOSE) { // empty block (or list, but we choose to see it as a block)
                 // FIXME: optimize: empty blocks are a waste of memory and cycles and ambiguous with empty lists, so add
                 // a static object type (i.e., one of the possible dynamic types for ck2::object) that codifies an empty
-                // block OR list
+                // block OR list (vector syntax nodes, essentially)
+                prs.next(&t); // suspicions confirmed, consume token
                 val = object{ std::make_unique<block>(), t.location() };
             }
             // all but an operator in this position implies this will be a list
@@ -179,8 +181,8 @@ void parser::next_expected(token* p_tok, uint type) {
     next(p_tok, (type == token::END));
 
     if (p_tok->type() != type)
-        throw va_parse_error(p_tok->location(), "Expected %s token but got %s",
-                             token::TYPE_MAP[type], p_tok->type_name());
+        throw va_parse_error(p_tok->location(), "Expected %s token but got %s -- '%s'",
+                             token::TYPE_MAP[type], p_tok->type_name(), (p_tok->text()) ? p_tok->text() : "");
 }
 
 
@@ -193,7 +195,7 @@ bool parser::next(token* p_tok, bool eof_ok) {
     if (_tq_n == 0) {
         if (_tq_done) return false;
         // nothing in queue and not done, so read directly from scanner buffer into p_tok (avoids token text copy)
-        _tq_done = _lex.read_token_into(*p_tok);
+        _tq_done = !( _lex.read_token_into(*p_tok) );
     }
     else {
         // token(s) are in lookahead queue, so drain that rather than lexer. as long as there are tokens in the queue,
