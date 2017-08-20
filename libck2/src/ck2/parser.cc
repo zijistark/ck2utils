@@ -64,13 +64,11 @@ block::block(parser& prs, bool is_root, bool is_save) {
         prs.next_expected(&t, token::OPERATOR);
         object op;
 
-        for (auto i = sizeof(BINOP_TBL)/sizeof(BINOP_TBL[0]); i > 0; --i) {
-            const binary_op_text& bop = BINOP_TBL[i];
+        for (const auto& bop : BINOP_TBL)
             if (strcmp(t.text(), bop.text) == 0) {
                 op = object{ bop.op, t.location() };
                 break;
             }
-        }
 
         assert( op.is_binary_op() || !"Invalid token when expecting binary operator" );
 
