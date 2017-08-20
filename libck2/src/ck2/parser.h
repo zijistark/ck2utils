@@ -29,36 +29,8 @@ class block;
 class list;
 class parser;
 
-/* COMMENT_BLOCK -- a list of lines of contiguous freestanding comments */
 
-// allows blank lines to be in the list under certain sane circumstances (in
-// order to heuristically improve [whitespace] information retention when/if
-// rewriting the comments after modifying the AST). they will be represented
-// as nullptr.
-
-// class comment_block {
-//     using vec_t = std::vector<char*>;
-//     vec_t _vec; // of lines of text considered to be part of a commented region
-
-// public:
-//     comment_block(char* first_line) { append_line(first_line); }
-
-//     void append_line(char* line) { _vec.push_back(line); }
-
-//     void append_blank(int n_blank_lines = 1) {
-//         for (int i = n_blank_lines; i > 0; --i) _vec.push_back(nullptr);
-//     }
-
-//     vec_t::size_type      size()  const noexcept { return _vec.size(); }
-//     bool                  empty() const noexcept { return size() == 0; }
-//     vec_t::iterator       begin()       noexcept { return _vec.begin(); }
-//     vec_t::iterator       end()         noexcept { return _vec.end(); }
-//     vec_t::const_iterator begin() const noexcept { return _vec.cbegin(); }
-//     vec_t::const_iterator end()   const noexcept { return _vec.cend(); }
-// };
-
-
-enum class binary_op : int {
+enum class binary_op {
     EQ,  // =
     LT,  // <
     GT,  // >
@@ -66,6 +38,7 @@ enum class binary_op : int {
     GTE, // >=
     EQ2, // ==
 };
+
 
 /* OBJECT -- generic "any"-type syntax tree node */
 
@@ -99,10 +72,6 @@ class object {
 
     floc _loc;
 
-    // unique_ptr<comment_block> _up_precomments;
-    // char* _postcomment;
-
-    void init() noexcept { } // _postcomment = nullptr; }
     void destroy() noexcept; // helper for dtor & move-assignment
 
 public:
@@ -277,14 +246,6 @@ public:
 /* PARSER -- construct a parse tree from a file whose resources are owned by the parser object */
 
 class parser {
-    // we keep a raw pointer to the last-parsed object so that we may associate a comment token following it
-    // on the same line with the object as a postcomment.
-    //object* _last_parsed_object;
-
-    /* we accrue free-standing comments here before associating them with a
-     * ck2::object later in the parse (as precomments to it) */
-    //unique_ptr<comment_block> up_comments;
-
 protected:
     /* friends only for access to our cstr_pool AFAIK */
     friend class block;
