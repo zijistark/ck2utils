@@ -5,13 +5,13 @@
 #include <cstdlib>
 
 
-_PDX_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 /* construct a `date` from a well-formed date-string non-const `src` (we assume the str is thrown away, as we modify it)
  * intended to be used when `src` is already known to be well-formed due to lexical analysis, as we skip error-checking.
  */
-date::date(char* src, const file_location& loc, error_queue& errors) {
+date::date(char* src, const floc& loc, error_queue& errors) {
     char* part[3];
     part[0] = src;
 
@@ -47,4 +47,4 @@ date::date(char* src, const file_location& loc, error_queue& errors) {
 }
 
 
-_PDX_NAMESPACE_END
+_CK2_NAMESPACE_END;

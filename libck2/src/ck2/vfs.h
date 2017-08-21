@@ -1,14 +1,14 @@
 // -*- c++ -*-
 
 #pragma once
-#include "pdx_common.h"
+#include "common.h"
 
 #include <vector>
 #include <string>
 #include <boost/filesystem.hpp>
 
 
-_PDX_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 namespace fs = boost::filesystem;
@@ -53,4 +53,4 @@ public:
 };
 
 
-_PDX_NAMESPACE_END
+_CK2_NAMESPACE_END;

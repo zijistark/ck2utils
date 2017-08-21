@@ -1,16 +1,16 @@
 
 #include "default_map.h"
 
-#include <pdx/parser.h>
-#include <pdx/error.h>
+#include <ck2/parser.h>
+#include <ck2/error.h>
 
 #include <cassert>
 
 
-default_map::default_map(const pdx::vfs& vfs)
+default_map::default_map(const ck2::vfs& vfs)
 : _max_province_id(0) {
 
-    using namespace pdx;
+    using namespace ck2;
 
     parser parse(vfs["map/default.map"]);
 

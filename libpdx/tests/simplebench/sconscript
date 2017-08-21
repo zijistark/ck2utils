@@ -1,8 +1,0 @@
-
-env = Environment()
-env.Append(CXXFLAGS='--std=c++17 -Wall -s -O3')
-env.Append(CPPPATH='../../src')
-env.Append(LIBPATH='../../build')
-
-env.Program('simplebench', ['simplebench.cc'], LIBS=['pdx', 'boost_filesystem', 'boost_system'])
-

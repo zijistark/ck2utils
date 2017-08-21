@@ -1,7 +1,7 @@
 
 #include "region_file.h"
-#include <pdx/parser.h>
-#include <pdx/error.h>
+#include <ck2/parser.h>
+#include <ck2/error.h>
 
 #include <algorithm>
 #include <fstream>
@@ -11,37 +11,37 @@ region_file::region_file(const fs::path& in_path) {
     const std::string spath = in_path.string();
     const char* path = spath.c_str();
 
-    pdx::parser parse(path);
+    ck2::parser parse(path);
 
     for (const auto& s : *parse.root_block()) {
         /* looking for <region name> = { <BLOCK> } */
         if (!s.key().is_string())
-            throw va_error("unexpected non-string value when expecting region name: %s", path);
+            throw ck2::va_error("unexpected non-string value when expecting region name: %s", path);
         if (!s.value().is_block())
-            throw va_error("expected region definition to follow string value '%s', but it did not: %s", s.key().as_string(), path);
+            throw ck2::va_error("expected region definition to follow string value '%s', but it did not: %s", s.key().as_string(), path);
 
         _regions.push_back( parse_region( s.key().as_string(), s.value().as_block(), path ) );
     }
 }
 
 
-unique_ptr<region_file::region> region_file::parse_region(const char* name, const pdx::block* block, const char* path) {
+unique_ptr<region_file::region> region_file::parse_region(const char* name, const ck2::block* block, const char* path) {
     auto p_region = std::make_unique<region>(name);
 
     for (const auto& s : *block) {
         /* looking for regions|duchies|counties|provinces = { <LIST> } */
         if (!s.key().is_string())
-            throw va_error("unexpected non-string value when expecting element-type-specifier in region '%s': %s", name, path);
+            throw ck2::va_error("unexpected non-string value when expecting element-type-specifier in region '%s': %s", name, path);
         if (!s.value().is_list())
-            throw va_error("expected a list value-type for elements in region '%s': %s", name, path);
+            throw ck2::va_error("expected a list value-type for elements in region '%s': %s", name, path);
 
         const char* k = s.key().as_string();
-        const pdx::list* v = s.value().as_list();
+        const ck2::list* v = s.value().as_list();
 
         if (strcmp(k, "regions") == 0) {
             for (const auto& e : *v) {
                 if (!e.is_string())
-                    throw va_error("unexpected non-string value when expecting region-element name in region '%s': %s", name, path);
+                    throw ck2::va_error("unexpected non-string value when expecting region-element name in region '%s': %s", name, path);
 
                 p_region->regions.emplace_back(e.as_string());
             }
@@ -49,7 +49,7 @@ unique_ptr<region_file::region> region_file::parse_region(const char* name, cons
         else if (strcmp(k, "duchies") == 0) {
             for (const auto& e : *v) {
                 if (!e.is_string())
-                    throw va_error("unexpected non-string value when expecting duchy name in region '%s': %s", name, path);
+                    throw ck2::va_error("unexpected non-string value when expecting duchy name in region '%s': %s", name, path);
 
                 p_region->duchies.emplace_back(e.as_string());
             }
@@ -57,7 +57,7 @@ unique_ptr<region_file::region> region_file::parse_region(const char* name, cons
         else if (strcmp(k, "counties") == 0) {
             for (const auto& e : *v) {
                 if (!e.is_string())
-                    throw va_error("unexpected non-string value when expecting county name in region '%s': %s", name, path);
+                    throw ck2::va_error("unexpected non-string value when expecting county name in region '%s': %s", name, path);
 
                 p_region->counties.emplace_back(e.as_string());
             }
@@ -65,15 +65,15 @@ unique_ptr<region_file::region> region_file::parse_region(const char* name, cons
         else if (strcmp(k, "provinces") == 0) {
             for (const auto& e : *v) {
                 if (!e.is_integer())
-                    throw va_error("unexpected non-integer value when expecting province ID in region '%s': %s", name, path);
+                    throw ck2::va_error("unexpected non-integer value when expecting province ID in region '%s': %s", name, path);
                 if (e.as_integer() <= 0)
-                    throw va_error("invalid province ID (must be positive and nonzero) in region '%s': %s", name, path);
+                    throw ck2::va_error("invalid province ID (must be positive and nonzero) in region '%s': %s", name, path);
 
                 p_region->provinces.emplace_back(e.as_integer());
             }
         }
         else
-            throw va_error("invalid element-type-specifier '%s' in region '%s': %s", k, name, path);
+            throw ck2::va_error("invalid element-type-specifier '%s' in region '%s': %s", k, name, path);
     }
 
     return p_region;

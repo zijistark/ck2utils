@@ -1,11 +1,11 @@
 // -*- c++ -*-
 
 #pragma once
-#include "pdx_common.h"
+#include "common.h"
 #include "error_queue.h"
 
 
-_PDX_NAMESPACE_BEGIN
+_CK2_NAMESPACE_BEGIN;
 
 
 #pragma pack(push, 1)
@@ -16,7 +16,7 @@ class date {
     int8_t  _d;
 
 public:
-    date(char* src, const file_location&, error_queue&); // only for use on mutable date-strings known to be well-formed
+    date(char* src, const floc&, error_queue&); // only for use on mutable date-strings known to be well-formed
     date(int16_t year, int8_t month, int8_t day) : _y(year), _m(month), _d(day) {}
 
     int16_t year()  const noexcept { return _y; }
@@ -43,9 +43,9 @@ public:
 #pragma pack(pop)
 
 
-_PDX_NAMESPACE_END
+_CK2_NAMESPACE_END;
 
 
-inline std::ostream& operator<<(std::ostream& os, pdx::date d) {
+inline std::ostream& operator<<(std::ostream& os, ck2::date d) {
     return os << (int)d.year() << '.' << (int)d.month() << '.' << (int)d.day();
 }
