@@ -132,8 +132,6 @@ object& object::operator=(object&& other) {
     /* destroy our current resources, then move resources from other, and return new self */
     destroy();
     _type = other._type;
-    // _precomment = other._precomment;
-    // _postcomment = other._postcomment;
 
     switch (other._type) {
         case NIL:       break;
@@ -202,9 +200,6 @@ bool parser::next(token* p_tok, bool eof_ok) {
         // memory, but they cannot change to what buffer is pointed (only we do that), and the text buffer itself might
         // be overwritten as soon as the next call to this method.
 
-        // FIXME: (re: above) also, the buffer could be overwritten by peek()ing past the currently-queued tokens,
-        // because that would initiate filling of the nec. amount of tokens from input into the queue. This can be
-        // smoothed over by adding a "spare" token element to the "end" of the circular queue, so solve it.
         *p_tok = _tq[_tq_head_idx];
         _tq_head_idx = (_tq_head_idx + 1) % TQ_SZ;
         --_tq_n;
@@ -214,7 +209,7 @@ bool parser::next(token* p_tok, bool eof_ok) {
         throw va_parse_error(p_tok->location(), "Unexpected EOF");
 
     if (p_tok->type() == token::FAIL)
-        throw va_parse_error(p_tok->location(), "Unrecognized input");
+        throw va_parse_error(p_tok->location(), "Unrecognized token");
 
     return true;
 }

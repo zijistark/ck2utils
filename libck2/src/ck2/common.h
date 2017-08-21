@@ -57,17 +57,16 @@ struct generate_int_array {
 // mdh_strncpy
 
 // copy not more than `length` characters from the string `src` (including any NULL terminator) to the string `dst`
-// while never overflowing the `DST_SZ` memory available to `dst`. return value: actual amount of characters copied.
+// while never overflowing the `dst_sz` memory available to `dst`. return value: actual amount of characters copied.
 
 // - precondition: `length <= strlen(src)`; we do not check the actual length ourselves for performance reasons.
-// - precondition: `DST_SZ` is the max size of the memory for `dst` (not max length but max length + null terminator)
+// - precondition: `dst_sz` is the max size of the memory for `dst` (not max length but max length + null terminator)
 // - precondition: the memory backing `src` and `dst` may not overlap; if it does, UNDEFINED BEHAVIOR! CHAOS! SIN!
 
 // - `dst` is always NULL-terminated when done (unlike strncpy)
 // - performance of the bounded copy should be virtually as good as you can get.
 // --> `dst` will never be unnecessarily padded with O(N) NULLs in a lot of cases (unlike strncpy)
 // --> memcpy is intensively optimized for non-overlapping block memory transfer (SIMD, etc.)
-// --> DST_SZ is a compile-time constant, cutting a bit of overhead sometimes. [might want a dynamic variant, however.]
 
 // motivation for creation: strncpy is practically obsolete and broken -- but it's also slow due to a poor POSIX
 // standardization choice, sprintf and similar are also slower, and of course, strcpy can overflow its output buffer.

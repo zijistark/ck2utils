@@ -259,7 +259,12 @@ protected:
     char* strdup(const char* s) { return _string_pool.strdup(s); }
 
     static const uint NUM_LOOKAHEAD_TOKENS = 1;
-    static const uint TQ_SZ = NUM_LOOKAHEAD_TOKENS + 1; // +1 for the "freebie" lookahead token, the next/current token
+    // actual token queue size is +1 for the "freebie" lookahead token (the next/current token) and +1 for a "spare"
+    // token object which is necessary to guard against dequeuing a token & then peeking past the end of the filled
+    // portion of the lookahead queue, which would then overwrite the token text buffer contents of the dequeued token
+    // as the queue was refilled and would thus otherwise be an easy possible source of error and generally
+    // inconvenient.
+    static const uint TQ_SZ = NUM_LOOKAHEAD_TOKENS + 2;
     static const uint TEXT_MAX_SZ = 512; // size of preallocated token text buffers (511 max length)
 
     bool  _tq_done; // have we read everything from the input stream?
@@ -274,7 +279,7 @@ protected:
     }
 
     // fill the token queue such that its effective size is at least `sz`. returns false if that couldn't be satisfied.
-    // preconditions: _tq_n <= sz <= TQ_SZ
+    // preconditions: _tq_n <= sz < TQ_SZ
     bool fill_token_queue(uint sz) {
         for (uint needed = sz - _tq_n; needed > 0 && !_tq_done; --needed)
             enqueue_token();
