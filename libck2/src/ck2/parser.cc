@@ -34,9 +34,6 @@ block::block(parser& prs, bool is_root, bool is_save) {
     }
 
     while (true) {
-        // FIXME: this will get optimized out when debugging is disabled, so...
-        //assert( prs.next(&t, is_root) && "Parser didn't terminate when it encountered an END/FAIL token!" );
-
         prs.next(&t, is_root);
 
         if (t.type() == token::END)
@@ -66,13 +63,11 @@ block::block(parser& prs, bool is_root, bool is_save) {
         prs.next_expected(&t, token::OPERATOR);
         object op;
 
-        for (const auto& bop : BINOP_TBL)
+        for (auto const& bop : BINOP_TBL)
             if (strcmp(t.text(), bop.text) == 0) {
                 op = object{ bop.op, t.location() };
                 break;
             }
-
-        assert( op.is_binary_op() || !"Invalid token when expecting binary operator" );
 
         /* on to value... */
         object val;
