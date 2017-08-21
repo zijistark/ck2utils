@@ -1,4 +1,25 @@
 # -*- python -*-
 
+vars = Variables()
+
+vars.Add(
+	EnumVariable('BUILD_TYPE', 'Set build type', 'debug',
+		allowed_values=('debug', 'debugmax', 'release'),
+		ignorecase=2)
+)
+
+env = Environment(variables = vars)
+env.Append(CXXFLAGS='--std=c++17 -Wall')
+
+if env['BUILD_TYPE'] == 'debugmax':
+	env.Append(CXXFLAGS='-g -O0')
+elif env['BUILD_TYPE'] == 'debug':
+	env.Append(CXXFLAGS='-g -O2')
+elif env['BUILD_TYPE'] == 'release':
+	env.Append(CXXFLAGS='-g0 -s -O3')
+
+Help(vars.GenerateHelpText(env))
+Export('env')
+
 SConscript('src/sconscript', variant_dir='build', duplicate=0)
 SConscript('tests/sconscript')

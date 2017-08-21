@@ -1,6 +1,5 @@
 
-env = Environment()
-env.Append(CXXFLAGS='--std=c++17 -Wall -g -O2')
+Import('*')
 env.Append(CPPPATH='../../src')
 env.Append(LIBPATH='../../build')
 
