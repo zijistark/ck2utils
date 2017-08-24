@@ -1,101 +1,396 @@
 #!/usr/bin/env python3
 
 import shutil
-from ck2parser import rootpath, Pair, Obj, Op, String, FullParser
+from ck2parser import rootpath, Comment, FullParser
 from print_time import print_time
 
-def mutate_cb(cb_pair):
-    name, tree = cb_pair.key.val, cb_pair.value
-    third_party = name.startswith('other_')
-    check_de_jure_tier = 'check_de_jure_tier' in tree.dictionary
-    least_index = float('inf')
-    # remove & handle can_use, possibly skipping this CB
-    try:
-        can_use = next(p for p in tree if p.key.val == 'can_use')
-        if can_use.value.has_pair('always', 'no'):
-            return
-        index = tree.contents.index(can_use)
-        least_index = min(index, least_index)
-        tree.contents.remove(can_use)
-    except StopIteration:
-        can_use = Pair('can_use')
-    if third_party:
-        trigger_name = 'emf_cb_thirdparty_can_use_trigger'
-    else:
-        trigger_name = 'emf_cb_can_use_trigger'
-    trigger = Pair(trigger_name, 'yes')
-    if not can_use.value.has_pair(trigger_name, 'yes'):
-        can_use.value.contents.insert(0, trigger)
-    # remove & handle can_use_gui
-    if (tree.has_pair('major_revolt', 'yes') or
-        tree.has_pair('is_revolt_cb', 'yes')):
-        can_use_gui = None
-    else:
-        try:
-            can_use_gui = next(p for p in tree if p.key.val == 'can_use_gui')
-            index = tree.contents.index(can_use_gui)
-            least_index = min(index, least_index)
-            tree.contents.remove(can_use_gui)
-        except StopIteration:
-            can_use_gui = Pair('can_use_gui')
-        if third_party:
-            trigger_name = 'emf_cb_thirdparty_can_use_gui_trigger'
-        else:
-            trigger_name = 'emf_cb_can_use_gui_trigger'
-        trigger = Pair(trigger_name, 'yes')
-        if not can_use_gui.value.has_pair(trigger_name, 'yes'):
-            can_use_gui.value.contents.insert(0, trigger)
-    # remove & handle can_use_title
-    try:
-        can_use_title = next(p for p in tree if p.key.val == 'can_use_title')
-        index = tree.contents.index(can_use_title)
-        least_index = min(index, least_index)
-        tree.contents.remove(can_use_title)
-    except StopIteration:
-        can_use_title = None
-    if can_use_title:
-        if check_de_jure_tier:
-            if third_party:
-                trigger_name = (
-                    'emf_cb_thirdparty_can_use_de_jure_title_trigger')
-            else:
-                trigger_name = 'emf_cb_can_use_de_jure_title_trigger'
-            trigger = Pair(trigger_name, 'yes')
-            if not can_use_title.value.has_pair(trigger_name, 'yes'):
-                can_use_title.value.contents.insert(0, trigger)
-        else:
-            if third_party:
-                trigger_name = 'emf_cb_thirdparty_can_use_title_trigger'
-            else:
-                trigger_name = 'emf_cb_can_use_title_trigger'
-            trigger = Pair(trigger_name, 'yes')
-            if not can_use_title.value.has_pair(trigger_name, 'yes'):
-                can_use_title.value.contents.append(trigger)
-    # reinsert
-    if can_use_title:
-        tree.contents.insert(least_index, can_use_title)
-    if can_use:
-        tree.contents.insert(least_index, can_use)
-    if can_use_gui:
-        tree.contents.insert(least_index, can_use_gui)
-    # handle & insert effects
-    try:
-        on_success_posttitle = next(p for p in tree
-                                    if p.key.val == 'on_success_posttitle')
-    except StopIteration:
-        on_success_posttitle = make_empty_obj_pair('on_success_posttitle')
-        index = next((i for i, p in enumerate(tree)
-                      if p.key.val == 'on_success_title'),
-                     next(i for (i, p) in enumerate(tree)
-                          if p.key.val == 'on_success')) + 1
-        tree.contents.insert(index, on_success_posttitle)
-    if third_party:
-        effect_name = 'emf_cb_thirdparty_on_success_posttitle_effect'
-    else:
-        effect_name = 'emf_cb_on_success_posttitle_effect'
-    effect = Pair(effect_name, 'yes')
-    if not on_success_posttitle.value.has_pair(effect_name, 'yes'):
-        on_success_posttitle.value.contents.append(effect)
+changeset = {
+    'd_sunni': [
+        ((775, 1, 1), 0, '''
+            effect = { set_title_flag = al_Mahdi }
+            '''),
+        ((785, 1, 1), 0, '''
+            effect = { set_title_flag = al_Hadi }
+            '''),
+        ((861, 12, 1), 1, '''
+            effect = { set_title_flag = anarchy_at_samarra_happened }
+            set_global_flag = anarchy_at_samarra
+            '''),
+        ((869, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Muhtadi
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((870, 6, 1), 0, '''
+            effect = {
+                set_title_flag = al_Mutamid
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            clr_global_flag = anarchy_at_samarra
+            '''),
+        ((892, 10, 1), 0, '''
+            effect = {
+                set_title_flag = al_Mutadid
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((902, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Muktafi
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((908, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Muqtadir
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((932, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Qahir
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((934, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Radi
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((940, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Muttaqi
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((944, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Mustakfi
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((946, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Muti
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((974, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Tai
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((991, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Qadir
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((1031, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Qaim
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((1075, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al-Muqtadi
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((1094, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Mustazhir
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((1118, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Mustarshid
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((1135, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Rashid
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((1136, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Muqtafi
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((1160, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Mustanjid
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((1170, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Mustadi
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((1180, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Nasir
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((1225, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Zahir
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((1226, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Mustansir
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            '''),
+        ((1242, 1, 1), 0, '''
+            effect = {
+                set_title_flag = al_Mustasim
+                change_variable = { which = "caliphnumber" value = 1 }
+            }
+            ''')
+    ],
+    'e_arabia': [
+        ((754, 1, 1), 1, '''
+            effect = {
+                set_variable = { which = "imperial_dynasty_count" value = 1 }
+                set_variable = { which = "imperial_decay" value = 25 }
+            }
+            '''),
+        ((775, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((785, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((786, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((809, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((813, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((833, 8, 9), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((842, 1, 5), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((847, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((861, 12, 1), 1, '''
+            law = infighting_0
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((862, 6, 7), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((866, 1, 1), 1, '''
+            effect = {
+                change_variable = { which = "imperial_dynasty_count" value = 1 }
+                set_variable = { which = "imperial_decay" value = 50 }
+            }
+            '''),
+        ((869, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((870, 6, 1), 1, '''
+            effect = {
+                revoke_law = infighting_0
+                change_variable = { which = "imperial_dynasty_count" value = 1 }
+            }
+            '''),
+        ((892, 10, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((902, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((908, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((932, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((934, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((940, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((944, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((946, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((974, 1, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((978, 1, 1), 1, '''
+            effect = { set_variable = { which = "imperial_dynasty_count" value = 0 } }
+            ''')
+    ],
+    'e_byzantium': [
+        ((743, 11, 2), 1, '''
+            set_global_flag = byz_empire_flourishes
+            effect = {
+                set_variable = { which = "imperial_decay" value = 10 }
+            }
+            '''),
+        ((1025, 12, 15), 1, '''
+            law = crown_authority_1
+            '''),
+        ((1055, 1, 11), 1, '''
+            clr_global_flag = byz_empire_flourishes 
+            set_global_flag = byz_empire_cracking
+            effect = {
+                set_variable = { which = "imperial_decay" value = 30 }
+            }
+            '''),
+        ((1057, 8, 31), 1, '''
+            law = crown_authority_2
+            '''),
+        ((1059, 11, 22), 1, '''
+            law = crown_authority_1
+            '''),
+        ((1071, 8, 26), 1, '''
+            clr_global_flag = byz_empire_cracking 
+            set_global_flag = byz_empire_falling
+            effect = {
+                set_variable = { which = "imperial_decay" value = 50 }
+            }
+            '''),
+        ((1081, 4, 1), 1, '''
+            law = crown_authority_2 
+            clr_global_flag = byz_empire_falling 
+            set_global_flag = byz_empire_cracking
+            effect = {
+                set_variable = { which = "imperial_dynasty_count" value = 0 }
+                set_variable = { which = "imperial_decay" value = 30 }
+            }
+            '''),
+        ((1118, 8, 15), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((1143, 4, 8), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((1180, 9, 24), 1, '''
+            law = crown_authority_1 
+            clr_global_flag = byz_empire_cracking 
+            set_global_flag = byz_empire_falling
+            effect = {
+                change_variable = { which = "imperial_dynasty_count" value = 1 }
+                set_variable = { which = "imperial_decay" value = 50 }
+            }
+            '''),
+        ((1183, 9, 24), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((1185, 9, 12), 1, '''
+            effect = { set_variable = { which = "imperial_dynasty_count" value = 0 } }
+            '''),
+        ((1195, 6, 1), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((1203, 7, 18), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((1204, 1, 28), 1, '''
+            law = crown_authority_2
+            effect = { set_variable = { which = "imperial_dynasty_count" value = 0 } }
+            '''),
+        ((1282, 12, 11), 1, '''
+            law = crown_authority_1
+            clr_global_flag = byz_empire_falling
+            set_global_flag = byz_empire_shattered
+            effect = {
+                change_variable = { which = "imperial_dynasty_count" value = 1 }
+                set_variable = { which = "imperial_decay" value = 70 }
+            }
+            '''),
+        ((1328, 5, 24), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            ''')
+    ],
+    'e_hre': [
+        ((962, 2, 2), 1, '''
+            effect = { set_variable = { which = "imperial_dynasty_count" value = 0 } }
+            '''),
+        ((973, 5, 7), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((983, 12, 7), 1, '''
+            effect = {
+                change_variable = { which = "imperial_dynasty_count" value = 1 }
+                set_variable = { which = "imperial_decay" value = 5 }
+            }
+            '''),
+        ((1002, 1, 12), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((1024, 7, 13), 1, '''
+            effect = { set_variable = { which = "imperial_dynasty_count" value = 0 } }
+            '''),
+        ((1039, 6, 4), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((1056, 5, 10), 1, '''
+            effect = {
+                change_variable = { which = "imperial_decay" value = 5 }
+                change_variable = { which = "imperial_dynasty_count" value = 1 }
+            }
+            '''),
+        ((1106, 7, 8), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((1125, 8, 24), 1, '''
+            effect = { set_variable = { which = "imperial_dynasty_count" value = 0 } }
+            '''),
+        ((1152, 2, 15), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((1190, 6, 10), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((1197, 9, 28), 1, '''
+            effect = {
+                change_variable = { which = "imperial_dynasty_count" value = 1 }
+                change_variable = { which = "imperial_decay" value = 10 }
+            }
+            '''),
+        ((1208, 6, 21), 1, '''
+            effect = { set_variable = { which = "imperial_dynasty_count" value = 0 } }
+            '''),
+        ((1250, 12, 13), 1, '''
+            effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
+            '''),
+        ((1254, 5, 21), 1, '''
+            effect = { set_variable = { which = "imperial_dynasty_count" value = 0 } }
+            '''),
+        ((1272, 4, 2), 1, '''
+            effect = {
+                change_variable = { which = "imperial_decay" value = 10 }
+            }
+            ''')
+    ]
+}
 
 @print_time
 def main():
@@ -105,55 +400,128 @@ def main():
     swmhhistory = swmhpath / 'history'
     emfswmhhistory = emfswmhpath / 'history'
     parser = FullParser()
-    parser.fq_keys.append('name')
-    parser.no_fold_to_depth = 1
+    parser.fq_keys = ['name']
     # parser.no_fold_keys.extend(['factor', 'value'])
-    parser.newlines_to_depth = 0
 
     # shutil.rmtree(str(emfswmhhistory), ignore_errors=True)
     # emfswmhhistory.mkdir(parents=True)
     
-    # (emfswmhhistory / 'characters').mkdir()
+    shutil.rmtree(str(emfswmhhistory / 'characters'), ignore_errors=True)
+
+    parser.newlines_to_depth = 0
+    parser.no_fold_to_depth = 1
+    (emfswmhhistory / 'characters').mkdir()
     path = swmhhistory / 'characters/hungarian.txt'
     tree = parser.parse_file(path)
     effect = tree[159137][867, 1, 1]['effect']
     effect.contents = [p for p in effect.contents
                        if p.key.val == 'create_character']
     effect.contents[:0] = parser.parse('''
-# Truce with Bulgaria until 887
-random_independent_ruler = {
-    limit = { has_landed_title = k_bulgaria }
-    opinion = { who = ROOT modifier = in_non_aggression_pact years = 20 }
-}
-if = {
-    limit = { is_nomadic = yes }
-    spawn_unit = {
-        province = 1147 # Bacau
-        owner = ROOT
-        troops = {
-            light_cavalry = { 465 465 }
-            horse_archers = { 235 235 }
+        # Truce with Bulgaria until 887
+        random_independent_ruler = {
+            limit = { has_landed_title = k_bulgaria }
+            opinion = { who = ROOT modifier = in_non_aggression_pact years = 20 }
         }
-        attrition = 0.25
-        reinforces = yes
-        earmark = start_troops
-    }
-    spawn_unit = {
-        province = 1147 # Bacau
-        owner = ROOT
-        troops = {
-            light_cavalry = { 465 465 }
-            horse_archers = { 235 235 }
+        if = {
+            limit = { is_nomadic = yes }
+            spawn_unit = {
+                province = 1147 # Bacau
+                owner = ROOT
+                troops = {
+                    light_cavalry = { 465 465 }
+                    horse_archers = { 235 235 }
+                }
+                attrition = 0.25
+                reinforces = yes
+                earmark = start_troops
+            }
+            spawn_unit = {
+                province = 1147 # Bacau
+                owner = ROOT
+                troops = {
+                    light_cavalry = { 465 465 }
+                    horse_archers = { 235 235 }
+                }
+                attrition = 0.25
+                reinforces = yes
+                earmark = start_troops
+            }
         }
-        attrition = 0.25
-        reinforces = yes
-        earmark = start_troops
-    }
-}
         ''').contents
     targetpath = emfswmhhistory / path.relative_to(swmhhistory)
     with targetpath.open('w', encoding='cp1252', newline='\r\n') as f:
         f.write(tree.str(parser))
+
+    shutil.rmtree(str(emfswmhhistory / 'titles'), ignore_errors=True)
+
+    parser.newlines_to_depth = -1
+    parser.no_fold_to_depth = 0
+    parser.fq_keys = ['which']
+    (emfswmhhistory / 'titles').mkdir()
+    for path, tree in parser.parse_files('history/titles/*',
+                                         basedir=swmhpath):
+        changed = False
+        for n, v in tree:
+            if any(n2.val == 'vice_royalty' for n2, _ in v):
+                changed = True
+                # removes attached comments, eh, whatever
+                v.contents = [p2 for p2 in v.contents
+                              if p2.key.val != 'vice_royalty']
+        if path.stem in changeset:
+            changed = True
+            for date, where, text in changeset[path.stem]:
+                tree[date].contents[where:where] = parser.parse(text).contents
+            if path.stem == 'e_byzantium':
+                for n, v in tree[3, 1, 27]:
+                    if n.val == 'law' and v.val == 'imperial_administration':
+                        v.val = 'administration_2'
+        elif path.stem == 'k_hungary':
+            changed = True
+            assert len(tree.contents) == 50
+            assert len(tree[580, 1, 1].contents) == 1
+            item = tree[580, 1, 1].contents.pop()
+            comments = item.key.pre_comments
+            item.key.pre_comments = []
+            comments.extend(
+                [Comment(x) for x in item.inline_str(parser)[0].splitlines()])
+            tree[580, 1, 1].ker.pre_comments[:0] = comments
+            assert len(tree[797, 1, 1].contents) == 2
+            item = tree[797, 1, 1].contents.pop()
+            comments = item.key.pre_comments
+            item.key.pre_comments = []
+            comments.extend(
+                [Comment(x) for x in item.inline_str(parser)[0].splitlines()])
+            tree[797, 1, 1].ker.pre_comments[:0] = comments
+            tree[1000, 12, 25].contents[:0] = parser.parse('''
+                set_global_flag = emf_conquest_hungary_completed
+                effect = { set_title_flag = ai_converted_catholic }
+                ''').contents
+            tree.contents[22:22] = parser.parse('''
+                895.1.1 = {
+                    effect = { set_title_flag = hungary_name_change }
+                }
+                902.1.1 = {
+                    set_global_flag = emf_magyar_migration_started
+                    set_global_flag = emf_magyar_migration_completed
+                }
+                ''').contents
+            tree.contents[22].key.pre_comments = (
+                tree.contents[24].key.pre_comments)
+            tree.contents[24].key.pre_comments = []
+        elif path.stem == 'k_magyar':
+            changed = True
+            item = tree[20, 1, 1].contents.pop()
+            comments = [Comment(x) for x in item.str(parser).splitlines()]
+            tree[20, 1, 1].ker.pre_comments[:0] = comments
+            tree[764, 1, 1].contents[:0] = parser.parse('''
+                law = succ_gavelkind
+                ''').contents
+        if changed:
+            tree.contents = [p for p in tree.contents
+                             if p.value.contents or p.has_comments]
+            targetpath = emfswmhhistory / path.relative_to(swmhhistory)
+            with targetpath.open('w', encoding='cp1252', newline='\r\n') as f:
+                f.write(tree.str(parser))
 
     # for path, tree in parser.parse_files('common/cb_types/*', basedir=MODPATH):
     #     # for cb_pair in tree:
