@@ -635,9 +635,10 @@ class SimpleParser:
     tokenizer = SimpleTokenizer
     repos = {}
 
-    def __init__(self, *moddirs):
+    def __init__(self, *moddirs, strict=True):
         self.moddirs = list(moddirs)
         self.basedir = vanilladir
+        self.strict = strict
         self.cache_hits = 0
         self.cache_misses = 0
         self.parse_tree_cache = {}
@@ -676,8 +677,11 @@ class SimpleParser:
         string = toktype('String') >> (lambda s: s[1:-1]) >> String
         key = date | number | name
         pair = forward_decl()
-        obj = (kel + many(pair | string | key) +
-               (ker | skip(finished)) >> unarg(Obj))
+        if self.strict:
+            obj = kel + many(pair | string | key) + ker >> unarg(Obj)
+        else:
+            obj = (kel + many(pair | string | key) +
+                   (ker | skip(finished)) >> unarg(Obj))
         pair.define(key + op + (obj | string | key) >> unarg(Pair))
         self.toplevel = many(pair) + skip(finished) >> TopLevel
 
@@ -843,7 +847,10 @@ class FullParser(SimpleParser):
         key = unquoted_string | date | number
         value = forward_decl()
         pair = key + op + value >> unarg(Pair)
-        obj = kel + (many(pair | value)) + (ker | end) >> unarg(Obj)
+        if self.strict:
+            obj = kel + many(pair | value) + ker >> unarg(Obj)
+        else:
+            obj = kel + many(pair | value) + (ker | end) >> unarg(Obj)
         value.define(obj | key | quoted_string)
         self.toplevel = (many(pair) + many(nl + comment) + end >>
                          unarg(TopLevel))
