@@ -263,6 +263,13 @@ variables:
     )
   vTriggerBool: '(?x: {{vTTriggerBool}} | {{vCTriggerBool}} | {{vAnyTriggerBool}} )'
   vTriggerTarget: '(?x: {{vTTriggerTarget}} | {{vCTriggerTarget}} )'
+  vCScope: |-
+    (?x:
+      religion_scope
+    | secret_religion_scope
+    | true_religion_scope
+    | culture_scope
+    )
 
 contexts:
   main:
@@ -359,6 +366,8 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.language.ck2script
+    - match: '\b{{vCScope}}\b'
+      scope: keyword.control.ck2script
     - match: \b(temporary|clan)\b
       scope: keyword.control.ck2script
     - match: \b((is_primary_holder_title(_tier)?)|tier|real_tier|lower_tier_than|lower_real_tier_than|higher_tier_than|higher_real_tier_than|is_titular|is_de_jure_title|de_facto_liege|de_facto_liege_title)\b
