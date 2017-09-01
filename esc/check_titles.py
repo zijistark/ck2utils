@@ -115,9 +115,13 @@ def process_landed_titles(parser):
                 if n.val in titles:
                     print('Duplicate title {}'.format(n.val))
                 titles.add(n.val)
-                if ('title' in v.dictionary and
-                    'title_female' not in v.dictionary):
-                    misogyny.append(n.val)
+                try:
+                    if ('title' in v.dictionary and
+                        'title_female' not in v.dictionary):
+                        misogyny.append(n.val)
+                except:
+                    print(n.val)
+                    raise
                 if n.val.startswith('b_'):
                     titles_de_jure.append(n.val)
                     parent_is_titular = False
@@ -128,8 +132,12 @@ def process_landed_titles(parser):
                         parent_is_titular = False
         return parent_is_titular
 
-    for _, tree in parser.parse_files('common/landed_titles/*'):
-        recurse(tree)
+    for path, tree in parser.parse_files('common/landed_titles/*'):
+        try:
+            recurse(tree)
+        except:
+            print(path)
+            raise
     # print('{} titles, {} de jure'.format(len(titles), len(titles_de_jure)))
     return titles, titles_de_jure, misogyny
 

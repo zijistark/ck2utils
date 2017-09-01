@@ -202,6 +202,9 @@ class TopLevel(Stringifiable):
     def __getitem__(self, key):
         return self.dictionary[key]
 
+    def get(self, *args, **kwargs):
+        return self.dictionary.get(*args, **kwargs)
+
     # assumes keys occur at most once
     def has_pair(self, key_val, val_val):
         return key_val in self.dictionary and self[key_val].val == val_val
@@ -324,7 +327,7 @@ class Number(Commented):
             return int(string)
         except ValueError:
             return float(string)
-    
+
 
 class Date(Commented):
 
@@ -452,6 +455,9 @@ class Obj(Stringifiable):
 
     def __getitem__(self, key):
         return self.dictionary[key]
+
+    def get(self, *args, **kwargs):
+        return self.dictionary.get(*args, **kwargs)
 
     # assumes keys occur at most once
     def has_pair(self, key_val, val_val):
@@ -820,8 +826,12 @@ class SimpleParser:
 
     def write(self, tree, path):
         path.parent.mkdir(parents=True, exist_ok=True)
-        with path.open('w', encoding='cp1252', newline='\r\n') as f:
-            f.write(tree.str(self))
+        try:
+            with path.open('w', encoding='cp1252', newline='\r\n') as f:
+                f.write(tree.str(self))
+        except:
+            print(path)
+            raise
 
 class FullParser(SimpleParser):
     tokenizer = FullTokenizer
