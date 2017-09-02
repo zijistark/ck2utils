@@ -161,7 +161,7 @@ variables:
         | rivals
         | (?: subrealm_ (?: castles | cities ) )
         | spouses
-        | trade_posts 
+        | trade_posts
         | traits
         | (?: (?: unique_dynasty_ )? vassals )
         )
@@ -347,7 +347,9 @@ contexts:
         2: entity.function.name
         # 4: some scope for namespaces or identifiers (entity.name... ?)
         5: constant.numeric.integer.ck2script
-    - match: (?<!\w)(\-?([0-9]+\.)?[0-9]+)\b
+    - match: (?<!\w)\-?[0-9]*\.\-?[0-9]*\.\-?[0-9]*\b
+      scope: constant.other.date.ck2script
+    - match: (?<!\w)\-?([0-9]+\.)?[0-9]+\b
       scope: constant.numeric.ck2script
     - match: '\b{{vTitleID}}\b'
       scope: variable.other.ck2script
@@ -421,7 +423,7 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.language.ck2script
-    - match: '\b{{vScope}}\b' 
+    - match: '\b{{vScope}}\b'
       scope: keyword.control.ck2script
     - match: \b(tier|real_tier|lower_tier_than|lower_real_tier_than|higher_tier_than|higher_real_tier_than)\b
       scope: keyword.control.ck2script
