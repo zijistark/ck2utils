@@ -27,6 +27,17 @@ variables:
     | KING
     | EMPEROR
     )
+  vLiteralHoldingType: |-
+    (?xi:
+      CASTLE
+    | TEMPLE
+    | CITY
+    | TRIBAL
+    | NOMAD
+    | FAMILY_PALACE
+    | TRADE_POST
+    | HOSPITAL
+    )
   vID: |-
     (?x: [a-zA-Z0-9_-]+ )
   vStrictID: |-
@@ -154,84 +165,129 @@ variables:
         | traits
         | (?: (?: unique_dynasty_ )? vassals )
         )
+    | age
     | among_most_powerful_vassals
+    | character
+    | combat_rating
+    | day_of_birth
+    | diplomacy
+    | dynasty
+    | intrigue
+    | learning
+    | martial
+    | month
+    | month_of_birth
+    | num_of_holy_sites
+    | piety
+    | prestige
+    | province_id
+    | realm_size
+    | ruled_years
+    | stewardship
+    | wealth
+    | year
     )
-  vTTriggerTarget: |-
-    (?x:
-      is_ (?: allowed | preferred) _holding_type
-    | conquest_culture
-    | culture
-    | religion
-    )
-  vTTriggerBool: |-
-    (?x:
-      adventurer
-    | clan
-    | controls_religion
-    | has_holder
-    | has_owner
-    | has_siege
-    | holy_order
-    | is_contested
-    | is_conquered
-    | is_feudal
-    | is_landless_type_title
-    | is_primary_type_title
-    | is_tribal_type_title
-    | is_occupied
-    | is_nomadic
-    | is_republic
-    | is_theocracy
-    | is_tribal
-    | mercenary
-    | rebel
-    | temporary
-    )
-  vPTriggerTarget: |-
-    (?x:
-      culture
-    | has_owner
-    | is_land
-    | religion
-    )
-  vCTriggerTarget: |-
+  vTriggerTarget: |-
     (?x:
       can_marry
     | character
+    | claimed_by
+    | conquest_culture
     | culture
+    | de_facto_liege
+    | de_facto_liege_title
+    | de_jure_liege
+    | de_jure_liege_or_above
+    | de_jure_vassal_or_below
     | dynasty
+    | has_claim
+    | has_landed_title
+    | has_strong_claim
+    | has_weak_claim
+    | holder
+    | is_allied_with
+    | is_allowed_holding_type
     | is_child_of
+    | is_close_relative
+    | is_consort
     | is_father
+    | is_foe
+    | is_friend
+    | is_liege_of
+    | is_liege_or_above
+    | is_lover
     | is_married
     | is_mother
+    | is_preferred_holding_type
     | is_primary_heir
+    | is_rival
+    | is_vassal_or_below
+    | is_within_diplo_range
+    | pays_tribute_to
+    | province
+    | province_id
     | religion
+    | same_liege
+    | same_realm
     | sibling
+    | title
+    | vassal_of
+    | war_with
     )
-  vCTriggerBool: |-
+  vTriggerBool: |-
     (?x:
-      controls_religion
+      adventurer
+    | always
+    | can_call_crusade
+    | can_change_religion
+    | can_marry
+    | controls_religion
     | clan
+    | has_autocephaly
+    | has_game_started
     | has_guardian
+    | has_holder
+    | has_inheritance_blocker
+    | has_owner
+    | has_raised_standing_troops
     | has_regent
     | has_secret_religion
+    | has_siege
     | holy_order
     | in_command
+    | in_revolt
     | in_seclusion
     | is_adult
+    | is_alive
+    | is_attacker
+    | is_capital
+    | is_consort
+    | is_contested
+    | is_conquered
+    | is_councillor
+    | is_de_jure_title
     | is_dying
     | is_father_real_father
     | is_female
     | is_feudal
+    | is_heretic
     | is_incapable
+    | is_ill
+    | is_land
     | is_landed
+    | is_landless_type_title
     | is_marriage_adult
     | is_married
     | is_merchant_republic
     | is_multiplayer_host_character
     | is_nomadic
+    | is_occupied
     | is_patrician
+    | is_pregnant
     | is_primary_heir
+    | is_primary_holder_title
+    | is_primary_holder_title_tier
+    | is_primary_type_title
     | is_primary_war_attacker
     | is_primary_war_defender
     | is_pregnant
@@ -239,31 +295,26 @@ variables:
     | is_playable
     | is_republic
     | is_ruler
+    | is_save_game
     | is_theocracy
+    | is_titular
     | is_tribal
+    | is_tribal_type_title
+    | is_tributary
+    | is_vice_royalty
     | is_voter
     | mercenary
+    | multiplayer
     | rebel
+    | religion_allows_female_temple_holders
+    | temporary
     | war
-    )
-  vAnyTriggerBool: |-
-    (?x:
-      multiplayer
-    | is_save_game
-    | has_game_started
-    )
-  vAnyTriggerInt: |-
-    (?x:
-      year
-      month
     )
   vAnyTriggerID: |-
     (?x:
       has_global_flag
     )
-  vTriggerBool: '(?x: {{vTTriggerBool}} | {{vCTriggerBool}} | {{vAnyTriggerBool}} )'
-  vTriggerTarget: '(?x: {{vTTriggerTarget}} | {{vCTriggerTarget}} )'
-  vCScope: |-
+  vScope: |-
     (?x:
       religion_scope
     | secret_religion_scope
@@ -350,8 +401,8 @@ contexts:
       scope: keyword.control.ck2script
     - match: \b(friends|rivals|has_dlc|lacks_dlc|is_part_of_plot|is_in_society|prisoner|min_age|max_age|religion|religion_group|culture|culture_group)\b
       scope: keyword.control.ck2script
-      # top-level event effect blocks
-    - match: \b(immediate|option|after)\b
+      # top-level event effect blocks (well, `name` is in the `option` block)
+    - match: \b(immediate|option|after|desc|title|name)\b
       scope: keyword.control.ck2script
       # general common triggers & effects
     - match: '\b({{vTriggerInt}})\s*=\s*({{vLiteralInt}})\b'
@@ -361,32 +412,34 @@ contexts:
     - match: '\b({{vTriggerBool}})\s*=\s*({{vLiteralBool}})\b'
       captures:
         1: support.function.ck2script
-        2: constant.numeric.integer.ck2script
+        2: constant.language.ck2script
+    - match: '\b(holding_type)\s*=\s*({{vLiteralHoldingType}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.ck2script
     - match: '\b({{vTriggerTarget}})\s*=\s*({{vTarget}})\b'
       captures:
         1: support.function.ck2script
         2: variable.language.ck2script
-    - match: '\b{{vCScope}}\b'
+    - match: '\b{{vScope}}\b' 
       scope: keyword.control.ck2script
-    - match: \b(temporary|clan)\b
+    - match: \b(tier|real_tier|lower_tier_than|lower_real_tier_than|higher_tier_than|higher_real_tier_than)\b
       scope: keyword.control.ck2script
-    - match: \b((is_primary_holder_title(_tier)?)|tier|real_tier|lower_tier_than|lower_real_tier_than|higher_tier_than|higher_real_tier_than|is_titular|is_de_jure_title|de_facto_liege|de_facto_liege_title)\b
+    - match: \bregion\b
       scope: keyword.control.ck2script
-    - match: \b(character|title|province|province_id|dynasty|region|de_jure_liege|de_jure_liege_or_above|de_jure_vassal_or_below|has_landed_title|holder|always|is_liege_or_above|is_vassal_or_below|is_liege_of|vassal_of|same_realm|same_liege)\b
+    - match: \b(((reverse_)?(remove_)?opinion)|((reverse_)?has_opinion_modifier)|opinion_diff|their_opinion|personal_opinion)\b
       scope: keyword.control.ck2script
-    - match: \b(has_(strong_|weak_)?claim|claimed_by|((reverse_)?(remove_)?opinion)|((reverse_)?has_opinion_modifier)|opinion_diff|their_opinion|personal_opinion)\b
+    - match: \b(((reverse_)?realm_levy_diff)|trait|create_(title|character|artifact|(random_(soldier|priest|steward|diplomat|intriguer)))|has_law)\b
       scope: keyword.control.ck2script
-    - match: \b(is_land|conquest_culture|((reverse_)?realm_levy_diff)|trait|(is_primary_war_(defender|attacker))|war_with|is_tributary|pays_tribute_to|create_(title|character|artifact|(random_(soldier|priest|steward|diplomat|intriguer)))|has_law|is_allied_with|sibling|num_of_holy_sites)\b
+    - match: \b(using_cb|((check|change|subtract|multiply|divide|export_to|set)_variable)|is_variable_equal|attribute_diff|age_diff|health|base_health)\b
       scope: keyword.control.ck2script
-    - match: \b(using_cb|((check|change|subtract|multiply|divide|export_to|set)_variable)|is_variable_equal|is_dying|is_alive|wealth|prestige|piety|diplomacy|martial|stewardship|intrigue|learning|attribute_diff|age_diff|health|base_health|can_marry|has_inheritance_blocker)\b
+    - match: \b(can_hold_title|government)\b
       scope: keyword.control.ck2script
-    - match: \b(realm_size|ruled_years|in_revolt|can_hold_title|holding_type|government|(num_of_(realm_counties|settlements|buildings|baron_titles|count_titles|count_titles_in_realm|duke_titles|king_titles|emperor_titles|children|claims|consorts|dynasty_members|faction_backers|lovers|max_settlements|friends|plot_backers|prisoners|rivals|titles|trade_posts|trade_post_diff|traits|unique_dynasty_vassals|vassals)))\b
+    - match: \b(has_game_rule|has_(job|minor)_title|artifact_type|secret_religion(_group)?|true_religion(_group)?|religion(_group)?|culture(_group)?)\b
       scope: keyword.control.ck2script
-    - match: \b(add_(character|province|holding)_modifier|has_game_rule|has_game_started|is_father_real_father|is_father|is_mother|is_child_of||is_pregnant|is_married|is_consort|is_lover|age|is_adult|is_incapable|is_marriage_adult|has_(job|minor)_title|is_close_relative|pays_tribute_to|month_of_birth|day_of_birth|artifact_type|secret_religion(_group)?|true_religion(_group)?|religion(_group)?|conquest_culture|culture(_group)?|is_within_diplo_range|is_friend|is_rival|is_foe|is_guardian)\b
+    - match: \b(has_(any_)?building|has_focus|has_ambition|has_(earmarked_)?regiments|holds_favor_on|owes_favor_to|relative_income_to_liege|relative_power|faction_power|among_most_powerful_vassals|relative_power_to_liege|(scaled_)?wealth|has_trade_post|has_owner|has_holder|port|borders_major_river|borders_lake|terrain)\b
       scope: keyword.control.ck2script
-    - match: \b(is_ill|has_(any_)?building|has_focus|has_ambition|has_autocephaly|religion_allows_female_temple_holders|has_raised_standing_troops|has_(earmarked_)?regiments|has_secret_religion|is_vice_royalty|holds_favor_on|owes_favor_to|relative_income_to_liege|relative_power|faction_power|among_most_powerful_vassals|relative_power_to_liege|(scaled_)?wealth|has_trade_post|has_owner|has_holder|port|borders_major_river|borders_lake|terrain)\b
-      scope: keyword.control.ck2script
-    - match: \b(society_rank|is_quest_target|has_quest|rank|society|has_(any_)?building|in_command|is_attacker|war|plot_power|can_swap_job_title|death_reason|killer|is_councillor|has_disease|is_occupied|distance|is_heretic|is_allowed_to_loot|combat_rating|)\b
+    - match: \b(society_rank|is_quest_target|has_quest|rank|society|has_(any_)?building|plot_power|can_swap_job_title|death_reason|killer|has_disease|distance|is_allowed_to_loot)\b
       scope: keyword.control.ck2script
       # these ones are actually scripted triggers from HIP/EMF core code (all scripted triggers should get a diff color too -- which means re-parsing the scripted triggers folder on the VFS regularly):
     - match: \b(((owner_)?under_((FROM){1,2}|ROOT|(PREV){1,3}))|is_de_jure_title|best_de_jure_liege_title_(under|holder)_(ROOT|FROM|target_ruler))\b
