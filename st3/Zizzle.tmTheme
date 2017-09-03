@@ -53,9 +53,24 @@
 			<key>name</key>
 			<string>Constant</string>
 			<key>scope</key>
-			<string>constant</string>
+			<string>constant.language.enum</string>
 			<key>settings</key>
 			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#CF6A4C</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Constant</string>
+			<key>scope</key>
+			<string>constant.language.boolean</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
 				<key>foreground</key>
 				<string>#CF6A4C</string>
 			</dict>
@@ -70,7 +85,7 @@
 				<key>fontStyle</key>
 				<string>bold</string>
 				<key>foreground</key>
-				<string>#0a7c00</string>
+				<string>#437a40</string>
 			</dict>
 		</dict>
 		<dict>
@@ -83,20 +98,7 @@
 				<key>fontStyle</key>
 				<string>bold</string>
 				<key>foreground</key>
-				<string>#be000a</string>
-			</dict>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>Literal</string>
-			<key>scope</key>
-			<string>constant.language.tier.ck2script</string>
-			<key>settings</key>
-			<dict>
-				<key>fontStyle</key>
-				<string>bold</string>
-				<key>foreground</key>
-				<string>#ff8eff</string>
+				<string>#cf4c4c</string>
 			</dict>
 		</dict>
 		<dict>
@@ -122,7 +124,20 @@
 				<key>fontStyle</key>
 				<string></string>
 				<key>foreground</key>
-				<string>#CDA869</string>
+				<string>#715d3a</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Keyword</string>
+			<key>scope</key>
+			<string>keyword.other.tooltip</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#5d6357</string>
 			</dict>
 		</dict>
 		<dict>
@@ -234,32 +249,6 @@
 			<dict>
 				<key>foreground</key>
 				<string>#ff8e00</string>
-			</dict>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>Literal</string>
-			<key>scope</key>
-			<string>support.constant.ck2script</string>
-			<key>settings</key>
-			<dict>
-				<key>fontStyle</key>
-				<string>bold</string>
-				<key>foreground</key>
-				<string>#44BA2C</string>
-			</dict>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>Literal</string>
-			<key>scope</key>
-			<string>support.constant.ck2script</string>
-			<key>settings</key>
-			<dict>
-				<key>fontStyle</key>
-				<string>bold</string>
-				<key>foreground</key>
-				<string>#44BA2C</string>
 			</dict>
 		</dict>
 		<dict>
