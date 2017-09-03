@@ -166,6 +166,11 @@ variables:
         | (?: (?: unique_dynasty_ )? vassals )
         )
     | age
+    | ai_ambition
+    | ai_greed
+    | ai_honor
+    | ai_rationality
+    | ai_zeal
     | among_most_powerful_vassals
     | character
     | combat_rating
@@ -237,6 +242,7 @@ variables:
   vTriggerBool: |-
     (?x:
       adventurer
+    | ai
     | always
     | can_call_crusade
     | can_change_religion
@@ -379,15 +385,35 @@ contexts:
     - match: \b(target|type|target_type|who|where|which|amount|value|count|attribute|percentage|duration|days|months|years|hidden|inherit|crime|disable_non_aggression_pacts|move|cooldown|tooltip|random|chance|factor|casus_belli|tier|thirdparty_title|infamy|as_if_liege|first|second|enemy|title|is_religious|same_religion|is_crusade|to|min|max|multiplier)\b
       scope: keyword.control.ck2script
     - match: '\b{{vLiteralTier}}\b'
-      scope: support.constant.tier.ck2script
+      scope: support.constant.tier.ck2script support.constant.enum.tier.ck2script
     - match: '\b({{vLiteralBool}}|{{vLiteralNull}})\b'
       scope: constant.language.ck2script
-    - match: \b((mult_)?modifier|modifier|additive_modifier|additive_power_diff_modifier|additive_opinion_modifier)\b
+      # general common triggers & effects
+    - match: '\b({{vTriggerInt}})\s*=\s*({{vLiteralInt}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.numeric.integer.ck2script
+    - match: '\b({{vTriggerBool}})\s*=\s*({{vLiteralBool}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.ck2script
+    - match: '\b(holding_type)\s*=\s*({{vLiteralHoldingType}})\b'
+      captures:
+        1: support.function.ck2script
+        2: support.constant.enum.holding_type.ck2script
+    - match: '\b({{vTriggerTarget}})\s*=\s*({{vTarget}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.language.ck2script
+    - match: '\b{{vScope}}\b' 
+      scope: keyword.control.ck2script
+      # hereafter, this is the wild untamed lands of free-form match rules:
+    - match: \b((mult_)?modifier|modifier|additive_modifier|additive_power_diff_modifier|additive_opinion_modifier|additive_compared_realm_size_modifier)\b
       scope: keyword.control.ck2script
     - match: \b(sprite|truce_days|is_permanent|check_all_titles|check_de_jure_tier|hostile_against_others|attacker_can_call_allies|defender_can_call_allies|can_ask_to_join_war|apply_short_occ_mod|press_claim|battle_warscore_mult|infamy_modifier|can_call_vassals|major_revolt|is_holy_war|allowed_to_target_tributaries|allowed_to_target_suzerains|ticking_war_score_multiplier|allow_distant|is_claim_all|is_independence|is_(?:tyranny|revolt)_cb)\b
       scope: keyword.control.ck2script
     - match: \b(tooltip|hidden_tooltip|custom_tooltip|hidden_trigger|hidden_effect)\b
-      scope: keyword.control.ck2script
+      scope: keyword.other.tooltip.ck2script
     - match: \b(if|trigger_switch|limit|on_trigger|while|break)\b
       scope: keyword.control.ck2script
       # types of "events" (repeat_event is strictly a command and not also an actual event type)
@@ -405,25 +431,6 @@ contexts:
       scope: keyword.control.ck2script
       # top-level event effect blocks (well, `name` is in the `option` block)
     - match: \b(immediate|option|after|desc|title|name)\b
-      scope: keyword.control.ck2script
-      # general common triggers & effects
-    - match: '\b({{vTriggerInt}})\s*=\s*({{vLiteralInt}})\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.numeric.integer.ck2script
-    - match: '\b({{vTriggerBool}})\s*=\s*({{vLiteralBool}})\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.language.ck2script
-    - match: '\b(holding_type)\s*=\s*({{vLiteralHoldingType}})\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.language.ck2script
-    - match: '\b({{vTriggerTarget}})\s*=\s*({{vTarget}})\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.language.ck2script
-    - match: '\b{{vScope}}\b'
       scope: keyword.control.ck2script
     - match: \b(tier|real_tier|lower_tier_than|lower_real_tier_than|higher_tier_than|higher_real_tier_than)\b
       scope: keyword.control.ck2script
