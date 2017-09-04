@@ -358,20 +358,24 @@ variables:
     | mercenary
     | multiplayer
     | owner_under_FROM
+    | owner_under_FROMFROM
     | owner_under_PREV
     | owner_under_PREVPREV
     | owner_under_PREVPREVPREV
     | owner_under_ROOT
+    | owner_under_target_ruler
     | pacifist
     | preparing_invasion
     | rebel
     | religion_allows_female_temple_holders
     | temporary
     | under_FROM
+    | under_FROMFROM
     | under_PREV
     | under_PREVPREV
     | under_PREVPREVPREV
     | under_ROOT
+    | under_target_ruler
     | war
     )
   vAnyTriggerID: |-
