@@ -187,6 +187,7 @@ variables:
     | diplomacy
     | dynasty
     | intrigue
+    | killer
     | learning
     | martial
     | month
@@ -206,6 +207,7 @@ variables:
     (?x:
       base_health
     | health
+    | religion_authority
     | scaled_piety
     | scaled_prestige
     | scaled_wealth
@@ -516,7 +518,7 @@ contexts:
         2: variable.other.ck2script
     - match: '\b{{vEventTarget}}\b'
       scope: variable.other.ck2script
-    - match: '\b((?:(?:has|remove)_{{vEventModifierType}}_modifier)|(?:add_|remove_)?trait|flag|can_hold_title|government|war_name|name|give_nickname|has_nickname|modifier|has_any_opinion_modifier|has_(?:minor|job)_title|has_plot|in_faction|leads_faction|has_law|add_law|add_law_w_cooldown|pass_law|region|continent|is_(?:law|decision|government)_(?:allowed|potential))\s*=\s*(\w+)\b'
+    - match: '\b((?:(?:has|remove)_{{vEventModifierType}}_modifier)|(?:add_|remove_)?trait|flag|can_hold_title|government|death_reason|war_name|name|give_nickname|has_nickname|modifier|has_any_opinion_modifier|has_(?:minor|job)_title|has_plot|in_faction|leads_faction|has_law|add_law|add_law_w_cooldown|pass_law|region|continent|is_(?:law|decision|government)_(?:allowed|potential))\s*=\s*(\w+)\b'
       captures:
         1: keyword.control.ck2script
         2: variable.identifier.ck2script
@@ -587,7 +589,7 @@ contexts:
     - match: \b((mult_)?modifier|modifier|additive_modifier|additive_power_diff_modifier|additive_opinion_modifier|additive_compared_realm_size_modifier|additive_realm_size_modifier)\b
       scope: keyword.control.ck2script
       # these are the names of parameters for numerous triggers & effects which have multiple named parameters possible
-    - match: \b(target|type|target_type|who|where|which|amount|value|count|attribute|percentage|duration|days|months|years|hidden|inherit|crime|disable_non_aggression_pacts|move|cooldown|random|chance|factor|casus_belli|tier|thirdparty_title|infamy|as_if_liege|first|second|enemy|title|is_religious|same_religion|is_crusade|to|min|max|multiplier)\b
+    - match: \b(target|type|target_type|who|where|which|amount|value|count|attribute|percentage|authority|duration|days|months|years|hidden|inherit|crime|disable_non_aggression_pacts|move|cooldown|random|chance|factor|casus_belli|tier|thirdparty_title|infamy|as_if_liege|first|second|enemy|title|is_religious|same_religion|is_crusade|to|min|max|multiplier)\b
       scope: keyword.control.ck2script
     - match: \b(sprite|truce_days|is_permanent|check_all_titles|check_de_jure_tier|hostile_against_others|attacker_can_call_allies|defender_can_call_allies|can_ask_to_join_war|apply_short_occ_mod|press_claim|battle_warscore_mult|infamy_modifier|can_call_vassals|major_revolt|is_holy_war|allowed_to_target_tributaries|allowed_to_target_suzerains|ticking_war_score_multiplier|allow_distant|is_claim_all|is_independence|is_(?:tyranny|revolt)_cb)\b
       scope: keyword.control.ck2script
@@ -617,7 +619,7 @@ contexts:
       scope: keyword.control.ck2script
     - match: \b(has_(any_)?building|has_focus|has_ambition|has_(earmarked_)?regiments|holds_favor_on|owes_favor_to|relative_income_to_liege|relative_power|faction_power|among_most_powerful_vassals|relative_power_to_liege|(scaled_)?wealth|has_trade_post|has_owner|has_holder|port|borders_major_river|borders_lake|terrain)\b
       scope: keyword.control.ck2script
-    - match: \b(society_rank|is_quest_target|has_quest|rank|society|has_(any_)?building|plot_power|can_swap_job_title|death_reason|killer|has_disease|distance|is_allowed_to_loot)\b
+    - match: \b(society_rank|is_quest_target|has_quest|rank|society|has_(any_)?building|plot_power|can_swap_job_title|killer|has_disease|distance|is_allowed_to_loot)\b
       scope: keyword.control.ck2script
       # general scopes ( ideally would be a different color )
     - match: \b((any_(direct_)?de_jure_vassal_title)|(any_de_jure_liege_title)|((any|random)_(demesne|realm)_(title|province))|((any|random)_province_holding)|((any|random)_neighbor_province))\b
