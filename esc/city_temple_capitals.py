@@ -16,6 +16,7 @@ def main():
         id_title[number] = title
         holding = collections.OrderedDict()
         capital = None
+        capital_set_today = False
         history = collections.defaultdict(list)
         for n, v in tree:
             try:
@@ -27,6 +28,7 @@ def main():
                 if v.val in ['castle', 'city', 'temple', 'tribal']:
                     holding[n.val] = v.val
                     if not capital:
+                        capital_set_today = True
                         capital = n.val
             except AttributeError:
                 history[n.val].extend(v)
@@ -35,14 +37,11 @@ def main():
         for _, stmts in sorted(history.items()):
             for n, v in stmts:
                 if n.val == 'capital':
+                    capital_set_today = True
                     capital = v.val
                     try:
                         if holding[capital] in ['city', 'temple']:
                             results.add((number, capital))
-                        if any(v == 'tribal'
-                               for k, v in holding.items() if k != capital):
-                            errors.append('ERROR: non-capital tribal in {}'
-                                          .format(number))
                     except KeyError:
                         errors.append('ERROR: unbuilt capital {} in {}'.format(
                                       v.val, number))
@@ -68,6 +67,11 @@ def main():
                     holding[n.val] = v.val
                     if not capital:
                         capital = n.val
+                if capital_set_today and any(v == 'tribal'
+                       for k, v in holding.items() if k != capital):
+                    errors.append('ERROR: non-capital tribal in {}'
+                                  .format(number))
+            capital_set_today = False
     with out_path.open('w') as fp:
         for line in errors:
             print(line, file=fp)
