@@ -349,6 +349,7 @@ variables:
     | is_pregnant
     | is_pretender
     | is_playable
+    | is_recent_grant
     | is_reformed_religion
     | is_republic
     | is_ruler
@@ -521,7 +522,7 @@ contexts:
         2: variable.other.ck2script
     - match: '\b{{vEventTarget}}\b'
       scope: variable.other.ck2script
-    - match: '\b((?:(?:has|remove)_{{vEventModifierType}}_modifier)|(?:add_|remove_)?trait|clear_flags_with_prefix|flag|can_hold_title|government|death_reason|war_name|name|give_nickname|has_nickname|modifier|has_any_opinion_modifier|has_(?:minor|job)_title|has_plot|in_faction|leads_faction|has_law|add_law|add_law_w_cooldown|pass_law|region|continent|is_(?:law|decision|government)_(?:allowed|potential))\s*=\s*(\w+)\b'
+    - match: '\b((?:(?:has|remove)_{{vEventModifierType}}_modifier)|(?:add_|remove_)?trait|clear_flags_with_prefix|flag|can_hold_title|government|death_reason|war_name|name|give_nickname|has_nickname|modifier|has_any_opinion_modifier|has_(?:minor|job)_title|has_plot|cancel_plot|in_faction|leads_faction|has_law|add_law|add_law_w_cooldown|pass_law|region|continent|is_(?:law|decision|government)_(?:allowed|potential))\s*=\s*(\w+)\b'
       captures:
         1: keyword.control.ck2script
         2: variable.identifier.ck2script
@@ -594,7 +595,7 @@ contexts:
       # these are the names of parameters for numerous triggers & effects which have multiple named parameters possible
     - match: \b(target|type|target_type|who|where|which|amount|value|count|attribute|percentage|authority|duration|days|months|years|hidden|inherit|crime|disable_non_aggression_pacts|move|cooldown|random|chance|factor|casus_belli|tier|thirdparty_title|infamy|as_if_liege|first|second|enemy|title|is_religious|same_religion|is_crusade|to|min|max|multiplier)\b
       scope: keyword.control.ck2script
-    - match: \b(sprite|truce_days|is_permanent|check_all_titles|check_de_jure_tier|hostile_against_others|attacker_can_call_allies|defender_can_call_allies|can_ask_to_join_war|apply_short_occ_mod|press_claim|battle_warscore_mult|infamy_modifier|can_call_vassals|major_revolt|is_holy_war|allowed_to_target_tributaries|allowed_to_target_suzerains|ticking_war_score_multiplier|allow_distant|is_claim_all|is_independence|is_(?:tyranny|revolt)_cb)\b
+    - match: \b(sprite|truce_days|is_permanent|check_all_titles|check_de_jure_tier|hostile_against_others|attacker_can_call_allies|defender_can_call_allies|can_ask_to_join_war|apply_short_occ_mod|press_claim|battle_warscore_mult|infamy_modifier|can_call_vassals|major_revolt|is_holy_war|allowed_to_target_tributaries|allowed_to_target_suzerains|ticking_war_score_multiplier|allow_distant|is_claim_all|is_independence|is_tyranny_cb|is_revolt_cb|can_attack_vassals|reflect_titleholder_change|display_on_map)\b
       scope: keyword.control.ck2script
       # types of "events" (repeat_event is strictly a command and not also an actual event type)
     - match: \b((character|long_character|narrative|letter|diploresponse|province|unit|repeat|society_quest)_event)\b
@@ -680,6 +681,8 @@ contexts:
       scope: keyword.control.ck2script
       # TODO: FUTURE CONTEXT OF JOB ACTIONS, AMBITIONS, PLOTS, FOCUSES, FACTIONS, LANDED_TITLES, COUNCIL_VOTING, TRAITS,
       #       COUNCIL_POSITIONS, GOVERNMENTS, ([LONG_]CHARACTER|LETTER|NARRATIVE|PROVINCE|UNIT|DIPLORESPONSE)_EVENT, ...
+    - match: \b(target_potential)\b # plot trigger blocks
+      scope: keyword.control.ck2script
       # random stuff not covered above [yet]:
     - match: \b(mean_time_to_happen|weight_multiplier|chance|membership|ai_chance)\b # modifier sets
       scope: keyword.control.ck2script
