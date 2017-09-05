@@ -67,10 +67,9 @@ def main():
                     holding[n.val] = v.val
                     if not capital:
                         capital = n.val
-                if capital_set_today and any(v == 'tribal'
-                       for k, v in holding.items() if k != capital):
-                    errors.append('ERROR: non-capital tribal in {}'
-                                  .format(number))
+            if capital_set_today and any(v == 'tribal'
+                   for k, v in holding.items() if k != capital):
+                errors.append('ERROR: non-capital tribal in {}'.format(number))
             capital_set_today = False
     with out_path.open('w') as fp:
         for line in errors:
