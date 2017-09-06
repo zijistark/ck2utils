@@ -55,13 +55,16 @@ variables:
     | (?:FROM){1,4}
     | (?:PREV){1,4}
     | THIS
+    )
+  vLangRHSTarget: |-
+    (?xi:
+      {{vLangTarget}}
     | LIEGE
     | FATHER
     | MOTHER
     | SPOUSE
     | NEW
     )
-  vTarget: '(?x: {{vLangTarget}} | {{vEventTarget}} )'
   vFlagType: |-
     (?x:
       character
@@ -551,16 +554,12 @@ contexts:
       captures:
         1: keyword.control.ck2script
         2: variable.other.ck2script
-    - match: '\b{{vEventTarget}}\b'
-      scope: variable.other.ck2script
     - match: '\b((?:set|clr|has)_{{vFlagType}}_flag)\s*=\s*(\w+)\b'
       captures:
         1: support.function.ck2script
         2: variable.identifier.ck2script
     - match: '\bhad_({{vFlagType}})_flag\b'
       scope: keyword.control.ck2script
-    - match: '\b{{vLangTarget}}\b'
-      scope: variable.language.ck2script
     - match: '\b{{vOpBool}}\b'
       scope: keyword.operator.logical.ck2script keyword.operator.word.ck2script
     - match: '\b{{vLiteralTier}}\b'
@@ -600,7 +599,7 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.other.ck2script
-    - match: '\b({{vTriggerTarget}})\s*=\s*({{vTarget}})\b'
+    - match: '\b({{vTriggerTarget}})\s*=\s*({{vLangRHSTarget}})\b'
       captures:
         1: support.function.ck2script
         2: variable.language.ck2script
@@ -612,8 +611,13 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.identifier.ck2script
-    - match: '\b{{vScope}}\b' 
-      scope: keyword.control.ck2script
+    - match: '\b{{vEventTarget}}\b'
+      scope: variable.other.ck2script
+    - match: '\b{{vLangTarget}}\b'
+      scope: variable.language.ck2script
+    - match: '\b({{vScope}})\b'
+      captures:
+        1: keyword.control.ck2script
       # >>>> hereafter, these are the wild untamed lands of free-form match rules that really need shit done about them >>>>
     - match: \b(tooltip|hidden_tooltip|hidden_trigger|hidden_effect)\b
       scope: keyword.other.tooltip.ck2script
