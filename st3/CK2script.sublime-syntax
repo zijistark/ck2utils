@@ -15,6 +15,7 @@ variables:
     | OR
     | calc_true_if
     )
+  vOpBinary: '(?x: ==? | >=? | <=? )'
   vLiteralBool: '(?:yes|no)'
   vLiteralMisc: '(?:none|public|true|secret)'
   vLiteralInt: '(?:[-]?\d+)'
@@ -54,6 +55,11 @@ variables:
     | (?:FROM){1,4}
     | (?:PREV){1,4}
     | THIS
+    | LIEGE
+    | FATHER
+    | MOTHER
+    | SPOUSE
+    | NEW
     )
   vTarget: '(?x: {{vLangTarget}} | {{vEventTarget}} )'
   vFlagType: |-
@@ -201,6 +207,7 @@ variables:
     | province_id
     | realm_size
     | ruled_years
+    | society_rank
     | stewardship
     | war_score
     | wealth
@@ -241,11 +248,15 @@ variables:
     | de_jure_liege_or_above
     | de_jure_vassal_or_below
     | dynasty
+    | family
     | has_blood_oath_with
     | has_claim
     | has_landed_title
+    | has_non_aggression_pact_with
+    | has_truce
     | has_strong_claim
     | has_weak_claim
+    | held_title_rating
     | higher_real_tier_than
     | higher_tier_than
     | holder
@@ -277,11 +288,13 @@ variables:
     | imprison
     | lower_real_tier_than
     | lower_tier_than
+    | overlord_of
     | pays_tribute_to
     | province
     | province_id
     | real_tier
     | religion
+    | reverse_has_truce
     | same_liege
     | same_realm
     | sibling
@@ -314,6 +327,7 @@ variables:
     | has_holder
     | has_inheritance_blocker
     | has_job_title
+    | has_lover
     | has_owner
     | has_raised_standing_troops
     | has_regent
@@ -324,6 +338,7 @@ variables:
     | in_command
     | in_revolt
     | in_seclusion
+    | independent
     | is_adult
     | is_alive
     | is_allowed_to_loot
@@ -385,6 +400,7 @@ variables:
     | pacifist
     | port
     | preparing_invasion
+    | prisoner
     | rebel
     | religion_allows_female_temple_holders
     | temporary
@@ -483,6 +499,7 @@ variables:
     | sea_zone
     | secret_religion_scope
     | siege
+    | society_plot
     | spouse
     | spouse_even_if_dead
     | strongest_clan_vassal
@@ -536,13 +553,9 @@ contexts:
         2: variable.other.ck2script
     - match: '\b{{vEventTarget}}\b'
       scope: variable.other.ck2script
-    - match: '\b((?:(?:has|remove)_{{vEventModifierType}}_modifier)|(?:add_|remove_)?trait|clear_flags_with_prefix|has_(?:any_)?building|has_focus|has_ambition|has_earmarked_regiments|flag|can_hold_title|terrain|government|death_reason|war_name|name|give_nickname|has_nickname|modifier|has_any_opinion_modifier|has_(?:minor|job)_title|has_plot|cancel_plot|in_faction|leads_faction|has_law|add_law|add_law_w_cooldown|pass_law|region|continent|is_(?:law|decision|government)_(?:allowed|potential))\s*=\s*(\w+)\b'
-      captures:
-        1: keyword.control.ck2script
-        2: variable.identifier.ck2script
     - match: '\b((?:set|clr|has)_{{vFlagType}}_flag)\s*=\s*(\w+)\b'
       captures:
-        1: keyword.control.ck2script
+        1: support.function.ck2script
         2: variable.identifier.ck2script
     - match: '\bhad_({{vFlagType}})_flag\b'
       scope: keyword.control.ck2script
@@ -559,11 +572,11 @@ contexts:
     - match: '\b{{vLiteralMisc}}\b'
       scope: constant.language.ck2script
       # general common triggers & effects
-    - match: '\b({{vTriggerInt}})\s*=\s*({{vLiteralInt}})\b'
+    - match: '\b({{vTriggerInt}})\s*{{vOpBinary}}\s*({{vLiteralInt}})\b'
       captures:
         1: support.function.ck2script
         2: constant.numeric.integer.ck2script
-    - match: '\b({{vTriggerDecimal}})\s*=\s*({{vLiteralDecimal}})\b'
+    - match: '\b({{vTriggerDecimal}})\s*{{vOpBinary}}\s*({{vLiteralDecimal}})\b'
       captures:
         1: support.function.ck2script
         2: constant.numeric.double.ck2script
@@ -595,6 +608,10 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.other.ck2script
+    - match: '\b((?:(?:has|remove)_{{vEventModifierType}}_modifier)|(?:add_|remove_)?trait|has_quest|has_secret_religion|clear_flags_with_prefix|society_member_of|culture|culture_group|religion|religion_group|true_religion|true_religion_group|secret_religion|secret_religion_group|has_(?:any_)?building|has_focus|has_ambition|has_earmarked_regiments|flag|can_hold_title|terrain|government|death_reason|war_name|name|give_nickname|has_nickname|modifier|has_any_opinion_modifier|has_(?:minor|job)_title|has_plot|cancel_plot|in_faction|leads_faction|has_law|add_law|add_law_w_cooldown|pass_law|region|continent|is_(?:law|decision|government)_(?:allowed|potential))\s*=\s*(\w+)\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.identifier.ck2script
     - match: '\b{{vScope}}\b' 
       scope: keyword.control.ck2script
       # >>>> hereafter, these are the wild untamed lands of free-form match rules that really need shit done about them >>>>
@@ -629,7 +646,7 @@ contexts:
       scope: keyword.control.ck2script
     - match: \b(((reverse_)?(remove_)?opinion)|((reverse_)?has_opinion_modifier)|opinion_diff|their_opinion|personal_opinion|religion_authority|add_{{vEventModifierType}}_modifier)\b
       scope: keyword.control.ck2script
-    - match: \b(((reverse_)?realm_levy_diff)|create_(title|character|artifact|(random_(soldier|priest|steward|diplomat|intriguer))))\b
+    - match: \b(((reverse_)?realm_levy_diff)|num_of_trade_post_diff|create_(title|character|artifact|(random_(soldier|priest|steward|diplomat|intriguer))))\b
       scope: keyword.control.ck2script
     - match: \b(using_cb|((check|change|subtract|multiply|divide|export_to|set)_variable)|is_variable_equal|attribute_diff|age_diff)\b
       scope: keyword.control.ck2script
@@ -695,7 +712,7 @@ contexts:
       scope: keyword.control.ck2script
       # TODO: FUTURE CONTEXT OF JOB ACTIONS, AMBITIONS, PLOTS, FOCUSES, FACTIONS, LANDED_TITLES, COUNCIL_VOTING, TRAITS,
       #       COUNCIL_POSITIONS, GOVERNMENTS, ([LONG_]CHARACTER|LETTER|NARRATIVE|PROVINCE|UNIT|DIPLORESPONSE)_EVENT, ...
-    - match: \b(target_potential|player_allow|allow_join|success|abort)\b # plot trigger blocks
+    - match: \b(target_potential|player_allow|allow_join|success|abort|abort_effect|creation_effect|vassal_rank_plot|military_plot|intrigue_plot|murder_plot|vassal_intrigue_plot)\b # plot trigger blocks
       scope: keyword.control.ck2script
       # random stuff not covered above [yet]:
     - match: \b(mean_time_to_happen|weight_multiplier|chance|membership|ai_chance)\b # modifier sets
