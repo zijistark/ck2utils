@@ -39,6 +39,13 @@ variables:
     | TRADE_POST
     | HOSPITAL
     )
+  vLiteralWarOutcome: |-
+    (?x:
+      invalid
+    | success
+    | whitepeace
+    | reverse_demand
+    )
   vID: |-
     (?x: [a-zA-Z0-9_-]+ )
   vStrictID: |-
@@ -169,6 +176,7 @@ variables:
     | day_of_birth
     | diplomacy
     | dynasty
+    | hospital_level
     | intrigue
     | killer
     | learning
@@ -201,6 +209,7 @@ variables:
     | num_of_spouses
     | num_of_subrealm_castles
     | num_of_subrealm_cities
+    | num_of_symptoms
     | num_of_trade_posts
     | num_of_traits
     | num_of_unique_dynasty_vassals
@@ -287,8 +296,6 @@ variables:
     | is_valid_viking_invasion_target
     | is_vassal_or_below
     | is_within_diplo_range
-    | impregnate
-    | imprison
     | lower_real_tier_than
     | lower_tier_than
     | overlord_of
@@ -326,9 +333,11 @@ variables:
     | controls_religion
     | clan
     | has_autocephaly
+    | has_epidemic
     | has_game_started
     | has_guardian
     | has_holder
+    | has_hospital
     | has_inheritance_blocker
     | has_job_title
     | has_lover
@@ -340,6 +349,7 @@ variables:
     | has_siege
     | has_trade_post
     | holy_order
+    | immortal
     | in_command
     | in_revolt
     | in_seclusion
@@ -358,6 +368,7 @@ variables:
     | is_father_real_father
     | is_female
     | is_feudal
+    | is_heir
     | is_heretic
     | is_incapable
     | is_ill
@@ -381,6 +392,7 @@ variables:
     | is_pregnant
     | is_pretender
     | is_playable
+    | is_plot_active
     | is_recent_grant
     | is_reformed_religion
     | is_republic
@@ -418,9 +430,140 @@ variables:
     | under_target_ruler
     | war
     )
-  vAnyTriggerID: |-
+  vTriggerID: |-
     (?x:
-      has_global_flag
+      can_hold_title
+    | continent
+    | culture
+    | culture_group
+    | disease
+    | government
+    | has_{{vEventModifierType}}_modifier
+    | has_{{vFlagType}}_flag
+    | has_ambition
+    | has_any_building
+    | has_any_opinion_modifier
+    | has_assigned_minor_title
+    | has_building
+    | has_earmarked_regiments
+    | has_focus
+    | has_job_title
+    | has_law
+    | has_minor_title
+    | has_nickname
+    | has_plot
+    | has_quest
+    | has_secret_religion
+    | in_faction
+    | is_decision_allowed
+    | is_decision_potential
+    | is_government_allowed
+    | is_government_potential
+    | is_law_allowed
+    | is_law_potential
+    | leads_faction
+    | region
+    | religion
+    | religion_group
+    | secret_religion
+    | secret_religion_group
+    | society_member_of
+    | terrain
+    | trait
+    | true_religion
+    | true_religion_group
+    | using_cb
+    )
+  vEffectNumber: |-
+    (?x:
+      participation_scaled_decadence
+    | participation_scaled_piety
+    | participation_scaled_prestige
+    | piety
+    | prestige
+    | scaled_piety
+    | scaled_prestige
+    | scaled_wealth
+    | treasury
+    | wealth
+    )
+  vEffectTarget: |-
+    (?x:
+      abdicate_to
+    | abdicate_to_most_liked_by
+    | add_claim
+    | add_favor
+    | add_pressed_claim
+    | add_weak_cleam
+    | add_weak_pressed_claim
+    | banish
+    | clear_wealth
+    | conquest_culture
+    | de_jure_liege
+    | force_host
+    | gain_title
+    | grant_title
+    | grant_title_no_opinion
+    | impregnate
+    | imprison
+    | move_character
+    | press_claim
+    | remove_claim
+    | remove_consort
+    | remove_favor
+    | remove_lover
+    | remove_tributary
+    | reverse_add_favor
+    | reverse_banish
+    | reverse_remove_favor
+    | usurp_title
+    | usurp_title_only
+    | usurp_title_plus_barony_if_unlanded
+    | usurp_title_plus_barony_if_unlanded_and_vassals
+    | usurp_title_plus_barony_if_unlanded_and_vassals_no_adj
+    )
+  vEffectBool: |-
+    (?x:
+      abdicate
+    | ambition_succeeds
+    | banish
+    | clear_wealth
+    | diplomatic_immunity
+    | impregnate
+    | plot_succeeds
+    | remove_guardian
+    | reveal_plot
+    | reveal_plot_w_message
+    )
+  vEffectID: |-
+    (?x:
+      add_law
+    | add_law_w_cooldown
+    | add_trait
+    | cancel_plot
+    | clear_flags_with_prefix
+    | clr_{{vFlagType}}_flag
+    | disband_event_forces
+    | give_nickname
+    | pass_law
+    | remove_{{vEventModifierType}}_modifier
+    | remove_title
+    | remove_trait
+    | set_{{vFlagType}}_flag
+    | set_name
+    )
+  vParamID: |-
+    (?x:
+      death_reason
+    | flag
+    | modifier
+    | name
+    | text
+    | war_name
+    | faction
+    | desc
+    | border
+    | picture
     )
   vScope: |-
     (?x:
@@ -433,6 +576,7 @@ variables:
     | capital_scope
     | center_flank_leader
     | clan_title
+    | consort
     | controller
     | county
     | crownlaw_title
@@ -458,7 +602,6 @@ variables:
     | highest_ranked_relative
     | holder_scope
     | host
-    | impregnate
     | invasion_target
     | job_chancellor
     | job_marshal
@@ -518,72 +661,7 @@ variables:
     | trade_post_owner
     | true_religion_scope
     )
-  vTriggerID: |-
-    (?x:
-      can_hold_title
-    | continent
-    | culture
-    | culture_group
-    | government
-    | has_{{vEventModifierType}}_modifier
-    | has_{{vFlagType}}_flag
-    | has_ambition
-    | has_any_building
-    | has_any_opinion_modifier
-    | has_building
-    | has_earmarked_regiments
-    | has_focus
-    | has_job_title
-    | has_law
-    | has_minor_title
-    | has_nickname
-    | has_plot
-    | has_quest
-    | has_secret_religion
-    | in_faction
-    | is_decision_allowed
-    | is_decision_potential
-    | is_government_allowed
-    | is_government_potential
-    | is_law_allowed
-    | is_law_potential
-    | leads_faction
-    | region
-    | religion
-    | religion_group
-    | secret_religion
-    | secret_religion_group
-    | society_member_of
-    | terrain
-    | trait
-    | true_religion
-    | true_religion_group
-    | using_cb
-    )
-  vEffectID: |-
-    (?x:
-      add_law
-    | add_law_w_cooldown
-    | add_trait
-    | cancel_plot
-    | clear_flags_with_prefix
-    | clr_{{vFlagType}}_flag
-    | give_nickname
-    | pass_law
-    | remove_{{vEventModifierType}}_modifier
-    | remove_trait
-    | set_{{vFlagType}}_flag
-    | set_name
-    )
-  vParamID: |-
-    (?x:
-      death_reason
-    | flag
-    | modifier
-    | name
-    | text
-    | war_name
-    )
+
 
 contexts:
   main:
@@ -677,6 +755,22 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.other.ck2script
+    - match: '\b({{vEffectTarget}})\s*=\s*({{vEventTarget}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.other.ck2script
+    - match: '\b({{vEffectTarget}})\s*=\s*({{vLangRHSTarget}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.language.ck2script
+    - match: '\b({{vEffectNumber}})\s*=\s*({{vLiteralDecimal}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.numeric.double.ck2script
+    - match: '\b(end_war)\s*=\s*({{vLiteralWarOutcome}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.enum.end_war.ck2script
     - match: '\b{{vEventTarget}}\b'
       scope: variable.other.ck2script
     - match: '\b{{vLangTarget}}\b'
