@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from collections import OrderedDict
+from collections import defaultdict, OrderedDict
 import re
 import numpy as np
 from PIL import Image
@@ -193,6 +193,27 @@ def analyze_provinces():
 
     return provinces
 
+def analyze_continents(provinces):
+    continents = {}
+    for prov in provinces.values():
+        if prov.get('Type').endswith('Land'):
+            continent_name = prov['Continent']
+            if continent_name not in continents:
+                continents[continent_name] = defaultdict(int)
+            cont = continents[continent_name]
+            cont['Provinces'] += 1
+            cont['Base Tax'] += int(prov['BT']) if prov['BT'] else 0
+            cont['Production'] += int(prov['BP']) if prov['BP'] else 0
+            cont['Manpower'] += int(prov['BM']) if prov['BM'] else 0
+            cont['Development'] += (int(prov['Development'])
+                if prov['Development'] else 0)
+    total = defaultdict(int)
+    for cont in continents.values():
+        for key, val in cont.items():
+            total[key] += val
+    continents['Total'] = total
+    return continents
+
 def format_output(provinces, headings):
     lines = ['{| class="wikitable sortable" '
               'style="font-size:95%; text-align:left"']
@@ -206,9 +227,30 @@ def format_output(provinces, headings):
     lines.append('')
     return '\n'.join(lines)
 
+def format_continent_output(continents, headings):
+    lines = ['{| class = "wikitable sortable" style ="text-align:right"']
+    header = '! Continent !! ' + ' !! '.join('{{{{icon|{}}}}} {}'.format(
+        head if head != 'Provinces' else 'Province', head) for head in headings)
+    lines.append(header)
+    for cont_name, cont in sorted(continents.items()):
+        lines.append('|-')
+        line = '|' if cont_name != 'Total' else '!'
+        line += ' style="text-align:left" | {}'.format(cont_name)
+        if cont_name != 'Total':
+            line += ''.join(' || {}'
+                            .format(cont.get(head, '')) for head in headings)
+        else:
+            line += ''.join(' || style="text-align:right" | {}'
+                            .format(cont.get(head, '')) for head in headings)
+        lines.append(line)
+    lines.append('|}')
+    lines.append('')
+    return '\n'.join(lines)
+
 @print_time
 def main():
     provinces = analyze_provinces()
+    continents = analyze_continents(provinces)
 
     tables = [
         (('ID,Name,Development,BT,BP,BM,'
@@ -225,6 +267,14 @@ def main():
         output_file = rootpath / filename
         with output_file.open('w') as f:
             f.write(output)
+
+    output = format_continent_output(continents,
+        'Provinces,Base Tax,Production,Manpower,Development'.split(','))
+    output_file = rootpath / 'eu4continenttable.txt'
+    with output_file.open('w') as f:
+        f.write(output)
+
+    import pdb;pdb.set_trace()
 
 if __name__ == '__main__':
     main()
