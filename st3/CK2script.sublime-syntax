@@ -39,13 +39,6 @@ variables:
     | TRADE_POST
     | HOSPITAL
     )
-  vLiteralWarOutcome: |-
-    (?x:
-      invalid
-    | success
-    | whitepeace
-    | reverse_demand
-    )
   vID: |-
     (?x: [a-zA-Z0-9_-]+ )
   vStrictID: |-
@@ -53,7 +46,7 @@ variables:
   vTextID: |-
     (?x: [^\s";]+ )
   vTitleID: |-
-    (?x: [bcdek] _ [a-zA-Z] [a-zA-Z_-]* )
+    (?x: [bcdek] _ [a-zA-Z] [a-zA-Z0-9_-]* )
   vEventTarget: |-
     (?x: event_target : {{vStrictID}} )
   vLangTarget: |-
@@ -174,13 +167,9 @@ variables:
     | character
     | combat_rating
     | day_of_birth
-    | diplomacy
     | dynasty
     | hospital_level
-    | intrigue
     | killer
-    | learning
-    | martial
     | month
     | month_of_birth
     | num_fitting_characters_for_title
@@ -220,10 +209,10 @@ variables:
     | realm_size
     | ruled_years
     | society_rank
-    | stewardship
     | war_score
     | wealth
     | year
+    | {{vCharAttr}}
     )
   vTriggerDecimal: |-
     (?x:
@@ -434,8 +423,10 @@ variables:
     (?x:
       can_hold_title
     | continent
+    | controls_religion
     | culture
     | culture_group
+    | death_reason
     | disease
     | government
     | has_{{vEventModifierType}}_modifier
@@ -476,7 +467,8 @@ variables:
     )
   vEffectNumber: |-
     (?x:
-      participation_scaled_decadence
+      change_{{vCharAttr}}
+    | participation_scaled_decadence
     | participation_scaled_piety
     | participation_scaled_prestige
     | piety
@@ -558,12 +550,17 @@ variables:
     | flag
     | modifier
     | name
-    | text
-    | war_name
     | faction
-    | desc
     | border
     | picture
+    | value
+    )
+  vParamTextID: |-
+    (?x:
+      desc
+    | name
+    | text
+    | war_name
     )
   vScope: |-
     (?x:
@@ -711,14 +708,6 @@ contexts:
     - match: '\b{{vLiteralMisc}}\b'
       scope: constant.language.ck2script
       # general common triggers & effects
-    - match: '\b({{vEffectID}}|{{vTriggerID}})\s*=\s*(\w+)\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.identifier.ck2script
-    - match: '\b({{vParamID}})\s*=\s*(\w+)\b'
-      captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: variable.identifier.ck2script
     - match: '\b({{vTriggerInt}})\s*{{vOpBinary}}\s*({{vLiteralInt}})\b'
       captures:
         1: support.function.ck2script
@@ -755,6 +744,10 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.other.ck2script
+    - match: '\b(dynasty)\s*=\s*(none)\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.ck2script
     - match: '\b({{vEffectTarget}})\s*=\s*({{vEventTarget}})\b'
       captures:
         1: support.function.ck2script
@@ -766,11 +759,23 @@ contexts:
     - match: '\b({{vEffectNumber}})\s*=\s*({{vLiteralDecimal}})\b'
       captures:
         1: support.function.ck2script
-        2: constant.numeric.double.ck2script
-    - match: '\b(end_war)\s*=\s*({{vLiteralWarOutcome}})\b'
+        2: constant.numeric.ck2script
+    - match: '\b(end_war)\s*=\s*(invalid|reverse_demand|success|whitepeace)\b'
       captures:
         1: support.function.ck2script
         2: constant.language.enum.end_war.ck2script
+    - match: '\b({{vEffectID}}|{{vTriggerID}})\s*=\s*({{vID}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.identifier.ck2script
+    - match: '\b({{vParamTextID}})\s*=\s*({{vTextID}})\b'
+      captures:
+        1: support.function.ck2script # should use a different scope for these
+        2: variable.identifier.ck2script
+    - match: '\b({{vParamID}})\s*=\s*({{vID}})\b'
+      captures:
+        1: support.function.ck2script # should use a different scope for these
+        2: variable.identifier.ck2script
     - match: '\b{{vEventTarget}}\b'
       scope: variable.other.ck2script
     - match: '\b{{vLangTarget}}\b'
