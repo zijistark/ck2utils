@@ -499,6 +499,7 @@ variables:
     | impregnate
     | imprison
     | move_character
+    | occupy_minors_of_occupied_settlements
     | press_claim
     | remove_claim
     | remove_consort
@@ -760,6 +761,10 @@ contexts:
       captures:
         1: support.function.ck2script
         2: constant.numeric.ck2script
+    - match: '\b({{vEffectBool}})\s*=\s*(yes)\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.boolean.true.ck2script
     - match: '\b(end_war)\s*=\s*(invalid|reverse_demand|success|whitepeace)\b'
       captures:
         1: support.function.ck2script
@@ -772,7 +777,7 @@ contexts:
       captures:
         1: support.function.ck2script # should use a different scope for these
         2: variable.identifier.ck2script
-    - match: '\b({{vParamID}})\s*=\s*({{vID}})\b'
+    - match: '\b({{vParamID}})\s*=\s*({{vStrictID}})\b'
       captures:
         1: support.function.ck2script # should use a different scope for these
         2: variable.identifier.ck2script
