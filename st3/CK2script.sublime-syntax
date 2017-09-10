@@ -327,6 +327,7 @@ variables:
     | can_marry
     | controls_religion
     | clan
+    | flank_has_leader
     | has_autocephaly
     | has_epidemic
     | has_game_started
@@ -363,7 +364,8 @@ variables:
     | is_father_real_father
     | is_female
     | is_feudal
-    | is_heir
+    | is_flanking
+    | is_heirm
     | is_heretic
     | is_incapable
     | is_ill
@@ -444,6 +446,7 @@ variables:
     | has_building
     | has_earmarked_regiments
     | has_focus
+    | has_job_action
     | has_job_title
     | has_law
     | has_minor_title
@@ -459,6 +462,7 @@ variables:
     | is_law_allowed
     | is_law_potential
     | leads_faction
+    | phase
     | region
     | religion
     | religion_group
@@ -561,6 +565,7 @@ variables:
     | border
     | picture
     | value
+    | group
     )
   vParamTextID: |-
     (?x:
@@ -614,6 +619,7 @@ variables:
     | job_treasurer
     | killer
     | kingdom
+    | leader
     | left_flank_leader
     | liege
     | liege_before_war
