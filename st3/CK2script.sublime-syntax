@@ -858,7 +858,7 @@ contexts:
     - match: \b(trigger|major_trigger)\b
       scope: keyword.control.ck2script
       # LANDED_TITLES
-    - match: \b(color2?|((graphical_)?culture)|religion|capital|foa|controls_religion|(title(_female)?)|dynasty_title_names|short_name|name_tier|landless|primary|dignity|caliphate|creation_requires_capital)\b
+    - match: \b(color2?|((graphical_)?culture)|religion|capital|foa|pirate|tribe|location_ruler_title|controls_religion|(title(_female)?)|dynasty_title_names|short_name|name_tier|landless|primary|dignity|caliphate|creation_requires_capital)\b
       scope: keyword.control.ck2script
     - match: \b(monthly_income|coat_of_arms|data|mercenary_type|assimilate|((fe)?male_names)|allow|gain_effect|mercenary|independent|title_prefix)\b
       scope: keyword.control.ck2script
