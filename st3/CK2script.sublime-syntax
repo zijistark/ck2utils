@@ -243,6 +243,7 @@ variables:
     | claimed_by
     | conquest_culture
     | culture
+    | culture_group
     | de_facto_liege
     | de_facto_liege_title
     | de_jure_liege
@@ -293,12 +294,17 @@ variables:
     | province_id
     | real_tier
     | religion
+    | religion_group
     | reverse_has_truce
     | same_liege
     | same_realm
+    | secret_religion
+    | secret_religion_group
     | sibling
     | tier
     | title
+    | true_religion
+    | true_religion_group
     | vassal_of
     | war_title
     | war_with
