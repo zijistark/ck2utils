@@ -146,6 +146,48 @@ variables:
       )
     | triggered_from_code
     )
+  vTargetedDecisionFilter: |-
+    (?x:
+      self
+    | court
+    | home_court
+    | vassals
+    | sub_realm
+    | realm
+    | dynasty
+    | spouse
+    | liege
+    | religious_head
+    | rivals
+    | society
+    | all
+    )
+  vTitleDecisionFilter: |-
+    (?x:
+      capital
+    | primary_title
+    | owned
+    | vassal_owned
+    | sub_realm_owned
+    | realm_owned
+    | dynasty_owned
+    | all
+    )
+  vSettlementDecisionFilter: |-
+    (?x:
+      capital
+    | owned
+    | vassal_owned
+    | sub_realm_owned
+    | realm_owned
+    | dynasty_owned
+    | all
+    )
+  vDecisionPropertyBool: |-
+    (?x:
+      is_high_prio
+    | hide_in_decisions_list
+    )
   vTriggerTier: |-
     (?x:
       higher_real_tier_than
@@ -234,7 +276,9 @@ variables:
     | de_jure_liege_or_above
     | de_jure_liege
     | de_jure_vassal_or_below
+    | has_claim
     | has_landed_title
+    | is_title_active
     )
   vTriggerTarget: |-
     (?x:
@@ -283,6 +327,7 @@ variables:
     | is_quest_target_of
     | is_reformed_religion
     | is_rival
+    | is_title_active
     | is_valid_viking_invasion_target
     | is_vassal_or_below
     | is_within_diplo_range
@@ -495,13 +540,16 @@ variables:
     | abdicate_to_most_liked_by
     | add_claim
     | add_favor
+    | add_friend
     | add_pressed_claim
-    | add_weak_cleam
+    | add_rival
+    | add_weak_claim
     | add_weak_pressed_claim
     | banish
     | clear_wealth
     | conquest_culture
     | de_jure_liege
+    | destroy_landed_title
     | force_host
     | gain_title
     | grant_title
@@ -519,6 +567,9 @@ variables:
     | reverse_add_favor
     | reverse_banish
     | reverse_remove_favor
+    | set_defacto_liege
+    | set_defacto_vassal
+    | unsafe_destroy_landed_title
     | usurp_title
     | usurp_title_only
     | usurp_title_plus_barony_if_unlanded
@@ -532,11 +583,13 @@ variables:
     | banish
     | clear_wealth
     | diplomatic_immunity
+    | destroy_landed_title
     | impregnate
     | plot_succeeds
     | remove_guardian
     | reveal_plot
     | reveal_plot_w_message
+    | unsafe_destroy_landed_title
     )
   vEffectID: |-
     (?x:
@@ -546,14 +599,19 @@ variables:
     | cancel_plot
     | clear_flags_with_prefix
     | clr_{{vFlagType}}_flag
+    | culture
     | disband_event_forces
     | give_nickname
     | pass_law
+    | religion
     | remove_{{vEventModifierType}}_modifier
     | remove_title
     | remove_trait
+    | secret_religion
     | set_{{vFlagType}}_flag
     | set_name
+    | set_government_type
+    | unsafe_religion
     )
   vParamID: |-
     (?x:
@@ -874,6 +932,18 @@ contexts:
       # FUTURE DECISION/LAW CONTEXT:
     - match: \b(decisions|title_decisions|settlement_decisions|vassal_decisions|targett?ed_decisions|plot_decisions|society_decisions)\b # top-level
       scope: keyword.control.ck2script
+    - match: \b(filter|ai_target_filter)\s*=\s*({{vTargetedDecisionFilter}}|{{vTitleDecisionFilter}}|{{vSettlementDecisionFilter}})\b
+      captures:
+        1: keyword.control.ck2script
+        2: constant.language.enum.decision_filter.ck2script
+    - match: '\b({{vDecisionPropertyBool}})\s*=\s*(yes)\b'
+      captures:
+        1: keyword.control.ck2script
+        2: constant.language.boolean.true.ck2script
+    - match: '\b({{vDecisionPropertyBool}})\s*=\s*(no)\b'
+      captures:
+        1: keyword.control.ck2script
+        2: constant.language.boolean.false.ck2script
     - match: \b(allow|potential|from_potential|revoke_allowed)\b # triggers
       scope: keyword.control.ck2script
     - match: \b(effect|pass_effect)\b # effects
