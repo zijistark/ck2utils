@@ -19,7 +19,7 @@ variables:
   vLiteralBool: '(?:yes|no)'
   vLiteralMisc: '(?:none|public|true|secret)'
   vLiteralInt: '(?:[-]?\d+)'
-  vLiteralDecimal: '(?x: [-]? (?: \d* \. \d+ ) | (?: \d+ \. \d*) | \d+ )'
+  vLiteralDecimal: '(?x: [-]? (?: (?: \d* \. \d+ ) | (?: \d+ \. \d*) | \d+ ) )'
   vLiteralTier: |-
     (?xi:
       BARON
@@ -209,6 +209,7 @@ variables:
     | character
     | combat_rating
     | day_of_birth
+    | decadence
     | dynasty
     | hospital_level
     | killer
@@ -241,11 +242,13 @@ variables:
     | num_of_subrealm_castles
     | num_of_subrealm_cities
     | num_of_symptoms
+    | num_of_titles
     | num_of_trade_posts
     | num_of_traits
     | num_of_unique_dynasty_vassals
     | num_of_vassals
     | piety
+    | population
     | prestige
     | province_id
     | realm_size
@@ -268,6 +271,7 @@ variables:
     | scaled_prestige
     | scaled_wealth
     | dynasty_realm_power
+    | population_factor
     )
   vTriggerTitleID: |-
     (?x:
@@ -294,9 +298,12 @@ variables:
     | de_jure_liege_or_above
     | de_jure_vassal_or_below
     | dynasty
+    | excommunicated_for
     | family
     | has_blood_oath_with
     | has_claim
+    | has_embargo
+    | has_feud_with
     | has_landed_title
     | has_non_aggression_pact_with
     | has_truce
@@ -342,6 +349,7 @@ variables:
     | religion
     | religion_group
     | reverse_has_truce
+    | rightful_religious_head
     | same_liege
     | same_realm
     | secret_religion
@@ -376,11 +384,13 @@ variables:
     | clan
     | flank_has_leader
     | has_autocephaly
+    | has_called_crusade
     | has_empty_holding
     | has_epidemic
     | has_game_started
     | has_guardian
     | has_holder
+    | has_horde_culture
     | has_hospital
     | has_inheritance_blocker
     | has_job_title
@@ -473,6 +483,7 @@ variables:
     | under_PREVPREVPREV
     | under_ROOT
     | under_target_ruler
+    | uses_decadence
     | war
     )
   vTriggerID: |-
@@ -528,6 +539,7 @@ variables:
       change_{{vCharAttr}}
     | fertility
     | health
+    | decadence
     | participation_scaled_decadence
     | participation_scaled_piety
     | participation_scaled_prestige
@@ -559,6 +571,7 @@ variables:
     | de_jure_liege
     | destroy_landed_title
     | destroy_settlement
+    | embargo
     | force_host
     | gain_title
     | grant_title
@@ -577,6 +590,7 @@ variables:
     | reverse_add_favor
     | reverse_banish
     | reverse_remove_favor
+    | seize_trade_post
     | set_defacto_liege
     | set_defacto_vassal
     | unsafe_destroy_landed_title
@@ -595,6 +609,7 @@ variables:
     | death
     | diplomatic_immunity
     | destroy_landed_title
+    | excommunicate
     | impregnate
     | make_capital_holding
     | plot_succeeds
@@ -604,11 +619,22 @@ variables:
     | reveal_plot_w_message
     | unsafe_destroy_landed_title
     )
+  vEffectTitleID: |-
+    (?x:
+      add_claim
+    | add_pressed_claim
+    | add_weak_claim
+    | add_weak_pressed_claim
+    | de_jure_liege
+    | remove_claim
+    | set_defacto_liege
+    )
   vEffectID: |-
     (?x:
       add_law
     | add_law_w_cooldown
     | add_trait
+    | adjective
     | cancel_plot
     | clear_flags_with_prefix
     | clr_{{vFlagType}}_flag
@@ -847,6 +873,10 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.language.ck2script
+    - match: '\b({{vEffectTitleID}})\s*=\s*({{vTitleID}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.other.ck2script
     - match: '\b({{vEffectNumber}})\s*=\s*({{vLiteralDecimal}})\b'
       captures:
         1: support.function.ck2script
@@ -855,6 +885,10 @@ contexts:
       captures:
         1: support.function.ck2script
         2: constant.language.boolean.true.ck2script
+    - match: '\b({{vEffectBool}})\s*=\s*(no)\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.boolean.false.ck2script
     - match: '\b(end_war)\s*=\s*(invalid|reverse_demand|success|whitepeace)\b'
       captures:
         1: support.function.ck2script
@@ -890,7 +924,7 @@ contexts:
       # these are the names of parameters for numerous triggers & effects which have multiple named parameters possible
     - match: \b(target|type|target_type|who|where|which|amount|value|count|attribute|percentage|authority|duration|days|months|years|hidden|inherit|crime|disable_non_aggression_pacts|move|cooldown|status|random|chance|factor|casus_belli|tier|thirdparty_title|infamy|as_if_liege|first|second|enemy|title|is_religious|same_religion|is_crusade|to|min|max|multiplier)\b
       scope: keyword.control.ck2script
-    - match: \b(sprite|truce_days|is_permanent|check_all_titles|check_de_jure_tier|hostile_against_others|attacker_can_call_allies|defender_can_call_allies|can_ask_to_join_war|apply_short_occ_mod|press_claim|battle_warscore_mult|infamy_modifier|can_call_vassals|major_revolt|is_holy_war|allowed_to_target_tributaries|allowed_to_target_suzerains|ticking_war_score_multiplier|allow_distant|is_claim_all|is_independence|is_tyranny_cb|is_revolt_cb|can_attack_vassals|reflect_titleholder_change|display_on_map)\b
+    - match: \b(sprite|truce_days|is_permanent|coalition_threat|check_all_titles|check_all_trade_posts|attacker_rel_head_is_ally|check_de_jure_tier|hostile_against_others|attacker_can_call_allies|defender_can_call_allies|can_ask_to_join_war|apply_short_occ_mod|press_claim|battle_warscore_mult|infamy_modifier|can_call_vassals|major_revolt|is_holy_war|allowed_to_target_tributaries|allowed_to_target_suzerains|ticking_war_score_multiplier|allow_distant|is_claim_all|is_independence|is_tyranny_cb|is_revolt_cb|can_attack_vassals|reflect_titleholder_change|display_on_map)\b
       scope: keyword.control.ck2script
       # types of "events" (repeat_event is strictly a command and not also an actual event type)
     - match: \b((character|long_character|narrative|letter|diploresponse|province|unit|repeat|society_quest)_event)\b
