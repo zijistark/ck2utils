@@ -321,6 +321,7 @@ variables:
     | is_lover
     | is_married
     | is_mother
+    | is_older_than
     | is_parent_religion
     | is_preferred_holding_type
     | is_primary_heir
@@ -367,6 +368,7 @@ variables:
     | best_de_jure_liege_title_under_target_ruler
     | borders_major_river
     | borders_lake
+    | can_be_given_away
     | can_call_crusade
     | can_change_religion
     | can_marry
@@ -374,6 +376,7 @@ variables:
     | clan
     | flank_has_leader
     | has_autocephaly
+    | has_empty_holding
     | has_epidemic
     | has_game_started
     | has_guardian
@@ -523,6 +526,8 @@ variables:
   vEffectNumber: |-
     (?x:
       change_{{vCharAttr}}
+    | fertility
+    | health
     | participation_scaled_decadence
     | participation_scaled_piety
     | participation_scaled_prestige
@@ -546,10 +551,14 @@ variables:
     | add_weak_claim
     | add_weak_pressed_claim
     | banish
+    | break_alliance
     | clear_wealth
     | conquest_culture
+    | copy_title_history
+    | copy_title_laws
     | de_jure_liege
     | destroy_landed_title
+    | destroy_settlement
     | force_host
     | gain_title
     | grant_title
@@ -563,6 +572,7 @@ variables:
     | remove_consort
     | remove_favor
     | remove_lover
+    | remove_spouse
     | remove_tributary
     | reverse_add_favor
     | reverse_banish
@@ -582,10 +592,13 @@ variables:
     | ambition_succeeds
     | banish
     | clear_wealth
+    | death
     | diplomatic_immunity
     | destroy_landed_title
     | impregnate
+    | make_capital_holding
     | plot_succeeds
+    | refill_holding_levy
     | remove_guardian
     | reveal_plot
     | reveal_plot_w_message
@@ -609,8 +622,8 @@ variables:
     | remove_trait
     | secret_religion
     | set_{{vFlagType}}_flag
-    | set_name
     | set_government_type
+    | set_name
     | unsafe_religion
     )
   vParamID: |-
@@ -624,6 +637,8 @@ variables:
     | picture
     | value
     | group
+    | earmark
+    | casus_belli
     )
   vParamTextID: |-
     (?x:
@@ -631,6 +646,7 @@ variables:
     | name
     | text
     | war_name
+    | title
     )
   vScope: |-
     (?x:
@@ -815,10 +831,14 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.other.ck2script
-    - match: '\b(dynasty)\s*=\s*(none)\b'
+    - match: '\b(dynasty)\s*=\s*(none|father_bastard|mother_bastard)\b'
       captures:
         1: support.function.ck2script
         2: constant.language.ck2script
+    - match: '\b(set_father|set_mother)\s*=\s*(0)\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.numeric.ck2script
     - match: '\b({{vEffectTarget}})\s*=\s*({{vEventTarget}})\b'
       captures:
         1: support.function.ck2script
