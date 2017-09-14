@@ -282,6 +282,7 @@ variables:
     | de_jure_vassal_or_below
     | has_claim
     | has_landed_title
+    | is_landed_title_allowed
     | is_title_active
     )
   vTriggerTarget: |-
@@ -323,6 +324,7 @@ variables:
     | is_friend
     | is_heresy_of
     | is_holy_site
+    | is_landed_title_allowed
     | is_liege_of
     | is_liege_or_above
     | is_lover
@@ -605,6 +607,8 @@ variables:
       abdicate
     | ambition_succeeds
     | banish
+    | clear_ambition
+    | clear_focus
     | clear_wealth
     | death
     | diplomatic_immunity
@@ -647,6 +651,7 @@ variables:
     | remove_title
     | remove_trait
     | secret_religion
+    | set_focus
     | set_{{vFlagType}}_flag
     | set_government_type
     | set_name
@@ -981,7 +986,7 @@ contexts:
     - match: \b(monthly_income|coat_of_arms|data|mercenary_type|assimilate|((fe)?male_names)|allow|gain_effect|mercenary|independent|title_prefix)\b
       scope: keyword.control.ck2script
       # CUSTOMIZABLE_LOCALISATION
-    - match: \b(defined_text|text|localisation_key)\b
+    - match: \b(defined_text|text|localisation_key|fallback_text)\b
       scope: keyword.control.ck2script
       # FUTURE DECISION/LAW CONTEXT:
     - match: \b(decisions|title_decisions|settlement_decisions|vassal_decisions|targett?ed_decisions|plot_decisions|society_decisions)\b # top-level
