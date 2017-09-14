@@ -275,6 +275,7 @@ variables:
     )
   vTriggerTitleID: |-
     (?x:
+      completely_controls
     | de_facto_liege
     | de_facto_liege_title
     | de_jure_liege_or_above
@@ -284,12 +285,14 @@ variables:
     | has_landed_title
     | is_landed_title_allowed
     | is_title_active
+    | title
     )
   vTriggerTarget: |-
     (?x:
       can_marry
     | character
     | claimed_by
+    | completely_controls
     | conquest_culture
     | culture
     | culture_group
@@ -491,6 +494,7 @@ variables:
   vTriggerID: |-
     (?x:
       can_hold_title
+    | completely_controls_region
     | continent
     | controls_religion
     | culture
@@ -609,6 +613,7 @@ variables:
     | banish
     | clear_ambition
     | clear_focus
+    | clear_secret_religion
     | clear_wealth
     | death
     | diplomatic_immunity
@@ -670,6 +675,7 @@ variables:
     | group
     | earmark
     | casus_belli
+    | technology
     )
   vParamTextID: |-
     (?x:
