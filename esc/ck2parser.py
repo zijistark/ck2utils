@@ -202,6 +202,9 @@ class TopLevel(Stringifiable):
     def __getitem__(self, key):
         return self.dictionary[key]
 
+    def __reversed__(self):
+        return reversed(self.contents)
+
     def get(self, *args, **kwargs):
         return self.dictionary.get(*args, **kwargs)
 
@@ -455,6 +458,9 @@ class Obj(Stringifiable):
 
     def __getitem__(self, key):
         return self.dictionary[key]
+
+    def __reversed__(self):
+        return reversed(self.contents)
 
     def get(self, *args, **kwargs):
         return self.dictionary.get(*args, **kwargs)
