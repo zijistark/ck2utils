@@ -14,7 +14,7 @@ CHECK_LIEGE_CONSISTENCY = True
 LANDED_TITLES_ORDER = True # if false, date order
 
 PRUNE_UNEXECUTED_HISTORY = True # prune all after last playable start
-PRUNE_IMPOSSIBLE_STARTS = False # implies prev
+PRUNE_IMPOSSIBLE_STARTS = True # implies prev
 PRUNE_NONBOOKMARK_STARTS = False # implies prev
 PRUNE_NONERA_STARTS = False # implies prev
 
@@ -265,8 +265,7 @@ class TitleHistory:
         if not self.tree:
             self.compile()
         path = folder / '{}.txt'.format(self.name)
-        with path.open('w', encoding='cp1252', newline='\r\n') as f:
-            f.write(self.tree.str(parser))
+        parser.write(self.tree, path)
 
 # for monkey patching Node.pop_greatest_child to fix issue 41
 # https://github.com/chaimleib/intervaltree/issues/41
@@ -320,11 +319,9 @@ def prune_tree(ivt, date_filter, pred=None):
 @print_time
 def main():
     intervaltree_patch_issue_41()
-    simple_parser = SimpleParser()
-    simple_parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
+    simple_parser = SimpleParser(rootpath / 'SWMH-BETA/SWMH')
     if FORMAT_TITLE_HISTORY or CLEANUP_TITLE_HISTORY:
-        history_parser = FullParser()
-        history_parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
+        history_parser = FullParser(rootpath / 'SWMH-BETA/SWMH')
     else:
         history_parser = simple_parser
     history_parser.no_fold_to_depth = 0
@@ -365,8 +362,7 @@ def main():
                         date_filter.chop(date, date.get_next_day())
                     last_start_date = max(date, last_start_date)
             if not PRUNE_NONBOOKMARK_STARTS and not PRUNE_NONERA_STARTS:
-                defines = next(
-                    simple_parser.parse_files('common/defines.txt'))[1]
+                defines = simple_parser.parse_file('common/defines.txt')
                 first = Date(*defines['start_date'].val)
                 last = Date(*defines['last_start_date'].val)
                 date_filter.chop(first, last.get_next_day())
@@ -385,11 +381,11 @@ def main():
     for _, tree in simple_parser.parse_files('history/characters/*'):
         for n, v in tree:
             birth = next((Date(*n2.val) for n2, v2 in v
-                          if (isinstance(n2, ASTDate) and
-                              'birth' in v2.dictionary)), Date.LATEST)
+                          if (isinstance(n2, ASTDate) and v2.get('birth'))),
+                         Date.LATEST)
             death = next((Date(*n2.val) for n2, v2 in v
-                          if (isinstance(n2, ASTDate) and
-                              'death' in v2.dictionary)), Date.LATEST)
+                          if (isinstance(n2, ASTDate) and v2.get('death'))),
+                         Date.LATEST)
             if birth <= death:
                 char_life[n.val] = birth, death
     for path, tree in history_parser.parse_files('history/titles/*'):
@@ -406,8 +402,7 @@ def main():
         histories[title].has_file = True
         histories[title].post_comments = tree.post_comments
         if FORMAT_TITLE_HISTORY and not CLEANUP_TITLE_HISTORY:
-            with path.open('w', encoding='cp1252', newline='\r\n') as f:
-                f.write(tree.str(history_parser))
+            history_parser.write(tree, path)
         try:
             for p in sorted(tree, key=attrgetter('key.val')):
                 n, v = p
