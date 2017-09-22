@@ -519,6 +519,11 @@ def main():
         if county_unheld:
             county_unheld = IntervalTree.from_tuples(county_unheld)
             title_county_unheld.append((title, county_unheld))
+    # counties without title histories
+    for history in histories.values():
+        if not history.has_file and history.name.startswith('c'):
+            title_county_unheld.append((history.name,
+                                        [(Date.EARLIEST, Date.LATEST)]))
     # possible todo: look for dead lieges,
     # even though redundant with dead holders
     title_liege_errors = []
@@ -528,7 +533,11 @@ def main():
             # counties are always held by someone
             if liege == 0 or liege.startswith('c'):
                 continue
-            for liege_unheld in title_unheld[liege][liege_begin:liege_end]:
+            liege_unhelds = IntervalTree(title_unheld[liege])
+            if not title.startswith('c'):
+                # don't care if liege is unheld when this title is also unheld
+                prune_tree(liege_unhelds, title_unheld[title])
+            for liege_unheld in liege_unhelds[liege_begin:liege_end]:
                 begin = max(liege_begin, liege_unheld.begin)
                 end = min(liege_end, liege_unheld.end)
                 if errors and errors[-1][1] == begin:
