@@ -14,8 +14,8 @@ CHECK_LIEGE_CONSISTENCY = True
 LANDED_TITLES_ORDER = True # if false, date order
 
 PRUNE_UNEXECUTED_HISTORY = True # prune all after last playable start
-PRUNE_IMPOSSIBLE_STARTS = True # implies prev
-PRUNE_NONBOOKMARK_STARTS = True # implies prev
+PRUNE_IMPOSSIBLE_STARTS = False # implies prev
+PRUNE_NONBOOKMARK_STARTS = False # implies prev
 PRUNE_NONERA_STARTS = False # implies prev
 
 PRUNE_ALL_BUT_DATES = [] # overrides above
@@ -95,7 +95,7 @@ class TitleHistory:
                                     Pair('clear_tribute_suzerain',
                                          vs[i - 1][1][0]))
                             v = Obj([Pair('who', v[0]),
-                                     Pair.'percentage', Number(str(v[1])))])
+                                     Pair('percentage', Number(str(v[1])))])
                             item = 'set_tribute_suzerain', v
                     elif k in ('name', 'adjective') and v == '':
                         item = 'reset_{}'.format(k), 'yes'
@@ -408,62 +408,66 @@ def main():
         if FORMAT_TITLE_HISTORY and not CLEANUP_TITLE_HISTORY:
             with path.open('w', encoding='cp1252', newline='\r\n') as f:
                 f.write(tree.str(history_parser))
-        for p in sorted(tree, key=attrgetter('key.val')):
-            n, v = p
-            date = Date(*n.val)
-            date_comments = histories[title].date_comments[date]
-            date_comments.extend(str(c) for c in n.pre_comments)
-            potentials = [x.post_comment for x in (p.tis, v.kel, v.ker)
-                          if x.post_comment]
-            if not(len(potentials) == 1 and len(v) == 1 and
-                   not v.contents[0].value.post_comment):
-                histories[title].date_comments[date].extend(str(c) for c in
-                                                            potentials)
-            histories[title].date_ker_comments[date].extend(
-                v.ker.pre_comments)
-            for p2 in v:
-                n2, v2 = p2
-                if n2.val in ('law', 'set_global_flag', 'clr_global_flag',
-                              'effect'):
-                    histories[title].history[date].append(p2)
-                    continue
-                attr_vals, value = None, None
-                if n2.val in ('holder', 'liege'):
-                    if v2.val in ('0', '-', title):
-                        value = 0
-                elif n2.val == 'set_tribute_suzerain':
-                    attr_vals = histories[title].attr['suzerain']
-                    try:
-                        value = v2['who'].val, v2['percentage'].val
-                    except KeyError:
+        try:
+            for p in sorted(tree, key=attrgetter('key.val')):
+                n, v = p
+                date = Date(*n.val)
+                date_comments = histories[title].date_comments[date]
+                date_comments.extend(str(c) for c in n.pre_comments)
+                potentials = [x.post_comment for x in (p.op, v.kel, v.ker)
+                              if x.post_comment]
+                if not(len(potentials) == 1 and len(v) == 1 and
+                       not v.contents[0].value.post_comment):
+                    histories[title].date_comments[date].extend(str(c) for c in
+                                                                potentials)
+                histories[title].date_ker_comments[date].extend(
+                    v.ker.pre_comments)
+                for p2 in v:
+                    n2, v2 = p2
+                    if n2.val in ('law', 'set_global_flag', 'clr_global_flag',
+                                  'effect'):
+                        histories[title].history[date].append(p2)
                         continue
-                elif n2.val == 'clear_tribute_suzerain':
-                    attr_vals = histories[title].attr['suzerain']
-                    value = v2.val, 0
-                    if attr_vals[-1][1] == 0 or attr_vals[-1][1][0] != v2.val:
-                        continue
-                elif n2.val in ('reset_adjective', 'reset_name'):
-                    if v2.val != 'yes':
-                        continue
-                    attr_vals = histories[title].attr[n2.val[6:]]
-                    value = ''
-                if attr_vals is None:
-                    attr_vals = histories[title].attr[n2.val]
-                if value is None:
-                    value = v2.val
-                if attr_vals[-1][0] == date:
-                    attr_vals[-1] = date, value
-                elif attr_vals[-1][1] != value:
-                    attr_vals.append((date, value))
-                if (len(potentials) == 1 and len(v) == 1 and
-                    not v2.post_comment):
-                    if isinstance(v2, Obj):
-                        v2.kel.post_comment = potentials[0]
-                    else:
-                        v2.post_comment = potentials[0]
-                if n2.pre_comments or v2.post_comment:
-                    histories[title].attr_comment[date, (n2.val, value)] = (
-                        n2.pre_comments, v2.post_comment)
+                    attr_vals, value = None, None
+                    if n2.val in ('holder', 'liege'):
+                        if v2.val in ('0', '-', title):
+                            value = 0
+                    elif n2.val == 'set_tribute_suzerain':
+                        attr_vals = histories[title].attr['suzerain']
+                        try:
+                            value = v2['who'].val, v2['percentage'].val
+                        except KeyError:
+                            continue
+                    elif n2.val == 'clear_tribute_suzerain':
+                        attr_vals = histories[title].attr['suzerain']
+                        value = v2.val, 0
+                        if attr_vals[-1][1] == 0 or attr_vals[-1][1][0] != v2.val:
+                            continue
+                    elif n2.val in ('reset_adjective', 'reset_name'):
+                        if v2.val != 'yes':
+                            continue
+                        attr_vals = histories[title].attr[n2.val[6:]]
+                        value = ''
+                    if attr_vals is None:
+                        attr_vals = histories[title].attr[n2.val]
+                    if value is None:
+                        value = v2.val
+                    if attr_vals[-1][0] == date:
+                        attr_vals[-1] = date, value
+                    elif attr_vals[-1][1] != value:
+                        attr_vals.append((date, value))
+                    if (len(potentials) == 1 and len(v) == 1 and
+                        not v2.post_comment):
+                        if isinstance(v2, Obj):
+                            v2.kel.post_comment = potentials[0]
+                        else:
+                            v2.post_comment = potentials[0]
+                    if n2.pre_comments or v2.post_comment:
+                        histories[title].attr_comment[date, (n2.val, value)] = (
+                            n2.pre_comments, v2.post_comment)
+        except TypeError:
+            print(path)
+            raise
         dead_holders = []
         county_unheld = []
         holders = histories[title].attr['holder']
