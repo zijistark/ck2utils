@@ -372,6 +372,8 @@ def main():
                     date_filter.addi(last_start_date.get_next_day(),
                                      Date.LATEST)
     title_holders = defaultdict(IntervalTree)
+    title_unheld = defaultdict(
+        lambda: IntervalTree.from_tuples([(Date.EARLIEST, Date.LATEST)]))
     title_lieges = defaultdict(IntervalTree)
     title_lte_tier = []
     char_titles = defaultdict(IntervalTree)
@@ -498,6 +500,7 @@ def main():
             title_holders[title][begin:end] = holder
             if holder != 0:
                 char_titles[holder][begin:end] = title
+                title_unheld[title].chop(begin, end)
         lte_tier = IntervalTree()
         lieges = histories[title].attr['liege']
         for i, (begin, liege) in enumerate(lieges):
@@ -525,17 +528,13 @@ def main():
             # counties are always held by someone
             if liege == 0 or liege.startswith('c'):
                 continue
-            if liege not in title_holders:
-                title_holders[liege][Date.EARLIEST:Date.LATEST] = 0
-            holders = title_holders[liege][liege_begin:liege_end]
-            for holder_begin, holder_end, holder in holders:
-                if holder == 0:
-                    begin = max(liege_begin, holder_begin)
-                    end = min(liege_end, holder_end)
-                    if errors and errors[-1][1] == begin:
-                        errors[-1] = errors[-1][0], end
-                    else:
-                        errors.append((begin, end))
+            for liege_unheld in title_unheld[liege][liege_begin:liege_end]:
+                begin = max(liege_begin, liege_unheld.begin)
+                end = min(liege_end, liege_unheld.end)
+                if errors and errors[-1][1] == begin:
+                    errors[-1] = errors[-1][0], end
+                else:
+                    errors.append((begin, end))
         if errors:
             errors = IntervalTree.from_tuples(errors)
             title_liege_errors.append((title, errors))
