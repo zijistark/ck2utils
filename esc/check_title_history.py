@@ -522,8 +522,8 @@ def main():
     # counties without title histories
     for history in histories.values():
         if not history.has_file and history.name.startswith('c'):
-            title_county_unheld.append((history.name,
-                                        [(Date.EARLIEST, Date.LATEST)]))
+            always = IntervalTree.from_tuples([(Date.EARLIEST, Date.LATEST)])
+            title_county_unheld.append((history.name, always))
     # possible todo: look for dead lieges,
     # even though redundant with dead holders
     title_liege_errors = []
