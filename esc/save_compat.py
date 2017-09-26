@@ -31,18 +31,47 @@ def parse_arguments():
     return args
 
 
+def compatible_digests(old_digest, new_digest):
+    compatible = True
+    for k, v in old_digest.items():
+        compatible &= v <= new_digest[k]
+    return compatible
+
+
 def create_digest_SWMH(mod_path):
-    digest = None
+    digest = {}
+    titles = set()
+    for _, tree in parser.parse_files('common/landed_titles/*'):
+        dfs = list(tree)
+        while dfs:
+            n, v = dfs.pop()
+            if is_codename(n.val):
+                titles.add(n.val)
+                dfs.extend(v)
+    digest['landed_titles'] = titles
     return digest
 
 
 def record_digest(mod_path):
+    parser.moddirs = [mod_path]
     if mod_path.name == 'SWMH':
         digest = create_digest_SWMH(mod_path)
     else:
         raise ValueError("don't know how to digest {}".format(mod_path.name))
 
     out_path = digest_dir / mod_path.name / 'latest'
+
+    if out_path.exists():
+        with out_path.open('rb') as f:
+            old_digest = pickle.load(f, fix_imports=False)
+
+        compatible = compatible_digests(old_digest, digest)
+
+        if compatible:
+            print('compatible')
+        else:
+            print('incompatible')
+
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open('wb') as f:
         pickle.dump(digest, f, protocol=-1, fix_imports=False)
@@ -58,15 +87,6 @@ def main():
     for mod_path in args.mod:
         record_digest(mod_path)
 
-    # titles = []
-    # for _, tree in parser.parse_files('common/landed_titles/*'):
-    #     dfs = list(reversed(tree))
-    #     while dfs:
-    #         n, v = dfs.pop()
-    #         if is_codename(n.val):
-    #             if n.val not in titles:
-    #                 titles.append(n.val)
-    #             dfs.extend(reversed(v))
     # no_title = []
     # for path in parser.files('gfx/flags/*.tga'):
     #     try:
