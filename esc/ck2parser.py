@@ -703,6 +703,15 @@ class SimpleParser:
         else:
             del self.parse_tree_cache[path]
 
+    def invalidate_repo_cache(self, bad_path=None):
+        if bad_path is None:
+            self.repos.clear()
+        else:
+            for repo_path in self.repos:
+                if repo_path == bad_path or repo_path in bad_path.parents:
+                    bad_repo_path = repo_path
+            del self.repos[bad_repo_path]
+
     def get_cachepath(self, path):
         m = hashlib.md5()
         m.update(bytes(path))
