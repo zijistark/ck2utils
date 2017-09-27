@@ -87,20 +87,6 @@ def main():
     for mod_path in args.mod:
         record_digest(mod_path)
 
-    # no_title = []
-    # for path in parser.files('gfx/flags/*.tga'):
-    #     try:
-    #         titles.remove(path.stem)
-    #     except ValueError:
-    #         if vanilladir not in path.parents:
-    #             no_title.append(path.name)
-    # no_flag = [t for t in titles if not t.startswith('b')]
-    # with (rootpath / 'flags.txt').open('w') as f:
-    #     if no_title:
-    #         print('No title for flag:', *no_title, sep='\n\t', file=f)
-    #     if no_flag:
-    #         print('No flag for title:', *no_flag, sep='\n\t', file=f)
-
 
 if __name__ == '__main__':
     main()
