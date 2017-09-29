@@ -267,6 +267,7 @@ variables:
     | relative_power
     | relative_power_to_liege
     | religion_authority
+    | revolt_risk
     | scaled_piety
     | scaled_prestige
     | scaled_wealth
@@ -964,6 +965,14 @@ contexts:
     - match: \b(((reverse_)?realm_levy_diff)|num_of_trade_post_diff|create_(title|character|artifact|(random_(soldier|priest|steward|diplomat|intriguer))))\b
       scope: keyword.control.ck2script
     - match: '\bhad_({{vFlagType}})_flag\b'
+      scope: keyword.control.ck2script
+    - match: \b(province|home|owner|scaled_by_biggest_garrison|attrition|cannot_inherit|disband_on_peace|reinforces|reinforce_rate_multiplier|match_character|match_mult|match_min|match_max|merge|can_toggle_looting|is_looter)\b
+      scope: support.function.ck2script
+    - match: \b(troops|archers|light_infantry|heavy_infantry|pikemen|knights|light_cavalry|horse_archers|war_elephants|galleys|spawn_fleet|spawn_unit)\b
+      scope: keyword.control.ck2script
+    - match: \b(age|random_traits|female)\b
+      scope: support.function.ck2script
+    - match: \b(attributes)\b
       scope: keyword.control.ck2script
     - match: \b(((check|change|subtract|multiply|divide|export_to|set)_variable)|is_variable_equal|attribute_diff|age_diff)\b
       scope: keyword.control.ck2script
