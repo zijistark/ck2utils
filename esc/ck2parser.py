@@ -25,8 +25,9 @@ def csv_rows(path, linenum=False, comments=False):
     with open(str(path), newline='', encoding='cp1252', errors='replace') as f:
         gen = ((r, i + 1) if linenum else r
                for i, r in enumerate(csv.reader(f, dialect='ckii'))
-               if (len(r) > 1 and r[0] and
-                   (comments or not r[0].startswith('#'))))
+               if (r and r[0] and
+                   (r[0].startswith('#') and comments or
+                    not r[0].startswith('#') and len(r) > 1)))
         yield from gen
 
 # give mod dirs in descending lexicographical order of mod name (Z-A),
