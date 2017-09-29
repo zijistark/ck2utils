@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# TODO: redo region checking
+
 import collections
 import csv
 import pathlib
@@ -8,7 +10,7 @@ import re
 import sys
 import shutil
 import tempfile
-from ck2parser import (rootpath, vanilladir, is_codename, files, Obj, csv_rows,
+from ck2parser import (rootpath, vanilladir, is_codename, Obj, csv_rows,
                        SimpleParser)
 from print_time import print_time
 
@@ -37,13 +39,7 @@ def check_titles(parser, path, titles):
     def recurse(tree):
         if tree.has_pairs:
             for p in tree:
-                try:
-                    n, v = p
-                except TypeError:
-                    if (path.name == 'mnm_hermetics_events.txt' and
-                        p.val in ['random', 70]):
-                        continue
-                    raise
+                n, v = p
                 v_is_obj = isinstance(v, Obj)
                 check_title(parser, n, path, titles, v_is_obj, p)
                 if v_is_obj:
@@ -54,7 +50,11 @@ def check_titles(parser, path, titles):
             for v in tree:
                 check_title(parser, v, path, titles, line=v)
 
-    recurse(parser.parse_file(path, errors='replace'))
+    try:
+        recurse(parser.parse_file(path, errors='replace'))
+    except:
+        print(path)
+        raise
 
 def check_regions(parser, titles, titles_de_jure, duchies_de_jure):
     bad_titles = []
@@ -80,27 +80,21 @@ def check_regions(parser, titles, titles_de_jure, duchies_de_jure):
                         if v3.val in titles and v3.val not in titles_de_jure:
                             bad_titles.append(v3.val)
                         elif world and v3.val in missing_duchies:
-                            try:
-                                missing_duchies.remove(v3.val)
-                            except ValueError:
-                                pass
+                            missing_duchies.remove(v3.val)
 
     return bad_titles, missing_duchies
 
 def check_province_history(parser, titles):
-    tree = next(parser.parse_files('map/default.map'))[1]
-    defs = tree['definitions'].val
-    _max_provinces = int(tree['max_provinces'].val)
+    defs = parser.parse_file('map/default.map')['definitions'].val
     id_name_map = {}
-    for row in csv_rows(next(files('map/' + defs, parser.moddirs))):
+    for row in csv_rows(parser.file('map/' + defs)):
         try:
             id_name_map[int(row[0])] = row[4]
         except (IndexError, ValueError):
             continue
-    for path in files('history/provinces/*', parser.moddirs):
+    for path in parser.files('history/provinces/*.txt'):
         number, name = path.stem.split(' - ')
-        number = int(number)
-        if number in id_name_map and id_name_map[number] == name:
+        if id_name_map.get(int(number)) == name:
             check_titles(parser, path, titles)
 
 def process_landed_titles(parser):
@@ -112,17 +106,10 @@ def process_landed_titles(parser):
         parent_is_titular = True
         for n, v in tree:
             if is_codename(n.val):
-                if n.val in titles:
-                    print('Duplicate title {}'.format(n.val))
                 titles.add(n.val)
-                try:
-                    if ('title' in v.dictionary and
-                        'title_female' not in v.dictionary):
-                        misogyny.append(n.val)
-                except:
-                    print(n.val)
-                    raise
-                if n.val.startswith('b_'):
+                if (v.get('title') and not v.get('title_female')):
+                    misogyny.append(n.val)
+                if n.val[0] == 'b':
                     titles_de_jure.append(n.val)
                     parent_is_titular = False
                 else:
@@ -132,7 +119,7 @@ def process_landed_titles(parser):
                         parent_is_titular = False
         return parent_is_titular
 
-    for path, tree in parser.parse_files('common/landed_titles/*'):
+    for path, tree in parser.parse_files('common/landed_titles/*.txt'):
         try:
             recurse(tree)
         except:
@@ -146,7 +133,7 @@ def main():
     parser = SimpleParser()
     parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
     titles, titles_de_jure, misogyny = process_landed_titles(parser)
-    duchies_de_jure = [t for t in titles_de_jure if t.startswith('d_')]
+    duchies_de_jure = [t for t in titles_de_jure if t[0] == 'd']
     check_province_history(parser, titles)
     bad_region_titles, missing_duchies = check_regions(
         parser, titles, titles_de_jure, duchies_de_jure)
@@ -180,9 +167,9 @@ def main():
         'common/achievements.txt'
         ]
     for glob in globs:
-        for path in files(glob, parser.moddirs):
+        for path in parser.files(glob):
             check_titles(parser, path, titles)
-    with (rootpath / 'check_titles.txt').open('w', encoding='cp1252') as fp:
+    with (rootpath / 'check_titles.txt').open('w') as fp:
         if bad_region_titles:
             print('Titular titles in regions:\n\t', end='', file=fp)
             print(*bad_region_titles, sep=' ', file=fp)
