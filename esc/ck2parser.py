@@ -42,7 +42,7 @@ def files(glob, moddirs=(), basedir=vanilladir, reverse=False):
 def get_cultures(parser, groups=True):
     cultures = []
     culture_groups = []
-    for _, tree in parser.parse_files('common/cultures/*'):
+    for _, tree in parser.parse_files('common/cultures/*.txt'):
         for n, v in tree:
             culture_groups.append(n.val)
             cultures.extend(n2.val for n2, v2 in v
@@ -52,23 +52,20 @@ def get_cultures(parser, groups=True):
 def get_religions(parser, groups=True):
     religions = []
     religion_groups = []
-    for _, tree in parser.parse_files('common/religions/*'):
+    for _, tree in parser.parse_files('common/religions/*.txt'):
         for n, v in tree:
             if n.val == 'secret_religion_visibility_trigger':
                 continue
             religion_groups.append(n.val)
             religions.extend(n2.val for n2, v2 in v
                              if (isinstance(v2, Obj) and
-                                 n2.val not in ('male_names', 'female_names')))
+                                 n2.val not in ['male_names', 'female_names']))
     return (religions, religion_groups) if groups else religions
 
 def get_province_id_name_map(parser):
-    _, tree = next(parser.parse_files('map/default.map'))
-    defs = tree['definitions'].val
+    defs = parser.parse_file('map/default.map')['definitions'].val
     id_name_map = {}
-    defs_path = next(files('map/' + defs, parser.moddirs,
-                           basedir=parser.basedir))
-    for row in csv_rows(defs_path):
+    for row in csv_rows(parser.file('map/' + defs)):
         try:
             id_name_map[int(row[0])] = row[4]
         except (IndexError, ValueError):
@@ -77,8 +74,7 @@ def get_province_id_name_map(parser):
 
 def get_provinces(parser):
     id_name = get_province_id_name_map(parser)
-    for path in files('history/provinces/*', parser.moddirs,
-                      basedir=parser.basedir):
+    for path in parser.files('history/provinces/* - *.txt'):
         number, name = path.stem.split(' - ')
         number = int(number)
         if id_name.get(number) == name:
@@ -91,14 +87,10 @@ def get_provinces(parser):
 
 def get_localisation(moddirs=(), basedir=vanilladir, ordered=False):
     locs = collections.OrderedDict() if ordered else {}
-    loc_glob = 'localisation/*.csv'
-    for path in files(loc_glob, moddirs, basedir=basedir):
+    for path in files('localisation/*.csv', moddirs, basedir=basedir):
         for row in csv_rows(path):
-            try:
-                if row[0] not in locs:
-                    locs[row[0]] = row[1]
-            except IndexError:
-                continue
+            if row[0] not in locs:
+                locs[row[0]] = row[1]
     return locs
 
 def first_post_comment(item):
@@ -205,6 +197,16 @@ class TopLevel(Stringifiable):
 
     def __reversed__(self):
         return reversed(self.contents)
+
+    @property
+    def pre_comments(self):
+        return self.contents[0].pre_comments if self.contents else None
+
+    @pre_comments.setter
+    def pre_comments(self, value):
+        if not self.contents:
+            raise RuntimeError('setting pre_comments on empty toplevel')
+        self.contents[0].pre_comments = value
 
     def get(self, *args, **kwargs):
         return self.dictionary.get(*args, **kwargs)
@@ -379,6 +381,22 @@ class Pair(Stringifiable):
         yield self.value
 
     @property
+    def pre_comments(self):
+        return self.key.pre_comments
+
+    @pre_comments.setter
+    def pre_comments(self, value):
+        self.key.pre_comments = value
+
+    @property
+    def post_comment(self):
+        return self.val.post_comment
+
+    @post_comment.setter
+    def post_comment(self, value):
+        self.val.post_comment = value
+
+    @property
     def has_comments(self):
         return any(x.has_comments for x in (self.key, self.op, self.value))
 
@@ -463,6 +481,27 @@ class Obj(Stringifiable):
     def __reversed__(self):
         return reversed(self.contents)
 
+    @property
+    def pre_comments(self):
+        return self.kel.pre_comments
+
+    @pre_comments.setter
+    def pre_comments(self, value):
+        self.kel.pre_comments = value
+
+    @property
+    def post_comment(self):
+        return self.ker.post_comment
+
+    @post_comment.setter
+    def post_comment(self, value):
+        self.ker.post_comment = value
+
+    @property
+    def has_comments(self):
+        return (self.kel.has_comments or self.ker.has_comments or
+                any(x.has_comments for x in self))
+
     def get(self, *args, **kwargs):
         return self.dictionary.get(*args, **kwargs)
 
@@ -479,15 +518,6 @@ class Obj(Stringifiable):
         if self._dictionary is None:
             self._dictionary = {k.val: v for k, v in reversed(self.contents)}
         return self._dictionary
-
-    @property
-    def post_comment(self):
-        return self.ker.post_comment
-
-    @property
-    def has_comments(self):
-        return (self.kel.has_comments or self.ker.has_comments or
-                any(x.has_comments for x in self))
 
     def str(self, parser, indent=0):
         s = indent * '\t'

@@ -20,7 +20,7 @@ def abbrev_path(path):
 def get_locs(where):
     locs = collections.OrderedDict()
     dupe_lines = []
-    for path in files('localisation/*', where):
+    for path in files('localisation/*.csv', where):
         vanilla = modpath not in path.parents
         for row, linenum in csv_rows(path, linenum=True):
             if row[0] in locs:
@@ -161,7 +161,7 @@ def main():
                         add_result(key, 'dyn. noun',
                                    mod_loc[province_id[title]],
                                    'mod static noun')
-                    elif title in vanilla_loc: 
+                    elif title in vanilla_loc:
                         add_result(key, 'dyn. noun', vanilla_loc[title],
                                    'vanilla static noun')
                     else:
@@ -191,7 +191,7 @@ def main():
                 if stat_adj_key in mod_loc:
                     add_result(dyn_id, 'dyn. adj.', mod_loc[stat_adj_key],
                                'mod static adj.')
-                elif stat_adj_key in vanilla_loc: 
+                elif stat_adj_key in vanilla_loc:
                     add_result(dyn_id, 'dyn. adj.', vanilla_loc[stat_adj_key],
                                'vanilla static adj.')
                 else:

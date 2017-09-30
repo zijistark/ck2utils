@@ -56,7 +56,7 @@ def main():
             one, two = int(row[0]), int(row[1])
         except ValueError:
             continue
-        if one in id_county_map and two  in id_county_map:
+        if one in id_county_map and two in id_county_map:
             province_graph.add_edge(one, two)
     regions = [set(c) for c in sorted(nx.connected_components(province_graph),
                                       key=min) if 333 not in c]
@@ -76,7 +76,7 @@ def main():
                 parent_provs |= child_provs
         return parent_provs
 
-    for _, tree in parser.parse_files('common/landed_titles/*'):
+    for _, tree in parser.parse_files('common/landed_titles/*.txt'):
         recurse(tree)
     code = TopLevel()
     for region in regions:
@@ -99,25 +99,23 @@ def main():
         # The AI needs these to optimize path finding
         #
         # NOTE: do not add any regions here that are NOT islands
-        
+
         # Regions can be declared with one or more of the following fields:
         #   duchies = { }, takes duchy title names declared in landed_titles.txt
         #   counties = { }, takes county title names declared in landed_titles.txt
         #   provinces = { }, takes province id numbers declared in /history/provinces
-        #   regions = { }, a region can also include other regions, however the subregions needs to be declared before the parent region. 
+        #   regions = { }, a region can also include other regions, however the subregions needs to be declared before the parent region.
         #       E.g. If the region world_europe contains the region world_europe_west then world_europe_west needs to be declared as a region before (i.e. higher up in this file) world_europe.
         '''
     full_parser = FullParser()
-    parsed = full_parser.parse(header_comments)
-    code.contents[0].key.pre_comments = parsed.post_comments
+    code.pre_comments[:0] = full_parser.parse(header_comments).post_comments
     path = rootpath
     if parser.moddirs:
         path = parser.moddirs[0] / 'map'
     path = path / 'island_region.txt'
     full_parser.no_fold_to_depth = 0
     full_parser.newlines_to_depth = 0
-    with path.open('w', encoding='cp1252', newline='\r\n') as f:
-        f.write(code.str(full_parser))
+    full_parser.write(code, path)
 
 
 if __name__ == '__main__':

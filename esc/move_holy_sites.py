@@ -17,7 +17,7 @@ def main():
     if out_path.exists():
         out_path.unlink()
     out_tree = TopLevel()
-    for path, tree in full_parser.parse_files('common/landed_titles/*'):
+    for path, tree in full_parser.parse_files('common/landed_titles/*.txt'):
         dfs = list(reversed(tree))
         while dfs:
             n, v = dfs.pop()
@@ -33,8 +33,7 @@ def main():
                     out_tree.contents.append(pair)
                 dfs.extend(reversed(v))
         full_parser.write(tree, path)
-    header = '-*- ck2.landed_titles -*-'
-    out_tree.contents[0].key.pre_comments.insert(0, Comment(header))
+    out_tree.pre_comments.insert(0, Comment('-*- ck2.landed_titles -*-'))
     full_parser.write(out_tree, out_path)
 
 

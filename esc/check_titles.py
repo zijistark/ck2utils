@@ -10,8 +10,9 @@ import re
 import sys
 import shutil
 import tempfile
+import ck2parser
 from ck2parser import (rootpath, vanilladir, is_codename, Obj, csv_rows,
-                       SimpleParser)
+                       get_province_id_name_map, SimpleParser)
 from print_time import print_time
 
 VANILLA_HISTORY_WARN = True
@@ -85,13 +86,7 @@ def check_regions(parser, titles, titles_de_jure, duchies_de_jure):
     return bad_titles, missing_duchies
 
 def check_province_history(parser, titles):
-    defs = parser.parse_file('map/default.map')['definitions'].val
-    id_name_map = {}
-    for row in csv_rows(parser.file('map/' + defs)):
-        try:
-            id_name_map[int(row[0])] = row[4]
-        except (IndexError, ValueError):
-            continue
+    id_name_map = get_province_id_name_map(parser)
     for path in parser.files('history/provinces/*.txt'):
         number, name = path.stem.split(' - ')
         if id_name_map.get(int(number)) == name:

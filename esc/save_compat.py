@@ -34,7 +34,7 @@ def parse_arguments():
 def compatible_digests(old_digest, new_digest):
     compatible = True
     for k, v in old_digest.items():
-        compatible &= v <= new_digest[k]
+        compatible &= k in new_digest and v <= new_digest[k]
     return compatible
 
 
@@ -79,6 +79,9 @@ def record_digest(mod_path):
 
 def invalidate_repo_cache(bad_path=None):
     parser.invalidate_repo_cache(bad_path)
+
+
+# git error e.g. other process checking out: git.exc.GitCommandError
 
 
 @print_time

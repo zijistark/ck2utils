@@ -108,14 +108,14 @@ class TitleHistory:
                         item = item[0], item[1].val
                     if (date, item) in self.attr_comment:
                         pre, post = self.attr_comment[date, item]
-                        pair.key.pre_comments = pre
-                        pair.value.post_comment = post
+                        pair.pre_comments = pre
+                        pair.post_comment = post
                     self.history[date].append(pair)
         contents = []
         for date, items in sorted(self.history.items()):
             items.sort(key=self.keys_sort_key)
             obj = Obj(items)
-            obj.ker.pre_comments = self.date_ker_comments[date]
+            obj.pre_comments = self.date_ker_comments[date]
             date = ASTDate(self.date_comments[date], str(date), None)
             date_pair = Pair(date, obj)
             contents.append(date_pair)
@@ -182,7 +182,7 @@ class TitleHistory:
                                     for s in pair_is.split('\n') if s]
                         if prev_i < len(self.tree):
                             # TODO fix how this stacks up comment level
-                            next_thing = self.tree.contents[prev_i].key
+                            next_thing = self.tree.contents[prev_i]
                             next_thing.pre_comments[:0] = comments
                             i -= 1
                         else:
@@ -192,8 +192,8 @@ class TitleHistory:
                         pair_is, _ = prev_holder_pair.inline_str(0, parser, 0)
                         comments = [Comment(s)
                                     for s in pair_is.split('\n') if s]
-                        next_thing = (obj.contents[j + 1].key
-                                      if j + 1 < len(obj) else obj.ker)
+                        next_thing = (obj.contents[j + 1]
+                                      if j + 1 < len(obj) else obj)
                         next_thing.pre_comments[:0] = comments
                 else:
                     obj.contents.remove(prev_holder_pair)
@@ -201,7 +201,7 @@ class TitleHistory:
                     pair_is, _ = prev_holder_pair.inline_str(0, parser, 0)
                     comments = [Comment(s)
                                 for s in pair_is.split('\n') if s]
-                    no_holder_pair.key.pre_comments[:0] = comments
+                    no_holder_pair.pre_comments[:0] = comments
                     obj.contents.append(no_holder_pair)
                     obj.contents.sort(key=self.keys_sort_key)
                 # possible redundant holder = 0 from that
@@ -414,20 +414,20 @@ def main():
                 potentials = [x.post_comment for x in (p.op, v.kel, v.ker)
                               if x.post_comment]
                 if not(len(potentials) == 1 and len(v) == 1 and
-                       not v.contents[0].value.post_comment):
+                       not v.contents[0].post_comment):
                     histories[title].date_comments[date].extend(str(c) for c in
                                                                 potentials)
                 histories[title].date_ker_comments[date].extend(
                     v.ker.pre_comments)
                 for p2 in v:
                     n2, v2 = p2
-                    if n2.val in ('law', 'set_global_flag', 'clr_global_flag',
-                                  'effect'):
+                    if n2.val in ['law', 'set_global_flag', 'clr_global_flag',
+                                  'effect']:
                         histories[title].history[date].append(p2)
                         continue
                     attr_vals, value = None, None
-                    if n2.val in ('holder', 'liege'):
-                        if v2.val in ('0', '-', title):
+                    if n2.val in ['holder', 'liege']:
+                        if v2.val in ['0', '-', title]:
                             value = 0
                     elif n2.val == 'set_tribute_suzerain':
                         attr_vals = histories[title].attr['suzerain']
@@ -440,7 +440,7 @@ def main():
                         value = v2.val, 0
                         if attr_vals[-1][1] == 0 or attr_vals[-1][1][0] != v2.val:
                             continue
-                    elif n2.val in ('reset_adjective', 'reset_name'):
+                    elif n2.val in ['reset_adjective', 'reset_name']:
                         if v2.val != 'yes':
                             continue
                         attr_vals = histories[title].attr[n2.val[6:]]

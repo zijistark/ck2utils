@@ -83,11 +83,11 @@ def main():
                 except KeyError:
                     pass
                 if v.inline_str(full_parser)[1][0] > 1: # only for multi-line
-                    v.ker.post_comment = None
+                    v.post_comment = None
                     _, (nl, _) = v.inline_str(full_parser)
                     if nl >= 36:
                         comment = 'end ' + n.val
-                        prepend_post_comment(v.ker, comment)
+                        prepend_post_comment(v, comment)
                     if re.match(r'[ekd]_', n.val):
                         try:
                             prepend_post_comment(v.kel, localisation[n.val])

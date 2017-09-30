@@ -257,7 +257,7 @@ changeset = {
             law = crown_authority_1
             '''),
         ((1055, 1, 11), 1, '''
-            clr_global_flag = byz_empire_flourishes 
+            clr_global_flag = byz_empire_flourishes
             set_global_flag = byz_empire_cracking
             effect = {
                 set_variable = { which = "imperial_decay" value = 30 }
@@ -270,15 +270,15 @@ changeset = {
             law = crown_authority_1
             '''),
         ((1071, 8, 26), 1, '''
-            clr_global_flag = byz_empire_cracking 
+            clr_global_flag = byz_empire_cracking
             set_global_flag = byz_empire_falling
             effect = {
                 set_variable = { which = "imperial_decay" value = 50 }
             }
             '''),
         ((1081, 4, 1), 1, '''
-            law = crown_authority_2 
-            clr_global_flag = byz_empire_falling 
+            law = crown_authority_2
+            clr_global_flag = byz_empire_falling
             set_global_flag = byz_empire_cracking
             effect = {
                 set_variable = { which = "imperial_dynasty_count" value = 0 }
@@ -292,8 +292,8 @@ changeset = {
             effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
             '''),
         ((1180, 9, 24), 1, '''
-            law = crown_authority_1 
-            clr_global_flag = byz_empire_cracking 
+            law = crown_authority_1
+            clr_global_flag = byz_empire_cracking
             set_global_flag = byz_empire_falling
             effect = {
                 change_variable = { which = "imperial_dynasty_count" value = 1 }
@@ -405,7 +405,7 @@ def main():
 
     # shutil.rmtree(str(emfswmhhistory), ignore_errors=True)
     # emfswmhhistory.mkdir(parents=True)
-    
+
     shutil.rmtree(str(emfswmhhistory / 'characters'), ignore_errors=True)
 
     parser.newlines_to_depth = 0
@@ -480,15 +480,15 @@ def main():
             assert len(tree.contents) == 50
             assert len(tree[580, 1, 1].contents) == 1
             item = tree[580, 1, 1].contents.pop()
-            comments = item.key.pre_comments
-            item.key.pre_comments = []
+            comments = item.pre_comments
+            item.pre_comments = []
             comments.extend(
                 [Comment(x) for x in item.inline_str(parser)[0].splitlines()])
             tree[580, 1, 1].ker.pre_comments[:0] = comments
             assert len(tree[797, 1, 1].contents) == 2
             item = tree[797, 1, 1].contents.pop()
-            comments = item.key.pre_comments
-            item.key.pre_comments = []
+            comments = item.pre_comments
+            item.pre_comments = []
             comments.extend(
                 [Comment(x) for x in item.inline_str(parser)[0].splitlines()])
             tree[797, 1, 1].ker.pre_comments[:0] = comments
@@ -505,9 +505,8 @@ def main():
                     set_global_flag = emf_magyar_migration_completed
                 }
                 ''').contents
-            tree.contents[22].key.pre_comments = (
-                tree.contents[24].key.pre_comments)
-            tree.contents[24].key.pre_comments = []
+            tree.contents[22].pre_comments = tree.contents[24].pre_comments
+            tree.contents[24].pre_comments = []
         elif path.stem == 'k_magyar':
             changed = True
             item = tree[20, 1, 1].contents.pop()

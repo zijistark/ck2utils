@@ -34,10 +34,9 @@ def main():
                 to_parse += 'terrain = {}\n'.format(data['terrain'])
                 to_parse += '}\n'
                 parsed = parser.parse(to_parse)
-                output_tree.contents.append(parsed.contents[0])
-        header = '# -*- ck2.province_setup -*-'
-        parsed = parser.parse(header)
-        output_tree.contents[0].key.pre_comments = parsed.post_comments
+                output_tree.contents.extend(parsed)
+        parsed = parser.parse('# -*- ck2.province_setup -*-')
+        output_tree.pre_comments[:0] = parsed.post_comments
     else:
         output_tree = parser.parse_file('common/province_setup/'
                                         '00_province_setup.txt')
