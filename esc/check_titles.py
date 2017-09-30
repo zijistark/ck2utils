@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
-# TODO: redo region checking
-
-import collections
+from collections import defaultdict
 import csv
+from operator import attrgetter
 import pathlib
 import pprint
 import re
@@ -17,8 +16,8 @@ from print_time import print_time
 
 VANILLA_HISTORY_WARN = True
 
-results = {True: collections.defaultdict(list),
-           False: collections.defaultdict(list)}
+results = {True: defaultdict(list),
+           False: defaultdict(list)}
 
 def check_title(parser, v, path, titles, lhs=False, line=None):
     if isinstance(v, str):
@@ -57,10 +56,10 @@ def check_titles(parser, path, titles):
         print(path)
         raise
 
-def check_regions(parser, titles, titles_de_jure, duchies_de_jure):
+def check_regions(parser, titles, duchies_de_jure):
     bad_titles = []
     missing_duchies = list(duchies_de_jure)
-    region_duchies = collections.defaultdict(list)
+    region_duchies = defaultdict(list)
     path, tree = next(parser.parse_files('map/geographical_region.txt'))
     for n, v in tree:
         world = n.val.startswith('world_')
@@ -78,7 +77,7 @@ def check_regions(parser, titles, titles_de_jure, duchies_de_jure):
                     if is_codename(v3.val):
                         check_title(parser, v3, path, titles, line=v3)
                         region_duchies[n.val].append(v3.val)
-                        if v3.val in titles and v3.val not in titles_de_jure:
+                        if v3.val in titles and v3.val not in duchies_de_jure:
                             bad_titles.append(v3.val)
                         elif world and v3.val in missing_duchies:
                             missing_duchies.remove(v3.val)
@@ -93,49 +92,45 @@ def check_province_history(parser, titles):
             check_titles(parser, path, titles)
 
 def process_landed_titles(parser):
-    titles = set()
-    titles_de_jure = []
+    titles_list = []
+    title_liege_map = {}
+    title_vassals_map = defaultdict(set)
     misogyny = []
-
-    def recurse(tree):
-        parent_is_titular = True
-        for n, v in tree:
-            if is_codename(n.val):
-                titles.add(n.val)
-                if (v.get('title') and not v.get('title_female')):
-                    misogyny.append(n.val)
-                if n.val[0] == 'b':
-                    titles_de_jure.append(n.val)
-                    parent_is_titular = False
-                else:
-                    is_titular = recurse(v)
-                    if not is_titular:
-                        titles_de_jure.append(n.val)
-                        parent_is_titular = False
-        return parent_is_titular
-
     for path, tree in parser.parse_files('common/landed_titles/*.txt'):
         try:
-            recurse(tree)
+            dfs = list(reversed(tree))
+            while dfs:
+                n, v = dfs.pop()
+                if is_codename(n.val):
+                    if n.val not in titles_list:
+                        titles_list.append(n.val)
+                    if v.get('title') and not v.get('title_female'):
+                        misogyny.append(n.val)
+                    for n2, v2 in v:
+                        if is_codename(n2.val):
+                            title_liege_map[n2.val] = n.val
+                            title_vassals_map[n.val].add(n2.val)
+                    dfs.extend(reversed(v))
         except:
             print(path)
             raise
-    # print('{} titles, {} de jure'.format(len(titles), len(titles_de_jure)))
-    return titles, titles_de_jure, misogyny
+    return titles_list, title_liege_map, title_vassals_map, misogyny
 
 @print_time
 def main():
+    # import pdb
     parser = SimpleParser()
     parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
-    titles, titles_de_jure, misogyny = process_landed_titles(parser)
-    duchies_de_jure = [t for t in titles_de_jure if t[0] == 'd']
+    titles_list, title_liege_map, title_vassals_map, misogyny = (
+        process_landed_titles(parser))
+    titles = set(titles_list)
     check_province_history(parser, titles)
-    bad_region_titles, missing_duchies = check_regions(
-        parser, titles, titles_de_jure, duchies_de_jure)
+    start_date = parser.parse_file('common/defines.txt')['start_date'].val
     for path, tree in parser.parse_files('history/titles/*.txt',
                                          errors='replace', memcache=True):
         if tree.contents:
-            good = check_title(parser, path.stem, path, titles)
+            title = path.stem
+            good = check_title(parser, title, path, titles)
             if (VANILLA_HISTORY_WARN and not good and
                 not any(d in path.parents for d in parser.moddirs)):
                 # newpath = parser.moddirs[0] / 'history/titles' / path.name
@@ -144,7 +139,22 @@ def main():
                       '<vanilla>' / path.relative_to(vanilladir)))
             else:
                 check_titles(parser, path, titles)
+            # update de jure changed before start_date
+            for n, v in sorted(tree, key=attrgetter('key.val')):
+                if n.val > start_date:
+                    break
+                for n2, v2 in v:
+                    if n2.val == 'de_jure_liege':
+                        old_liege = title_liege_map.get(title)
+                        if old_liege:
+                            title_vassals_map[old_liege].discard(title)
+                        title_liege_map[title] = v2.val
+                        title_vassals_map[v2.val].add(title)
         parser.flush(path)
+    duchies_de_jure = [t for t, v in title_vassals_map.items()
+                       if t[0] == 'd' and v]
+    bad_region_titles, missing_duchies = check_regions(parser, titles,
+                                                       duchies_de_jure)
     for _ in parser.parse_files('history/characters/*.txt'):
         pass # just parse it to see if it parses
     globs = [
