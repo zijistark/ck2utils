@@ -18,6 +18,8 @@ from funcparserlib.parser import (some, a, maybe, many, finished, skip,
 import git
 from localpaths import rootpath, vanilladir, cachedir
 
+VERSION = 1
+
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
                      quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
 
@@ -834,12 +836,14 @@ class SimpleParser:
                                             os.path.getmtime(str(path)))):
                     with cachepath.open('rb') as f:
                         tree = pickle.load(f, fix_imports=False)
-                        if memcache:
-                            self.parse_tree_cache[path] = tree
-                        self.cache_hits += 1
-                        return tree
-            except (pickle.PickleError, AttributeError, EOFError, ImportError,
-                    IndexError):
+                        if tree.version == VERSION:
+                            if memcache:
+                                self.parse_tree_cache[path] = tree
+                            self.cache_hits += 1
+                            return tree
+            except AttributeError:
+                pass
+            except (pickle.PickleError, EOFError, ImportError, IndexError):
                 print('Error retrieving cache for {}'.format(path),
                       file=sys.stderr)
                 traceback.print_exc()
@@ -856,6 +860,7 @@ class SimpleParser:
                             pass
                         # possible todo: put this i/o in another thread
                         with cachepath.open('wb') as f:
+                            tree.version = VERSION
                             pickle.dump(tree, f, protocol=-1,
                                         fix_imports=False)
                     if memcache:
