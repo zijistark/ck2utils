@@ -18,7 +18,7 @@ from funcparserlib.parser import (some, a, maybe, many, finished, skip,
 import git
 from localpaths import rootpath, vanilladir, cachedir
 
-VERSION = 1
+VERSION = 2
 
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
                      quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
@@ -698,10 +698,7 @@ class SimpleParser:
         self.newlines_to_depth = -1
         self.ignore_cache = False
         self.cachedir = cachedir / self.__class__.__name__
-        try:
-            self.cachedir.mkdir(parents=True) # 3.5 pls
-        except FileExistsError:
-            pass
+        self.cachedir.mkdir(parents=True, exist_ok=True)
         self.setup_parser()
 
     def __del__(self):
@@ -815,8 +812,8 @@ class SimpleParser:
             if path.is_file():
                 yield path, self.parse_file(path, **kwargs)
 
-    def parse_file(self, path, encoding='cp1252', errors=None, memcache=None,
-                   diskcache=None):
+    def parse_file(self, path, encoding='cp1252', errors='replace',
+                   memcache=None, diskcache=None):
         try:
             path = path.resolve()
         except AttributeError:
@@ -826,7 +823,9 @@ class SimpleParser:
             memcache = self.memcache_default
         if diskcache is None:
             diskcache = self.diskcache_default
-        if not self.ignore_cache:
+        ignore_cache = (self.ignore_cache or encoding != 'cp1252' or
+                        errors != 'replace')
+        if not ignore_cache:
             if path in self.parse_tree_cache:
                 return self.parse_tree_cache[path]
             cachepath, is_indexed = self.get_cachepath(path)
@@ -835,7 +834,7 @@ class SimpleParser:
                                            (os.path.getmtime(str(cachepath)) >=
                                             os.path.getmtime(str(path)))):
                     with cachepath.open('rb') as f:
-                        tree = pickle.load(f, fix_imports=False)
+                        tree = pickle.load(f)
                         if tree.version == VERSION:
                             if memcache:
                                 self.parse_tree_cache[path] = tree
@@ -852,17 +851,13 @@ class SimpleParser:
         with path.open(encoding=encoding, errors=errors) as f:
             try:
                 tree = self.parse(f.read())
-                if not self.ignore_cache:
+                if not ignore_cache:
                     if diskcache:
-                        try:
-                            cachepath.parent.mkdir(parents=True) # 3.5 pls
-                        except FileExistsError:
-                            pass
+                        cachepath.parent.mkdir(parents=True, exist_ok=True)
                         # possible todo: put this i/o in another thread
                         with cachepath.open('wb') as f:
                             tree.version = VERSION
-                            pickle.dump(tree, f, protocol=-1,
-                                        fix_imports=False)
+                            pickle.dump(tree, f)
                     if memcache:
                         self.parse_tree_cache[path] = tree
                 return tree

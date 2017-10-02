@@ -51,7 +51,7 @@ def check_titles(parser, path, titles):
                 check_title(parser, v, path, titles, line=v)
 
     try:
-        recurse(parser.parse_file(path, errors='replace'))
+        recurse(parser.parse_file(path))
     except:
         print(path)
         raise
@@ -127,7 +127,7 @@ def main():
     check_province_history(parser, titles)
     start_date = parser.parse_file('common/defines.txt')['start_date'].val
     for path, tree in parser.parse_files('history/titles/*.txt',
-                                         errors='replace', memcache=True):
+                                         memcache=True):
         if tree.contents:
             title = path.stem
             good = check_title(parser, title, path, titles)

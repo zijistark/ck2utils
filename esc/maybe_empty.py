@@ -3,16 +3,8 @@
 import collections
 import pathlib
 import sys
-from ck2parser import (rootpath, get_provinces, files, is_codename, Obj,
-                       SimpleParser)
+from ck2parser import rootpath, get_provinces, is_codename, Obj, SimpleParser
 from print_time import print_time
-
-IGNORE_ENCODING_ERRORS = False
-
-if IGNORE_ENCODING_ERRORS:
-    errors = 'replace'
-else:
-    errors = None
 
 def get_modpath():
     if len(sys.argv) <= 1:
@@ -24,9 +16,9 @@ def output(provinces):
 
 def get_start_interval(parser):
     dates = []
-    for _, tree in parser.parse_files('common/bookmarks/*'):
+    for _, tree in parser.parse_files('common/bookmarks/*.txt'):
         dates.extend(v['date'].val for _, v in tree)
-    tree = next(parser.parse_files('common/defines.txt'))[1]
+    tree = parser.parse_file('common/defines.txt')
     dates.append(tree['start_date'].val)
     dates.append(tree['last_start_date'].val)
     return min(dates), max(dates)
@@ -39,7 +31,7 @@ def process_landed_titles(parser):
                 recurse(v)
 
     titles = set()
-    for _, tree in parser.parse_files('common/landed_titles/*'):
+    for _, tree in parser.parse_files('common/landed_titles/*.txt'):
         recurse(tree)
     return titles
 
@@ -54,13 +46,13 @@ def process_provinces(parser, first_start, last_start):
         for n, v in tree:
             if isinstance(v, Obj):
                 changes_by_date[n.val].extend(v)
-            elif v.val == 'castle' or v.val == 'city':
+            elif v.val in ['castle', 'city']:
                 castles_and_cities.add(n.val)
         for date, changes in sorted(changes_by_date.items()):
             for n, v in changes:
                 if n.val == 'remove_settlement':
                     castles_and_cities.discard(v.val)
-                elif v.val == 'castle' or v.val == 'city':
+                elif v.val in ['castle', 'city']:
                     castles_and_cities.add(n.val)
             if date >= first_start:
                 if date > last_start:
@@ -73,9 +65,9 @@ def process_provinces(parser, first_start, last_start):
 def process_titles(parser, valid_titles, first_start, last_start):
     nomads = set()
     vassals = collections.defaultdict(set)
-    for path in files('history/titles/*', parser.moddirs):
+    for path in parser.files('history/titles/*.txt'):
         title = path.stem
-        if title in valid_titles and not title.startswith('b'):
+        if title in valid_titles not title[0] != 'b':
             tree = parser.parse_file(path)
             changes_by_date = collections.defaultdict(list)
             changes_by_date[first_start] = []
@@ -88,7 +80,7 @@ def process_titles(parser, valid_titles, first_start, last_start):
                     if n.val == 'liege':
                         liege = str(v.val) if v.val != title else '0'
                     elif n.val == 'historical_nomad':
-                        nomad = True if v.val == 'yes' else False
+                        nomad = v.val == 'yes'
                 if date >= first_start:
                     if date > last_start:
                         break
@@ -110,7 +102,7 @@ def main():
     maybe_empty = set()
 
     def check_nomad(title):
-        if title.startswith('c'):
+        if title[0] == 'c':
             number = province_id[title]
             if number in no_castles_or_cities:
                 maybe_empty.add(number)

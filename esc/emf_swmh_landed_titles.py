@@ -42,8 +42,7 @@ def main():
     emf_mini_lt = rootpath / 'EMF/EMF+MiniSWMH/common/landed_titles'
 
     for indir, outdir in [(swmhpath, emf_swmh_lt), (minipath, emf_mini_lt)]:
-        if not outdir.exists():
-            outdir.mkdir(parents=True)
+        outdir.mkdir(parents=True, exist_ok=True)
         for inpath, tree in full_parser.parse_files('common/landed_titles/*',
                                                     basedir=indir):
             if inpath.name in WHITELIST:

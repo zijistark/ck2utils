@@ -76,8 +76,7 @@ def process_history(parser, build, extra_keys):
     id_name = get_province_id_name_map(parser)
     # critical_error = False
     for glob in ['history/provinces/*', 'history/titles/*']:
-        # replace errors: vanilla history has some UTF-8 bytes
-        for inpath, tree in parser.parse_files(glob, errors='replace'):
+        for inpath, tree in parser.parse_files(glob):
             # if isinstance(tree, Exception):
             #     critical_error = True
             #     continue
