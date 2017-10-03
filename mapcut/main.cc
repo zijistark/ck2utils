@@ -23,22 +23,23 @@ using namespace boost::filesystem;
 
 
 /* TODO: use Boost::ProgramOptions (or just a config file), and end this nonsense */
-/*
-const path VROOT_DIR("/var/local/vanilla-ck2");
-const path ROOT_DIR("/var/local/git/SWMH-BETA/SWMH");
-const path OUT_ROOT_DIR("/var/local/git/MiniSWMH/MiniSWMH");
-const path EMF_ROOT_DIR("/var/local/git/EMF/EMF");
-const path EMF_SWMH_ROOT_DIR("/var/local/git/EMF/EMF+SWMH");
-const path EMF_OUT_ROOT_DIR("/var/local/git/EMF/EMF+MiniSWMH");
-*/
 
+const path VROOT_DIR("/var/local/vanilla-ck2");
+const path REPO_ROOT_DIR("/home/hiphub/git");
+const path ROOT_DIR = REPO_ROOT_DIR / "SWMH-BETA/SWMH";
+const path OUT_ROOT_DIR = REPO_ROOT_DIR / "MiniSWMH/MiniSWMH";
+const path EMF_ROOT_DIR = REPO_ROOT_DIR / "EMF/EMF";
+const path EMF_SWMH_ROOT_DIR = REPO_ROOT_DIR / "EMF/EMF+SWMH";
+const path EMF_OUT_ROOT_DIR = REPO_ROOT_DIR / "EMF/EMF+MiniSWMH";
+
+/*
 const path VROOT_DIR("/home/ziji/vanilla");
 const path ROOT_DIR("/cygdrive/c/git/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("/cygdrive/c/git/MiniSWMH/MiniSWMH");
 const path EMF_ROOT_DIR("/cygdrive/c/git/EMF/EMF");
 const path EMF_SWMH_ROOT_DIR("/cygdrive/c/git/EMF/EMF+SWMH");
 const path EMF_OUT_ROOT_DIR("/cygdrive/c/git/EMF/EMF+MiniSWMH");
-
+*/
 
 const path TITLES_FILE("swmh_landed_titles.txt"); // only uses this landed_titles file
 const path PROVSETUP_FILE("00_province_setup.txt"); // only uses this prov_setup file
