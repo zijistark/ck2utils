@@ -210,6 +210,31 @@ class TopLevel(Stringifiable):
             raise RuntimeError('setting pre_comments on empty toplevel')
         self.contents[0].pre_comments = value
 
+    @property
+    def header_comment(self):
+        c_list = self.pre_comments or self.post_comments
+        if c_list[0].val.startswith('-*-'):
+            return c_list[0].val
+        return None
+
+    @header_comment.setter
+    def header_comment(self, value):
+        del self.header_comment
+        if self.pre_comments is not None:
+            c_list = self.pre_comments
+        else:
+            c_list = self.post_comments
+        c_list.insert(0, value)
+
+    @header_comment.deleter
+    def header_comment(self):
+        if self.pre_comments is not None:
+            c_list = self.pre_comments
+        else:
+            c_list = self.post_comments
+        if (c_list and c_list[0].val.startswith('-*-')):
+            del c_list[0]
+
     def get(self, *args, **kwargs):
         return self.dictionary.get(*args, **kwargs)
 
