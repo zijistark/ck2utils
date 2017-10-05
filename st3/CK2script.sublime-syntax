@@ -461,6 +461,7 @@ variables:
     | is_save_game
     | is_theocracy
     | is_titular
+    | is_titular_title
     | is_tribal
     | is_tribal_type_title
     | is_tributary
