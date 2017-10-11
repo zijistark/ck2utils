@@ -121,19 +121,20 @@ def chars(line, parser):
     col = 0
     for char in line:
         if char == '\t':
-            col = (col // parser.tab_width + 1) * parser.tab_width
+            col = (col // parser.indent_width + 1) * parser.indent_width
         else:
             col += 1
     return col
 
 def comments_to_str(parser, comments, indent):
     s = ''
-    if indent == 0 and comments and re.match(r'-\*-', comments[0].val):
+    if indent == 0 and comments and comments[0].val.startswith('-*-'):
         s = str(comments[0]) + '\n\n'
         comments = comments[1:]
     if not comments:
         return s
-    sep = '\n' + indent * '\t'
+    indent_str = '\t' if parser.tab_indents else ' ' * parser.indent_width
+    sep = '\n' + indent * indent_str
     comments_str = '\n'.join(c.val for c in comments)
     if comments_str == '':
         return s
@@ -144,16 +145,17 @@ def comments_to_str(parser, comments, indent):
     except (NoParseError, ValueError):
         butlast = comments_to_str(parser, comments[:-1], indent)
         if butlast:
-            butlast += indent * '\t'
+            butlast += indent * indent_str
         return s + butlast + str(comments[-1]) + '\n'
     for p in tree:
         p_is, _ = p.inline_str(parser, indent)
         p_is_lines = p_is.rstrip().splitlines()
         s += '#' + p_is_lines[0] + sep
-        s += ''.join('#' + line[indent:] + sep for line in p_is_lines[1:])
+        s += ''.join('#' + line[len(indent_str):] + sep
+                     for line in p_is_lines[1:])
     if tree.post_comments:
         s += comments_to_str(parser, tree.post_comments, indent)
-    s = s.rstrip('\t')
+    s = s.rstrip('\t ')
     return s
 
 
@@ -301,10 +303,11 @@ class Commented(Stringifiable):
 
     def str(self, parser, indent=0):
         s = ''
+        indent_str = '\t' if parser.tab_indents else ' ' * parser.indent_width
         if self.pre_comments:
-            s += indent * '\t'
+            s += indent * indent_str
             s += comments_to_str(parser, self.pre_comments, indent)
-        s += indent * '\t' + self.val_str()
+        s += indent * indent_str + self.val_str()
         if self.post_comment:
             s += ' ' + str(self.post_comment)
         s += '\n'
@@ -312,31 +315,32 @@ class Commented(Stringifiable):
 
     def inline_str(self, parser, indent=0, col=0):
         nl = 0
-        sep = '\n' + indent * '\t'
+        indent_str = '\t' if parser.tab_indents else ' ' * parser.indent_width
+        sep = '\n' + indent * indent_str
         s = ''
         if self.pre_comments:
-            if col > indent * parser.tab_width:
+            if col > indent * parser.indent_width:
                 s += sep
                 nl += 1
             if isinstance(self, Op) and self.val == '}':
                 pre_indent = indent + 1
-                s += '\t'
+                s += indent_str
             else:
                 pre_indent = indent
             # I can't tell the difference if I'm just after, say, "NOT = { "
-            # with tab_width == 8, but whatever. # ?????
+            # with indent_width == 8, but whatever. # ?????
             c_s = (comments_to_str(parser, self.pre_comments, pre_indent) +
                    sep[1:])
             s += c_s
             nl += c_s.count('\n')
-            col = indent * parser.tab_width
+            col = indent * parser.indent_width
         val_is, col_val = self.val_inline_str(parser, col)
         s += val_is
         col = col_val
         if self.post_comment:
             s += ' ' + str(self.post_comment) + sep
             nl += 1
-            col = indent * parser.tab_width
+            col = indent * parser.indent_width
         return s, (nl, col)
 
 
@@ -428,11 +432,13 @@ class Pair(Stringifiable):
         return any(x.has_comments for x in (self.key, self.op, self.value))
 
     def str(self, parser, indent=0):
-        s = indent * '\t'
-        self_is, _ = self.inline_str(parser, indent, indent * parser.tab_width)
+        indent_str = '\t' if parser.tab_indents else ' ' * parser.indent_width
+        s = indent * indent_str
+        self_is, _ = self.inline_str(parser, indent,
+                                     indent * parser.indent_width)
         if self_is[-1].isspace():
             if indent:
-                s += self_is[:-indent]
+                s += self_is[:-len(indent_str)]
             else:
                 s += self_is
         else:
@@ -452,13 +458,14 @@ class Pair(Stringifiable):
             s += ' '
             col += 1
         op_is, (nl_op, col_op) = self.op.inline_str(parser, indent, col)
-        if col > indent * parser.tab_width and col_op > parser.chars_per_line:
+        if (col > indent * parser.indent_width and
+            col_op > parser.chars_per_line):
             if not s[-2].isspace():
                 s = s[:-1]
             op_s = self.op.str(parser, indent)
             s += '\n' + op_s
             nl += 1 + op_s.count('\n')
-            col = indent * parser.tab_width
+            col = indent * parser.indent_width
         else:
             if op_is[0] == '\n':
                 s = s[:-1]
@@ -547,11 +554,13 @@ class Obj(Stringifiable):
         return self._dictionary
 
     def str(self, parser, indent=0):
-        s = indent * '\t'
-        self_is, _ = self.inline_str(parser, indent, indent * parser.tab_width)
+        indent_str = '\t' if parser.tab_indents else ' ' * parser.indent_width
+        s = indent * indent_str
+        self_is, _ = self.inline_str(parser, indent,
+                                     indent * parser.indent_width)
         if self_is[-1].isspace():
             if indent:
-                s += self_is[:-indent]
+                s += self_is[:-len(indent_str)]
             else:
                 s += self_is
         else:
@@ -595,10 +604,11 @@ class Obj(Stringifiable):
                                    parser.chars_per_line):
                     s_oneline += ker_is
                     return s_oneline, (nl_ker, col_ker)
+        indent_str = '\t' if parser.tab_indents else ' ' * parser.indent_width
         if self.has_pairs:
             if s[-1].isspace():
                 if indent:
-                    s = s[:-indent]
+                    s = s[:-len(indent_str)]
             else:
                 s += '\n'
                 nl += 1
@@ -611,13 +621,13 @@ class Obj(Stringifiable):
                         isinstance(self.contents[i + 1].value, Obj))):
                         s += '\n'
                         nl += 1
-            s += indent * '\t'
-            col = indent * parser.tab_width
+            s += indent * indent_str
+            col = indent * parser.indent_width
         else:
-            sep = '\n' + (indent + 1) * '\t'
+            sep = '\n' + (indent + 1) * indent_str
             sep_col = chars(sep, parser)
             if s[-1].isspace():
-                s += '\t'
+                s += indent_str
             else:
                 s += sep
                 nl += 1
@@ -628,7 +638,7 @@ class Obj(Stringifiable):
                     col += 1
                 item_is, (nl_item, col_item) = item.inline_str(parser,
                                                                indent + 1, col)
-                if (col > (indent + 1) * parser.tab_width and
+                if (col > (indent + 1) * parser.indent_width and
                     col_item > parser.chars_per_line):
                     if not s[-2].isspace():
                         s = s[:-1]
@@ -641,9 +651,9 @@ class Obj(Stringifiable):
                 nl += nl_item
                 col = col_item
             if not s[-1].isspace():
-                s += '\n' + indent * '\t'
+                s += '\n' + indent * indent_str
                 nl += 1
-                col = indent * parser.tab_width
+                col = indent * parser.indent_width
         ker_is, (nl_ker, col_ker) = self.ker.inline_str(parser, indent, col)
         s += ker_is
         nl += nl_ker
@@ -714,13 +724,14 @@ class SimpleParser:
         self.parse_tree_cache = {}
         self.memcache_default = False
         self.diskcache_default = True
-        # these two used only to compute long line wrapping
-        self.tab_width = 8 # minimum 2
+        self.tab_indents = True
+        self.indent_width = 8 # minimum 2
         self.chars_per_line = 125
         self.fq_keys = []
         self.no_fold_keys = []
         self.no_fold_to_depth = -1
         self.newlines_to_depth = -1
+        self.crlf = True
         self.ignore_cache = False
         self.cachedir = cachedir / self.__class__.__name__
         self.cachedir.mkdir(parents=True, exist_ok=True)
@@ -898,7 +909,8 @@ class SimpleParser:
     def write(self, tree, path):
         path.parent.mkdir(parents=True, exist_ok=True)
         try:
-            with path.open('w', encoding='cp1252', newline='\r\n') as f:
+            with path.open('w', encoding='cp1252',
+                           newline=('\r\n' if self.crlf else '\n')) as f:
                 f.write(tree.str(self))
         except:
             print(path)
