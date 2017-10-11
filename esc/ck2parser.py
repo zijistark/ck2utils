@@ -151,7 +151,7 @@ def comments_to_str(parser, comments, indent):
         p_is, _ = p.inline_str(parser, indent)
         p_is_lines = p_is.rstrip().splitlines()
         s += '#' + p_is_lines[0] + sep
-        s += ''.join('#' + line[len(indent_str):] + sep
+        s += ''.join('#' + line[len(sep) - 1:] + sep
                      for line in p_is_lines[1:])
     if tree.post_comments:
         s += comments_to_str(parser, tree.post_comments, indent)
@@ -438,7 +438,7 @@ class Pair(Stringifiable):
                                      indent * parser.indent_width)
         if self_is[-1].isspace():
             if indent:
-                s += self_is[:-len(indent_str)]
+                s += self_is[:-len(s)]
             else:
                 s += self_is
         else:
@@ -560,7 +560,7 @@ class Obj(Stringifiable):
                                      indent * parser.indent_width)
         if self_is[-1].isspace():
             if indent:
-                s += self_is[:-len(indent_str)]
+                s += self_is[:-len(s)]
             else:
                 s += self_is
         else:
@@ -608,7 +608,7 @@ class Obj(Stringifiable):
         if self.has_pairs:
             if s[-1].isspace():
                 if indent:
-                    s = s[:-len(indent_str)]
+                    s = s[:-indent * parser.indent_width]
             else:
                 s += '\n'
                 nl += 1
@@ -704,7 +704,7 @@ class FullTokenizer(SimpleTokenizer):
         ('op', (r'[<=>]=?',)),
         ('date', (r'-?\d*\.\d*\.\d*',)),
         ('number', (r'-?\d+(\.\d+)?(?!\w)',)),
-        ('quoted_string', (r'"[^"#\r\n]*"',)),
+        ('quoted_string', (r'".*?"',)),
         ('unquoted_string', (r'[^\s"#<=>{}]+',))
     ]
     useless = ['whitespace']
