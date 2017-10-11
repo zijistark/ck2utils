@@ -4,12 +4,10 @@ import re
 from ck2parser import rootpath, get_provinces, SimpleParser
 from print_time import print_time
 
-modpath = rootpath / 'SWMH-BETA/SWMH'
-
 def process_landed_titles(parser, prov_title):
     def recurse(tree):
         for n, v in tree:
-            if re.match('c_', n.val):
+            if n.val.startswith('c_'):
                 yield n.val
             elif re.match('[ekd]_', n.val):
                 de_jure_counties = tuple(recurse(v))
@@ -35,16 +33,14 @@ def process_landed_titles(parser, prov_title):
                         print('\tMust be {}' .format(de_jure_counties[0]))
                 yield from de_jure_counties
 
-    for _, tree in parser.parse_files('common/landed_titles/*'):
+    for _, tree in parser.parse_files('common/landed_titles/*.txt'):
         for _ in recurse(tree):
             pass
 
 @print_time
 def main():
-    parser = SimpleParser()
-    parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
-    province_title = {prov: title
-                      for prov, title, _ in get_provinces(parser)}
+    parser = SimpleParser(rootpath / 'SWMH-BETA/SWMH')
+    province_title = {prov: title for prov, title, _ in get_provinces(parser)}
     process_landed_titles(parser, province_title)
 
 if __name__ == '__main__':

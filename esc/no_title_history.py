@@ -9,7 +9,7 @@ from print_time import print_time
 def main():
     parser = SimpleParser(rootpath / 'SWMH-BETA/SWMH')
     counties = []
-    for _, tree in parser.parse_files('common/landed_titles/*'):
+    for _, tree in parser.parse_files('common/landed_titles/*.txt'):
         dfs = list(reversed(tree))
         while dfs:
             n, v = dfs.pop()
@@ -17,7 +17,7 @@ def main():
                 dfs.extend(reversed(v))
             elif n.val.startswith('c_'):
                 counties.append(n.val)
-    for path in parser.files('history/titles/*'):
+    for path in parser.files('history/titles/*.txt'):
         try:
             counties.remove(path.stem)
         except ValueError:

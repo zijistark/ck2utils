@@ -401,6 +401,9 @@ def main():
     emfswmhhistory = emfswmhpath / 'history'
     parser = FullParser()
     parser.fq_keys = ['name']
+    parser.crlf = False
+    parser.tab_indents = False
+    parser.indent_width = 4
     # parser.no_fold_keys.extend(['factor', 'value'])
 
     # shutil.rmtree(str(emfswmhhistory), ignore_errors=True)
@@ -449,8 +452,7 @@ def main():
         }
         ''').contents
     targetpath = emfswmhhistory / path.relative_to(swmhhistory)
-    with targetpath.open('w', encoding='cp1252', newline='\r\n') as f:
-        f.write(tree.str(parser))
+    parser.write(tree, targetpath)
 
     shutil.rmtree(str(emfswmhhistory / 'titles'), ignore_errors=True)
 
@@ -519,14 +521,7 @@ def main():
             tree.contents = [p for p in tree.contents
                              if p.value.contents or p.has_comments]
             targetpath = emfswmhhistory / path.relative_to(swmhhistory)
-            with targetpath.open('w', encoding='cp1252', newline='\r\n') as f:
-                f.write(tree.str(parser))
-
-    # for path, tree in parser.parse_files('common/cb_types/*', basedir=MODPATH):
-    #     # for cb_pair in tree:
-    #     #     mutate_cb(cb_pair)
-    #     with path.open('w', encoding='cp1252', newline='\r\n') as f:
-    #         f.write(tree.str(parser))
+            parser.write(tree, targetpath)
 
 if __name__ == '__main__':
     main()

@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 
 import re
-from ck2parser import vanilladir, rootpath, SimpleParser, is_codename
+from ck2parser import rootpath, SimpleParser, is_codename
+import localpaths
 from print_time import print_time
 
 
 @print_time
 def main():
-    ck2root = vanilladir
-    eu4root = ck2root / '../Europa Universalis IV'
+    ck2root = localpaths.vanilladir
+    eu4root = localpaths.eu4dir
     parser = SimpleParser()
     # parser.moddirs.append(rootpath / 'SWMH-BETA/SWMH')
     ck2titles = set()
-    for _, tree in parser.parse_files('common/landed_titles/*'):
+    for _, tree in parser.parse_files('common/landed_titles/*.txt'):
         dfs = list(tree)
         while dfs:
             n, v = dfs.pop()
@@ -133,7 +134,7 @@ def main():
     #     '57 - Hannover', '575 - Gwadar', '577 - Kalat', '59 - Meissen', '64 - Niederbayern', '67 - Franken',
     #     '69 - Konstanz', '740 - Malwa', '767 - Wystuc', '77 - Pfalz'
     # }
-    with open('validation.txt', 'w') as f:
+    with (rootpath / 'validate_converter.txt').open('w') as f:
         print('### province_table.csv ###', file=f)
         if bad_ck2_id_prov:
             print('Invalid CK2 titles:\n\t', end='', file=f)

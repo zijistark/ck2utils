@@ -45,7 +45,11 @@ def build_trigger(parser, counties_by_barony_count, title_id):
 @print_time.print_time
 def main():
     parser = ck2parser.FullParser(ck2parser.rootpath / 'SWMH-BETA/SWMH')
-    outpath = ck2parser.rootpath / 'EMF/EMF+SWMH/common/scripted_triggers/emf_can_add_holding_slot_trigger.txt'
+    parser.crlf = False
+    parser.tab_indents = False
+    parser.indent_width = 4
+    outpath = ck2parser.rootpath / ('EMF/EMF+SWMH/common/scripted_triggers/'
+                                    'emf_can_add_holding_slot_trigger.txt')
     simple_parser = ck2parser.SimpleParser(*parser.moddirs)
 
     title_id = process_province_history(simple_parser)
@@ -55,19 +59,18 @@ def main():
     def scan_for_baronies(tree):
         for n, v in tree:
             if ck2parser.is_codename(n.val):
-                if n.val.startswith('c_'):
+                if n.val[0] == 'c':
                     baronies = sum(1 for n2, _ in v if n2.val.startswith('b_'))
                     yield n.val, baronies
                 else:
                     yield from scan_for_baronies(v)
 
     counties_by_barony_count = collections.defaultdict(list)
-    for _, tree in parser.parse_files('common/landed_titles/*'):
+    for _, tree in parser.parse_files('common/landed_titles/*.txt'):
         for title, baronies in scan_for_baronies(tree):
             counties_by_barony_count[baronies].append(title)
     trigger = build_trigger(parser, counties_by_barony_count, title_id)
-    with outpath.open('w', encoding='cp1252', newline='\r\n') as f:
-        f.write(trigger.str(parser))
+    parser.write(trigger, outpath)
 
 if __name__ == '__main__':
     main()

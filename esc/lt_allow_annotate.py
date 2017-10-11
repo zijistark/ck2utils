@@ -4,7 +4,6 @@ import re
 from ck2parser import rootpath, is_codename, get_cultures, Pair, SimpleParser, FullParser
 import print_time
 
-MODPATHS = [rootpath / 'SWMH-BETA/SWMH', rootpath / 'EMF/EMF+Vanilla']
 FORMAT_ONLY = False
 
 ALWAYS_NO_TITLES = ['e_sunni', 'e_shiite', 'k_avaria', 'k_lombardy']
@@ -47,19 +46,25 @@ def process_title(title_pair):
     if not allow.value.has_pair(trigger_name, 'yes'):
         allow.value.contents.append(Pair(trigger_name, 'yes'))
 
+def annotate_mod(simple_parser, full_parser, modpath):
+    simple_parser.moddirs = [modpath]
+    cultures = get_cultures(simple_parser, groups=False)
+    full_parser.fq_keys = cultures
+    for path, tree in full_parser.parse_files('common/landed_titles/*.txt',
+                                              modpath):
+        for title_pair in tree:
+            process_title(title_pair)
+        full_parser.write(tree, path)
+
 @print_time.print_time
 def main():
     simple_parser = SimpleParser()
     full_parser = FullParser()
-    for modpath in MODPATHS:
-        simple_parser.moddirs = [modpath]
-        cultures = get_cultures(simple_parser, groups=False)
-        full_parser.fq_keys = cultures
-        for path, tree in full_parser.parse_files('common/landed_titles/*',
-                                                  modpath):
-            for title_pair in tree:
-                process_title(title_pair)
-            full_parser.write(tree, path)
+    annotate_mod(simple_parser, full_parser, rootpath / 'SWMH-BETA/SWMH')
+    full_parser.crlf = False
+    full_parser.tab_indents = False
+    full_parser.indent_width = 4
+    annotate_mod(simple_parser, full_parser, rootpath / 'EMF/EMF+Vanilla')
 
 if __name__ == '__main__':
     main()
