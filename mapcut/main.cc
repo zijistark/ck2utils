@@ -41,8 +41,9 @@ const path EMF_SWMH_ROOT_DIR("/cygdrive/c/git/EMF/EMF+SWMH");
 const path EMF_OUT_ROOT_DIR("/cygdrive/c/git/EMF/EMF+MiniSWMH");
 */
 
-const path TITLES_FILE("swmh_landed_titles.txt"); // only uses this landed_titles file
-const path PROVSETUP_FILE("00_province_setup.txt"); // only uses this prov_setup file
+const path TITLES_FILE("swmh_landed_titles.txt");
+const path HOLYSITES_FILE("z_holy_sites.txt");
+const path PROVSETUP_FILE("00_province_setup.txt");
 
 
 typedef std::vector<std::string> strvec_t;
@@ -91,7 +92,6 @@ int main(int argc, char** argv) {
 
     bool emf = false;
     strvec_t top_titles;
-    top_titles.reserve(argc - 1);
 
     for (int i = 1; i < argc; ++i) {
         const char* t = argv[i];
@@ -196,6 +196,9 @@ int main(int argc, char** argv) {
             ++g_stats.n_counties_cut;
         }
 
+	/* parse z_holy_sites.txt */
+        ck2::parser hs_parse( vfs["common/landed_titles" / HOLYSITES_FILE] );
+	
         path out_root = (emf) ? EMF_OUT_ROOT_DIR : OUT_ROOT_DIR;
         path out_map_root(out_root / "map");
         create_directories(out_map_root);
@@ -222,8 +225,14 @@ int main(int argc, char** argv) {
             /* rewrite landed_titles */
             path out_lt_path(out_root / "common" / "landed_titles");
             create_directories(out_lt_path);
-            out_lt_path /= TITLES_FILE;
-            lt_printer ltp( out_lt_path, top_titles, parse.root_block() );
+            {
+	      lt_printer ltp( out_lt_path / TITLES_FILE, top_titles, parse.root_block() );
+	    }
+
+            /* rewrite holy_sites */
+	    {
+	      lt_printer ltp( out_lt_path / HOLYSITES_FILE, del_titles, hs_parse.root_block() );
+	    }
 
             /* blank as much title history as necessary */
             blank_title_history(vfs, del_titles);
