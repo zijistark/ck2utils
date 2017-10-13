@@ -127,13 +127,14 @@ def record_digest(mod_path, commit=None, new=False):
         return digest
 
     must_checkout = repo.head.commit != commit
-    if must_checkout:
-        prev_head = checkout(repo, commit)
+    try:
+        if must_checkout:
+            prev_head = checkout(repo, commit)
 
-    digest = create_digest(mod_path)
-
-    if must_checkout:
-        checkout(repo, prev_head)
+        digest = create_digest(mod_path)
+    finally:
+        if must_checkout:
+            checkout(repo, prev_head)
 
     digest_path.parent.mkdir(parents=True, exist_ok=True)
     with digest_path.open('wb') as f:
@@ -163,8 +164,7 @@ def invalidate_repo_cache(bad_path=None):
 @print_time
 def main():
     args = parse_arguments()
-    mods = args.mod or digestible_mods
-    for mod_path in mods:
+    for mod_path in args.mod:
         compat_report = check_compat(mod_path)
         if len(compat_report) == 0:
             print('compatible')
