@@ -255,6 +255,7 @@ class TopLevel(Stringifiable):
         return self._dictionary
 
     def str(self, parser, indent=0):
+        raise NotImplementedError('ck2parser string output disabled due to serious bug')
         s = ''
         for i, item in enumerate(self):
             s += item.str(parser, indent)
