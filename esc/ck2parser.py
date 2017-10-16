@@ -255,7 +255,6 @@ class TopLevel(Stringifiable):
         return self._dictionary
 
     def str(self, parser, indent=0):
-        raise NotImplementedError('ck2parser string output disabled due to serious bug')
         s = ''
         for i, item in enumerate(self):
             s += item.str(parser, indent)
@@ -609,7 +608,7 @@ class Obj(Stringifiable):
         if self.has_pairs:
             if s[-1].isspace():
                 if indent:
-                    s = s[:-indent * parser.indent_width]
+                    s = s[:-indent * len(indent_str)]
             else:
                 s += '\n'
                 nl += 1
