@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 
 import shutil
+import sys
 from ck2parser import rootpath, Comment, FullParser
 from print_time import print_time
+
+hydra = '--hydra' in sys.argv
 
 changeset = {
     'd_sunni': [
@@ -342,25 +345,25 @@ changeset = {
                 set_variable = { which = "imperial_decay" value = 5 }
             }
             '''),
-        ((1002, 1, 12), 1, '''
+        ((1002, 1, 24) if hydra else (1002, 1, 12), 1, '''
             effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
             '''),
-        ((1024, 7, 13), 1, '''
+        ((1024, 7, 3) if hydra else (1024, 7, 13), 1, '''
             effect = { set_variable = { which = "imperial_dynasty_count" value = 0 } }
             '''),
         ((1039, 6, 4), 1, '''
             effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
             '''),
-        ((1056, 5, 10), 1, '''
+        ((1056, 10, 5) if hydra else (1056, 5, 10), 1, '''
             effect = {
                 change_variable = { which = "imperial_decay" value = 5 }
                 change_variable = { which = "imperial_dynasty_count" value = 1 }
             }
             '''),
-        ((1106, 7, 8), 1, '''
+        ((1106, 8, 7) if hydra else (1106, 7, 8), 1, '''
             effect = { change_variable = { which = "imperial_dynasty_count" value = 1 } }
             '''),
-        ((1125, 8, 24), 1, '''
+        ((1125, 5, 23) if hydra else (1125, 8, 24), 1, '''
             effect = { set_variable = { which = "imperial_dynasty_count" value = 0 } }
             '''),
         ((1152, 2, 15), 1, '''
@@ -472,7 +475,11 @@ def main():
         if path.stem in changeset:
             changed = True
             for date, where, text in changeset[path.stem]:
-                tree[date].contents[where:where] = parser.parse(text).contents
+                try:
+                    tree[date].contents[where:where] = parser.parse(text).contents
+                except:
+                    print(path)
+                    raise
             if path.stem == 'e_byzantium':
                 for n, v in tree[3, 1, 27]:
                     if n.val == 'law' and v.val == 'imperial_administration':
