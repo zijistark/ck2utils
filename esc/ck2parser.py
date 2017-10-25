@@ -733,6 +733,7 @@ class SimpleParser:
         self.newlines_to_depth = -1
         self.crlf = True
         self.ignore_cache = False
+        self.vanilla_is_repo = True
         self.cachedir = cachedir / self.__class__.__name__
         self.cachedir.mkdir(parents=True, exist_ok=True)
         self.setup_parser()
@@ -783,7 +784,7 @@ class SimpleParser:
         m.update(bytes(path))
         cachedir = self.cachedir
         name = m.hexdigest()
-        if vanilladir in path.parents:
+        if not self.vanilla_is_repo and vanilladir in path.parents:
             return self.cachedir / 'vanilla' / name, False
         for repo_path, (latest_commit, dirty_paths) in self.repos.items():
             if repo_path in path.parents:
@@ -794,6 +795,9 @@ class SimpleParser:
                 repo = git.Repo(str(path.parent), odbt=git.GitCmdObjectDB,
                                 search_parent_directories=True)
             except git.InvalidGitRepositoryError:
+                if self.vanilla_is_repo and vanilladir in path.parents:
+                    self.vanilla_is_repo = False
+                    return self.cachedir / 'vanilla' / name, False
                 return self.cachedir / name, False
             repo_path = pathlib.Path(repo.working_tree_dir)
             tracked_files = set(repo.git.ls_files(z=True).split('\x00')[:-1])
