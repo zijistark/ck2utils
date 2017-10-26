@@ -89,7 +89,7 @@ void adjacencies_file::write(const fs::path& out_path) {
     if (!os)
         throw std::runtime_error("Adjacencies file could not be opened for output: " + spath);
 
-    os << "From;To;Type;Through;-1;-1;-1;-1;Comment\r\n"; // need Windows EOL here
+    os << "From;To;Type;Through;-1;-1;-1;-1;Comment\n";
 
     for (const auto& adj : _vec) {
         if (adj.deleted) continue;
@@ -99,6 +99,6 @@ void adjacencies_file::write(const fs::path& out_path) {
         if (adj.to) os << adj.to; // treat 0-value as blank
         os << ';' << adj.type << ';';
         if (adj.through) os << adj.through; // treat 0-value as blank
-        os << ";-1;-1;-1;-1;" << adj.comment << "\r\n";
+        os << ";-1;-1;-1;-1;" << adj.comment << "\n";
     }
 }

@@ -45,6 +45,7 @@ const path TITLES_FILE("swmh_landed_titles.txt");
 const path HOLYSITES_FILE("z_holy_sites.txt");
 const path PROVSETUP_FILE("00_province_setup.txt");
 
+const int TAB_WIDTH = 4;
 
 typedef std::vector<std::string> strvec_t;
 typedef std::unordered_map<std::string, uint> str2id_map_t;
@@ -196,9 +197,9 @@ int main(int argc, char** argv) {
             ++g_stats.n_counties_cut;
         }
 
-	/* parse z_holy_sites.txt */
+    /* parse z_holy_sites.txt */
         ck2::parser hs_parse( vfs["common/landed_titles" / HOLYSITES_FILE] );
-	
+
         path out_root = (emf) ? EMF_OUT_ROOT_DIR : OUT_ROOT_DIR;
         path out_map_root(out_root / "map");
         create_directories(out_map_root);
@@ -225,14 +226,10 @@ int main(int argc, char** argv) {
             /* rewrite landed_titles */
             path out_lt_path(out_root / "common" / "landed_titles");
             create_directories(out_lt_path);
-            {
-	      lt_printer ltp( out_lt_path / TITLES_FILE, top_titles, parse.root_block() );
-	    }
+            lt_printer( out_lt_path / TITLES_FILE, top_titles, parse.root_block() );
 
             /* rewrite holy_sites */
-	    {
-	      lt_printer ltp( out_lt_path / HOLYSITES_FILE, del_titles, hs_parse.root_block() );
-	    }
+            lt_printer( out_lt_path / HOLYSITES_FILE, del_titles, hs_parse.root_block() );
 
             /* blank as much title history as necessary */
             blank_title_history(vfs, del_titles);
@@ -432,7 +429,7 @@ void lt_printer::print(const ck2::statement& s) {
         }
     }
 
-    os << std::setfill('\t') << std::setw(indent) << "";
+    os << std::setfill(' ') << std::setw(indent * TAB_WIDTH) << "";
     print(k);
     os << " = ";
 
@@ -479,7 +476,7 @@ void lt_printer::print(const ck2::object& o) {
             ++indent;
             print(*o.as_block());
             --indent;
-            os << std::setfill('\t') << std::setw(indent) << "" << '}';
+            os << std::setfill(' ') << std::setw(indent * TAB_WIDTH) << "" << '}';
         }
     }
     else if (o.is_list()) {

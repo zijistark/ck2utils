@@ -153,7 +153,8 @@ void region_file::write(const fs::path& out_path) {
     std::ofstream os(out_path.string());
     if (!os) throw std::runtime_error("Could not write to file: " + out_path.string());
 
-    const int TAB_WIDTH = 8;
+    const char* TAB = "    ";
+    const int TAB_WIDTH = strlen(TAB);
     const int MAX_LINE_LEN = 72;
 
     /* NOTE: we use \n instead of std::endl intentionally (UNIX format) */
@@ -166,31 +167,31 @@ void region_file::write(const fs::path& out_path) {
         os << pr->name << " = {\n"; // use UNIX EOL
 
         if (!pr->regions.empty()) {
-            os << "\tregions = {\n";
-            for (const auto& e : pr->regions) os << "\t\t" << e << "\n";
-            os << "\t}\n";
+            os << TAB << "regions = {\n";
+            for (const auto& e : pr->regions) os << TAB << TAB << e << "\n";
+            os << TAB << "}\n";
         }
         if (!pr->duchies.empty()) {
-            os << "\tduchies = {\n";
-            for (const auto& e : pr->duchies) os << "\t\t" << e << "\n";
-            os << "\t}\n";
+            os << TAB << "duchies = {\n";
+            for (const auto& e : pr->duchies) os << TAB << TAB << e << "\n";
+            os << TAB << "}\n";
         }
         if (!pr->counties.empty()) {
-            os << "\tcounties = {\n";
-            for (const auto& e : pr->counties) os << "\t\t" << e << "\n";
-            os << "\t}\n";
+            os << TAB << "counties = {\n";
+            for (const auto& e : pr->counties) os << TAB << TAB << e << "\n";
+            os << TAB << "}\n";
         }
         if (!pr->provinces.empty()) {
-            os << "\tprovinces = {\n";
+            os << TAB << "provinces = {\n";
 
-            os << "\t\t";
+            os << TAB << TAB;
             int cur_line_len = TAB_WIDTH*2;
 
             for (const auto& e : pr->provinces) {
                 int e_len = num_digits(e) + 1; // assume a space following it
 
                 if (e_len + cur_line_len > MAX_LINE_LEN) {
-                    os << "\n\t\t";
+                    os << "\n" << TAB << TAB;
                     cur_line_len = TAB_WIDTH*2;
                 }
 
@@ -198,7 +199,7 @@ void region_file::write(const fs::path& out_path) {
                 cur_line_len += e_len;
             }
 
-            os << "\n\t}\n";
+            os << "\n" << TAB << "}\n";
         }
 
         os << "}\n";

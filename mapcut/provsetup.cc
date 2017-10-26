@@ -11,6 +11,10 @@
 #include <cerrno>
 
 
+
+const char* TAB = "    ";
+
+
 provsetup::provsetup(const fs::path& in_path) {
 
     const std::string spath = in_path.string();
@@ -71,6 +75,7 @@ provsetup::provsetup(const fs::path& in_path) {
 
 void provsetup::write(const fs::path& out_path) {
 
+
     const std::string spath = out_path.string();
     const char* path = spath.c_str();
     FILE* f;
@@ -86,14 +91,14 @@ void provsetup::write(const fs::path& out_path) {
         fprintf(f, "%u = {\r\n", ++id);
 
         if (r.title.empty()) {
-            fprintf(f, "\tmax_settlements=7\r\n");
+            fprintf(f, "%smax_settlements=7\r\n", TAB);
         }
         else {
-            fprintf(f, "\ttitle=%s\r\n", r.title.c_str());
-            fprintf(f, "\tmax_settlements=%d\r\n", r.max_settlements);
+            fprintf(f, "%stitle=%s\r\n", TAB, r.title.c_str());
+            fprintf(f, "%smax_settlements=%d\r\n", TAB, r.max_settlements);
         }
 
-        fprintf(f, "\tterrain=%s\r\n", r.terrain.c_str());
+        fprintf(f, "%sterrain=%s\r\n", TAB, r.terrain.c_str());
         fprintf(f, "}\r\n");
     }
 
