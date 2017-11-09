@@ -676,6 +676,7 @@ variables:
     | set_mother
     | set_offmap_holder
     | set_preferred_capital
+    | set_secret_religion
     | unsafe_destroy_landed_title
     | usurp_title
     | usurp_title_only
@@ -740,13 +741,13 @@ variables:
     | remove_special_character_title
     | remove_title
     | remove_trait
-    | secret_religion
     | set_focus
     | set_{{vFlagType}}_flag
     | set_government_type
     | set_policy
     | set_name
     | set_offmap_name
+    | set_secret_religion
     | set_special_character_title
     | set_status
     | unsafe_religion
