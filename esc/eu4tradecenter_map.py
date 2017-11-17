@@ -136,7 +136,7 @@ def main():
                      max(pos[1] - 1, min(dest[1], pos[3])))
             if start != dest:
                 print('\rline drawn for {}'.format(number), file=sys.stderr)
-                draw_lines.line([start, dest], fill=(192, 192, 192))
+                draw_lines.line([start, dest], fill=(176, 176, 176))
     print('', file=sys.stderr)
     out = Image.fromarray(prov_color_lut[b])
     out.paste(borders, mask=borders)

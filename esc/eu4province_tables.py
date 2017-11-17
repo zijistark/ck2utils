@@ -203,8 +203,8 @@ def analyze_continents(provinces):
             cont = continents[continent_name]
             cont['Provinces'] += 1
             cont['Base Tax'] += int(prov['BT']) if prov['BT'] else 0
-            cont['Production'] += int(prov['BP']) if prov['BP'] else 0
-            cont['Manpower'] += int(prov['BM']) if prov['BM'] else 0
+            cont['Base Production'] += int(prov['BP']) if prov['BP'] else 0
+            cont['Base Manpower'] += int(prov['BM']) if prov['BM'] else 0
             cont['Development'] += (int(prov['Development'])
                 if prov['Development'] else 0)
     total = defaultdict(int)
@@ -228,9 +228,15 @@ def format_output(provinces, headings):
     return '\n'.join(lines)
 
 def format_continent_output(continents, headings):
+    icon_names = {
+        'Provinces': 'Province',
+        'Base Production': 'Production',
+        'Base Manpower': 'Manpower'
+    }
     lines = ['{| class = "wikitable sortable" style ="text-align:right"']
     header = '! Continent !! ' + ' !! '.join('{{{{icon|{}}}}} {}'.format(
-        head if head != 'Provinces' else 'Province', head) for head in headings)
+        icon_names.get(head, head), head)
+        for head in headings)
     lines.append(header)
     for cont_name, cont in sorted(continents.items()):
         lines.append('|-')
@@ -269,12 +275,13 @@ def main():
             f.write(output)
 
     output = format_continent_output(continents,
-        'Provinces,Base Tax,Production,Manpower,Development'.split(','))
+        ('Provinces,Base Tax,Base Production,Base Manpower,'
+         'Development').split(','))
     output_file = rootpath / 'eu4continenttable.txt'
     with output_file.open('w') as f:
         f.write(output)
 
-    import pdb;pdb.set_trace()
+    # import pdb;pdb.set_trace()
 
 if __name__ == '__main__':
     main()

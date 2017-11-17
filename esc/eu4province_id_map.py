@@ -22,8 +22,8 @@ def main():
     inhabited_provs = set()
     colors = {
         'land': np.uint8((127, 127, 127)),
-        'sea': np.uint8((51, 67, 85)),
-        'desert': np.uint8((36, 36, 36))
+        'sea': np.uint8((68, 107, 163)),
+        'desert': np.uint8((94, 94, 94))
     }
     prov_color_lut = np.full(max_provinces, colors['land'], '3u1')
     for row in csv_rows(parser.file('map/' + default_tree['definitions'].val)):
@@ -101,7 +101,7 @@ def main():
                 if start != dest:
                     print('\rline drawn for {}'.format(number),
                           file=sys.stderr)
-                    draw_lines.line([start, dest], fill=(192, 192, 192))
+                    draw_lines.line([start, dest], fill=(176, 176, 176))
         print('', file=sys.stderr)
         out = Image.fromarray(prov_color_lut[b])
         out.paste(borders, mask=borders)
