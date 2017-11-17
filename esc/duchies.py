@@ -753,7 +753,7 @@ def format_other_provs_table():
 #                                 'e_rajastan', 'e_bengal', 'e_deccan']:
 #             Title.kingdom_graph.add_node(k_u.codename, color=0,
 #                                          weight=len(list(k_u.vassals(when))))
-#     for u, v in Title.province_graph.edges_iter():
+#     for u, v in Title.province_graph.edges():
 #         try:
 #             k_u = Title.id_title_map[u].liege(when).liege(when)
 #             k_v = Title.id_title_map[v].liege(when).liege(when)
@@ -798,7 +798,7 @@ def duchy_path():
         'd_khangai', 'd_ikh_bogd'
     }
     when = datetime.date(769, 1, 1)
-    for u, v in Title.province_graph.edges_iter():
+    for u, v in Title.province_graph.edges():
         try:
             d_u = Title.id_title_map[u].liege(when).codename
             d_v = Title.id_title_map[v].liege(when).codename
@@ -866,15 +866,15 @@ def main():
 
     province_map_out = pathlib.Path('C:/Users/Nicholas/Pictures/CKII')
     maps = [
-        # 'max_settlements',
-        # 'defined_baronies',
-        # 'defined_baronies_minus_max_settlements',
-        # '1066_built_holdings',
-        # 'max_settlements_minus_1066_built_holdings',
-        # 'max_settlements_divided_by_area',
-        # 'log_max_settlements_divided_by_area',
+        'max_settlements',
+        'defined_baronies',
+        'defined_baronies_minus_max_settlements',
+        '1066_built_holdings',
+        'max_settlements_minus_1066_built_holdings',
+        'max_settlements_divided_by_area',
+        'log_max_settlements_divided_by_area',
         '1066_built_holdings_divided_by_area',
-        # 'log_1066_built_holdings_divided_by_area',
+        'log_1066_built_holdings_divided_by_area',
     ]
     for value in maps:
         generate_province_map(map_provinces, province_map_out, value)
