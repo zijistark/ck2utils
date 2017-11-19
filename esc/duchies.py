@@ -31,25 +31,26 @@ import numpy
 import PIL
 import PIL.Image
 import tabulate
-import localpaths
+import ck2parser
 
-# modpaths = []
-modpaths = [localpaths.rootpath / 'SWMH-BETA/SWMH']
-# modpaths = [pathlib.Path('/cygdrive/c/Users/Nicholas/Documents/Paradox Interactive/Crusader Kings II/mod/Lux Invicta v0.6k11')]
+rootpath = ck2parser.rootpath
+
+modpaths = []
+# modpaths.append(rootpath / 'SWMH-BETA/SWMH')
 
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
                      quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
 
-CKII_DIR = localpaths.vanilladir
+parser = ck2parser.SimpleParser(*modpaths)
 
-OUTPUT_FILE = pathlib.Path('C:/Users/Nicholas/Desktop/table.txt')
+CKII_DIR = ck2parser.vanilladir
+
+OUTPUT_FILE = rootpath / 'table.txt'
 
 if not modpaths:
-    borders_path = pathlib.Path('C:/Users/Nicholas/Pictures/CKII/'
-                                'borderlayer.png')
+    borders_path = rootpath / 'borderlayer.png'
 elif modpaths[0].name == 'SWMH':
-    borders_path = pathlib.Path('C:/Users/Nicholas/Pictures/CKII/'
-                                'borderlayer_swmh.png')
+    borders_path = rootpath / 'swmh_borderlayer.png'
 else:
     borders_path = None
 
@@ -204,58 +205,6 @@ class Title:
 cultures = []
 localisation = {}
 
-def tokenize(string):
-    token_specs = [
-        ('comment', (r'#.*',)),
-        ('whitespace', (r'\s+',)),
-        ('op', (r'[={}]',)),
-        ('date', (r'\d*\.\d*\.\d*',)),
-        ('number', (r'\d+(\.\d+)?',)),
-        ('quoted_string', (r'"[^"#]*"',)),
-        ('unquoted_string', (r'[^\s"#={}]+',))
-    ]
-    useless = ['comment', 'whitespace']
-    inner_tokenize = funcparserlib.lexer.make_tokenizer(token_specs)
-    return (tok for tok in inner_tokenize(string) if tok.type not in useless)
-
-def parse(tokens):
-    def unquote(string):
-        return string[1:-1]
-
-    def make_number(string):
-        try:
-            return int(string)
-        except ValueError:
-            return float(string)
-
-    def make_date(string):
-        # CKII appears to default to 0, not 1, but that's awkward to handle
-        # with datetime, and it only comes up for b_embriaco anyway
-        year, month, day = ((int(x) if x else 1) for x in string.split('.'))
-        return datetime.date(year, month, day)
-
-    def some(tok_type):
-        return (funcparserlib.parser.some(lambda tok: tok.type == tok_type) >>
-                (lambda tok: tok.value))
-
-    def op(string):
-        return funcparserlib.parser.skip(funcparserlib.parser.a(
-            funcparserlib.lexer.Token('op', string)))
-
-    many = funcparserlib.parser.many
-    fwd = funcparserlib.parser.with_forward_decls
-    endmark = funcparserlib.parser.skip(funcparserlib.parser.finished)
-    unquoted_string = some('unquoted_string')
-    quoted_string = some('quoted_string') >> unquote
-    number = some('number') >> make_number
-    date = some('date') >> make_date
-    key = unquoted_string | quoted_string | number | date
-    value = fwd(lambda: obj | key)
-    pair = fwd(lambda: key + op('=') + value)
-    obj = fwd(lambda: op('{') + many(pair | value) + (op('}') | endmark))
-    toplevel = many(pair | value) + endmark
-    return toplevel.parse(list(tokens))
-
 def parse_files(glob):
     for path in files(glob):
         try:
@@ -265,9 +214,12 @@ def parse_files(glob):
             raise
 
 def parse_file(path):
-    with path.open(encoding='cp1252', errors='ignore') as f:
-        s = f.read()
-    return parse(tokenize(s))
+    tree = parser.parse_file(path)
+
+    def unbox(x):
+        return x.val if hasattr(x, 'val') else [unbox(y) for y in x]
+
+    return unbox(tree)
 
 # give mod dirs in descending lexicographical order of mod name (Z-A),
 # modified for dependencies as necessary.
@@ -644,15 +596,19 @@ def format_counties_table():
     sorted_rows = sorted(rows(), key=operator.itemgetter('ID'))
     return tabulate.tabulate(sorted_rows, headers='keys', tablefmt='mediawiki')
 
-def duchy_stats():
+def duchy_county_stats():
     start_1066 = datetime.date(1066, 9, 15)
     counties = [sum(1 for x in d.vassals(start_1066)) for d in Title.duchies()]
     counties = [x for x in counties if x > 0]
-    print('count: {}'.format(len(counties)))
-    mean = statistics.mean(counties)
-    median = statistics.median(counties)
-    print('mean: {}'.format(mean))
-    print('median: {}'.format(median))
+    print('de jure duchy count: {}'.format(len(counties)))
+    num_counties = sum(1 for _ in Title.counties())
+    print('county count: {}'.format(num_counties))
+    others = Title.max_provinces - 1 - num_counties
+    print('non-county province count: {}'.format(others))
+    # mean = statistics.mean(counties)
+    # median = statistics.median(counties)
+    # print('mean: {}'.format(mean))
+    # print('median: {}'.format(median))
 
 def provinces_info():
     start = datetime.date(769, 1, 1)
@@ -847,34 +803,40 @@ def main():
     parse_map_provinces(map_provinces)
     parse_csv(map_adjacencies, process_map_adjacencies_row)
 
-    # duchy_stats()
-    # provinces_info()
+    # old scraps:
     # duchy_path()
-    # check_nomads()
-
-    # output = format_duchies_table()
-
-    # output = format_counties_table()
-
-    # output = format_other_provs_table()
-
-    # output = re.sub(r' {2,}', ' ', output)
-    # with OUTPUT_FILE.open('w') as f:
-    #     f.write(output)
-
     # color_kingdoms()
+    # check_nomads()
+    # provinces_info()
 
-    province_map_out = pathlib.Path('C:/Users/Nicholas/Pictures/CKII')
+    duchy_county_stats()
+
+    output = format_duchies_table()
+    output = re.sub(r' {2,}', ' ', output)
+    with (rootpath / 'duchies_table.txt').open('w') as f:
+        f.write(output)
+
+    output = format_counties_table()
+    output = re.sub(r' {2,}', ' ', output)
+    with (rootpath / 'counties_table.txt').open('w') as f:
+        f.write(output)
+
+    output = format_other_provs_table()
+    output = re.sub(r' {2,}', ' ', output)
+    with (rootpath / 'other_provs_table.txt').open('w') as f:
+        f.write(output)
+
+    province_map_out = rootpath
     maps = [
         'max_settlements',
-        'defined_baronies',
-        'defined_baronies_minus_max_settlements',
-        '1066_built_holdings',
-        'max_settlements_minus_1066_built_holdings',
-        'max_settlements_divided_by_area',
-        'log_max_settlements_divided_by_area',
-        '1066_built_holdings_divided_by_area',
-        'log_1066_built_holdings_divided_by_area',
+    #     'defined_baronies',
+    #     'defined_baronies_minus_max_settlements',
+    #     '1066_built_holdings',
+    #     'max_settlements_minus_1066_built_holdings',
+    #     'max_settlements_divided_by_area',
+    #     'log_max_settlements_divided_by_area',
+    #     '1066_built_holdings_divided_by_area',
+    #     'log_1066_built_holdings_divided_by_area',
     ]
     for value in maps:
         generate_province_map(map_provinces, province_map_out, value)
