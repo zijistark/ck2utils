@@ -14,7 +14,6 @@
 
 import collections
 import csv
-import datetime
 import operator
 import pathlib
 import re
@@ -53,6 +52,9 @@ elif modpaths[0].name == 'SWMH':
     borders_path = rootpath / 'swmh_borderlayer.png'
 else:
     borders_path = None
+
+EARLIEST_DATE = (float('-inf'),) * 3
+LATEST_DATE = (float('inf'),) * 3
 
 class Interval:
     def __init__(self, start, stop):
@@ -140,23 +142,23 @@ class Title:
         if name != self.name and name not in self.other_names:
             self.other_names.append(name)
 
-    def build(self, from_when=datetime.date.min):
+    def build(self, from_when=EARLIEST_DATE):
         self.builts[from_when] = True
 
-    def destroy(self, from_when=datetime.date.min):
+    def destroy(self, from_when=EARLIEST_DATE):
         self.builts[from_when] = False
 
-    def built(self, when=datetime.date.min):
+    def built(self, when=EARLIEST_DATE):
         try:
             return self.builts[max(date for date in self.builts if
                                    date <= when)]
         except ValueError:
             return False
 
-    def built_holdings(self, when=datetime.date.min):
+    def built_holdings(self, when=EARLIEST_DATE):
         return (t for t in self.vassals(when) if t.built(when))
 
-    def set_liege(self, liege, from_when=datetime.date.min):
+    def set_liege(self, liege, from_when=EARLIEST_DATE):
         try:
             liege = Title.get(liege)
         except KeyError:
@@ -168,18 +170,18 @@ class Title:
             intvl.stop = from_when
         self.lieges[from_when] = liege
         to_when = min((date for date in self.lieges if date > from_when),
-                      default=datetime.date.max)
+                      default=LATEST_DATE)
         if liege is not None:
             liege.vassal_intvls[self].append(Interval(from_when, to_when))
 
-    def liege(self, when=datetime.date.min):
+    def liege(self, when=EARLIEST_DATE):
         try:
             return self.lieges[max(date for date in self.lieges if
                                    date <= when)]
         except ValueError:
             return None
 
-    def culture(self, when=datetime.date.min):
+    def culture(self, when=EARLIEST_DATE):
         try:
             culture = self.cultures[max(date for date in self.cultures if
                                     date <= when)]
@@ -187,7 +189,7 @@ class Title:
             return None
         return localisation.get(culture, culture)
 
-    def religion(self, when=datetime.date.min):
+    def religion(self, when=EARLIEST_DATE):
         try:
             religion = self.religions[max(date for date in self.religions if
                                       date <= when)]
@@ -195,7 +197,7 @@ class Title:
             return None
         return localisation.get(religion, religion)
 
-    def vassals(self, when=datetime.date.min):
+    def vassals(self, when=EARLIEST_DATE):
         return (title for title, intvls in self.vassal_intvls.items() if
                 any(when in intvl for intvl in intvls))
 
@@ -283,8 +285,8 @@ def process_provinces(provinces_txts):
         if title.name == title.codename:
             title.set_name(name)
         title.max_holdings = v_dict['max_settlements']
-        title.cultures[datetime.date(1, 1, 1)] = v_dict['culture']
-        title.religions[datetime.date(1, 1, 1)] = v_dict['religion']
+        title.cultures[EARLIEST_DATE] = v_dict['culture']
+        title.religions[EARLIEST_DATE] = v_dict['religion']
         for n1, v1 in v:
             if Title.valid_codename(n1):
                 try:
@@ -294,7 +296,7 @@ def process_provinces(provinces_txts):
                     continue
                 holding.set_liege(title)
                 holding.build()
-            elif isinstance(n1, datetime.date):
+            elif isinstance(n1, tuple):
                 for n2, v2 in v1:
                     if n2 == 'name':
                         title.add_other_name(v2)
@@ -315,7 +317,7 @@ def process_titles(titles_txts):
         except KeyError:
             continue
         for n1, v1 in v:
-            if isinstance(n1, datetime.date):
+            if isinstance(n1, tuple):
                 v1_dict = dict(v1)
                 liege = v1_dict.get('de_jure_liege')
                 if liege:
@@ -404,7 +406,7 @@ def generate_province_map(in_path, out_dir, value):
 
     rgb_map = {}
     border = True
-    start = datetime.date(1066, 9, 15)
+    start = 1066, 9, 15
     in_image = PIL.Image.open(str(in_path))
     array = numpy.array(in_image)
 
@@ -514,8 +516,7 @@ def process_map_adjacencies_row(row):
 # TODO: write secondary table for british duchies in 769
 def format_duchies_table():
     def rows():
-        starts = [datetime.date(769, 1, 1), datetime.date(867, 1, 1),
-                  datetime.date(1066, 9, 15)]
+        starts = [(769, 1, 1), (867, 1, 1), (1066, 9, 15)]
         start_1066 = starts[2]
         if modpaths:
             del starts[0]
@@ -536,7 +537,7 @@ def format_duchies_table():
             start_holdings = [sum(1 for c in duchy.vassals(s) for b in
                                   c.built_holdings(s)) for s in starts]
             for datum, start in zip(start_holdings, starts):
-                row['{} holdings'.format(start.year)] = datum
+                row['{} holdings'.format(start[0])] = datum
             counties = list(duchy.vassals(start_1066))
             max_holdings = sum(c.max_holdings for c in counties)
             row['Max holdings'] = max_holdings
@@ -558,8 +559,7 @@ def format_duchies_table():
 
 def format_counties_table():
     def rows():
-        starts = [datetime.date(769, 1, 1), datetime.date(867, 1, 1),
-                  datetime.date(1066, 9, 15)]
+        starts = [(769, 1, 1), (867, 1, 1), (1066, 9, 15)]
         start_1066 = starts[2]
         for county in Title.counties():
             row = collections.OrderedDict()
@@ -579,14 +579,14 @@ def format_counties_table():
                         row['Empire'] = empire.name
             cultures = [(when, county.culture(when)) for when in starts]
             for start, datum in cultures:
-                row['{} culture'.format(start.year)] = datum
+                row['{} culture'.format(start[0])] = datum
             religions = [(when, county.religion(when)) for when in starts]
             for start, datum in religions:
-                row['{} religion'.format(start.year)] = datum
+                row['{} religion'.format(start[0])] = datum
             start_holdings = [
                 (s, sum(1 for b in county.built_holdings(s))) for s in starts]
             for start, datum in start_holdings:
-                row['{} holdings'.format(start.year)] = datum
+                row['{} holdings'.format(start[0])] = datum
             row['Max holdings'] = county.max_holdings
             row['Coastal'] = 'yes' if county.coastal() else 'no'
             row['Other names'] = ', '.join(county.other_names)
@@ -597,7 +597,7 @@ def format_counties_table():
     return tabulate.tabulate(sorted_rows, headers='keys', tablefmt='mediawiki')
 
 def duchy_county_stats():
-    start_1066 = datetime.date(1066, 9, 15)
+    start_1066 = 1066, 9, 15
     counties = [sum(1 for x in d.vassals(start_1066)) for d in Title.duchies()]
     counties = [x for x in counties if x > 0]
     print('de jure duchy count: {}'.format(len(counties)))
@@ -611,7 +611,7 @@ def duchy_county_stats():
     # print('median: {}'.format(median))
 
 def provinces_info():
-    start = datetime.date(769, 1, 1)
+    start = 769, 1, 1
     holdings_freqs = collections.defaultdict(int)
     k_g4 = collections.defaultdict(int)
     k_holdings = collections.defaultdict(int)
@@ -636,7 +636,7 @@ def provinces_info():
     print('\n'.join(fives[:-43:-1]))
 
 def check_nomads():
-    start = datetime.date(769, 1, 1)
+    start = 769, 1, 1
     county_of_name = {}
     crash = False
     for c in Title.counties():
@@ -697,7 +697,7 @@ def format_other_provs_table():
     return tabulate.tabulate(sorted_rows, headers='keys', tablefmt='mediawiki')
 
 # def color_kingdoms():
-#     when = datetime.date(1066, 9, 15)
+#     when = 1066, 9, 15
 #     for u in Title.province_graph:
 #         try:
 #             k_u = Title.id_title_map[u].liege(when).liege(when)
@@ -753,7 +753,7 @@ def duchy_path():
         'd_zhetysu', 'd_kirghiz', 'd_kumul', 'd_altay', 'd_otuken',
         'd_khangai', 'd_ikh_bogd'
     }
-    when = datetime.date(769, 1, 1)
+    when = 769, 1, 1
     for u, v in Title.province_graph.edges():
         try:
             d_u = Title.id_title_map[u].liege(when).codename
@@ -828,18 +828,20 @@ def main():
 
     province_map_out = rootpath
     maps = [
-        'max_settlements',
-    #     'defined_baronies',
-    #     'defined_baronies_minus_max_settlements',
-    #     '1066_built_holdings',
-    #     'max_settlements_minus_1066_built_holdings',
-    #     'max_settlements_divided_by_area',
-    #     'log_max_settlements_divided_by_area',
-    #     '1066_built_holdings_divided_by_area',
-    #     'log_1066_built_holdings_divided_by_area',
+        # 'max_settlements',
+        # 'defined_baronies',
+        # 'defined_baronies_minus_max_settlements',
+        # '1066_built_holdings',
+        # 'max_settlements_minus_1066_built_holdings',
+        # 'max_settlements_divided_by_area',
+        # 'log_max_settlements_divided_by_area',
+        # '1066_built_holdings_divided_by_area',
+        # 'log_1066_built_holdings_divided_by_area',
     ]
     for value in maps:
         generate_province_map(map_provinces, province_map_out, value)
+
+    import pdb;pdb.set_trace()
 
 # def parse_map_test():
 #     Title.province_graph = networkx.Graph()
