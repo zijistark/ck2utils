@@ -730,28 +730,11 @@ def format_other_provs_table():
 
 def duchy_path():
     from pprint import pprint
-    west_europe = {
-        'd_northumberland', 'd_lancaster', 'd_york', 'd_norfolk', 'd_bedford',
-        'd_hereford', 'd_gloucester', 'd_canterbury','d_somerset', 'd_gwynedd',
-        'd_powys', 'd_deheubarth', 'd_cornwall', 'd_the_isles', 'd_galloway',
-        'd_western_isles', 'd_lothian', 'd_albany', 'd_moray', 'd_ulster',
-        'd_connacht', 'd_meath', 'd_leinster', 'd_munster', 'd_upper_burgundy',
-        'd_savoie', 'd_holland', 'd_gelre', 'd_luxembourg', 'd_upper_lorraine',
-        'd_lower_lorraine', 'd_alsace', 'd_bavaria', 'd_osterreich', 'd_tyrol',
-        'd_brunswick', 'd_thuringia', 'd_koln', 'd_franconia', 'd_baden',
-        'd_swabia', 'd_mecklemburg', 'd_pommerania', 'd_pomeralia', 'd_saxony',
-        'd_brandenburg', 'd_meissen', 'd_bohemia', 'd_moravia', 'd_berry',
-        'd_anjou', 'd_normandy', 'd_orleans', 'd_champagne', 'd_valois',
-        'd_burgundy', 'd_aquitaine', 'd_toulouse', 'd_gascogne', 'd_poitou',
-        'd_auvergne', 'd_bourbon', 'd_brittany', 'd_provence', 'd_dauphine',
-        'd_brabant', 'd_flanders', 'd_castilla', 'd_aragon', 'd_barcelona',
-        'd_valencia', 'd_mallorca', 'd_navarra', 'd_asturias', 'd_leon',
-        'd_galicia', 'd_porto', 'd_beja', 'd_algarve', 'd_cordoba', 'd_murcia',
-        'd_granada', 'd_sevilla', 'd_badajoz', 'd_toledo'
+    start_region = {
+        'd_jiuquan'
     }
-    east_steppe = {
-        'd_zhetysu', 'd_kirghiz', 'd_kumul', 'd_altay', 'd_otuken',
-        'd_khangai', 'd_ikh_bogd'
+    end_region = {
+        'd_marrakech', 'd_fes', 'd_tangiers', 'd_tlemcen', 'd_alger', 'd_kabylia', 'd_tunis', 'd_tripolitania', 'd_cyrenaica', 'd_alexandria', 'd_damietta', 'd_cairo', 'd_aswan'
     }
     when = 769, 1, 1
     for u, v in Title.province_graph.edges():
@@ -760,20 +743,20 @@ def duchy_path():
             d_v = Title.id_title_map[v].liege(when).codename
         except KeyError:
             continue
-        if d_u in west_europe:
-            d_u = 'world_europe_west'
-        if d_u in east_steppe:
-            d_u = 'world_steppe_east'
-        if d_v in west_europe:
-            d_v = 'world_europe_west'
-        if d_v in east_steppe:
-            d_v = 'world_steppe_east'
+        if d_u in start_region:
+            d_u = 'start_region'
+        if d_u in end_region:
+            d_u = 'end_region'
+        if d_v in start_region:
+            d_v = 'start_region'
+        if d_v in end_region:
+            d_v = 'end_region'
         if d_u is not d_v:
             Title.duchy_graph.add_edge(d_u, d_v)
     paths = list(networkx.all_shortest_paths(Title.duchy_graph,
-                                             'world_europe_west',
-                                             'world_steppe_east'))
+                                             'start_region', 'end_region'))
     pprint(paths)
+    raise SystemExit()
     # [['world_europe_west',
     #   'd_prussia',
     #   'd_lithuanians',
@@ -784,6 +767,19 @@ def duchy_path():
     #   'd_perm',
     #   'd_yugra',
     #   'world_steppe_east']]
+      # 'd_kumul',
+      # 'd_karashar',
+      # 'd_kashgar',
+      # 'd_ferghana',
+      # 'd_samarkand',
+      # 'd_merv',
+      # 'd_khorasan',
+      # 'd_jibal',
+      # 'd_baghdad',
+      # 'd_basra',
+      # 'd_nefoud',
+      # 'd_arabia_petrae',
+      # 'd_sinai'
 
 # TODO: refactor stuff
 def main():
