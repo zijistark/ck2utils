@@ -62,7 +62,7 @@ def main():
 
     # scan all province history (in mod):
     # if it doesn't match a line in definitions.csv, then it should be deleted.
-    for path in files('history/provinces/*', basedir=modpath):
+    for path in files('history/provinces/*.txt', basedir=modpath):
         num, name = path.stem.split(' - ')
         num = int(num)
         if num not in prov_num_name_map or prov_num_name_map[num] != name:
@@ -77,10 +77,10 @@ def main():
             if is_codename(n.val):
                 titles.add(n.val)
                 recurse(v)
-    for _, tree in parser.parse_files('common/landed_titles/*'):
+    for _, tree in parser.parse_files('common/landed_titles/*.txt'):
         recurse(tree)
     # delete all title history in mod not matching a title definition
-    for path in files('history/titles/*', basedir=modpath):
+    for path in files('history/titles/*.txt', basedir=modpath):
         title = path.stem
         if title not in titles:
             print('Deleting ' + str(path))
@@ -88,7 +88,7 @@ def main():
     # then, for all visible vanilla title history,
     # if it matches a title definition copy it
     # if it doesn't, override it with a blank file
-    for path in parser.files('history/titles/*'):
+    for path in parser.files('history/titles/*.txt'):
         title = path.stem
         if vanilladir in path.parents:
             new_path = modpath / path.relative_to(vanilladir)

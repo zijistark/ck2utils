@@ -767,7 +767,7 @@ class SimpleParser:
     def flush(self, path=None):
         if path is None:
             self.parse_tree_cache = {}
-        else:
+        elif path in self.parse_tree_cache:
             del self.parse_tree_cache[path]
 
     def invalidate_repo_cache(self, bad_path=None):
@@ -850,7 +850,7 @@ class SimpleParser:
             basedir = self.basedir
         for path in files(glob, moddirs, basedir=basedir):
             if path.is_file():
-                yield path, self.parse_file(path, **kwargs)
+                yield path.resolve(), self.parse_file(path, **kwargs)
 
     def parse_file(self, path, encoding='cp1252', errors='replace',
                    memcache=None, diskcache=None):
