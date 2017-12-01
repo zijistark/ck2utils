@@ -121,6 +121,7 @@ def main():
     # import pdb
     parser = SimpleParser()
     parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
+    # parser.moddirs.extend([rootpath / 'EMF/EMF', rootpath / 'EMF/EMF+SWMH'])
     titles_list, title_liege_map, title_vassals_map, misogyny = (
         process_landed_titles(parser))
     titles = set(titles_list)
@@ -192,7 +193,8 @@ def main():
                 if titles:
                     for modpath in parser.moddirs:
                         if modpath in path.parents:
-                            rel_path = '<mod>' / path.relative_to(modpath)
+                            rel_path = ('<{}>'.format(modpath.name) /
+                                        path.relative_to(modpath))
                             break
                     else:
                         rel_path = '<vanilla>' / path.relative_to(vanilladir)
