@@ -52,7 +52,7 @@ def main():
     cultures.update(cult_groups)
     defined_titles = []
     commented_out_titles = []
-    for _, tree in full_parser.parse_files('common/landed_titles/*'):
+    for _, tree in full_parser.parse_files('common/landed_titles/*.txt'):
         for title, defined in recurse(simple_parser, tree):
             (defined_titles if defined else commented_out_titles).append(title)
     titles = set(defined_titles) | set(commented_out_titles)
@@ -63,7 +63,7 @@ def main():
     unrecognized_nonbarony_keys = []
     unrecognized_barony_keys = []
     unrecognized_culture_keys = []
-    for path in files('localisation/*', basedir=simple_parser.moddirs[0]):
+    for path in files('localisation/*.csv', basedir=simple_parser.moddirs[0]):
         for key, *_ in csv_rows(path):
             match = re.match(r'[ekdcb]_((?!_adj).)*', key)
             if match:

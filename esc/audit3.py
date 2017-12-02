@@ -9,7 +9,7 @@ from print_time import print_time
 IGNORE_COMMENTS = False
 
 BINARY = ['.dds', '.tga', '.xac', '.bmp', '.db', '.jpg', '.yml', '.xlsx',
-          '.ogg', '.wav', '.xcf', '.psd']
+          '.ogg', '.wav', '.xcf', '.psd', '.sublime-workspace']
 
 @print_time
 def main():

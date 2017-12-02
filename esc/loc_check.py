@@ -51,7 +51,7 @@ def scan_landed_titles(parser, cultures, loc_mod):
                         undef[v2.val].append((n.val, n2.val))
                 recurse(v)
 
-    for path, tree in parser.parse_files('common/landed_titles/*'):
+    for path, tree in parser.parse_files('common/landed_titles/*.txt'):
         print(path)
         recurse(tree)
     return dynamics, undef
