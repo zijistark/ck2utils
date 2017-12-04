@@ -273,6 +273,7 @@ variables:
     | realm_size
     | ruled_years
     | society_rank
+    | total_years_played
     | war_score
     | wealth
     | year
@@ -474,11 +475,13 @@ variables:
     | is_landless_type_title
     | is_marriage_adult
     | is_married
+    | is_married_matrilineally
     | is_merchant_republic
     | is_multiplayer_host_character
     | is_nomadic
     | is_occupied
     | is_offmap_governor
+    | is_offmap_ruler  # this one is somewhat questionable?
     | is_patrician
     | is_pregnant
     | is_primary_heir
