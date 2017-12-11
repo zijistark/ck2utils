@@ -32,7 +32,7 @@ void an_province::write_event(FILE* f, uint event_id) const {
         fprintf(f, "\t\t\tbuild_holding = { type = %s }\n", e.holding_type());
         fprintf(f, "\t\t\tculture  = %s\n", e.culture.c_str());
         fprintf(f, "\t\t\treligion = %s\n", e.religion.c_str());
-        fprintf(f, "\t\t\temf_nomad_antinomad_%s_effect = yes\n", e.holding_type());
+        fprintf(f, "\t\t\temf_nomad_antinomad_%s = yes\n", e.holding_type());
         fprintf(f, "\t\t\tlog = \"emf_antinomad(%u, '[Root.GetName]') => %s / %s / %s\"\n",
                 _id, e.holding_type(), e.culture.c_str(), e.religion.c_str());
         fprintf(f, "\t\t\tbreak = yes\n");
@@ -50,7 +50,7 @@ void an_province::write_event(FILE* f, uint event_id) const {
     fprintf(f, "\t\tbuild_holding = { type = %s }\n", e.holding_type());
     fprintf(f, "\t\tculture  = %s\n", e.culture.c_str());
     fprintf(f, "\t\treligion = %s\n", e.religion.c_str());
-    fprintf(f, "\t\temf_nomad_antinomad_%s_effect = yes\n", e.holding_type());
+    fprintf(f, "\t\temf_nomad_antinomad_%s = yes\n", e.holding_type());
     fprintf(f, "\t\tlog = \"emf_antinomad(%u, '[Root.GetName]') => %s / %s / %s\"\n",
             _id, e.holding_type(), e.culture.c_str(), e.religion.c_str());
 
