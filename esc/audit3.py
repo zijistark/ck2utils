@@ -33,6 +33,8 @@ def main():
                             audit[relpath].append(result)
             except Exception:
                 audit[relpath].append(str(sys.exc_info()[1]))
+    if audit:
+        print(wd)
     for path, results in sorted(audit.items()):
         if results:
             print(path, *results, sep='\n\t')

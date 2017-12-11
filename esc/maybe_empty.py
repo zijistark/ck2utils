@@ -8,8 +8,9 @@ from print_time import print_time
 
 def get_modpath():
     if len(sys.argv) <= 1:
-        return rootpath / 'SWMH-BETA/SWMH'
-    return pathlib.Path(sys.argv[1])
+        # return rootpath / 'SWMH-BETA/SWMH'
+        return []
+    return [pathlib.Path(sys.argv[1])]
 
 def output(provinces):
     print(*provinces, sep='\n')
@@ -67,7 +68,7 @@ def process_titles(parser, valid_titles, first_start, last_start):
     vassals = collections.defaultdict(set)
     for path in parser.files('history/titles/*.txt'):
         title = path.stem
-        if title in valid_titles not title[0] != 'b':
+        if title in valid_titles and title[0] != 'b':
             tree = parser.parse_file(path)
             changes_by_date = collections.defaultdict(list)
             changes_by_date[first_start] = []
@@ -93,7 +94,7 @@ def process_titles(parser, valid_titles, first_start, last_start):
 @print_time
 def main():
     parser = SimpleParser()
-    parser.moddirs = [get_modpath()]
+    parser.moddirs = get_modpath()
     titles = process_landed_titles(parser)
     first_start, last_start = get_start_interval(parser)
     province_id, no_castles_or_cities = process_provinces(
