@@ -105,7 +105,8 @@ def create_digest_SWMH():
     dynasties = set()
     for _, tree in parser.parse_files('common/dynasties/*.txt'):
         for n, v in tree:
-            dynasties.add((n.val, v.get('culture').val))
+            culture = v['culture'].val if 'culture' in v.dictionary else None
+            dynasties.add((n.val, culture))
     digest['dynasties'] = dynasties
 
     landed_titles = set()
