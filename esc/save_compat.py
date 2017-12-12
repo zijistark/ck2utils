@@ -86,16 +86,59 @@ def compare_digests(old, new):
 
 
 def create_digest_SWMH():
-    digest = {'version': {1}}
-    titles = set()
+    digest = {'version': {2}}
+
+    buildings = set()
+    for _, tree in parser.parse_files('common/buildings/*.txt'):
+        for n, v in tree:
+            for n2, v2 in v:
+                buildings.add((n.val, n2.val))
+    digest['buildings'] = buildings
+
+    cultures = set()
+    for _, tree in parser.parse_files('common/cultures/*.txt'):
+        for n, v in tree:
+            for n2, v2 in v:
+                cultures.add(n2.val)
+    digest['cultures'] = cultures
+
+    dynasties = set()
+    for _, tree in parser.parse_files('common/dynasties/*.txt'):
+        for n, v in tree:
+            dynasties.add((n.val, v.get('culture')))
+    digest['dynasties'] = dynasties
+
+    landed_titles = set()
     for _, tree in parser.parse_files('common/landed_titles/*.txt'):
         dfs = list(tree)
         while dfs:
             n, v = dfs.pop()
             if is_codename(n.val):
-                titles.add(n.val)
+                landed_titles.add(n.val)
                 dfs.extend(v)
-    digest['landed_titles'] = titles
+    digest['landed_titles'] = landed_titles
+
+    minor_titles = set()
+    for _, tree in parser.parse_files('common/minor_titles/*.txt'):
+        for n, v in tree:
+            minor_titles.add(n.val)
+    digest['minor_titles'] = minor_titles
+
+    religions = set()
+    for _, tree in parser.parse_files('common/religions/*.txt'):
+        for n, v in tree:
+            for n2, v2 in v:
+                religions.add(n2.val)
+    digest['religions'] = religions
+
+    traits = set()
+    trait_index = 0
+    for _, tree in parser.parse_files('common/traits/*.txt'):
+        for n, v in tree:
+            traits.add((trait_index, n.val))
+            trait_index += 1
+    digest['traits'] = traits
+
     return digest
 
 
