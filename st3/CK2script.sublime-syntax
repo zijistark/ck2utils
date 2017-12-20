@@ -279,6 +279,7 @@ variables:
     | year
     | yearly_income
     | {{vCharAttr}}
+    | artifact_age
     )
   vTriggerDecimal: |-
     (?x:
@@ -296,6 +297,7 @@ variables:
     | scaled_wealth
     | dynasty_realm_power
     | population_factor
+    | society_currency
     )
   vTriggerTitleID: |-
     (?x:
@@ -305,6 +307,7 @@ variables:
     | de_jure_liege_or_above
     | de_jure_liege
     | de_jure_vassal_or_below
+    | government
     | has_claim
     | has_landed_title
     | is_landed_title_allowed
@@ -315,6 +318,7 @@ variables:
     (?x:
         has_offmap_news_enabled
     |   is_offmap_tag
+    |   government
     )
   vTriggerTarget: |-
     (?x:
@@ -333,6 +337,7 @@ variables:
     | dynasty
     | excommunicated_for
     | family
+    | government
     | has_blood_oath_with
     | has_claim
     | has_embargo
@@ -350,12 +355,19 @@ variables:
     | holder
     | is_allied_with
     | is_allowed_holding_type
+    | is_ancestor_of
+    | is_aunt_uncle_of
+    | is_capital
     | is_child_of
     | is_close_relative
     | is_consort
+    | is_cousin_of
+    | is_descendant_of
     | is_father
     | is_foe
     | is_friend
+    | is_grandchild_of
+    | is_grandparent_of
     | is_heresy_of
     | is_holy_site
     | is_landed_title_allowed
@@ -364,7 +376,9 @@ variables:
     | is_lover
     | is_married
     | is_mother
+    | is_nibling_of
     | is_older_than
+    | is_parent_of
     | is_parent_religion
     | is_preferred_holding_type
     | is_primary_heir
@@ -374,6 +388,8 @@ variables:
     | is_title_active
     | is_valid_viking_invasion_target
     | is_vassal_or_below
+    | liege_or_above_of
+    | vassal_or_below_of
     | is_within_diplo_range
     | lower_real_tier_than
     | lower_tier_than
@@ -389,8 +405,10 @@ variables:
     | rightful_religious_head
     | same_liege
     | same_realm
+    | same_society_as
     | secret_religion
     | secret_religion_group
+    | set_name
     | shares_realm_border_with
     | sibling
     | tier
@@ -434,6 +452,7 @@ variables:
     | has_hospital
     | has_inheritance_blocker
     | has_job_title
+    | has_known_creation_date
     | has_lover
     | has_nickname
     | has_owner
@@ -473,6 +492,7 @@ variables:
     | is_land
     | is_landed
     | is_landless_type_title
+    | is_lowborn
     | is_marriage_adult
     | is_married
     | is_married_matrilineally
@@ -526,6 +546,7 @@ variables:
     | rebel
     | religion_allows_female_temple_holders
     | risks_minor_clan_rising
+    | technology_can_spread
     | temporary
     | under_FROM
     | under_FROMFROM
@@ -537,6 +558,31 @@ variables:
     | under_target_ruler
     | uses_decadence
     | war
+    | emf_hostile_religion_to_ROOT
+    | emf_hostile_religion_to_FROM
+    | emf_hostile_religion_to_PREV
+    | emf_hostile_religion_to_target_ruler
+    | emf_unreformed_pagan
+    | emf_not_unreformed_pagan
+    | emf_polytheist_religion
+    | emf_feminist_religion
+    | emf_western_christian_religion
+    | emf_can_religion_excommunicate
+    | emf_religion_head_divorce
+    | emf_divine_blood_religion
+    | emf_is_formidable_woman
+    | emf_can_inherit
+    | emf_is_voter
+    | emf_can_convert_religion
+    | emf_can_disturb
+    | emf_ROOT_completely_controls_counties
+    | emf_has_swmh
+    | emf_not_has_swmh
+    | emf_can_execute_ROOT
+    | title_duke_basic_allow
+    | title_tribe_basic_allow
+    | title_king_basic_allow
+    | title_emperor_basic_allow
     )
   vTriggerID: |-
     (?x:
@@ -600,6 +646,7 @@ variables:
     | terrain
     | trade_post_has_building
     | trade_post_has_any_building
+    | trade_route
     | trait
     | true_religion
     | true_religion_group
@@ -626,6 +673,7 @@ variables:
     | scaled_prestige
     | scaled_wealth
     | set_father
+    | set_looter_hostility_days
     | set_mother
     | treasury
     | wealth
@@ -681,6 +729,7 @@ variables:
     | set_preferred_capital
     | set_secret_religion
     | unsafe_destroy_landed_title
+    | unsafe_impregnate
     | usurp_title
     | usurp_title_only
     | usurp_title_plus_barony_if_unlanded
@@ -712,6 +761,17 @@ variables:
     | set_can_toggle_looting
     | set_looting
     | unsafe_destroy_landed_title
+    | unsafe_impregnate
+    | emf_liege_change
+    | emf_abdicate
+    | emf_copy_title_state_from_PREV
+    | emf_destroy_title
+    | emf_unsafe_destroy_title
+    | emf_ROOT_subjugate_ruler
+    | emf_FROM_subjugate_ruler
+    | emf_set_viceroy_exemption
+    | pf_liege_change_under_title_begin_effect
+    | pf_liege_change_under_title_end_effect
     )
   vEffectTitleID: |-
     (?x:
@@ -734,6 +794,7 @@ variables:
     | cancel_plot
     | clear_flags_with_prefix
     | clr_{{vFlagType}}_flag
+    | clr_offmap_tmp_flag
     | culture
     | disband_event_forces
     | give_nickname
@@ -746,25 +807,31 @@ variables:
     | remove_trait
     | set_focus
     | set_{{vFlagType}}_flag
+    | set_offmap_tmp_flag
     | set_government_type
+    | set_graphical_culture
     | set_policy
     | set_name
     | set_offmap_name
     | set_secret_religion
     | set_special_character_title
     | set_status
+    | unsafe_destroy_artifact
     | unsafe_religion
     | unsafe_give_minor_title
     )
   vParamNumber: |-
     (?x:
       size
-    | powerma
+    | power
     | for_population
     | match_mult
     | match_min
     | match_max
     | scaled_by_biggest_garrison
+    | strength_growth_per_century
+    | hire_range
+    | extra_ai_eval_troops
     | attrition
     | reinforce_rate_multiplier
     | maintenance_multiplier
@@ -785,6 +852,8 @@ variables:
     | technology
     | law
     | tributary_type
+    | graphical_culture
+    | mercenary_type
     )
   vParamTextID: |-
     (?x:
@@ -792,6 +861,10 @@ variables:
     | name
     | text
     | title
+    | title_female
+    | title_prefix
+    | foa
+    | foa_female
     )
   vParamBool: |-
     (?x:
@@ -809,6 +882,9 @@ variables:
     |   as_if_liege
     |   random
     |   customizer
+    |   can_be_usurped
+    |   can_be_claimed
+    |   offmap
     )
   vCBParamTier: (?:check_de_jure_tier)
   vCBParamInt: |-
@@ -933,6 +1009,7 @@ variables:
     | offmap_power
     | owner
     | parent_religion_head
+    | player_heir
     | plot_target_char
     | plot_target_province
     | plot_target_title
@@ -1190,13 +1267,13 @@ contexts:
       # create_title
     - match: \b(create_title|landless|nomad|adventurer|army_template|rebel|temporary|mercenary|replace_captain_on_death|siphons_income_to_creator|custom_created|base_title|copy_title_laws|ruler|ruler_female|foa)\b
       scope: support.function.ck2script
-    - match: \b(province|home|owner|cannot_inherit|disband_on_peace|reinforces|match_character|merge|can_toggle_looting|is_looter)\b
+    - match: \b(province|home|owner|cannot_inherit|disband_on_peace|reinforces|maintenance_multiplier|match_character|merge|can_toggle_looting|is_looter)\b
       scope: support.function.ck2script
     - match: \b(troops|spawn_fleet|spawn_unit|scaled_with_population_of|archers|light_infantry|heavy_infantry|pikemen|knights|light_cavalry|horse_archers|war_elephants|galleys)\b
       scope: keyword.control.ck2script
     - match: \b(age|random_traits|female)\b
       scope: support.function.ck2script
-    - match: \b(attributes)\b
+    - match: \b(attributes|diplomacy|martial|stewardship|intrigue|learning)\b
       scope: keyword.control.ck2script
     - match: \b(((check|change|subtract|multiply|divide|export_to|set)_variable)|is_variable_equal|attribute_diff|age_diff)\b
       scope: keyword.control.ck2script
@@ -1210,7 +1287,7 @@ contexts:
     - match: \b((any_(direct_)?de_jure_vassal_title)|any_de_jure_liege_title|any_title_under|((any|random)_(demesne|realm)_(title|province))|((any|random)_province_holding)|((any|random)_neighbor_province))\b
       scope: keyword.control.ck2script
       # these scopes all have any & random versions
-    - match: \b(((any|random)_(artifact|player|character|rival|consort|trade_post|friend|voter|ward|opinion_modifier_target|non_aggression_pact_character|lover|((un)?known_)?enemy_plotter|close_relative|backed_character|landed_title|claim|potential_tribal_county|(neighbor_)?province))|((any|random)_(child|spouse|sibling|dynasty_member)(_even_if_dead)?))\b
+    - match: \b(((any|random)_(tributary|pupil|artifact|player|character|rival|consort|trade_post|friend|voter|ward|opinion_modifier_target|non_aggression_pact_character|lover|((un)?known_)?enemy_plotter|close_relative|backed_character|landed_title|claim|potential_tribal_county|(neighbor_)?province))|((any|random)_(child|spouse|sibling|dynasty_member)(_even_if_dead)?))\b
       scope: keyword.control.ck2script
       # these scopes all have any & random versions -- unit scopes
     - match: \b(any|random)_(army|fleet|unit)\b
@@ -1227,10 +1304,12 @@ contexts:
       # LANDED_TITLES
     - match: \b(color2?|((graphical_)?culture)|religion|capital|foa|pirate|tribe|location_ruler_title|controls_religion|(title(_female)?)|dynasty_title_names|short_name|name_tier|landless|primary|dignity|caliphate|creation_requires_capital)\b
       scope: keyword.control.ck2script
-    - match: \b(monthly_income|coat_of_arms|data|mercenary_type|assimilate|((fe)?male_names)|allow|gain_effect|mercenary|independent|title_prefix)\b
+    - match: \b(monthly_income|coat_of_arms|data|mercenary_type|assimilate|((fe)?male_names)|allow|gain_effect|mercenary|independent)\b
       scope: keyword.control.ck2script
       # CUSTOMIZABLE_LOCALISATION
     - match: \b(defined_text|text|localisation_key|fallback_text)\b
+      # ON_ACTIONS & JOB_ACTIONS:
+    - match: \b(events)\b
       scope: keyword.control.ck2script
       # FUTURE DECISION/LAW CONTEXT:
     - match: \b(decisions|title_decisions|settlement_decisions|vassal_decisions|targett?ed_decisions|plot_decisions|society_decisions)\b # top-level
