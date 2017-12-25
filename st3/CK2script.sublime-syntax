@@ -153,18 +153,21 @@ variables:
   vTargetedDecisionFilter: |-
     (?x:
       self
-    | court
-    | home_court
+    | court(?:_including_me)?
+    | home_court(?:_including_me)?
     | vassals
-    | sub_realm
-    | realm
-    | dynasty
+    | sub_realm(?:_including_me)?
+    | realm(?:_including_me)?
+    | dynasty(?:_including_me)?
     | spouse
     | liege
     | religious_head
     | rivals
-    | society
-    | all
+    | society(?:_including_me)?
+    | all(?:_including_me)?
+    | none
+    | vassal_wars
+    | independent_rulers
     )
   vTitleDecisionFilter: |-
     (?x:
@@ -191,6 +194,11 @@ variables:
     (?x:
       is_high_prio
     | hide_in_decisions_list
+    | is_mercenary
+    )
+  vDecisionPropertyInt: |-
+    (?x:
+      ai_check_interval
     )
   vTriggerTier: |-
     (?x:
@@ -213,6 +221,8 @@ variables:
     | character
     | combat_rating
     | day_of_birth
+    | days_at_current_society_rank
+    | days_in_society
     | decadence
     | demesne_size
     | dynasty
@@ -365,6 +375,7 @@ variables:
     | is_descendant_of
     | is_father
     | is_foe
+    | is_former_lover
     | is_friend
     | is_grandchild_of
     | is_grandparent_of
@@ -484,10 +495,11 @@ variables:
     | is_female
     | is_feudal
     | is_flanking
-    | is_heirm
+    | is_heir
     | is_heretic
     | is_incapable
     | is_ill
+    | is_in_society
     | is_island
     | is_land
     | is_landed
@@ -521,6 +533,7 @@ variables:
     | is_ruler
     | is_save_game
     | is_seafarer
+    | is_society_grandmaster
     | is_theocracy
     | is_titular
     | is_titular_title
@@ -529,6 +542,7 @@ variables:
     | is_tributary
     | is_vice_royalty
     | is_voter
+    | is_virtous # yes, the trigger is misspelled in the API
     | mercenary
     | multiplayer
     | owner_under_FROM
@@ -546,6 +560,7 @@ variables:
     | rebel
     | religion_allows_female_temple_holders
     | risks_minor_clan_rising
+    | society_can_rank_up
     | technology_can_spread
     | temporary
     | under_FROM
@@ -660,6 +675,7 @@ variables:
     (?x:
       add_holding_slot
     | change_{{vCharAttr}}
+    | change_society_currency
     | fertility
     | health
     | decadence
@@ -685,8 +701,10 @@ variables:
     | add_claim
     | add_favor
     | add_friend
+    | add_lover
     | add_pressed_claim
     | add_rival
+    | add_spouse
     | add_weak_claim
     | add_weak_pressed_claim
     | banish
@@ -797,6 +815,7 @@ variables:
     | clr_offmap_tmp_flag
     | culture
     | disband_event_forces
+    | give_minor_title
     | give_nickname
     | pass_law
     | religion
@@ -854,6 +873,7 @@ variables:
     | tributary_type
     | graphical_culture
     | mercenary_type
+    | society
     )
   vParamTextID: |-
     (?x:
@@ -1287,7 +1307,7 @@ contexts:
     - match: \b((any_(direct_)?de_jure_vassal_title)|any_de_jure_liege_title|any_title_under|((any|random)_(demesne|realm)_(title|province))|((any|random)_province_holding)|((any|random)_neighbor_province))\b
       scope: keyword.control.ck2script
       # these scopes all have any & random versions
-    - match: \b(((any|random)_(tributary|pupil|artifact|player|character|rival|consort|trade_post|friend|voter|ward|opinion_modifier_target|non_aggression_pact_character|lover|((un)?known_)?enemy_plotter|close_relative|backed_character|landed_title|claim|potential_tribal_county|(neighbor_)?province))|((any|random)_(child|spouse|sibling|dynasty_member)(_even_if_dead)?))\b
+    - match: \b(((any|random)_(society_member|tributary|pupil|artifact|player|character|rival|consort|trade_post|friend|voter|ward|opinion_modifier_target|non_aggression_pact_character|lover|((un)?known_)?enemy_plotter|close_relative|backed_character|landed_title|claim|potential_tribal_county|(neighbor_)?province))|((any|random)_(child|spouse|sibling|dynasty_member)(_even_if_dead)?))\b
       scope: keyword.control.ck2script
       # these scopes all have any & random versions -- unit scopes
     - match: \b(any|random)_(army|fleet|unit)\b
@@ -1326,6 +1346,10 @@ contexts:
       captures:
         1: keyword.control.ck2script
         2: constant.language.boolean.false.ck2script
+    - match: '\b({{vDecisionPropertyInt}})\s*=\s*(\d+)\b'
+      captures:
+        1: keyword.control.ck2script
+        2: constant.numeric.ck2script
     - match: \b(allow|potential|from_potential|revoke_allowed)\b # triggers
       scope: keyword.control.ck2script
     - match: \b(effect|pass_effect)\b # effects
