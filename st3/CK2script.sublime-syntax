@@ -20,6 +20,7 @@ variables:
   vLiteralMisc: '(?:none|public|true|secret|random|actually_culture|culture)'
   vLiteralInt: '(?:[-]?\d+)'
   vLiteralDecimal: '(?x: [-]? (?: (?: \d* \. \d+ ) | (?: \d+ \. \d*) | \d+ ) )'
+  vLiteralDate: '(?x: [-]? \d{1,4}} \. [-]? \d{1,2} \. [-]? \d{1,2} )'
   vLiteralTier: |-
     (?xi:
       BARON
@@ -199,6 +200,10 @@ variables:
   vDecisionPropertyInt: |-
     (?x:
       ai_check_interval
+    )
+  vTriggerDate: |-
+    (?x:
+        start_date
     )
   vTriggerTier: |-
     (?x:
@@ -389,8 +394,10 @@ variables:
     | is_mother
     | is_nibling_of
     | is_older_than
+    | is_opposite_sex
     | is_parent_of
     | is_parent_religion
+    | is_plot_target_of
     | is_preferred_holding_type
     | is_primary_heir
     | is_quest_target_of
@@ -416,6 +423,7 @@ variables:
     | rightful_religious_head
     | same_liege
     | same_realm
+    | same_sex
     | same_society_as
     | secret_religion
     | secret_religion_group
@@ -465,6 +473,7 @@ variables:
     | has_job_title
     | has_known_creation_date
     | has_lover
+    | has_mercenary_band
     | has_nickname
     | has_owner
     | has_polygamy
@@ -516,6 +525,7 @@ variables:
     | is_offmap_ruler  # this one is somewhat questionable?
     | is_patrician
     | is_pregnant
+    | is_priest
     | is_primary_heir
     | is_primary_holder_title
     | is_primary_holder_title_tier
@@ -573,6 +583,7 @@ variables:
     | under_target_ruler
     | uses_decadence
     | war
+    | is_inaccessible_trigger
     | emf_hostile_religion_to_ROOT
     | emf_hostile_religion_to_FROM
     | emf_hostile_religion_to_PREV
@@ -905,6 +916,7 @@ variables:
     |   can_be_usurped
     |   can_be_claimed
     |   offmap
+    |   historical
     )
   vCBParamTier: (?:check_de_jure_tier)
   vCBParamInt: |-
@@ -1125,6 +1137,10 @@ contexts:
       captures:
         1: support.function.ck2script
         2: constant.language.enum.tier.ck2script
+    - match: '\b({{vTriggerDate}})\s*{{vOpBinary}}\s*({{vLiteralDate}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.other.date.ck2script
     - match: '\b(holding_type)\s*=\s*({{vLiteralHoldingType}})\b'
       captures:
         1: support.function.ck2script
