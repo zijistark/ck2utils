@@ -168,7 +168,7 @@ variables:
     | all(?:_including_me)?
     | none
     | vassal_wars
-    | independent_rulers
+    | independent_rulers(?:_including_me)?
     )
   vTitleDecisionFilter: |-
     (?x:
@@ -334,6 +334,7 @@ variables:
         has_offmap_news_enabled
     |   is_offmap_tag
     |   government
+    |   is_offmap_governor
     )
   vTriggerTarget: |-
     (?x:
@@ -342,6 +343,7 @@ variables:
     | claimed_by
     | completely_controls
     | conquest_culture
+    | could_be_parent_of
     | culture
     | culture_group
     | de_facto_liege
@@ -454,6 +456,7 @@ variables:
     | can_be_given_away
     | can_call_crusade
     | can_change_religion
+    | can_have_more_leadership_traits
     | can_marry
     | controls_religion
     | clan
@@ -483,6 +486,7 @@ variables:
     | has_settlement_construction
     | has_siege
     | has_trade_post
+    | historical
     | holy_order
     | immortal
     | in_command
@@ -523,6 +527,7 @@ variables:
     | is_occupied
     | is_offmap_governor
     | is_offmap_ruler  # this one is somewhat questionable?
+    | is_or_was_offmap_power_ruler
     | is_patrician
     | is_pregnant
     | is_priest
@@ -569,6 +574,7 @@ variables:
     | prisoner
     | rebel
     | religion_allows_female_temple_holders
+    | remove_spouse
     | risks_minor_clan_rising
     | society_can_rank_up
     | technology_can_spread
@@ -609,6 +615,12 @@ variables:
     | title_tribe_basic_allow
     | title_king_basic_allow
     | title_emperor_basic_allow
+    | is_smart_trigger
+    | is_dumb_trigger
+    | is_weak_trigger
+    | is_strong_trigger
+    | is_infertile_trigger
+    | is_attractive_trigger
     )
   vTriggerID: |-
     (?x:
@@ -681,6 +693,50 @@ variables:
   vTriggerEffectQString: |-
     (?x:
         set_name
+    |   log
+    |   text
+    |   has_offmap_name
+    |   set_offmap_name
+    |   set_special_character_title
+    |   remove_special_character_title
+    )
+  vTriggerBlock: |-
+    (?x:
+        opinion
+    |   reverse_opinion
+    |   their_opinion
+    |   clan_opinion
+    |   personal_opinion
+    |   relative_power
+    |   relative_power_including_allies_attacker
+    |   relative_power_including_allies_defender
+    |   is_tributary
+    |   disliked_by_offmap
+    |   liked_by_offmap
+    )
+  vEffectBlock: |-
+    (?x:
+        abdicate
+    |   add_law
+    |   gain_title
+    |   grant_title
+    |   grant_title_no_opinion
+    |   usurp_title
+    |   usurp_title_only
+    |   usurp_title_plus_barony_if_unlanded
+    |   usurp_title_plus_barony_if_unlanded_and_vassals
+    |   usurp_title_plus_barony_if_unlanded_and_vassals_no_adj
+    |   make_tributary
+    |   death
+    |   activate_title
+    |   set_title_nomad
+    |   set_title_landless
+    |   change_variable
+    |   set_variable
+    |   subtract_variable
+    |   multiply_variable
+    |   divide_variable
+    |   export_to_variable
     )
   vEffectNumber: |-
     (?x:
@@ -757,6 +813,7 @@ variables:
     | set_offmap_holder
     | set_preferred_capital
     | set_secret_religion
+    | show_portrait
     | unsafe_destroy_landed_title
     | unsafe_impregnate
     | usurp_title
@@ -780,6 +837,7 @@ variables:
     | destroy_landed_title
     | excommunicate
     | impregnate
+    | imprison
     | make_capital_holding
     | plot_succeeds
     | refill_holding_levy
@@ -837,6 +895,7 @@ variables:
     | remove_trait
     | set_focus
     | set_{{vFlagType}}_flag
+    | set_offmap_name
     | set_offmap_tmp_flag
     | set_government_type
     | set_graphical_culture
@@ -846,6 +905,7 @@ variables:
     | set_secret_religion
     | set_special_character_title
     | set_status
+    | sound_effect
     | unsafe_destroy_artifact
     | unsafe_religion
     | unsafe_give_minor_title
@@ -1145,6 +1205,10 @@ contexts:
       captures:
         1: support.function.ck2script
         2: constant.language.enum.holding_type.ck2script
+    - match: '\b(type)\s*=\s*(offmap|permanent|default|nomadic|holy_war|created|revolt|host|invasion|revoke|claim)\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.enum.ck2script
     - match: '\b({{vTriggerTarget}})\s*=\s*({{vEventTarget}})\b'
       captures:
         1: support.function.ck2script
@@ -1193,10 +1257,17 @@ contexts:
       captures:
         1: support.function.ck2script
         2: constant.language.boolean.false.ck2script
+    - match: '\b({{vEffectBlock}}|{{vTriggerBlock}})\s*=\s*(?=\{)'
+      captures:
+        1: support.function.ck2script
     - match: '\b(end_war)\s*=\s*(invalid|reverse_demand|success|whitepeace)\b'
       captures:
         1: support.function.ck2script
         2: constant.language.enum.end_war.ck2script
+    - match: '\b(offmap)\s*=\s*(allow|only)\b'
+      captures:
+        1: keyword.control.ck2script
+        2: constant.language.enum.ck2script
     - match: '\b({{vEffectID}}|{{vTriggerID}})\s*=\s*({{vID}})\b'
       captures:
         1: support.function.ck2script
@@ -1307,7 +1378,7 @@ contexts:
       scope: support.function.ck2script
     - match: \b(troops|spawn_fleet|spawn_unit|scaled_with_population_of|archers|light_infantry|heavy_infantry|pikemen|knights|light_cavalry|horse_archers|war_elephants|galleys)\b
       scope: keyword.control.ck2script
-    - match: \b(age|random_traits|female)\b
+    - match: \b(age|random_traits|female|genetic_father|genetic_mother)\b
       scope: support.function.ck2script
     - match: \b(attributes|diplomacy|martial|stewardship|intrigue|learning)\b
       scope: keyword.control.ck2script
@@ -1332,7 +1403,7 @@ contexts:
     - match: \bany_(war|claimant|attacker|defender|de_jure_vassal|faction_backer|favor_(holder|ower)|known_plotter|liege|plot_backer|plotter|previous_holder|suzerain|unique_dynasty_vassal|title|heir_title|mercenary_band|pretender_title|trade_route_province)\b
       scope: keyword.control.ck2script
       # scopes that exclude ROOT
-    - match: \b((any|random)_province_(character|lord)|((any|random)_courtier(_or_vassal)?)|(any|random)_host_courtier|((any|random)_realm_(lord|character))|(any|random)_current_enemy|(any|random)_vassal|(any|random)_dynasty_member|(any|random)_(independent|playable)_ruler)\b
+    - match: \b((any|random)_province_(character|lord)|((any|random)_courtier(_or_vassal)?)|(any|random)_host_courtier|((any|random)_realm_(lord|character))|(any|random)_current_enemy|(any|random)_vassal|(any|random)_dynasty_member|(any|random)_((neighbor_)?independent|playable)_ruler)\b
       scope: keyword.control.ck2script
       # top-level event trigger blocks
     - match: \b(trigger|major_trigger)\b
