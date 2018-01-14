@@ -15,8 +15,13 @@ import traceback
 from funcparserlib.lexer import make_tokenizer, Token
 from funcparserlib.parser import (some, a, maybe, many, finished, skip,
                                   oneplus, forward_decl, NoParseError)
-import git
 from localpaths import rootpath, vanilladir, cachedir
+
+try:
+    import git
+    git_present = True
+except ImportError:
+    git_present = False
 
 VERSION = 2
 
@@ -791,10 +796,16 @@ class SimpleParser:
                 break
         else:
             repo_init_start = time.time()
-            try:
-                repo = git.Repo(str(path.parent), odbt=git.GitCmdObjectDB,
-                                search_parent_directories=True)
-            except git.InvalidGitRepositoryError:
+            if git_present:
+                try:
+                    repo = git.Repo(str(path.parent), odbt=git.GitCmdObjectDB,
+                                    search_parent_directories=True)
+                    no_git = False
+                except git.InvalidGitRepositoryError:
+                    no_git = True
+            else:
+                no_git = True
+            if no_git:
                 if self.vanilla_is_repo and vanilladir in path.parents:
                     self.vanilla_is_repo = False
                     return self.cachedir / 'vanilla' / name, False
