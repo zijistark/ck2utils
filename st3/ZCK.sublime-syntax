@@ -1,11 +1,10 @@
 %YAML 1.2
 ---
-name: CK2script
+name: ZCK
 file_extensions:
-  - gfx
-  - gui
-scope: source.ck2script
-first_line_match: -\*- ck2(\.\w[\w\.]*)? -\*-
+  - zck
+scope: source.zck
+first_line_match: -\*- zck(\.\w[\w\.]*)? -\*-
 
 variables:
   vOpBool: |-
@@ -15,7 +14,8 @@ variables:
     | OR
     | calc_true_if
     )
-  vOpBinary: '(?x: ==? | >=? | <=? )'
+  vOpBinary: '(?x: ==? | >=? | <=? | \!= )'
+  vOpBinaryLimited: '(?x: !?= )'
   vLiteralBool: '(?:yes|no)'
   vLiteralMisc: '(?:none|public|true|secret|random|actually_culture|culture)'
   vLiteralInt: '(?:[-]?\d+)'
@@ -51,7 +51,7 @@ variables:
   vOffmapID: |-
     (?x: offmap _ [a-zA-Z] [a-zA-Z0-9_-]* )
   vEventTarget: |-
-    (?x: event_target : {{vStrictID}} )
+    (?x: (?:event_)? target : {{vStrictID}} )
   vLangTarget: |-
     (?xi:
       (?:ROOT (?: _ (?:FROM){1,4} )? )
@@ -1161,341 +1161,345 @@ variables:
 contexts:
   main:
     - match: '#.*'
-      scope: comment.line.number-sign.ck2script
+      scope: comment.line.number-sign.zck
     - match: '\b({{vTriggerEffectQString}})\s*=\s*("[^"\r\n]*")'
       captures:
-        1: support.function.ck2script
-        2: string.quoted.double.ck2script
+        1: support.function.zck
+        2: string.quoted.double.zck
     - match: '"'
-      scope: punctuation.definition.string.begin.ck2script
+      scope: punctuation.definition.string.begin.zck
       push:
-        - meta_scope: string.quoted.double.ck2script
+        - meta_scope: string.quoted.double.zck
         - match: '"'
-          scope: punctuation.definition.string.end.ck2script
+          scope: punctuation.definition.string.end.zck
           pop: true
         - match: \n
-          scope: invalid.illegal.newline.ck2script
+          scope: invalid.illegal.newline.zck
         - match: \\.
-          scope: invalid.illegal.escape.ck2script
+          scope: invalid.illegal.escape.zck
     - match: \{
       push: braces
     - match: \}
       scope: invalid.illegal.stray-bracket-end
     - match: \b(id)\s*=\s*(((\w+)\.)?(0|([1-9][0-9]*)))\b
       captures:
-        1: keyword.control.ck2script
+        1: keyword.control.zck
         2: entity.function.name
         # 4: some scope for namespaces or identifiers (entity.name... ?)
-        5: constant.numeric.integer.ck2script
+        5: constant.numeric.integer.zck
     - match: (?<!\w)\-?[0-9]*\.\-?[0-9]*\.\-?[0-9]*\b
-      scope: constant.other.date.ck2script
+      scope: constant.other.date.zck
     - match: (?<!\w)\-?([0-9]+\.)?[0-9]+\b
-      scope: constant.numeric.double.ck2script
+      scope: constant.numeric.double.zck
     - match: '\b(clear(?:_global)?_event_target|save(?:_global)?_event_target_as)\s*=\s*({{vStrictID}})\b'
       captures:
-        1: keyword.control.ck2script
-        2: variable.other.ck2script
+        1: keyword.control.zck
+        2: variable.other.zck
+    - match: '\b(clear(?:_global)?_target|save(?:_global)?_target)\s*=\s*({{vStrictID}})\b'
+      captures:
+        1: keyword.control.zck
+        2: variable.other.zck
     - match: '\b{{vOpBool}}\b'
-      scope: keyword.operator.logical.ck2script keyword.operator.word.ck2script
+      scope: keyword.operator.logical.zck keyword.operator.word.zck
       # general common triggers & effects
     - match: '\b({{vTriggerInt}})\s*{{vOpBinary}}\s*({{vLiteralInt}})\b'
       captures:
-        1: support.function.ck2script
-        2: constant.numeric.integer.ck2script
+        1: support.function.zck
+        2: constant.numeric.integer.zck
     - match: '\b({{vTriggerDecimal}})\s*{{vOpBinary}}\s*({{vLiteralDecimal}})\b'
       captures:
-        1: support.function.ck2script
-        2: constant.numeric.double.ck2script
-    - match: '\b({{vTriggerBool}})\s*=\s*(yes)\b'
+        1: support.function.zck
+        2: constant.numeric.double.zck
+    - match: '\b({{vTriggerBool}})\s*{{vOpBinaryLimited}}\s*(yes)\b'
       captures:
-        1: support.function.ck2script
-        2: constant.language.boolean.true.ck2script
-    - match: '\b({{vTriggerBool}})\s*=\s*(no)\b'
+        1: support.function.zck
+        2: constant.language.boolean.true.zck
+    - match: '\b({{vTriggerBool}})\s*{{vOpBinaryLimited}}\s*(no)\b'
       captures:
-        1: support.function.ck2script
-        2: constant.language.boolean.false.ck2script
-    - match: '\b({{vTriggerTier}})\s*=\s*({{vLiteralTier}})\b'
+        1: support.function.zck
+        2: constant.language.boolean.false.zck
+    - match: '\b({{vTriggerTier}})\s*{{vOpBinaryLimited}}\s*({{vLiteralTier}})\b'
       captures:
-        1: support.function.ck2script
-        2: constant.language.enum.tier.ck2script
+        1: support.function.zck
+        2: constant.language.enum.tier.zck
     - match: '\b({{vTriggerDate}})\s*{{vOpBinary}}\s*({{vLiteralDate}})\b'
       captures:
-        1: support.function.ck2script
-        2: constant.other.date.ck2script
-    - match: '\b(holding_type)\s*=\s*({{vLiteralHoldingType}})\b'
+        1: support.function.zck
+        2: constant.other.date.zck
+    - match: '\b(holding_type)\s*{{vOpBinaryLimited}}\s*({{vLiteralHoldingType}})\b'
       captures:
-        1: support.function.ck2script
-        2: constant.language.enum.holding_type.ck2script
+        1: support.function.zck
+        2: constant.language.enum.holding_type.zck
     - match: '\b(type)\s*=\s*(offmap|permanent|default|nomadic|holy_war|created|revolt|host|invasion|revoke|claim|inheritance|faction_demand|election|grant|usurp)\b'
       captures:
-        1: support.function.ck2script
-        2: constant.language.enum.ck2script
-    - match: '\b({{vTriggerTarget}})\s*=\s*({{vEventTarget}})\b'
+        1: support.function.zck
+        2: constant.language.enum.zck
+    - match: '\b({{vTriggerTarget}})\s*{{vOpBinaryLimited}}\s*({{vEventTarget}})\b'
       captures:
-        1: support.function.ck2script
-        2: variable.other.ck2script
-    - match: '\b({{vTriggerTarget}})\s*=\s*({{vLangRHSTarget}})\b'
+        1: support.function.zck
+        2: variable.other.zck
+    - match: '\b({{vTriggerTarget}})\s*{{vOpBinaryLimited}}\s*({{vLangRHSTarget}})\b'
       captures:
-        1: support.function.ck2script
-        2: variable.language.ck2script
-    - match: '\b({{vTriggerTitleID}})\s*=\s*({{vTitleID}})\b'
+        1: support.function.zck
+        2: variable.language.zck
+    - match: '\b({{vTriggerTitleID}})\s*{{vOpBinaryLimited}}\s*({{vTitleID}})\b'
       captures:
-        1: support.function.ck2script
-        2: variable.other.ck2script
-    - match: '\b({{vTriggerOffmapID}})\s*=\s*({{vOffmapID}})\b'
+        1: support.function.zck
+        2: variable.other.zck
+    - match: '\b({{vTriggerOffmapID}})\s*{{vOpBinaryLimited}}\s*({{vOffmapID}})\b'
       captures:
-        1: support.function.ck2script
-        2: variable.other.ck2script
-    - match: '\b(dynasty)\s*=\s*(none|father_bastard|mother_bastard|random|culture|actually_culture)\b'
+        1: support.function.zck
+        2: variable.other.zck
+    - match: '\b(dynasty)\s*{{vOpBinaryLimited}}\s*(none|father_bastard|mother_bastard|random|culture|actually_culture)\b'
       captures:
-        1: support.function.ck2script
-        2: constant.language.ck2script
+        1: support.function.zck
+        2: constant.language.zck
     - match: '\b(set_father|set_mother)\s*=\s*(0)\b'
       captures:
-        1: support.function.ck2script
-        2: constant.numeric.ck2script
+        1: support.function.zck
+        2: constant.numeric.zck
     - match: '\b({{vEffectTarget}})\s*=\s*({{vEventTarget}})\b'
       captures:
-        1: support.function.ck2script
-        2: variable.other.ck2script
+        1: support.function.zck
+        2: variable.other.zck
     - match: '\b({{vEffectTarget}})\s*=\s*({{vLangRHSTarget}})\b'
       captures:
-        1: support.function.ck2script
-        2: variable.language.ck2script
+        1: support.function.zck
+        2: variable.language.zck
     - match: '\b({{vEffectTitleID}})\s*=\s*({{vTitleID}})\b'
       captures:
-        1: support.function.ck2script
-        2: variable.other.ck2script
+        1: support.function.zck
+        2: variable.other.zck
     - match: '\b({{vEffectNumber}})\s*=\s*({{vLiteralDecimal}})\b'
       captures:
-        1: support.function.ck2script
-        2: constant.numeric.ck2script
+        1: support.function.zck
+        2: constant.numeric.zck
     - match: '\b({{vEffectBool}})\s*=\s*(yes)\b'
       captures:
-        1: support.function.ck2script
-        2: constant.language.boolean.true.ck2script
+        1: support.function.zck
+        2: constant.language.boolean.true.zck
     - match: '\b({{vEffectBool}})\s*=\s*(no)\b'
       captures:
-        1: support.function.ck2script
-        2: constant.language.boolean.false.ck2script
-    - match: '\b({{vEffectBlock}}|{{vTriggerBlock}})\s*=\s*(?=\{)'
+        1: support.function.zck
+        2: constant.language.boolean.false.zck
+    - match: '\b({{vEffectBlock}}|{{vTriggerBlock}})\s*=?\s*(?=\{)'
       captures:
-        1: support.function.ck2script
+        1: support.function.zck
     - match: '\b(end_war)\s*=\s*(invalid|reverse_demand|success|whitepeace)\b'
       captures:
-        1: support.function.ck2script
-        2: constant.language.enum.end_war.ck2script
+        1: support.function.zck
+        2: constant.language.enum.end_war.zck
     - match: '\b(offmap)\s*=\s*(allow|only)\b'
       captures:
-        1: keyword.control.ck2script
-        2: constant.language.enum.ck2script
+        1: keyword.control.zck
+        2: constant.language.enum.zck
     - match: '\b({{vEffectID}}|{{vTriggerID}})\s*=\s*({{vID}})\b'
       captures:
-        1: support.function.ck2script
-        2: variable.identifier.ck2script
+        1: support.function.zck
+        2: variable.identifier.zck
     - match: '\b({{vParamNumber}})\s*{{vOpBinary}}\s*({{vLiteralDecimal}})\b'
       captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: variable.identifier.ck2script
+        1: support.function.zck # should use a different scope for these
+        2: variable.identifier.zck
     - match: '\b({{vCBParamTier}})\s*=\s*({{vLiteralTier}})\b'
       captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: constant.language.enum.tier.ck2script
+        1: support.function.zck # should use a different scope for these
+        2: constant.language.enum.tier.zck
     - match: '\b({{vCBParamInt}})\s*=\s*({{vLiteralInt}})\b'
       captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: constant.numeric.ck2script
+        1: support.function.zck # should use a different scope for these
+        2: constant.numeric.zck
     - match: '\b({{vCBParamNumber}})\s*=\s*({{vLiteralDecimal}})\b'
       captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: constant.numeric.ck2script
+        1: support.function.zck # should use a different scope for these
+        2: constant.numeric.zck
     - match: '\b({{vCBParamBool}})\s*=\s*(yes)\b'
       captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: constant.language.boolean.true.ck2script
+        1: support.function.zck # should use a different scope for these
+        2: constant.language.boolean.true.zck
     - match: '\b({{vCBParamBool}})\s*=\s*(no)\b'
       captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: constant.language.boolean.false.ck2script
+        1: support.function.zck # should use a different scope for these
+        2: constant.language.boolean.false.zck
     - match: '\b({{vParamBool}})\s*=\s*(yes)\b'
       captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: constant.language.boolean.true.ck2script
+        1: support.function.zck # should use a different scope for these
+        2: constant.language.boolean.true.zck
     - match: '\b({{vParamBool}})\s*=\s*(no)\b'
       captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: constant.language.boolean.false.ck2script
+        1: support.function.zck # should use a different scope for these
+        2: constant.language.boolean.false.zck
     - match: '\b({{vCBParamTextID}})\s*=\s*({{vTextID}})\b'
       captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: variable.identifier.ck2script
+        1: support.function.zck # should use a different scope for these
+        2: variable.identifier.zck
     - match: '\b({{vParamTextID}})\s*=\s*({{vTextID}})\b'
       captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: variable.identifier.ck2script
+        1: support.function.zck # should use a different scope for these
+        2: variable.identifier.zck
     - match: '\b({{vParamID}})\s*=\s*({{vStrictID}})\b'
       captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: variable.identifier.ck2script
+        1: support.function.zck # should use a different scope for these
+        2: variable.identifier.zck
     - match: '\b{{vEventTarget}}\b'
-      scope: variable.other.ck2script
+      scope: variable.other.zck
     - match: '\b{{vLangTarget}}\b'
-      scope: variable.language.ck2script
+      scope: variable.language.zck
     - match: '\b{{vTitleID}}\b'
-      scope: variable.other.ck2script
+      scope: variable.other.zck
     - match: \bc_\d+\b # character scope, not a title; integer is character ID
-      scope: variable.other.ck2script
+      scope: variable.other.zck
     - match: '\b{{vScope}}\b'
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: '\b{{vOffmapID}}\b'
-      scope: variable.other.ck2script
+      scope: variable.other.zck
     - match: '\b{{vLiteralMisc}}\b'
-      scope: constant.language.ck2script
+      scope: constant.language.zck
     - match: '\b{{vLiteralTier}}\b'
-      scope: constant.language.enum.tier.ck2script
+      scope: constant.language.enum.tier.zck
     - match: \byes\b
-      scope: constant.language.boolean.true.ck2script
+      scope: constant.language.boolean.true.zck
     - match: \bno\b
-      scope: constant.language.boolean.false.ck2script
+      scope: constant.language.boolean.false.zck
       # >>>> hereafter, these are the wild untamed lands of free-form match rules that really need shit done about them >>>>
     - match: \b(tooltip|hidden_tooltip|hidden_trigger|hidden_effect)\b
-      scope: keyword.other.tooltip.ck2script
+      scope: keyword.other.tooltip.zck
     - match: \b(custom|conditional)_tooltip\b
-      scope: keyword.control.ck2script
-    - match: \b(if|else|else_if|trigger_switch|limit|on_trigger|while|break|show_scope_change|generate_tooltip)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
+    - match: \b(if|else|elif|elsif|else_if|trigger_switch|limit|on_trigger|while|then|do|break|show_scope_change|generate_tooltip)\b
+      scope: keyword.control.zck
     - match: \b((mult_)?modifier|modifier|additive_modifier|additive_power_diff_modifier|additive_opinion_modifier|additive_compared_realm_size_modifier|additive_realm_size_modifier)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # these are the names of parameters for numerous triggers & effects which have multiple named parameters possible
     - match: \b(target|type|target_type|who|where|which|amount|value|count|attribute|percentage|authority|duration|days|months|years|status|chance|factor|casus_belli|tier|thirdparty_title|infamy|first|second|enemy|title|as_if_allied_to|to|min|max|multiplier)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # types of "events" (repeat_event is strictly a command and not also an actual event type)
     - match: \b((character|long_character|narrative|letter|diploresponse|province|unit|repeat|society_quest)_event)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # top-level event context flags/paramters:
     - match: \b(((show_(ROOT|root))|(hide_(window|from|FROM|new))|(show(_from|_FROM){2,4})))\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(is_triggered_only|major|desc|is_friendly|picture|border|title|notification)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # event pre-triggers
     - match: \b(only_(independent|playable|rulers|capable|men|women)|capable_only|is_patrician|is_sick|ai|war|is_married|has_character_flag|has_global_flag|has_flag)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(friends|rivals|has_dlc|lacks_dlc|is_part_of_plot|is_in_society|prisoner|min_age|max_age|religion|religion_group|culture|culture_group)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # top-level event effect blocks (well, `name` is in the `option` block)
     - match: \b(immediate|fail_trigger_effect|option|after|desc|title|name)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # triggers that open a block for parameters (for most part)
     - match: \b(((reverse_)?(remove_)?opinion)|((reverse_)?has_opinion_modifier)|opinion_diff|their_opinion|personal_opinion|religion_authority|add_{{vEventModifierType}}_modifier|remove_{{vEventModifierType}}_modifiers)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(((reverse_)?realm_levy_diff)|num_of_trade_post_diff|create_(title|character|artifact|(random_(soldier|priest|steward|diplomat|intriguer))))\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: '\bhad_({{vFlagType}})_flag\b'
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # create_title
     - match: \b(create_title|landless|nomad|adventurer|army_template|rebel|temporary|mercenary|replace_captain_on_death|siphons_income_to_creator|custom_created|base_title|copy_title_laws|ruler|ruler_female|foa)\b
-      scope: support.function.ck2script
+      scope: support.function.zck
     - match: \b(province|home|owner|cannot_inherit|disband_on_peace|reinforces|maintenance_multiplier|match_character|merge|can_toggle_looting|is_looter)\b
-      scope: support.function.ck2script
+      scope: support.function.zck
     - match: \b(troops|spawn_fleet|spawn_unit|scaled_with_population_of|archers|light_infantry|heavy_infantry|pikemen|knights|light_cavalry|horse_archers|war_elephants|galleys)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(age|random_traits|female|genetic_father|genetic_mother)\b
-      scope: support.function.ck2script
+      scope: support.function.zck
     - match: \b(attributes|diplomacy|martial|stewardship|intrigue|learning)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(((check|change|subtract|multiply|divide|export_to|set)_variable)|is_variable_equal|attribute_diff|age_diff)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(has_game_rule|artifact_type|secret_religion(_group)?|true_religion(_group)?|religion(_group)?|culture(_group)?)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(has_regiments|holds_favor_on|owes_favor_to|faction_power)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(is_quest_target|rank|society|plot_power|can_swap_job_title|killer|has_disease|distance)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # general scopes ( ideally would be a different color )
-    - match: \b((any_(direct_)?de_jure_vassal_title)|any_de_jure_liege_title|any_title_under|((any|random)_(demesne|realm)_(title|province))|((any|random)_province_holding)|((any|random)_neighbor_province))\b
-      scope: keyword.control.ck2script
+    - match: \b(any_de_jure_vassal_title|any_de_jure_liege_title|any_title_under|((any|random)_(demesne|realm)_(title|province))|((any|random)_province_holding))\b
+      scope: keyword.control.zck
       # these scopes all have any & random versions
-    - match: \b(((any|random)_(society_member|tributary|pupil|artifact|player|character|rival|consort|trade_post|friend|voter|ward|opinion_modifier_target|non_aggression_pact_character|lover|((un)?known_)?enemy_plotter|close_relative|backed_character|landed_title|claim|potential_tribal_county|(neighbor_)?province))|((any|random)_(child|spouse|sibling|dynasty_member)(_even_if_dead)?))\b
-      scope: keyword.control.ck2script
+    - match: \b(((any|random)_(direct_de_jure_vassal_title|allied_character|quest_target|quester_targetting_this|quester|society_member|tributary|pupil|artifact|player|character|rival|consort|trade_post|friend|voter|ward|opinion_modifier_target|non_aggression_pact_character|lover|((un)?known_)?enemy_plotter|close_relative|backed_character|landed_title|claim|potential_tribal_county|(neighbor_)?province))|((any|random)_(child|spouse|sibling|dynasty_member)(_even_if_dead)?))\b
+      scope: keyword.control.zck
       # these scopes all have any & random versions -- unit scopes
-    - match: \b(any|random)_(army|fleet|unit)\b
-      scope: keyword.control.ck2script
+    - match: \b(any|random)_(army|fleet|unit|controlled_unit)\b
+      scope: keyword.control.zck
       # these scopes only have any_ versions (no random_); might want to have a slightly different saturation or something for these when highlighting, kinda like the multi-scopes that exclude ROOT
     - match: \bany_(war|claimant|attacker|defender|de_jure_vassal|faction_backer|favor_(holder|ower)|known_plotter|liege|plot_backer|plotter|previous_holder|suzerain|unique_dynasty_vassal|title|heir_title|mercenary_band|pretender_title|trade_route_province)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # scopes that exclude ROOT
     - match: \b((any|random)_province_(character|lord)|((any|random)_courtier(_or_vassal)?)|(any|random)_host_courtier|((any|random)_realm_(lord|character))|(any|random)_current_enemy|(any|random)_vassal|(any|random)_dynasty_member|(any|random)_((neighbor_)?independent|playable)_ruler)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # top-level event trigger blocks
     - match: \b(trigger|major_trigger)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # LANDED_TITLES
     - match: \b(color2?|((graphical_)?culture)|religion|capital|foa|pirate|tribe|location_ruler_title|controls_religion|(title(_female)?)|dynasty_title_names|short_name|name_tier|landless|primary|dignity|caliphate|creation_requires_capital)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(monthly_income|coat_of_arms|data|mercenary_type|assimilate|((fe)?male_names)|allow|gain_effect|mercenary|independent)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # CUSTOMIZABLE_LOCALISATION
     - match: \b(defined_text|text|localisation_key|fallback_text)\b
       # ON_ACTIONS & JOB_ACTIONS:
     - match: \b(events)\b
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # FUTURE DECISION/LAW CONTEXT:
     - match: \b(decisions|title_decisions|settlement_decisions|vassal_decisions|targett?ed_decisions|plot_decisions|society_decisions)\b # top-level
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(filter|ai_target_filter)\s*=\s*({{vTargetedDecisionFilter}}|{{vTitleDecisionFilter}}|{{vSettlementDecisionFilter}})\b
       captures:
-        1: keyword.control.ck2script
-        2: constant.language.enum.decision_filter.ck2script
+        1: keyword.control.zck
+        2: constant.language.enum.decision_filter.zck
     - match: '\b({{vDecisionPropertyBool}})\s*=\s*(yes)\b'
       captures:
-        1: keyword.control.ck2script
-        2: constant.language.boolean.true.ck2script
+        1: keyword.control.zck
+        2: constant.language.boolean.true.zck
     - match: '\b({{vDecisionPropertyBool}})\s*=\s*(no)\b'
       captures:
-        1: keyword.control.ck2script
-        2: constant.language.boolean.false.ck2script
+        1: keyword.control.zck
+        2: constant.language.boolean.false.zck
     - match: '\b({{vDecisionPropertyInt}})\s*=\s*(\d+)\b'
       captures:
-        1: keyword.control.ck2script
-        2: constant.numeric.ck2script
+        1: keyword.control.zck
+        2: constant.numeric.zck
     - match: \b(allow|potential|from_potential|revoke_allowed)\b # triggers
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(effect|pass_effect)\b # effects
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(ai_will_do|ai_will_revoke)\b # modifier sets
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # FUTURE MINOR TITLE / RELIGIOUS TITLE CONTEXT:
     - match: \b(allowed_to_grant|allowed_to_hold|revoke_trigger)\b # triggers
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(gain_effect|lose_effect|retire_effect)\b # effects
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \bai_will_do\b # modifier sets
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # FUTURE JOB TITLE CONTEXT:
     - match: \b(allow|dismiss_trigger)\b # triggers
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(gain_effect|lose_effect|retire_effect)\b # effects
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # FUTURE CB CONTEXT:
     - match: \b((can_use(_(title|gui))?)|(is_valid(_title)?))\b # trigger blocks
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b((on_(add|success|fail|reverse_demand)(_(title|posttitle))?)|on_invalidation|on_(attacker|defender)_leader_death)\b # effect blocks
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(((attacker|defender)_ai_(victory|defeat)_worth)|ai_will_do)\b # modifier blocks
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # TODO: FUTURE CONTEXT OF JOB ACTIONS, AMBITIONS, PLOTS, FOCUSES, FACTIONS, LANDED_TITLES, COUNCIL_VOTING, TRAITS,
       #       COUNCIL_POSITIONS, GOVERNMENTS, ([LONG_]CHARACTER|LETTER|NARRATIVE|PROVINCE|UNIT|DIPLORESPONSE)_EVENT, ...
     - match: \b(target_potential|player_allow|allow_join|success|abort|abort_effect|creation_effect)\b # plot trigger blocks
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(vassal_rank_plot|military_plot|intrigue_plot|murder_plot|vassal_intrigue_plot)\b # plot types
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \bis_visible\b # trait and event modifier trigger block
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
       # random stuff not covered above [yet]:
     - match: \b(mean_time_to_happen|weight_multiplier|chance|membership|ai_chance)\b # modifier sets
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
     - match: \b(random|random_list)\b # effects w/ modifier sets
-      scope: keyword.control.ck2script
+      scope: keyword.control.zck
 
   braces:
     - match: \}

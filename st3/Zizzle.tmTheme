@@ -220,7 +220,7 @@
 			<key>name</key>
 			<string>Variable: Event Target</string>
 			<key>scope</key>
-			<string>variable.other.target.ck2script</string>
+			<string>variable.other.target</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -231,7 +231,7 @@
 			<key>name</key>
 			<string>Variable: Event Target</string>
 			<key>scope</key>
-			<string>variable.language.ck2script</string>
+			<string>variable.language</string>
 			<key>settings</key>
 			<dict>
 				<key>fontStyle</key>
@@ -244,7 +244,7 @@
 			<key>name</key>
 			<string>Variable: Identifier</string>
 			<key>scope</key>
-			<string>variable.identifier.ck2script</string>
+			<string>variable.identifier</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -255,18 +255,7 @@
 			<key>name</key>
 			<string>Boolean Logic Operator</string>
 			<key>scope</key>
-			<string>keyword.operator.ck2script</string>
-			<key>settings</key>
-			<dict>
-				<key>foreground</key>
-				<string>#009999</string>
-			</dict>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>Boolean Logic Operator</string>
-			<key>scope</key>
-			<string>keyword.operator.ck2script</string>
+			<string>keyword.operator</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
