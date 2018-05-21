@@ -171,13 +171,14 @@ def record_digest(mod_path, commit=None, new=False):
         return digest
 
     must_checkout = repo.head.commit != commit
+    prev_head = None
     try:
         if must_checkout:
             prev_head = checkout(repo, commit)
 
         digest = create_digest(mod_path)
     finally:
-        if must_checkout:
+        if must_checkout and prev_head != None:
             checkout(repo, prev_head)
 
     digest_path.parent.mkdir(parents=True, exist_ok=True)
