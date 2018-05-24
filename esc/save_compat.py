@@ -86,7 +86,7 @@ def compare_digests(old, new):
 
 
 def create_digest_SWMH():
-    digest = {'version': {3}}
+    digest = {'version': {4}}
 
     buildings = set()
     for _, tree in parser.parse_files('common/buildings/*.txt'):
@@ -95,11 +95,14 @@ def create_digest_SWMH():
                 buildings.add((n.val, n2.val))
     digest['buildings'] = buildings
 
+    culture_groups = set()
     cultures = set()
     for _, tree in parser.parse_files('common/cultures/*.txt'):
         for n, v in tree:
+            culture_groups.add(n.val)
             for n2, v2 in v:
                 cultures.add(n2.val)
+    digest['culture_groups'] = culture_groups
     digest['cultures'] = cultures
 
     dynasties = set()
