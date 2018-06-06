@@ -16,6 +16,7 @@ variables:
     )
   vOpBinary: '(?x: ==? | >=? | <=? | \!= )'
   vOpBinaryLimited: '(?x: !?= )'
+  vOpAssign: '(?x: = | \+= | -= | \*= | /= )'
   vLiteralBool: '(?:yes|no)'
   vLiteralMisc: '(?:none|public|true|secret|random|actually_culture|culture)'
   vLiteralInt: '(?:[-]?\d+)'
@@ -42,6 +43,8 @@ variables:
     )
   vID: |-
     (?x: [a-zA-Z0-9_-]+ )
+  vVarID: |-
+    (?x: (?:_[a-zA-Z0-9_]+)|(?:[a-zA-Z])[a-zA-Z0-9_]*)
   vStrictID: |-
     (?x: [a-zA-Z_] [a-zA-Z0-9_-]* )
   vTextID: |-
@@ -204,6 +207,7 @@ variables:
   vTriggerDate: |-
     (?x:
         start_date
+    |   current_date
     )
   vTriggerTier: |-
     (?x:
@@ -755,6 +759,7 @@ variables:
     |   multiply_variable
     |   divide_variable
     |   export_to_variable
+    |   transfer_scaled_wealth
     )
   vEffectNumber: |-
     (?x:
@@ -859,6 +864,7 @@ variables:
     | make_capital_holding
     | make_primary_title
     | plot_succeeds
+    | recalc_succession
     | refill_holding_levy
     | remove_guardian
     | reveal_plot
@@ -1187,7 +1193,11 @@ contexts:
         2: entity.function.name
         # 4: some scope for namespaces or identifiers (entity.name... ?)
         5: constant.numeric.integer.zck
-    - match: (?<!\w)\-?[0-9]*\.\-?[0-9]*\.\-?[0-9]*\b
+    - match: '\b({{vTriggerDate}})\s*{{vOpBinary}}\s*({{vLiteralDate}})\b'
+      captures:
+        1: support.function.zck
+        2: constant.other.date.zck
+    - match: (?<!\w){{vLiteralDate}}\b
       scope: constant.other.date.zck
     - match: (?<!\w)\-?([0-9]+\.)?[0-9]+\b
       scope: constant.numeric.double.zck
@@ -1201,6 +1211,10 @@ contexts:
         2: variable.other.zck
     - match: '\b{{vOpBool}}\b'
       scope: keyword.operator.logical.zck keyword.operator.word.zck
+    - match: '(\$)({{vVarID}})\b'
+      captures:
+        1: storage.variable.zck
+        2: variable.identifier.zck
       # general common triggers & effects
     - match: '\b({{vTriggerInt}})\s*{{vOpBinary}}\s*({{vLiteralInt}})\b'
       captures:
@@ -1222,10 +1236,6 @@ contexts:
       captures:
         1: support.function.zck
         2: constant.language.enum.tier.zck
-    - match: '\b({{vTriggerDate}})\s*{{vOpBinary}}\s*({{vLiteralDate}})\b'
-      captures:
-        1: support.function.zck
-        2: constant.other.date.zck
     - match: '\b(holding_type)\s*{{vOpBinaryLimited}}\s*({{vLiteralHoldingType}})\b'
       captures:
         1: support.function.zck
@@ -1293,7 +1303,11 @@ contexts:
       captures:
         1: keyword.control.zck
         2: constant.language.enum.zck
-    - match: '\b({{vEffectID}}|{{vTriggerID}})\s*=\s*({{vID}})\b'
+    - match: '\b({{vTriggerID}})\s*{{vOpBinaryLimited}}\s*({{vID}})\b'
+      captures:
+        1: support.function.zck
+        2: variable.identifier.zck
+    - match: '\b({{vEffectID}})\s*=\s*({{vID}})\b'
       captures:
         1: support.function.zck
         2: variable.identifier.zck
