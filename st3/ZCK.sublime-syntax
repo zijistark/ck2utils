@@ -54,7 +54,7 @@ variables:
   vOffmapID: |-
     (?x: offmap _ [a-zA-Z] [a-zA-Z0-9_-]* )
   vEventTarget: |-
-    (?x: (?:event_)? target : {{vStrictID}} )
+    (?x: (?:event_)? t (?:arget)? : {{vStrictID}} )
   vLangTarget: |-
     (?xi:
       (?:ROOT (?: _ (?:FROM){1,4} )? )
@@ -1232,6 +1232,10 @@ contexts:
       captures:
         1: support.function.zck
         2: constant.language.boolean.false.zck
+    - match: '\b(tier|real_tier)\s*{{vOpBinary}}\s*({{vLiteralTier}})\b'
+      captures:
+        1: support.function.zck
+        2: constant.language.enum.tier.zck
     - match: '\b({{vTriggerTier}})\s*{{vOpBinaryLimited}}\s*({{vLiteralTier}})\b'
       captures:
         1: support.function.zck
