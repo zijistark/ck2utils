@@ -32,6 +32,8 @@ my $opt_resume_reason;
 my $opt_compress = 1;
 my $opt_archive = 1;
 my $opt_launch = 0;
+my $opt_game_debug = 0;
+my $opt_game_scriptlog = 1;
 
 sub escalona_mode {
 	$opt_game_dir = File::Spec->catdir(qw( /cygdrive c SteamLibrary steamapps common ), 'Crusader Kings II');
@@ -46,17 +48,23 @@ GetOptions(
 	'g|game-dir=s' => \$opt_game_dir,
 	'n|name=s' => \$opt_name,
 	'c|continue' => \$opt_continue,
-	'D|daemonize' => \$opt_daemon,
+#	'D|daemonize' => \$opt_daemon,
 	'l|launch' => \$opt_launch,
+	'debug!' => \$opt_game_debug,
+	'scriptlog!' => \$opt_game_scriptlog,
 	'r|resume-reason=s' => \$opt_resume_reason,
 	'ctd|resume-ctd' => sub { $opt_resume_reason = 'CTD' },
 	'normal|resume-normal' => sub { $opt_resume_reason = 'Normal' },
-	'no-compression' => sub { $opt_compress = 0 },
-	'no-save-archiving' => sub { $opt_archive = 0 },
+	'compress!' => \$opt_compress,
+	'archive!' => \$opt_archive,
 	'E|escalona' => \&escalona_mode,
 ) or croak;
 
 $opt_continue = 1 if $opt_resume_reason;
+
+my @game_args = ();
+push(@game_args, '-scriptlog') if ($opt_launch && $opt_game_scriptlog);
+push(@game_args, '-debug', '-debugscripts') if ($opt_launch && $opt_game_debug);
 
 croak "specify a user directory with --user-dir" unless $opt_user_dir;
 croak "specify a name for the savegame series with --name" unless $opt_name;
@@ -71,9 +79,9 @@ my $game_exe;
 
 if ($opt_launch) {
 	$game_exe = File::Spec->catfile($opt_game_dir, 'CK2game.exe');
-	
+
 	unless (-f $game_exe && -x $game_exe) {
-		croak "game executable not valid (not there or needs execute permission): $game_exe";
+		croak "game executable not valid (not there or needs execute permissions): $game_exe";
 	}
 }
 
@@ -81,7 +89,7 @@ my $user_dir = $opt_user_dir;
 
 if ($opt_mod_user_dir) {
 	$user_dir = File::Spec->catdir($opt_user_dir, $opt_mod_user_dir);
-	
+
 	unless (-e $user_dir) {
 		mkdir $user_dir or croak "folder creation failed: $!: $user_dir";
 	}
@@ -132,7 +140,6 @@ my $counter = 0;
 
 sub finish {
 	unlink $pid_file if $opt_daemon;
-	
 	print "Processed ".($counter-$counter_start)." autosaves, series totaling $counter, over ".sprintf("%.2f", (time()-$time_start)/60)." minutes.\n";
 	print "Path: $archive_dir\n";
 	exit 0;
@@ -141,33 +148,52 @@ sub finish {
 $SIG{INT} = \&finish;
 $SIG{TERM} = \&finish;
 
+my $is_new_archive = !(-e $archive_dir);
 
-my $bf;
-
-if (-e $archive_dir) {
+unless ($is_new_archive) {
 	croak "archive directory preexists; continue existing series with -c or --continue" unless $opt_continue;
 	croak "must specify a resume reason with --resume-reason <TEXT>, --ctd, or --normal" unless $opt_resume_reason;
 	croak "cannot continue without series counter file" unless -f $counter_file;
+}
+else {
+	mkdir $archive_dir or croak "folder creation failed: $!: $archive_dir";
+	update_counter_file();
+}
 
+if ($opt_launch) {
+	print STDERR "Launching: '$game_exe' ".join(' ', @game_args)."\n";
+
+	# fork-and-return (parent needs to do its job still)
+	defined(my $pid = fork()) or croak "can't fork (first): $!";
+
+	unless ($pid) { # child
+		chdir($opt_game_dir) or croak "chdir: $!: $opt_game_dir";
+		(setsid() != -1)     or croak "cannot into session leader: $!";
+
+		# fork-and-exit
+		defined(my $pid2 = fork()) or croak "can't fork (first): $!";
+		exit 0 if $pid2; # man-in-the-middle dies, grandchild survives
+
+		umask 0;
+
+		my ($dev_null, $trace_file) = (File::Spec->devnull, 'ck2_stdout_stderr.txt');
+		open(STDIN,  "<", $dev_null)    or croak "can't read $dev_null: $!";
+		open(STDOUT, ">", $trace_file)  or croak "can't write to $trace_file: $!";
+		open(STDERR, ">&STDOUT")        or croak "can't dup stderr -> stdout: $!";
+		exec($game_exe, @game_args)     or croak "exec: $!: $game_exe";
+	}
+}
+
+my $bf; # benchmark file
+
+unless ($is_new_archive) {
 	read_counter_file();
 	$counter_start = $counter;
 	open($bf, '>>', $bench_file) or croak "file open failed: $!: $bench_file";
 }
 else {
-	mkdir $archive_dir or croak "folder creation failed: $!: $archive_dir";
-	update_counter_file();
 	open($bf, '>', $bench_file) or croak "file open failed: $!: $bench_file";
-	$bf->print("Sample ID;Date;Duration (seconds);File Size (MB);Resume Reason;Comment\n");
-}
-
-if ($opt_launch) {
-	defined(my $pid = fork()) or croak "can't fork: $!";
-
-	unless ($pid) {
-		# child process
-		chdir($opt_game_dir) or croak "chdir: $!: $opt_game_dir";
-		exec($game_exe, '-debug', '-debugscripts') or croak "exec: $!: $game_exe";
-	}
+	$bf->print("Sample ID;Game Date;Duration (seconds);File Size (MB);Resume Reason;Comment\n");
 }
 
 my $as_mtime = (-f $autosave_file) ? stat($autosave_file)->mtime : 0;
@@ -179,7 +205,7 @@ while (1) {
 	if ($waiting % 10 == 0) {
 		print STDERR "Waiting for first autosave (start the game)...\n";
 		++$waiting; # only print this reminder every 10sec
-		
+
 		if ($opt_daemon && $waiting == 0) {
 			my $pid = daemonize();
 
@@ -197,18 +223,18 @@ while (1) {
 	}
 
 	my $st = stat($autosave_file);
-	
+
 	if (defined $st && $st->mtime > $as_mtime) {
 		# autosave file is present and its mtime is newer than previously recorded
-		
+
 		$waiting = -1;
-		
+
 		# sleep an extra 10 seconds to allow for the game to do a slow write-out
 		# of a very large save.  we may otherwise catch the file in the middle of
 		# being written.
-		
+
 		sleep(10);
-		
+
 		my $gl_st = stat($gamelog_file);
 		my $gl_new_size;
 
@@ -221,58 +247,58 @@ while (1) {
 		}
 
 		my $gl_bytes_grown = $gl_new_size - $gl_size;
-		
+
 		if ($gl_bytes_grown > 0) {
 			my $gl_new_data;
-			
+
 			open(my $glf, '<', $gamelog_file) or croak "file open failed: $!: $gamelog_file";
 			$glf->seek($gl_size, 0);
 			($glf->read($gl_new_data, $gl_bytes_grown) == $gl_bytes_grown)
 				or croak "read of $gl_bytes_grown bytes failed: $!: $gamelog_file";
 			$glf->close;
-			
+
 			open($glf, '>>', $log_file) or croak "file open failed: $!: $log_file";
 			$glf->print($gl_new_data);
 			$glf->close;
 		}
 		elsif ($gl_bytes_grown < 0) {
 			print STDERR "WARNING: game.log was truncated, implying restart of CK2: excluding autosave's timing...\n";
-			
+
 			my $gl_new_data;
-			
+
 			if ($gl_new_size) {
 				open(my $glf, '<', $gamelog_file) or croak "file open failed: $!: $gamelog_file";
 				($glf->read($gl_new_data, $gl_new_size) == $gl_new_size)
 					or croak "read of $gl_new_size bytes failed: $!: $gamelog_file";
 				$glf->close;
 			}
-				
+
 			open(my $glf, '>>', $log_file) or croak "file open failed: $!: $log_file";
 			$glf->print("=" x 72, "\n", "==== GAME.LOG TRUNCATED!\n", "=" x 72, "\n");
 			$glf->print($gl_new_data) if $gl_new_data;
 			$glf->close;
 		}
-		
+
 		$gl_size = $gl_new_size;
-		
+
 		# redo the stat, in case the mtime is later now due to an in-progress write
 		# (and, if benchmarking, we want the exact time between the end-of-write
 		# of autosaves)
 		$st = stat($autosave_file);
 		my $date = parse_savegame_date($autosave_file);
-		
+
 		my $elapsed = '';
 		my $reason_for_no_timing = '';
 		my $sdate = '';
 		my $size_mb = sprintf('%0.1f', $st->size / 1_000_000);
-		
+
 		unless ($date) {
 			print STDERR "ERROR: could not extract date from autosave!\n";
 		}
 		else {
 			$sdate = sprintf("%04d-%02d-%02d", @$date);
 		}
-	
+
 		if ($counter == $counter_start) { # the first save in a run can't be clocked
 			$reason_for_no_timing = $opt_resume_reason if $counter;
 		}
@@ -282,15 +308,15 @@ while (1) {
 		else {
 			$elapsed = $st->mtime - $as_mtime;
 		}
-		
+
 		$as_mtime = $st->mtime; # rotate the previous mtime
-		
+
 		$bf->print($counter, ';', $sdate, ';', $elapsed, ';', $size_mb, ';', $reason_for_no_timing, ';', "\n");
 		$bf->flush;
-		
+
 		++$counter;
 		update_counter_file();
-		
+
 		# now move the save to the head of our archive series, if archiving
 
 		if ($opt_archive) {
@@ -307,13 +333,12 @@ while (1) {
 			}
 		}
 
-		
 		print STDERR "processed save (date: $sdate)";
 		print STDERR " in ${elapsed}sec" if $elapsed;
 		print STDERR "\n";
 		$time_last = time();
 	}
-	
+
 	sleep(1);
 }
 
@@ -335,7 +360,7 @@ sub read_counter_file {
 
 sub daemonize {
 	my $null = File::Spec->devnull;
-	
+
 	chdir($archive_dir)       or croak "can't chdir: $!: $archive_dir";
 	open(STDIN,  "<", $null)  or croak "can't read $null: $!";
 	open(STDOUT, ">", $null)  or croak "can't write to $null: $!";
@@ -346,7 +371,7 @@ sub daemonize {
 sub detach {
 	(setsid() != -1)          or croak "can't start a new session: $!";
 	open(STDERR, ">&STDOUT")  or croak "can't dup stderr -> stdout: $!";
-	
+
 	open(my $pf, '>', $pid_file);
 	$pf->print($$);
 	$pf->close;
@@ -355,15 +380,15 @@ sub detach {
 sub parse_savegame_date {
 	my $filename = shift;
 	my $date = undef;
-	
+
 	open(my $sf, '<', $filename) or croak "failed to open savegame file: $!: $filename";
-	
+
 	while (<$sf>) {
 		next unless /^\tdate="(\d{3,4})\.(\d{1,2})\.(\d{1,2})"/;
 		$date = [0+$1, 0+$2, 0+$3];
 		last;
 	}
-	
+
 	$sf->close;
 	return $date;
 }
