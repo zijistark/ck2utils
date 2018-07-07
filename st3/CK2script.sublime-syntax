@@ -761,10 +761,13 @@ variables:
       add_holding_slot
     | change_{{vCharAttr}}
     | change_society_currency
+    | culture_techpoints
     | fertility
     | health
     | decadence
+    | economy_techpoints
     | manpower
+    | military_techpoints
     | participation_scaled_decadence
     | participation_scaled_piety
     | participation_scaled_prestige
