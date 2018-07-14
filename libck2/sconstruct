@@ -4,19 +4,28 @@ vars = Variables()
 
 vars.Add(
 	EnumVariable('BUILD_TYPE', 'Set build type', 'debug',
-		allowed_values=('debug', 'debugmax', 'release'),
+		allowed_values=('debug_max', 'debug', 'release_debug', 'release'),
 		ignorecase=2)
 )
 
 env = Environment(variables = vars)
-env.Append(CXXFLAGS='--std=c++17 -Wall')
+env.Append(CCFLAGS='-Wall -Wconversion')
+env.Append(CXXFLAGS='-std=c++17')
 
-if env['BUILD_TYPE'] == 'debugmax':
-	env.Append(CXXFLAGS='-g -O0')
+if env['BUILD_TYPE'] == 'debug_max':
+    env.Append(CPPDEFINES=['DEBUG_MAX'])
+    env.Append(CXXFLAGS='-g -O0')
 elif env['BUILD_TYPE'] == 'debug':
-	env.Append(CXXFLAGS='-g -O2')
+    env.Append(CPPDEFINES=['DEBUG'])
+    env.Append(CXXFLAGS='-g -O1')
+elif env['BUILD_TYPE'] == 'release_debug':
+    env.Append(CPPDEFINES=['RELEASE_DEBUG'])
+    env.Append(CXXFLAGS='-g -O2')
 elif env['BUILD_TYPE'] == 'release':
-	env.Append(CXXFLAGS='-g0 -s -O3')
+    env.Append(CPPDEFINES=['RELEASE', 'NDEBUG'])
+    env.Append(CXXFLAGS='-g0 -s -Ofast -ffast-math')
+
+env.Append(LINKFLAGS='-static')
 
 Help(vars.GenerateHelpText(env))
 Export('env')

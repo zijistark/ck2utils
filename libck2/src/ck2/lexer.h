@@ -1,31 +1,23 @@
-// -*- c++ -*-
+#ifndef __LIBCK2_LEXER_H__
+#define __LIBCK2_LEXER_H__
 
-#pragma once
 #include "common.h"
 #include "scanner.h"
-#include "token.h"
-#include "error.h"
-
-#include "file_location.h"
-
-#include <cstdio>
-#include <string>
+#include "filesystem.h"
 #include <memory>
-#include <algorithm>
-#include <boost/filesystem.hpp>
+#include <cstdio>
 
 
 _CK2_NAMESPACE_BEGIN;
 
 
-namespace fs = boost::filesystem;
-
+class token;
 
 class lexer {
-    using unique_file_ptr = std::unique_ptr<std::FILE, int (*)(std::FILE *)>;
+    using uniq_file_ptr = std::unique_ptr<std::FILE, int (*)(std::FILE *)>;
 
-    unique_file_ptr _f;
-    const char*     _pathname;
+    uniq_file_ptr _f;
+    fs::path      _path;
 
     void reset_scanner() {
         yyin = nullptr;
@@ -34,14 +26,12 @@ class lexer {
     }
 
 protected:
-    const char* pathname() const noexcept { return _pathname; }
+    const fs::path& path() const noexcept { return _path; }
 
 public:
     lexer() = delete;
     ~lexer() noexcept { reset_scanner(); }
-    lexer(const char* path);
-    lexer(const std::string& path) : lexer(path.c_str()) {}
-    lexer(const fs::path& path) : lexer(path.string().c_str()) {}
+    lexer(const fs::path& path);
 
     // read a new token from the input into t. if max_copy_sz is nonzero, actually copy the token text buffer (capped by
     // this amount) into the token object's preexisting buffer. otherwise, when max_copy_sz == 0, simply swap the token
@@ -51,3 +41,4 @@ public:
 
 
 _CK2_NAMESPACE_END;
+#endif

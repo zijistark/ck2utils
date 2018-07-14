@@ -1,12 +1,12 @@
-// -*- c++ -*-
+#ifndef __LIBCK2_COMMON_H__
+#define __LIBCK2_COMMON_H__
 
-#ifndef _CK2_COMMON_H_
-#define _CK2_COMMON_H_
 
 #define _CK2_NAMESPACE_BEGIN namespace ck2 {
 #define _CK2_NAMESPACE_END }
 
 
+#include "Error.h"
 #include <cstdint>
 #include <cassert>
 #include <ostream>
@@ -21,6 +21,9 @@ typedef unsigned int uint;
 #ifndef SIZE_MAX
 #define SIZE_MAX (~(size_t)0)
 #endif
+
+constexpr char EOL = '\n';
+constexpr const char* const TAB = "    ";
 
 
 /* generate_int_array< N, template<size_t> F >::result
@@ -79,6 +82,4 @@ static inline size_t mdh_strncpy(char* dst, size_t dst_sz, const char* src, size
 
 
 _CK2_NAMESPACE_END;
-
-
 #endif

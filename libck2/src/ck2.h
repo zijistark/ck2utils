@@ -1,13 +1,11 @@
-// -*- c++ -*-
+#ifndef __LIBCK2_CK2_H__
+#define __LIBCK2_CK2_H__
 
-#pragma once
-
-#include "ck2/vfs.h"
+#include "ck2/VFS.h"
 #include "ck2/date.h"
 #include "ck2/fp_decimal.h"
 #include "ck2/file_location.h"
 #include "ck2/error_queue.h"
 #include "ck2/parser.h"
-// #include "ck2/lexer.h"
-// #include "ck2/token.h"
-// #include "ck2/cstr.h"
+
+#endif // __LIBCK2_CK2_H__

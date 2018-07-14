@@ -41,7 +41,7 @@ block::block(parser& prs, bool is_root, bool is_save) {
 
         if (t.type() == token::CLOSE) {
             if (is_root && !is_save) // closing braces are only bad at root level
-                throw va_parse_error(t.location(), "Unmatched closing brace");
+                throw parser::ParseError(t.location(), "Unmatched closing brace");
 
             // otherwise, they mean it's time return to the previous block
             return;
@@ -174,13 +174,13 @@ void parser::next_expected(token* p_tok, uint type) {
     next(p_tok, (type == token::END));
 
     if (p_tok->type() != type)
-        throw va_parse_error(p_tok->location(), "Expected %s token but got %s -- '%s'",
+        throw ParseError(p_tok->location(), "Expected %s token but got %s -- '%s'",
                              token::TYPE_MAP[type], p_tok->type_name(), (p_tok->text()) ? p_tok->text() : "");
 }
 
 
 void parser::unexpected_token(const token& t) const {
-    throw va_parse_error(t.location(), "Unexpected token %s", t.type_name());
+    throw ParseError(t.location(), "Unexpected token %s", t.type_name());
 }
 
 
@@ -206,10 +206,10 @@ bool parser::next(token* p_tok, bool eof_ok) {
     }
 
     if (p_tok->type() == token::END && !eof_ok)
-        throw va_parse_error(p_tok->location(), "Unexpected EOF");
+        throw ParseError(p_tok->location(), "Unexpected EOF");
 
     if (p_tok->type() == token::FAIL)
-        throw va_parse_error(p_tok->location(), "Unrecognized token");
+        throw ParseError(p_tok->location(), "Unrecognized token");
 
     return true;
 }

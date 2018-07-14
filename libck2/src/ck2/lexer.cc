@@ -1,4 +1,6 @@
 
+#include "file_location.h"
+#include "token.h"
 #include "lexer.h"
 
 
@@ -9,7 +11,7 @@ bool lexer::read_token_into(token& t, size_t max_copy_sz) {
     bool ret = true;
 
     t.type( yylex() );
-    t.location( floc{ _pathname, static_cast<uint>(yylineno) } );
+    t.location( floc{ _path, static_cast<uint>(yylineno) } );
 
     if (t.type() == token::END) {
         t.text(nullptr, 0);
@@ -45,12 +47,12 @@ bool lexer::read_token_into(token& t, size_t max_copy_sz) {
     return ret;
 }
 
-lexer::lexer(const char* pathname)
-    : _f( std::fopen(pathname, "rb"), std::fclose ),
-      _pathname(pathname) {
+lexer::lexer(const fs::path& path)
+    : _f( std::fopen(path.string().c_str(), "rb"), std::fclose ),
+      _path(path) {
 
     if (_f.get() == nullptr)
-        throw va_error("Could not open file: %s", pathname);
+        throw Error("could not open file (for reading): %s", path.string());
 
     yyin = _f.get();
     yylineno = 1;

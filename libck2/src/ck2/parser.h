@@ -1,8 +1,8 @@
-// -*- c++ -*-
+#ifndef __LIBCK2_PARSER_H__
+#define __LIBCK2_PARSER_H__
 
-#pragma once
 #include "common.h"
-
+#include "filesystem.h"
 #include "error_queue.h"
 #include "cstr_pool.h"
 #include "cstr.h"
@@ -10,14 +10,12 @@
 #include "date.h"
 #include "fp_decimal.h"
 #include "token.h"
-#include "error.h"
-
 #include <vector>
 #include <memory>
 #include <string>
 #include <algorithm>
 #include <unordered_map>
-#include <boost/filesystem.hpp>
+#include <string_view>
 
 
 _CK2_NAMESPACE_BEGIN;
@@ -43,6 +41,7 @@ enum class binary_op {
 /* OBJECT -- generic "any"-type syntax tree node */
 
 class object {
+public:
     enum {
         NIL,
         STRING,
@@ -56,6 +55,7 @@ class object {
 
     using binop = binary_op;
 
+private:
     union data_union {
         char* s;
         int   i;
@@ -176,9 +176,9 @@ public:
     statement() = delete;
     statement(object& k, object& op, object& v) : _k(std::move(k)), _op(std::move(op)), _v(std::move(v)) {}
 
-    object const& key()   const noexcept { return _k; }
-    object const& op()    const noexcept { return _op; }
-    object const& value() const noexcept { return _v; }
+    const object& key()   const noexcept { return _k; }
+    const object& op()    const noexcept { return _op; }
+    const object& value() const noexcept { return _v; }
 
     void print(std::ostream&, uint indent = 0) const;
 };
@@ -317,6 +317,16 @@ public:
 
     block* root_block() noexcept { return _up_root_block.get(); }
     error_queue& errors() noexcept { return _errors; }
+
+    struct ParseError : public Error {
+        ParseError() = delete;
+        ~ParseError() noexcept {}
+
+        template<typename... Args>
+        ParseError(const floc& fl, const std::string_view& format, const Args& ...args)
+            : Error(fmt::format("%s:L%u: ", fl.path().generic_string(), fl.line()) +
+                    fmt::vformat(format, fmt::make_format_args(args...))) {}
+    };
 };
 
 
@@ -349,7 +359,7 @@ bool looks_like_title(const char*);
 
 
 _CK2_NAMESPACE_END;
-
+#endif
 
 inline std::ostream& operator<<(std::ostream& os, const ck2::block& a) { a.print(os); return os; }
 inline std::ostream& operator<<(std::ostream& os, const ck2::list& a) { a.print(os); return os; }
