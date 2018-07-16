@@ -99,7 +99,6 @@ public:
     /* destructor */
     ~object() { destroy(); }
 
-    // just shorthand aliases for location():
     const Loc& loc() const noexcept { return _loc; }
     Loc&       loc()       noexcept { return _loc; }
 

@@ -173,7 +173,7 @@ void parser::next_expected(token* p_tok, uint type) {
     next(p_tok, (type == token::END));
 
     if (p_tok->type() != type)
-        throw FLError(floc(p_tok->loc()), "Expected {} token but got {} -- '{}'",
+        throw err(p_tok->loc(), "Expected {} token but got {} -- '{}'",
                   token::TYPE_MAP[type], p_tok->type_name(), (p_tok->text()) ? p_tok->text() : "");
 }
 

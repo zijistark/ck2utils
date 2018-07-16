@@ -45,11 +45,13 @@ DefaultMap::DefaultMap(const VFS& vfs)
 
             if (max_provinces < min_cap)
                 throw prs.err(s.value(),
-                              "max_provinces' value ({}) too low (should be at least {})", max_provinces, min_cap);
+                              "max_provinces' value ({}) too low (should be at least {})",
+                              max_provinces, min_cap);
 
             if (max_provinces > max_cap)
                 throw prs.err(s.value(),
-                              "max_provinces' value ({}) too high (should be at least {})", max_provinces, max_cap);
+                              "max_provinces' value ({}) too high (should be no more than {})",
+                              max_provinces, max_cap);
 
             _max_prov_id = max_provinces - 1;
         }

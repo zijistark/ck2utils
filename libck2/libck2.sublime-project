@@ -1,21 +1,21 @@
 {
-	"folders":
-	[
-		{
-			"path": "."
-		}
-	],
-	"settings":
-	{
-		"default_line_ending": "unix",
-		"ensure_newline_at_eof_on_save": true,
-		"show_encoding": true,
-		"show_line_endings": true,
-		"tab_size": 4,
-		"translate_tabs_to_spaces": true,
+    "folders":
+    [
+        {
+            "path": "."
+        }
+    ],
+    "settings":
+    {
+        "default_line_ending": "unix",
+        "ensure_newline_at_eof_on_save": true,
+        "show_encoding": true,
+        "show_line_endings": true,
+        "tab_size": 4,
+        "translate_tabs_to_spaces": true,
         "trim_automatic_white_space": true,
-	    "rulers": [115],
+        "rulers": [115],
         "fallback_encoding": "Western (Windows 1252)",
         "default_encoding": "UTF-8",
-	},
+    },
 }

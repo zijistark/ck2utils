@@ -2,11 +2,11 @@
 #define __LIBCK2_DEFAULT_MAP_H__
 
 #include "common.h"
-#include "filesystem.h"
 #include "VFS.h"
+#include "filesystem.h"
 #include <string>
-#include <string_view>
 #include <vector>
+#include <unordered_map>
 #include <unordered_set>
 
 
@@ -45,7 +45,7 @@ private:
     ocean_vec_t       _ocean_vec;
     major_river_set_t _major_river_set;
 
-    const std::unordered_map<const char*, fs::path&> _req_path_map;
+    const std::unordered_map<str_view, fs::path&> _req_path_map;
 
 public:
     DefaultMap(const VFS& vfs);
