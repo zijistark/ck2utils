@@ -25,13 +25,12 @@ class lexer {
         yyrestart(yyin);
     }
 
-protected:
-    const fs::path& path() const noexcept { return _path; }
-
 public:
     lexer() = delete;
     ~lexer() noexcept { reset_scanner(); }
     lexer(const fs::path& path);
+
+    const fs::path& path() const noexcept { return _path; }
 
     // read a new token from the input into t. if max_copy_sz is nonzero, actually copy the token text buffer (capped by
     // this amount) into the token object's preexisting buffer. otherwise, when max_copy_sz == 0, simply swap the token

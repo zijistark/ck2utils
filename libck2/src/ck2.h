@@ -4,8 +4,6 @@
 #include "ck2/VFS.h"
 #include "ck2/date.h"
 #include "ck2/fp_decimal.h"
-#include "ck2/file_location.h"
-#include "ck2/error_queue.h"
 #include "ck2/parser.h"
 
 #endif // __LIBCK2_CK2_H__

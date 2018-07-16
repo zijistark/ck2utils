@@ -2,20 +2,21 @@
 #define __LIBCK2_PARSER_H__
 
 #include "common.h"
-#include "filesystem.h"
-#include "error_queue.h"
-#include "cstr_pool.h"
+#include "FileLocation.h"
 #include "cstr.h"
-#include "lexer.h"
+#include "cstr_pool.h"
 #include "date.h"
 #include "fp_decimal.h"
+#include "lexer.h"
 #include "token.h"
-#include <vector>
+#include "filesystem.h"
 #include <memory>
-#include <string>
 #include <algorithm>
-#include <unordered_map>
+#include <string>
 #include <string_view>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 
 _CK2_NAMESPACE_BEGIN;
@@ -70,19 +71,24 @@ private:
         ~data_union() {}
     } _data;
 
-    floc _loc;
+    Loc _loc;
 
     void destroy() noexcept; // helper for dtor & move-assignment
 
 public:
-    object(const floc& fl = floc()) : _type(NIL),       _loc(fl) {}
-    object(char* s, const floc& fl) : _type(STRING),    _loc(fl) { _data.s = s; }
-    object(int i,   const floc& fl) : _type(INTEGER),   _loc(fl) { _data.i = i; }
-    object(date d,  const floc& fl) : _type(DATE),      _loc(fl) { _data.d = d; }
-    object(fp3 f,   const floc& fl) : _type(DECIMAL),   _loc(fl) { _data.f = f; }
-    object(binop o, const floc& fl) : _type(BINARY_OP), _loc(fl) { _data.o = o; }
-    object(unique_ptr<block> up, const floc& fl) : _type(BLOCK), _loc(fl) { new (&_data.up_block) unique_ptr<block>(std::move(up)); }
-    object(unique_ptr<list> up,  const floc& fl) : _type(LIST),  _loc(fl) { new (&_data.up_list) unique_ptr<list>(std::move(up)); }
+    object(const Loc& l = Loc())  : _type(NIL),       _loc(l) {}
+    object(char* s, const Loc& l) : _type(STRING),    _loc(l) { _data.s = s; }
+    object(int i,   const Loc& l) : _type(INTEGER),   _loc(l) { _data.i = i; }
+    object(date d,  const Loc& l) : _type(DATE),      _loc(l) { _data.d = d; }
+    object(fp3 f,   const Loc& l) : _type(DECIMAL),   _loc(l) { _data.f = f; }
+    object(binop o, const Loc& l) : _type(BINARY_OP), _loc(l) { _data.o = o; }
+
+    object(unique_ptr<block> up, const Loc& l) : _type(BLOCK), _loc(l) {
+        new (&_data.up_block) unique_ptr<block>(std::move(up));
+    }
+    object(unique_ptr<list> up,  const Loc& l) : _type(LIST),  _loc(l) {
+        new (&_data.up_list) unique_ptr<list>(std::move(up));
+    }
 
     /* move-assignment operator */
     object& operator=(object&& other);
@@ -93,8 +99,10 @@ public:
     /* destructor */
     ~object() { destroy(); }
 
-    floc const& location() const noexcept { return _loc; }
-    floc&       location()       noexcept { return _loc; }
+    // just shorthand aliases for location():
+    const Loc& loc() const noexcept { return _loc; }
+    Loc&       loc()       noexcept { return _loc; }
+
     // const comment_block* precomments() const noexcept { return _up_precomments.get(); }
     // const char*          postcomment() const noexcept { return _postcomment; }
 
@@ -254,7 +262,7 @@ protected:
     lexer _lex;
     cstr_pool<char> _string_pool;
     unique_ptr<block> _up_root_block;
-    error_queue _errors;
+    //error_queue _errors;
 
     char* strdup(const char* s) { return _string_pool.strdup(s); }
 
@@ -303,7 +311,7 @@ protected:
 public:
     parser() = delete;
     parser(const std::string& p, bool is_save = false) : parser(p.c_str(), is_save) {}
-    parser(const fs::path& p, bool is_save = false) : parser(p.string().c_str(), is_save) {}
+    parser(const fs::path& p, bool is_save = false) : parser(p.generic_string().c_str(), is_save) {}
     parser(const char* p, bool is_save = false) : _lex(p), _tq_done(false), _tq_head_idx(0), _tq_n(0) {
         // hook our preallocated token text buffers into the lookahead queue
         for (uint i = 0; i < TQ_SZ; ++i) {
@@ -315,18 +323,24 @@ public:
         _up_root_block = std::make_unique<block>(*this, true, is_save);
     }
 
-    block* root_block() noexcept { return _up_root_block.get(); }
-    error_queue& errors() noexcept { return _errors; }
+    const auto& path()       const noexcept { return _lex.path(); }
+    auto        root_block()       noexcept { return _up_root_block.get(); }
 
-    struct ParseError : public Error {
-        ParseError() = delete;
-        ~ParseError() noexcept {}
+    auto floc(const Location& loc) const noexcept { return FLoc(loc, path()); }
+    auto floc(const object& obj)   const noexcept { return FLoc(obj.loc(), path()); }
+    auto floc()                    const noexcept { return FLoc(path()); }
 
-        template<typename... Args>
-        ParseError(const floc& fl, const std::string_view& format, const Args& ...args)
-            : Error(fmt::format("%s:L%u: ", fl.path().generic_string(), fl.line()) +
-                    fmt::vformat(format, fmt::make_format_args(args...))) {}
-    };
+    template<typename... Args> auto err(const Location& loc, str_view format, Args&& ...args) const {
+        return FLError(floc(loc), format, std::forward<Args>(args)...);
+    }
+
+    template<typename... Args> auto err(const object& obj, str_view format, Args&& ...args) const {
+        return FLError(floc(obj), format, std::forward<Args>(args)...);
+    }
+
+    template<typename... Args> auto err(str_view format, Args&& ...args) const {
+        return FLError(floc(), format, std::forward<Args>(args)...);
+    }
 };
 
 

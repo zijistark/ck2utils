@@ -7,6 +7,7 @@
 
 
 #include "Error.h"
+#include <string_view>
 #include <cstdint>
 #include <cassert>
 #include <ostream>
@@ -17,13 +18,14 @@ _CK2_NAMESPACE_BEGIN;
 
 
 typedef unsigned int uint;
+using str_view = std::string_view;
 
 #ifndef SIZE_MAX
 #define SIZE_MAX (~(size_t)0)
 #endif
 
-constexpr char EOL = '\n';
-constexpr const char* const TAB = "    ";
+inline const char* const EOL = "\n";
+inline const char* const TAB = "    ";
 
 
 /* generate_int_array< N, template<size_t> F >::result

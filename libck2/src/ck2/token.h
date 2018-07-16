@@ -1,10 +1,10 @@
-// -*- c++ -*-
+#ifndef __LIBCK2_TOKEN_H__
+#define __LIBCK2_TOKEN_H__
 
-#pragma once
 #include "common.h"
-#include "file_location.h"
-
+#include "Location.h"
 #include <limits>
+
 
 _CK2_NAMESPACE_BEGIN;
 
@@ -29,7 +29,7 @@ protected:
     uint  _type;
     uint  _text_len;
     char* _text;
-    floc  _loc;
+    Loc   _loc;
 
 public:
     static const char* TYPE_MAP[];
@@ -43,14 +43,14 @@ public:
     uint text_len()             const noexcept { return _text_len; }
     void text_len(uint new_len)       noexcept { _text_len = new_len; }
 
-    const file_location& location()                const noexcept { return _loc; }
-    void                 location(const floc& loc)       noexcept { _loc = loc; }
+    const auto& loc()               const noexcept { return _loc; }
+    void        loc(const Loc& loc)       noexcept { _loc = loc; }
 
-    char const* text() const noexcept { return _text; }
-    char*       text()       noexcept { return _text; }
-
-    void text(char* new_text, uint new_len) noexcept { _text = new_text; _text_len = new_len; }
+    const char* text()                             const noexcept { return _text; }
+    char*       text()                                   noexcept { return _text; }
+    void        text(char* new_text, uint new_len)       noexcept { _text = new_text; _text_len = new_len; }
 };
 
 
 _CK2_NAMESPACE_END;
+#endif

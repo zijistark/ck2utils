@@ -9,7 +9,7 @@ vars.Add(
 )
 
 env = Environment(variables = vars)
-env.Append(CCFLAGS='-Wall -Wconversion')
+env.Append(CCFLAGS='-Wall -Wconversion -Wno-unused-function -Werror')
 env.Append(CXXFLAGS='-std=c++17')
 
 if env['BUILD_TYPE'] == 'debug_max':

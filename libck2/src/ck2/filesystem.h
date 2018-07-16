@@ -1,7 +1,7 @@
 #ifndef __LIBCK2_FILESYSTEM_H__
 #define __LIBCK2_FILESYSTEM_H__
 
-#include "Error.h"
+#include "common.h"
 #include <boost/filesystem.hpp>
 #include <string>
 
@@ -17,21 +17,22 @@ protected:
     fs::path _path;
 public:
     PathError() = delete;
-    PathError(const fs::path& path, const std::string& msg) : Error(msg), _path(path) {}
+    ~PathError() noexcept {}
+    PathError(const std::string& msg_, const fs::path& path_) : Error(msg_), _path(path_) {}
     const auto& path() const noexcept { return _path; }
 };
 
 struct PathNotFoundError : public PathError {
     PathNotFoundError() = delete;
-    PathNotFoundError(const fs::path& path)
-        : PathError(path, fmt::format("path not found: %s", path.string())) {}
+    PathNotFoundError(const fs::path& path_)
+        : PathError(fmt::format("path not found: {}", path_.generic_string()), path_) {}
 };
 
 struct PathTypeError : public PathError {
     PathTypeError() = delete;
-    PathTypeError(const fs::path& path)
-        : PathError(path, fmt::format("path points to unexpected file type (e.g., directory vs. regular file): %s",
-                                      path.string())) {}
+    PathTypeError(const fs::path& path_)
+        : PathError(fmt::format("path points to unexpected file type (e.g., directory vs. regular file): {}",
+                                path_.generic_string()), path_) {}
 };
 
 

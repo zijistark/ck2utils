@@ -1,4 +1,5 @@
-// -*- c++ -*-
+#ifndef __LIBCK2_FP_DECIMAL_H__
+#define __LIBCK2_FP_DECIMAL_H__
 
 /* ck2::fp_decimal -- a class to represent parsed fixed-point decimal numbers accurately (i.e., fractional base-10^-N
  * component so that any parsed decimal number can be represented exactly).
@@ -10,9 +11,7 @@
  *       the rare bit of arithmetic is required, conversion to/from floating-point is at least there.
  */
 
-#pragma once
 #include "common.h"
-#include "error_queue.h"
 
 
 _CK2_NAMESPACE_BEGIN;
@@ -41,7 +40,7 @@ public:
     static const int32_t invalid = INT32_MIN; // cannot be represented in any fp_decimal<D in 1..9>, so we'll use it as our NaN
 
 public:
-    fp_decimal(char* src, const floc&, error_queue&); // for construction while parsing
+    fp_decimal(char* src); // for construction while parsing
     fp_decimal(double f) : _m( f * scale + 0.5 )  {}
     fp_decimal(float f)  : _m( f * scale + 0.5f ) {}
     fp_decimal(int i)    : _m( i * scale ) {}
@@ -103,7 +102,7 @@ _CK2_NAMESPACE_BEGIN;
  * DECIMAL: -?[0-9]+\.[0-9]*
  */
 template<uint D>
-fp_decimal<D>::fp_decimal(char* src, const floc& loc, error_queue& errors) {
+fp_decimal<D>::fp_decimal(char* src) {
 
     bool is_negative = false;
     const char* s_i = src;
@@ -137,9 +136,9 @@ fp_decimal<D>::fp_decimal(char* src, const floc& loc, error_queue& errors) {
             overflow |= (is_negative) ? i < integral_min : i > integral_max;
         }
 
-        if (overflow)
-            errors.push(loc, "Integral value too big in decimal number (%s) -- supported range: [%d, %d]",
-                        s_i, integral_min+0, integral_max+0); // [1]
+        // if (overflow)
+        //     errors.push(loc, "Integral value too big in decimal number (%s) -- supported range: [%d, %d]",
+        //                 s_i, integral_min+0, integral_max+0); // [1]
 
         /* [1] the weird +0 syntax was required due to weirdness w/ compile-time constants that end-up being optimized out
          * of the object code and the way std::forward works for error_queue::enqueue. without converting them to temporaries,
@@ -147,7 +146,7 @@ fp_decimal<D>::fp_decimal(char* src, const floc& loc, error_queue& errors) {
     }
 
     /* parse fractional component s_f */
-    int32_t f = 0;
+    int64_t f = 0;
     {
         const char* p = s_f;
 
@@ -163,16 +162,16 @@ fp_decimal<D>::fp_decimal(char* src, const floc& loc, error_queue& errors) {
         if (*p) {
             /* assuming *p is a digit (guaranteed by DECIMAL token), then:
              * data truncation due to insufficient fractional digits in representation */
-            errors.push(error::priority::WARNING, loc,
-                        "Fractional value too big in decimal number (%s) -- supported range: [0, %d]; value truncated",
-                        s_f, scale - 1);
+            // errors.push(error::priority::WARNING, loc,
+            //             "Fractional value too big in decimal number (%s) -- supported range: [0, %d]; value truncated",
+            //             s_f, scale - 1);
         }
     }
 
     /* done */
-    _m = (is_negative) ? i * -scale - f
-                       : i * scale + f;
+    _m = static_cast<int32_t>( (is_negative) ? i * -scale - f : i * scale + f );
 }
 
 
 _CK2_NAMESPACE_END;
+#endif

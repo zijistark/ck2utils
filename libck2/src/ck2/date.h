@@ -1,14 +1,15 @@
-// -*- c++ -*-
+#ifndef __LIBCK2_DATE_H__
+#define __LIBCK2_DATE_H__
 
-#pragma once
 #include "common.h"
-#include "error_queue.h"
 
 
 _CK2_NAMESPACE_BEGIN;
 
 
-#pragma pack(push, 1)
+#ifdef _MSC_VER
+    #pragma pack(push, 1)
+#endif
 
 class date {
     int16_t _y;
@@ -16,7 +17,7 @@ class date {
     int8_t  _d;
 
 public:
-    date(char* src, const floc&, error_queue&); // only for use on mutable date-strings known to be well-formed
+    date(char* src); // only for use on mutable date-strings known to be well-formed
     date(int16_t year, int8_t month, int8_t day) : _y(year), _m(month), _d(day) {}
 
     int16_t year()  const noexcept { return _y; }
@@ -38,14 +39,20 @@ public:
     bool operator!=(const date& o) const noexcept { return !(*this == o); }
     bool operator> (const date& o) const noexcept { return *this >= o && *this != o; }
     bool operator<=(const date& o) const noexcept { return *this < o || *this == o; }
-};
 
-#pragma pack(pop)
+    friend std::ostream& operator<<(std::ostream& os, date d) {
+        return os << (int)d.year() << '.' << (int)d.month() << '.' << (int)d.day();
+    }
+}
+#ifndef _MSC_VER
+    __attribute__ ((packed))
+#endif
+; // close the class definition statement
+
+#ifdef _MSC_VER
+    #pragma pack(pop)
+#endif
 
 
 _CK2_NAMESPACE_END;
-
-
-inline std::ostream& operator<<(std::ostream& os, ck2::date d) {
-    return os << (int)d.year() << '.' << (int)d.month() << '.' << (int)d.day();
-}
+#endif

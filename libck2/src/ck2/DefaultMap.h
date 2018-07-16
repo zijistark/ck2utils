@@ -16,14 +16,13 @@ _CK2_NAMESPACE_BEGIN;
 class DefaultMap {
 public:
     struct SeaRange {
-        // province IDs
-        uint start;
-        uint end;
+        uint start_id;
+        uint end_id;
     };
 
 private:
     using seazone_vec_t = std::vector<SeaRange>;
-    using ocean_vec_t = std::vector<SeaRange*>;
+    using ocean_vec_t = std::vector<uint>;
     using major_river_set_t = std::unordered_set<uint>;
 
     uint              _max_prov_id;
@@ -46,8 +45,12 @@ private:
     ocean_vec_t       _ocean_vec;
     major_river_set_t _major_river_set;
 
+    const std::unordered_map<const char*, fs::path&> _req_path_map;
+
 public:
     DefaultMap(const VFS& vfs);
+
+    // non-const interface will be provided when we actually have the need
 
     auto        max_province_id()    const noexcept { return _max_prov_id; }
     const auto& definitions_path()   const noexcept { return _definitions_path; }
@@ -68,9 +71,7 @@ public:
     const auto& seazone_ranges()     const noexcept { return _seazone_vec; }
     const auto& major_river_set()    const noexcept { return _major_river_set; }
 
-    constexpr bool is_valid_province(uint prov_id) const noexcept {
-        return prov_id > 0 && prov_id <= _max_prov_id;
-    }
+    constexpr bool is_valid_province(uint prov_id) const noexcept { return prov_id > 0 && prov_id <= _max_prov_id; }
 
     bool is_water_province(uint prov_id) const noexcept;
 };

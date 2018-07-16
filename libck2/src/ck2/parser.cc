@@ -1,7 +1,6 @@
 
 #include "parser.h"
 #include "token.h"
-#include "error.h"
 
 #include <iomanip>
 #include <ctype.h>
@@ -41,7 +40,7 @@ block::block(parser& prs, bool is_root, bool is_save) {
 
         if (t.type() == token::CLOSE) {
             if (is_root && !is_save) // closing braces are only bad at root level
-                throw parser::ParseError(t.location(), "Unmatched closing brace");
+                throw prs.err("Unmatched closing brace");
 
             // otherwise, they mean it's time return to the previous block
             return;
@@ -50,11 +49,11 @@ block::block(parser& prs, bool is_root, bool is_save) {
         object key;
 
         if (t.type() == token::STR)
-            key = object{ prs.strdup(t.text()), t.location() };
+            key = object{ prs.strdup(t.text()), t.loc() };
         else if (t.type() == token::DATE)
-            key = object{ date{ t.text(), t.location(), prs.errors() }, t.location() };
+            key = object{ date{ t.text() }, t.loc() };
         else if (t.type() == token::INTEGER)
-            key = object{ atoi(t.text()), t.location() };
+            key = object{ atoi(t.text()), t.loc() };
         else
             prs.unexpected_token(t);
 
@@ -65,7 +64,7 @@ block::block(parser& prs, bool is_root, bool is_save) {
 
         for (auto const& bop : BINOP_TBL)
             if (strcmp(t.text(), bop.text) == 0) {
-                op = object{ bop.op, t.location() };
+                op = object{ bop.op, t.loc() };
                 break;
             }
 
@@ -84,22 +83,22 @@ block::block(parser& prs, bool is_root, bool is_save) {
                 // a static object type (i.e., one of the possible dynamic types for ck2::object) that codifies an empty
                 // block OR list (vector syntax nodes, essentially)
                 prs.next(&t); // suspicions confirmed, consume token
-                val = object{ std::make_unique<block>(), t.location() };
+                val = object{ std::make_unique<block>(), t.loc() };
             }
             // all but an operator in this position implies this will be a list
             else if (pt2 && pt2->type() != token::OPERATOR)
-                val = object{ std::make_unique<list>(prs), t.location() };
+                val = object{ std::make_unique<list>(prs), t.loc() };
             else // but with the operator in position, it's definitely a block
-                val = object{ std::make_unique<block>(prs), t.location() };
+                val = object{ std::make_unique<block>(prs), t.loc() };
         }
         else if (t.type() == token::STR || t.type() == token::QSTR)
-            val = object{ prs.strdup(t.text()), t.location() };
+            val = object{ prs.strdup(t.text()), t.loc() };
         else if (t.type() == token::QDATE || t.type() == token::DATE)
-            val = object{ date{ t.text(), t.location(), prs.errors() }, t.location() };
+            val = object{ date{ t.text() }, t.loc() };
         else if (t.type() == token::DECIMAL)
-            val = object{ fp3{ t.text(), t.location(), prs.errors() }, t.location() };
+            val = object{ fp3{ t.text() }, t.loc() };
         else if (t.type() == token::INTEGER)
-            val = object{ atoi(t.text()), t.location() };
+            val = object{ atoi(t.text()), t.loc() };
         else
             prs.unexpected_token(t);
 
@@ -155,13 +154,13 @@ list::list(parser& prs) {
         prs.next(&t);
 
         if (t.type() == token::QSTR || t.type() == token::STR)
-            _vec.emplace_back( prs.strdup(t.text()), t.location() );
+            _vec.emplace_back( prs.strdup(t.text()), t.loc() );
         else if (t.type() == token::INTEGER)
-            _vec.emplace_back( atoi(t.text()), t.location() );
+            _vec.emplace_back( atoi(t.text()), t.loc() );
         else if (t.type() == token::DECIMAL)
-            _vec.emplace_back( fp3{ t.text(), t.location(), prs.errors() }, t.location() );
+            _vec.emplace_back( fp3{ t.text() }, t.loc() );
         else if (t.type() == token::OPEN)
-            _vec.emplace_back( std::make_unique<block>(prs), t.location() );
+            _vec.emplace_back( std::make_unique<block>(prs), t.loc() );
         else if (t.type() != token::CLOSE)
             prs.unexpected_token(t);
         else
@@ -174,13 +173,13 @@ void parser::next_expected(token* p_tok, uint type) {
     next(p_tok, (type == token::END));
 
     if (p_tok->type() != type)
-        throw ParseError(p_tok->location(), "Expected %s token but got %s -- '%s'",
-                             token::TYPE_MAP[type], p_tok->type_name(), (p_tok->text()) ? p_tok->text() : "");
+        throw FLError(floc(p_tok->loc()), "Expected {} token but got {} -- '{}'",
+                  token::TYPE_MAP[type], p_tok->type_name(), (p_tok->text()) ? p_tok->text() : "");
 }
 
 
 void parser::unexpected_token(const token& t) const {
-    throw ParseError(t.location(), "Unexpected token %s", t.type_name());
+    throw err(t.loc(), "Unexpected token type {}", t.type_name());
 }
 
 
@@ -206,10 +205,10 @@ bool parser::next(token* p_tok, bool eof_ok) {
     }
 
     if (p_tok->type() == token::END && !eof_ok)
-        throw ParseError(p_tok->location(), "Unexpected EOF");
+        throw err(p_tok->loc(), "Unexpected EOF");
 
     if (p_tok->type() == token::FAIL)
-        throw ParseError(p_tok->location(), "Unrecognized token");
+        throw err(p_tok->loc(), "Unrecognized token");
 
     return true;
 }
