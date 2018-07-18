@@ -25,13 +25,14 @@ public:
 struct PathNotFoundError : public PathError {
     PathNotFoundError() = delete;
     PathNotFoundError(const fs::path& path_)
-        : PathError(fmt::format("path not found: {}", path_.generic_string()), path_) {}
+        : PathError(fmt::format("Path not found: {}", path_.generic_string()), path_) {}
 };
+
 
 struct PathTypeError : public PathError {
     PathTypeError() = delete;
-    PathTypeError(const fs::path& path_)
-        : PathError(fmt::format("path points to unexpected file type (e.g., directory vs. regular file): {}",
+    PathTypeError(const fs::path& path_) // TODO: tell the user what type of file it does point to vs. expected
+        : PathError(fmt::format("Path points to unexpected file type (e.g., directory vs. regular file): {}",
                                 path_.generic_string()), path_) {}
 };
 

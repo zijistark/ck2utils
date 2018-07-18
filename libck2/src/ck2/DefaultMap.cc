@@ -129,6 +129,9 @@ DefaultMap::DefaultMap(const VFS& vfs)
 
 
 bool DefaultMap::is_water_province(uint prov_id) const noexcept {
+    // TODO: upgrade this to a binary search when we add a sorted version of the seazone vector for a) validation
+    // that the sea_zones ranges all do not overlap, and b) so that an efficient province ID membership query for
+    // an ocean_region can be implemented
     for (const auto& sea_range : _seazone_vec)
         if (prov_id >= sea_range.start_id && prov_id <= sea_range.end_id)
             return true;

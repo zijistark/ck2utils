@@ -15,6 +15,8 @@ class FileLocation : public Location {
     fs::path _path;
 public:
     FileLocation(const Location& loc_, const fs::path& path_) : Location(loc_), _path(path_) {}
+    FileLocation(uint line_, uint col_, const fs::path& path_) : Location(line_, col_), _path(path_) {}
+    FileLocation(uint line_, const fs::path& path_) : Location(line_), _path(path_) {}
     FileLocation(const fs::path& path_) : _path(path_) {}
 
     const auto& path()                      const noexcept { return _path; }
