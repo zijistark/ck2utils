@@ -325,8 +325,8 @@ public:
     const auto& path()       const noexcept { return _lex.path(); }
     auto        root_block()       noexcept { return _up_root_block.get(); }
 
-    auto floc(const Location& loc) const noexcept { return FLoc(loc, path()); }
-    auto floc(const object& obj)   const noexcept { return FLoc(obj.loc(), path()); }
+    auto floc(const Location& loc) const noexcept { return FLoc(path(), loc); }
+    auto floc(const object& obj)   const noexcept { return FLoc(path(), obj.loc()); }
     auto floc()                    const noexcept { return FLoc(path()); }
 
     template<typename... Args> auto err(const Location& loc, str_view format, Args&& ...args) const {

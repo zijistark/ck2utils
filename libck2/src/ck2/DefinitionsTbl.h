@@ -1,6 +1,7 @@
 #ifndef __LIBCK2_DEFINITIONS_TBL_H__
 #define __LIBCK2_DEFINITIONS_TBL_H__
 
+#include "common.h"
 #include "DefaultMap.h"
 #include "VFS.h"
 #include "Color.h"
@@ -14,26 +15,14 @@ _CK2_NAMESPACE_BEGIN;
 
 class DefinitionsTbl {
 public:
-    class Row {
-    public:
-        Row(uint id_, str_view name_, rgb color_, str_view rest_ = "")
-            : _id(id_), _name(name_), _color(color_), _rest(rest_) {}
+    struct Row {
+        uint        id;
+        rgb         color;
+        std::string name;
+        std::string rest;
 
-        auto        id()    const noexcept { return _id; }
-        auto        color() const noexcept { return _color; }
-        const auto& name()  const noexcept { return _name; }
-        const auto& rest()  const noexcept { return _rest; }
-
-        void id(uint id_)         noexcept { _id = id_; }
-        void color(rgb color_)    noexcept { _color = color_; }
-        void name(str_view name_) { _name = name_; }
-        void rest(str_view rest_) { _rest = rest_; }
-
-    private:
-        uint        _id;
-        std::string _name;
-        rgb         _color;
-        std::string _rest;
+        Row(uint id_, rgb color_, str_view name_, str_view rest_ = "")
+            : id(id_), color(color_), name(name_), rest(rest_) {}
     };
 
     // construct an empty file; default ctor must adjust the row vector due to the API's 1:1 mapping of province ID
@@ -61,7 +50,7 @@ public:
 
 private:
     std::vector<Row> _v;
-    static inline const auto DUMMY_ROW = Row{ 0, "", 0 };
+    static inline const auto DUMMY_ROW = Row{ 0, 0, "" };
 };
 
 

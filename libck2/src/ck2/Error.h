@@ -6,6 +6,8 @@
 #include <string_view>
 #include <exception>
 #include <stdexcept>
+#include <cerrno>
+#include <cstring>
 
 
 _CK2_NAMESPACE_BEGIN;

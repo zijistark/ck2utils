@@ -12,7 +12,7 @@ _CK2_NAMESPACE_BEGIN;
 
 
 DefinitionsTbl::DefinitionsTbl()
-: _v(1, DUMMY_ROW) {}// map 1-based province ID indexing directly to Row vector indices w/ dummy Row
+: _v(1, DUMMY_ROW) {} // map 1-based province ID indexing directly to Row vector indices w/ dummy Row
 
 
 DefinitionsTbl::DefinitionsTbl(const VFS& vfs, const DefaultMap& dm)
@@ -22,9 +22,6 @@ DefinitionsTbl::DefinitionsTbl(const VFS& vfs, const DefaultMap& dm)
 
     auto path = vfs["map" / dm.definitions_path()];
     auto spath = path.generic_string();
-    uint n_line = 1;
-
-    const auto fl = [&]() { return FLoc(n_line, path); };
 
     // TODO: all of this I/O and string splitting and type conversion/validation needs to be done in the future by
     // a generic CSVReader template class parameterized on the sequence of types (from left to right) for which to
@@ -37,9 +34,12 @@ DefinitionsTbl::DefinitionsTbl(const VFS& vfs, const DefaultMap& dm)
         throw Error("Failed to open file: {}: {}", strerror(errno), spath);
 
     char buf[512];
+    uint n_line = 0;
+
+    const auto fl = [&]() { return FLoc(path, n_line); };
 
     if ( fgets(&buf[0], sizeof(buf), f) == nullptr ) // consume CSV header
-        throw Error("CSV file must have a header line: {}", spath);
+        throw FLError(fl(), "This type of CSV file must have a header line");
 
     while ( fgets(&buf[0], sizeof(buf), f) != nullptr )
     {
@@ -57,18 +57,15 @@ DefinitionsTbl::DefinitionsTbl(const VFS& vfs, const DefaultMap& dm)
 
         for (uint x = 0; x < N_COLS; ++x)
         {
-            if ( (n_str[x] = strsep(&p, ";")) == nullptr ) // not even thread-safe, another reason for CSVReader
+            if ( (n_str[x] = strsep(&p, ";")) == nullptr )
                 throw FLError(fl(),
                               "Not enough columns in CSV record (need at least {} but only {} found)", N_COLS, x);
         }
 
         str_view rest(p);
 
-        if (!rest.empty())
-        {
-            if (rest[rest.size()] == '\n') rest.remove_suffix(1);
-            if (rest[rest.size()] == '\r') rest.remove_suffix(1);
-        }
+        if (!rest.empty() && rest.back() == '\n') rest.remove_suffix(1);
+        if (!rest.empty() && rest.back() == '\r') rest.remove_suffix(1);
 
         const uint N_INT_COLS = N_COLS - 1;
         long n[N_INT_COLS];
@@ -99,7 +96,7 @@ DefinitionsTbl::DefinitionsTbl(const VFS& vfs, const DefaultMap& dm)
         if ((uint)n[0] != n_line - 1)
             throw FLError(fl(), "CSV record with province ID #{} is out of order or IDs were skipped", n[0]);
 
-        _v.emplace_back(n[0], n_str[4], rgb{ (uint)n[1], (uint)n[2], (uint)n[3] }, rest);
+        _v.emplace_back(n[0], rgb{ (uint)n[1], (uint)n[2], (uint)n[3] }, n_str[4], rest);
 
         if ((uint)n[0] == dm.max_province_id())
             break;
@@ -125,8 +122,8 @@ void DefinitionsTbl::write(const fs::path& p) const {
 
     for (auto&& r : *this)
         fmt::print(f, "{};{};{};{};{};{}\n",
-                   r.id(), r.color().red(), r.color().green(), r.color().blue(), r.name(),
-                   (r.rest().empty()) ? "x" : r.rest());
+                   r.id, r.color.red(), r.color.green(), r.color.blue(), r.name,
+                   (r.rest.empty()) ? "x" : r.rest);
 
     fclose(f);
  

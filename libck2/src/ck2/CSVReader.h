@@ -2,6 +2,8 @@
 #define __LIBCK2_CSV_READER_H__
 
 #include "common.h"
+#include "filesystem.h"
+#include <cstdio>
 
 
 _CK2_NAMESPACE_BEGIN;
@@ -13,7 +15,9 @@ _CK2_NAMESPACE_BEGIN;
 
 template<class TupleT, class RecordCallbackT, const char Delim = ';'>
 class CSVReader {
-    // TODO: implementation is worth 3 cookies!
+private:
+    fs::path _path;
+    FILE* _if;
 };
 
 

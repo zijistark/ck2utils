@@ -14,25 +14,23 @@ _CK2_NAMESPACE_BEGIN;
 class FileLocation : public Location {
     fs::path _path;
 public:
-    FileLocation(const Location& loc_, const fs::path& path_) : Location(loc_), _path(path_) {}
-    FileLocation(uint line_, uint col_, const fs::path& path_) : Location(line_, col_), _path(path_) {}
-    FileLocation(uint line_, const fs::path& path_) : Location(line_), _path(path_) {}
-    FileLocation(const fs::path& path_) : _path(path_) {}
+    FileLocation(const fs::path& path_, const Location& loc_) : Location(loc_), _path(path_) {}
+    FileLocation(const fs::path& path_, uint line_ = 0, uint col_ = 0) : Location(line_, col_), _path(path_) {}
 
-    const auto& path()                      const noexcept { return _path; }
-    void        path(const fs::path& path_)       noexcept { _path = path_; }
+    auto const& path() const noexcept { return _path; }
+    auto&       path()       noexcept { return _path; }
 
-    auto to_string() const {
+    auto to_string() const
+    {
         auto loc_s = Location::to_string();
         return (loc_s.empty()) ? path().generic_string() :
                                  path().generic_string() + ":" + loc_s;
     }
 
-    auto to_string_prefix() const {
-        return to_string() + ": ";
-    }
+    auto to_string_prefix() const { return to_string() + ": "; }
 
-    auto to_string_suffix() const {
+    auto to_string_suffix() const
+    {
         return Location::to_string_suffix() + fmt::format(" in '{}'", path().generic_string());
     }
 };
