@@ -1,7 +1,7 @@
 
 #include "AdjacenciesFile.h"
 #include "FileLocation.h"
-
+#include "stdio.h"
 #include <memory>
 #include <fstream>
 #include <cstdio>
@@ -21,9 +21,10 @@ static uint col_to_province_id(const FLoc& fl, const char* col, const str_view& 
      */
     if (*col == '\0') return 0;
 
-    long l = strtol(n_str[x], &col, 10);
+    char* p_potential_junk = nullptr;
+    long l = strtol(col, &p_potential_junk, 10);
 
-    if (*col)
+    if (*p_potential_junk)
         throw FLError(fl, "Malformed integer value in CSV column '{}' (should be a province ID)", col_name);
 
     if (l < 0)
@@ -43,7 +44,7 @@ AdjacenciesFile::AdjacenciesFile(const VFS& vfs, const DefaultMap& dm)
 
     // unique_file_ptr will automatically destroy/close its FILE* if we throw an exception (or return)
     typedef std::unique_ptr<std::FILE, int (*)(std::FILE *)> unique_file_ptr;
-    unique_file_ptr ufp( std::fopen(spath, "rb"), std::fclose );
+    unique_file_ptr ufp( std::fopen(spath.c_str(), "rb"), std::fclose );
 
     if (ufp.get() == nullptr)
         throw Error("Failed to open file: {}: {}", strerror(errno), spath);
@@ -54,7 +55,7 @@ AdjacenciesFile::AdjacenciesFile(const VFS& vfs, const DefaultMap& dm)
     const auto fl = [&]() { return FLoc(path, n_line); };
 
     if (fgets(&buf[0], sizeof(buf), ufp.get()) == nullptr) // consume CSV header
-        throw FLError("This type of CSV file must have a header line");
+        throw FLError(path, "This type of CSV file must have a header line");
 
     ++n_line;
 
@@ -88,9 +89,9 @@ AdjacenciesFile::AdjacenciesFile(const VFS& vfs, const DefaultMap& dm)
         if (!rest.empty() && rest.back() == '\r') rest.remove_suffix(1);
 
         /* add to end of internal list of adjacencies */
-        _v.emplace_back(col_to_province_id(fl(), cols[0], "From"),
-                        col_to_province_id(fl(), cols[1], "To"),
-                        col_to_province_id(fl(), cols[3], "Through"),
+        _v.emplace_back(col_to_province_id(fl(), cols[0], "From", dm),
+                        col_to_province_id(fl(), cols[1], "To", dm),
+                        col_to_province_id(fl(), cols[3], "Through", dm),
                         cols[2], // TODO: validate types into an Enum
                         rest);
 

@@ -1,7 +1,8 @@
 
+#include "ProvinceMap.h"
 #include "BMPHeader.h"
 #include "FileLocation.h"
-#include "ProvinceMap.h"
+#include "Color.h"
 #include <cstdio>
 #include <cerrno>
 #include <cstdlib>
@@ -18,7 +19,7 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
   _n_height(0)
 {
     /* map provinces.bmp color to province ID */
-    std::unordered_map<rgb, uint16_t> color2id_map;
+    std::unordered_map<RGB, uint16_t> color2id_map;
 
     for (const auto& row : def_tbl)
         color2id_map.emplace(row.color, row.id);
@@ -35,7 +36,7 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
 
     BMPHeader bf_hdr;
 
-    if (fread(&bf_hdr, sizeof(bf_hdr), 1, ufp.get()) < 1)
+    if (errno = 0; fread(&bf_hdr, sizeof(bf_hdr), 1, ufp.get()) < 1)
     {
         if (errno)
             throw FLError(path, "Failed to read bitmap file header: {}", strerror(errno));
@@ -44,7 +45,7 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
     }
 
     if (bf_hdr.magic != BMPHeader::MAGIC)
-        throw FLError(path, "Unsupported bitmap file type (magic={0:04x} but want magic={0:04x})",
+        throw FLError(path, "Unsupported bitmap file type (magic={:06X} but want magic={:06X})",
                       bf_hdr.magic, BMPHeader::MAGIC);
 
     // TODO: all these not to be handled by compile-time assertions (every damn one from here one!)
@@ -71,7 +72,7 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
 
     /* seek past any other bytes and directly to offset of pixel array (if needed). */
     if (fseek(ufp.get(), bf_hdr.n_bitmap_offset, SEEK_SET) != 0)
-        throw FLError(path, "Failed to seek to raw bitmap data (offset={:X}): %s",
+        throw FLError(path, "Failed to seek to raw bitmap data (offset={0:010X}/{0}): {1}",
                       bf_hdr.n_bitmap_offset,
                       strerror(errno));
 
@@ -81,12 +82,12 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
 
     for (uint row = 0; row < _n_height; ++row)
     {
-        if (fread(p_row, n_row_sz, 1, ufp.get()) < 1)
+        if (errno = 0; fread(p_row, n_row_sz, 1, ufp.get()) < 1)
         {
             if (errno)
-                throw FLError(path, "Failed to read bitmap file data: {}", strerror(errno));
+                throw FLError(path, "Failed to read scanline #{} of bitmap data: {}", row, strerror(errno));
             else
-                throw FLError(path, "Unexpected EOF while reading bitmap file data");
+                throw FLError(path, "Unexpected EOF while reading bitmap data");
         }
 
         const uint y = _n_height - 1 - row;

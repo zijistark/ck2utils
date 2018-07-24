@@ -11,32 +11,30 @@ _CK2_NAMESPACE_BEGIN;
 //#pragma pack(push, 1)
 
 
-struct rgb {
+struct RGB {
     uint8_t r;
     uint8_t g;
     uint8_t b;
 
-    rgb() = delete; // no such thing as a default color
-
-    constexpr rgb(uint red, uint green, uint blue) :
+    constexpr RGB(uint red, uint green, uint blue) :
         r(static_cast<uint8_t>(red)),
         g(static_cast<uint8_t>(green)),
-        b(static_cast<uint8_t>(blue)) { }
+        b(static_cast<uint8_t>(blue)) {}
  
-    constexpr rgb(uint rgb) :
+    constexpr RGB(uint rgb) :
         r(static_cast<uint8_t>( (rgb >> 16) & 0xFF )),
         g(static_cast<uint8_t>( (rgb >> 8) & 0xFF )),
-        b(static_cast<uint8_t>( rgb & 0xFF )) { }
+        b(static_cast<uint8_t>( rgb & 0xFF )) {}
 
     constexpr operator uint() const noexcept { // implicit conversion to unsigned int with 24-bit RGB value
         return (static_cast<uint>(r) << 16) | (static_cast<uint>(g) << 8) | b;
     }
 
-    constexpr uint8_t red()   const { return r; }
-    constexpr uint8_t green() const { return g; }
-    constexpr uint8_t blue()  const { return b; }
+    constexpr auto red()   const noexcept { return r; }
+    constexpr auto green() const noexcept { return g; }
+    constexpr auto blue()  const noexcept { return b; }
     
-    constexpr bool operator==(const rgb& c) const noexcept {
+    constexpr bool operator==(const RGB& c) const noexcept {
         return (r == c.r && g == c.g && b == c.b);
     }
 };
@@ -48,9 +46,12 @@ _CK2_NAMESPACE_END;
 /* inject std::hash<rgb> specialization */
 
 namespace std {
-    template<> struct hash<ck2::rgb> {
-        typedef ck2::rgb argument_type;
+    template<> struct hash<ck2::RGB> {
+        typedef ck2::RGB argument_type;
         typedef size_t result_type;
+        // TODO: try to find an actual 24-bit hash or something that will help improve this hash in an RGB context
+        // or, rather, just fiddle with FNV-1a vs. other popular functions and see what happens. the most obvious
+        // problem is that all the colors have their 8 MSBs all zeroed.
         result_type operator()(argument_type const& c) const { return std::hash<unsigned int>{}( c ); }
     };
 }

@@ -1,7 +1,7 @@
 
 #include "DefinitionsTable.h"
 #include "FileLocation.h"
-#include "legacy_compat.h" // ?!
+#include "legacy_compat.h" // for strsep, which is safe, but not POSIX (and deprecated in this code)
 #include "filesystem.h"
 #include <cstdio>
 #include <cstdlib>
@@ -28,9 +28,11 @@ DefinitionsTable::DefinitionsTable(const VFS& vfs, const DefaultMap& dm)
     // extract valid values (presumably simply reusing the [variadic] tuple utility class & a callback function
     // provided by the user code to process a record)
 
-    FILE* f;
-
-    if ( (f = fopen(spath.c_str(), "rb")) == nullptr )
+    typedef std::unique_ptr<std::FILE, int (*)(std::FILE *)> unique_file_ptr;
+    unique_file_ptr ufp( std::fopen(spath.c_str(), "rb"), std::fclose );
+    FILE* f = ufp.get();
+    
+    if (f == nullptr)
         throw Error("Failed to open file: {}: {}", strerror(errno), spath);
 
     char buf[512];
@@ -38,10 +40,10 @@ DefinitionsTable::DefinitionsTable(const VFS& vfs, const DefaultMap& dm)
 
     const auto fl = [&]() { return FLoc(path, n_line); };
 
-    if ( fgets(&buf[0], sizeof(buf), f) == nullptr ) // consume CSV header
+    if (fgets(&buf[0], sizeof(buf), f) == nullptr) // consume CSV header
         throw FLError(fl(), "This type of CSV file must have a header line");
 
-    while ( fgets(&buf[0], sizeof(buf), f) != nullptr )
+    while (fgets(&buf[0], sizeof(buf), f) != nullptr)
     {
         ++n_line;
 
@@ -57,13 +59,12 @@ DefinitionsTable::DefinitionsTable(const VFS& vfs, const DefaultMap& dm)
 
         for (uint x = 0; x < N_COLS; ++x)
         {
-            if ( (n_str[x] = strsep(&p, ";")) == nullptr )
+            if ((n_str[x] = strsep(&p, ";")) == nullptr)
                 throw FLError(fl(),
                               "Not enough columns in CSV record (need at least {} but only {} found)", N_COLS, x);
         }
 
         str_view rest(p);
-
         if (!rest.empty() && rest.back() == '\n') rest.remove_suffix(1);
         if (!rest.empty() && rest.back() == '\r') rest.remove_suffix(1);
 
@@ -93,44 +94,40 @@ DefinitionsTable::DefinitionsTable(const VFS& vfs, const DefaultMap& dm)
         if (!dm.is_valid_province(n[0]))
             throw FLError(fl(), "Invalid province ID #{}", n[0]);
 
+        /*
         if ((uint)n[0] != n_line - 1)
             throw FLError(fl(), "CSV record with province ID #{} is out of order or IDs were skipped", n[0]);
+        */
 
-        _v.emplace_back(n[0], rgb{ (uint)n[1], (uint)n[2], (uint)n[3] }, n_str[4], rest);
+        _v.emplace_back(n[0], RGB{ (uint)n[1], (uint)n[2], (uint)n[3] }, n_str[4], rest);
 
-        if ((uint)n[0] == dm.max_province_id())
+        if ((unsigned)n[0] == dm.max_province_id())
             break;
     }
-
-    fclose(f);
 
     if (size() != dm.max_province_id())
         throw FLError(path, "Defined {} provinces while default.map specified {}", size(), dm.max_province_id());
 }
 
 
-void DefinitionsTable::write(const fs::path& p) const {
-    errno = 0;
+void DefinitionsTable::write(const fs::path& path) const {
+    auto spath = path.generic_string();
 
-    const std::string spath = p.generic_string();
-    FILE* f;
+    // in the future, use a unique_file_ptr that doesn't discard the return value of std::fclose(FILE*) and checks
+    // it for an error condition.
+    typedef std::unique_ptr<std::FILE, int (*)(std::FILE *)> unique_file_ptr;
+    unique_file_ptr ufp( std::fopen(spath.c_str(), "wb"), std::fclose );
+    auto f = ufp.get();
 
-    // TODO: needs a unique_file_ptr (exception guard)
-
-    if ( (f = fopen(spath.c_str(), "wb")) == nullptr )
-        throw Error("Failed to write to file: {}: {}", strerror(errno), spath);
+    if (f == nullptr)
+        throw FLError(path, "Failed to open file for writing: {}", strerror(errno));
 
     fmt::print(f, "province;red;green;blue;name;x\n");
 
-    for (auto&& r : *this)
+    for (const auto& r : _v)
         fmt::print(f, "{};{};{};{};{};{}\n",
                    r.id, r.color.red(), r.color.green(), r.color.blue(), r.name,
-                   (r.rest.empty()) ? "x" : r.rest);
-
-    fclose(f);
- 
-    if (errno)
-        throw Error("Failed to write all data to file: {}: {}", strerror(errno), spath);
+                   r.rest.empty() ? "x" : r.rest);
 }
 
 

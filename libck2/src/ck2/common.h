@@ -8,9 +8,9 @@
 
 #include "Error.h"
 #include <string_view>
+#include <iosfwd>
 #include <cstdint>
 #include <cassert>
-#include <ostream>
 #include <cstring>
 
 
@@ -25,7 +25,7 @@ using str_view = std::string_view;
 #endif
 
 inline const char* const EOL = "\n";
-inline const char* const TAB = "    ";
+inline const char* const TAB = "\t";
 
 
 /* generate_int_array< N, template<size_t> F >::result

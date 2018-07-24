@@ -18,11 +18,11 @@ class DefinitionsTable
 public:
     struct Row {
         uint        id;
-        rgb         color;
+        RGB         color;
         std::string name;
         std::string rest;
 
-        Row(uint id_, rgb color_, str_view name_, str_view rest_ = "")
+        Row(uint id_, RGB color_, str_view name_, str_view rest_ = "")
             : id(id_), color(color_), name(name_), rest(rest_) {}
     };
 

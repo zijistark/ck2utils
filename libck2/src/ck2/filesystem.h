@@ -6,6 +6,12 @@
 #include <string>
 
 
+// this header exists foremost as a compilation proxy between the different not-quite-there-yet C++17
+// implementations of <filesystem> (or <experimental/filesytem>) and Boost.
+
+// after that, it's convenience stuff for users of FS-related things.
+
+
 _CK2_NAMESPACE_BEGIN;
 
 
