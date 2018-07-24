@@ -1,5 +1,5 @@
 
-#include "DefinitionsTbl.h"
+#include "DefinitionsTable.h"
 #include "FileLocation.h"
 #include "legacy_compat.h" // ?!
 #include "filesystem.h"
@@ -11,11 +11,11 @@
 _CK2_NAMESPACE_BEGIN;
 
 
-DefinitionsTbl::DefinitionsTbl()
+DefinitionsTable::DefinitionsTable()
 : _v(1, DUMMY_ROW) {} // map 1-based province ID indexing directly to Row vector indices w/ dummy Row
 
 
-DefinitionsTbl::DefinitionsTbl(const VFS& vfs, const DefaultMap& dm)
+DefinitionsTable::DefinitionsTable(const VFS& vfs, const DefaultMap& dm)
 {
     _v.reserve(2048);
     _v.emplace_back(DUMMY_ROW); // dummy Row for province 0
@@ -105,19 +105,21 @@ DefinitionsTbl::DefinitionsTbl(const VFS& vfs, const DefaultMap& dm)
     fclose(f);
 
     if (size() != dm.max_province_id())
-        throw FLError(FLoc(path),
-                      "Defined {} provinces while default.map specified {}", size(), dm.max_province_id());
+        throw FLError(path, "Defined {} provinces while default.map specified {}", size(), dm.max_province_id());
 }
 
 
-void DefinitionsTbl::write(const fs::path& p) const {
+void DefinitionsTable::write(const fs::path& p) const {
+    errno = 0;
+
     const std::string spath = p.generic_string();
     FILE* f;
+
+    // TODO: needs a unique_file_ptr (exception guard)
 
     if ( (f = fopen(spath.c_str(), "wb")) == nullptr )
         throw Error("Failed to write to file: {}: {}", strerror(errno), spath);
 
-    errno = 0;
     fmt::print(f, "province;red;green;blue;name;x\n");
 
     for (auto&& r : *this)

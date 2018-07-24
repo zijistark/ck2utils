@@ -1,5 +1,5 @@
-#ifndef __LIBCK2_DEFINITIONS_TBL_H__
-#define __LIBCK2_DEFINITIONS_TBL_H__
+#ifndef __LIBCK2_DEFINITIONS_TABLE_H__
+#define __LIBCK2_DEFINITIONS_TABLE_H__
 
 #include "common.h"
 #include "DefaultMap.h"
@@ -13,7 +13,8 @@
 _CK2_NAMESPACE_BEGIN;
 
 
-class DefinitionsTbl {
+class DefinitionsTable
+{
 public:
     struct Row {
         uint        id;
@@ -27,10 +28,10 @@ public:
 
     // construct an empty file; default ctor must adjust the row vector due to the API's 1:1 mapping of province ID
     // (1-based) to row vector index (0-based)
-    DefinitionsTbl();
+    DefinitionsTable();
 
     // construct from an existing file
-    DefinitionsTbl(const VFS&, const DefaultMap&);
+    DefinitionsTable(const VFS&, const DefaultMap&);
 
     // write back to a file
     void write(const fs::path& output_path) const;
