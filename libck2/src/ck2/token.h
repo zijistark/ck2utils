@@ -3,7 +3,6 @@
 
 #include "common.h"
 #include "Location.h"
-#include <limits>
 
 
 _CK2_NAMESPACE_BEGIN;
@@ -35,20 +34,20 @@ public:
     static const char* TYPE_MAP[];
     const char* type_name() const noexcept { return TYPE_MAP[_type]; }
 
-    token(uint type = END) : _type(type), _text_len(0), _text(nullptr) {}
+    token(uint type_ = END) : _type(type_), _text_len(0), _text(nullptr) {}
 
-    uint type()              const noexcept { return _type; }
-    void type(uint new_type)       noexcept { _type = new_type; }
+    uint type()       const noexcept { return _type; }
+    void type(uint t)       noexcept { _type = t; }
 
-    uint text_len()             const noexcept { return _text_len; }
-    void text_len(uint new_len)       noexcept { _text_len = new_len; }
+    uint text_len()       const noexcept { return _text_len; }
+    void text_len(uint n)       noexcept { _text_len = n; }
 
-    const auto& loc()               const noexcept { return _loc; }
-    void        loc(const Loc& loc)       noexcept { _loc = loc; }
+    const auto& loc()             const noexcept { return _loc; }
+    void        loc(const Loc& l)       noexcept { _loc = l; }
 
-    const char* text()                             const noexcept { return _text; }
-    char*       text()                                   noexcept { return _text; }
-    void        text(char* new_text, uint new_len)       noexcept { _text = new_text; _text_len = new_len; }
+    const char* text()                const noexcept { return _text; }
+    char*       text()                      noexcept { return _text; }
+    void        text(char* p, uint n)       noexcept { _text = p; _text_len = n; }
 };
 
 

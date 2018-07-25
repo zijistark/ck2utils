@@ -6,26 +6,23 @@
 #include <string_view>
 #include <exception>
 #include <stdexcept>
-#include <cerrno>
-#include <cstring>
 
 
 _CK2_NAMESPACE_BEGIN;
 
 
 class Error : public std::runtime_error {
-public:
-    Error() = delete;
+    using Base = std::runtime_error;
 
-    Error(const std::string& msg)
-        : std::runtime_error(msg) {}
+public:
+    Error(const std::string& msg) : Base(msg) {}
 
     // Error(const char* format, fmt::format_args args)
     //     : std::runtime_error( fmt::vformat(format, args) ) {}
 
     template<typename... Args>
     Error(std::string_view format, const Args& ...args)
-        : std::runtime_error( fmt::vformat(format, fmt::make_format_args(args...) ) ) {}
+        : Base( fmt::vformat(format, fmt::make_format_args(args...) ) ) {}
 };
 
 

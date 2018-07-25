@@ -5,6 +5,7 @@
 #include "DefaultMap.h"
 #include "VFS.h"
 #include "filesystem.h"
+#include <string_view>
 #include <string>
 #include <vector>
 
@@ -21,7 +22,7 @@ public:
         std::string type;
         std::string comment;
 
-        Adjacency(uint _from, uint _to, uint _through, str_view _type, str_view _comment)
+        Adjacency(uint _from, uint _to, uint _through, std::string_view _type, std::string_view _comment)
             : from(_from), to(_to), through(_through), type(_type), comment(_comment) {}
     };
 

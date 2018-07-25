@@ -5,17 +5,13 @@
 #include "common.h"
 #include "filesystem.h"
 #include <vector>
-#include <string_view>
 #include <string>
 
 
 _CK2_NAMESPACE_BEGIN;
 
 
-class VFS {
-    std::vector<fs::path> _root_paths;
-
-public:
+struct VFS {
     VFS(const fs::path& base_path) : _root_paths({ base_path }) {}
 
     void push_root_path(const fs::path& p) {
@@ -39,14 +35,6 @@ public:
         return p;
     }
 
-    /* std::string_view convenience overloads */
-
-    // auto resolve_path(fs::path* p_real_path, const std::string_view& virt_path) const {
-    //     return resolve_path(p_real_path, fs::path(virt_path));
-    // }
-
- //   auto operator[](const std::string_view& virt_path) const { return (*this)[fs::path(virt_path)]; }
-
     auto to_string() {
         std::string s = "{";
 
@@ -64,6 +52,9 @@ public:
         s += '}';
         return s;
     }
+
+private:
+    std::vector<fs::path> _root_paths;
 };
 
 

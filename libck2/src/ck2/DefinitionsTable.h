@@ -22,7 +22,7 @@ public:
         std::string name;
         std::string rest;
 
-        Row(uint id_, RGB color_, str_view name_, str_view rest_ = "")
+        Row(uint id_, RGB color_, std::string_view name_, std::string_view rest_ = "")
             : id(id_), color(color_), name(name_), rest(rest_) {}
     };
 
@@ -38,7 +38,7 @@ public:
 
     /* act somewhat like an STL container... */
 
-    uint size()  const noexcept { return _v.size() - 1; }
+    auto size()  const noexcept { return _v.size() - 1; }
     auto empty() const noexcept { return size() == 0; }
 
     auto operator[](uint id) const noexcept { return _v[id]; }

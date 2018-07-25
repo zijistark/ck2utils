@@ -1,6 +1,8 @@
 
 #include "DefaultMap.h"
 #include "parser.h"
+#include <cassert>
+#include <string>
 #include <unordered_map>
 #include <string_view>
 
@@ -124,7 +126,7 @@ DefaultMap::DefaultMap(const VFS& vfs)
     if (_seazone_vec.empty()) throw prs.err("no 'sea_zones' range(s) defined");
 
     for (auto&& [k, v] : _req_path_map)
-        if (v.empty()) throw prs.err("path for '{}' not defined", k);
+        if (v.empty()) throw prs.err("required key '{}' not defined (value should be a path)", k);
 }
 
 
@@ -138,5 +140,6 @@ bool DefaultMap::is_water_province(uint prov_id) const noexcept {
 
     return false;
 }
+
 
 _CK2_NAMESPACE_END;

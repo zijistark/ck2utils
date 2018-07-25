@@ -5,55 +5,57 @@
 #include "Error.h"
 #include "Location.h"
 #include "filesystem.h"
-#include <utility>
+//#include <utility>
 
 
 _CK2_NAMESPACE_BEGIN;
 
 
 class FileLocation : public Location {
-    fs::path _path;
+    using Base = Location;
 public:
-    FileLocation(const fs::path& path_, const Location& loc_) : Location(loc_), _path(path_) {}
-    FileLocation(const fs::path& path_, uint line_ = 0, uint col_ = 0) : Location(line_, col_), _path(path_) {}
+    FileLocation(const fs::path& path_, const Location& loc_) : Base(loc_), _path(path_) {}
+    FileLocation(const fs::path& path_, uint line_ = 0, uint col_ = 0) : Base(line_, col_), _path(path_) {}
 
     auto const& path() const noexcept { return _path; }
     auto&       path()       noexcept { return _path; }
 
     auto to_string() const
     {
-        auto loc_s = Location::to_string();
-        return (loc_s.empty()) ? path().generic_string() :
-                                 path().generic_string() + ":" + loc_s;
+        auto ls = Base::to_string();
+        return ls.empty() ? _path.generic_string() : _path.generic_string() + ":" + ls;
     }
 
     auto to_string_prefix() const { return to_string() + ": "; }
 
-    auto to_string_suffix() const
-    {
-        return Location::to_string_suffix() + fmt::format(" in '{}'", path().generic_string());
+    auto to_string_suffix() const {
+        return Base::to_string_suffix() + fmt::format(" in '{}'", _path.generic_string());
     }
-};
 
-
-class FLError : public Error {
-    FileLocation _fl;
-public:
-    FLError() = delete;
-    ~FLError() noexcept {}
-
-    FLError(const FileLocation& fl, const std::string& msg)
-        : Error( fl.to_string_prefix() + msg ), _fl(fl) {}
-
-    template<typename... Args>
-    FLError(const FileLocation& fl, str_view format, const Args& ...args)
-        : Error( fl.to_string_prefix() + fmt::vformat(format, fmt::make_format_args(args...)) ), _fl(fl) {}
-
-    const auto& floc() const noexcept { return _fl; }
+private:
+    fs::path _path;
 };
 
 
 using FLoc = FileLocation;
+
+
+class FLError : public Error {
+    using Base = Error;
+public:
+    auto const& floc() const noexcept { return _fl; }
+    auto&       floc()       noexcept { return _fl; }
+
+    FLError(const FLoc& fl_, const std::string& msg)
+        : Base(fl_.to_string_prefix() + msg), _fl(fl_) {}
+
+    template<typename... Args>
+    FLError(const FLoc& fl_, std::string_view format, const Args& ...args)
+        : Base(fl_.to_string_prefix() + fmt::vformat(format, fmt::make_format_args(args...))), _fl(fl_) {}
+
+private:
+    FLoc _fl;
+};
 
 
 _CK2_NAMESPACE_END;

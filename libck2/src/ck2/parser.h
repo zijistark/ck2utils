@@ -329,15 +329,15 @@ public:
     auto floc(const object& obj)   const noexcept { return FLoc(path(), obj.loc()); }
     auto floc()                    const noexcept { return FLoc(path()); }
 
-    template<typename... Args> auto err(const Location& loc, str_view format, Args&& ...args) const {
+    template<typename... Args> auto err(const Location& loc, std::string_view format, Args&& ...args) const {
         return FLError(floc(loc), format, std::forward<Args>(args)...);
     }
 
-    template<typename... Args> auto err(const object& obj, str_view format, Args&& ...args) const {
+    template<typename... Args> auto err(const object& obj, std::string_view format, Args&& ...args) const {
         return FLError(floc(obj), format, std::forward<Args>(args)...);
     }
 
-    template<typename... Args> auto err(str_view format, Args&& ...args) const {
+    template<typename... Args> auto err(std::string_view format, Args&& ...args) const {
         return FLError(floc(), format, std::forward<Args>(args)...);
     }
 };

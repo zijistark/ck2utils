@@ -1,14 +1,31 @@
 
 #include "DefinitionsTable.h"
 #include "FileLocation.h"
-#include "legacy_compat.h" // for strsep, which is safe, but not POSIX (and deprecated in this code)
 #include "filesystem.h"
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <cerrno>
 
 
 _CK2_NAMESPACE_BEGIN;
+
+
+static char* strsep(char** stringp, const char* delim) {
+    char* start = *stringp;
+    char* p;
+
+    p = (start != NULL) ? strpbrk(start, delim) : NULL;
+
+    if (p == NULL)
+        *stringp = NULL;
+    else {
+        *p = '\0';
+        *stringp = p + 1;
+    }
+
+    return start;
+}
 
 
 DefinitionsTable::DefinitionsTable()
@@ -64,7 +81,7 @@ DefinitionsTable::DefinitionsTable(const VFS& vfs, const DefaultMap& dm)
                               "Not enough columns in CSV record (need at least {} but only {} found)", N_COLS, x);
         }
 
-        str_view rest(p);
+        std::string_view rest(p);
         if (!rest.empty() && rest.back() == '\n') rest.remove_suffix(1);
         if (!rest.empty() && rest.back() == '\r') rest.remove_suffix(1);
 

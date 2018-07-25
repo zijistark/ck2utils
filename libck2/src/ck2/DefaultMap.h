@@ -5,6 +5,7 @@
 #include "VFS.h"
 #include "filesystem.h"
 #include <string>
+#include <string_view>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
@@ -45,7 +46,7 @@ private:
     ocean_vec_t       _ocean_vec;
     major_river_set_t _major_river_set;
 
-    const std::unordered_map<str_view, fs::path&> _req_path_map;
+    const std::unordered_map<std::string_view, fs::path&> _req_path_map;
 
 public:
     DefaultMap(const VFS& vfs);
@@ -71,7 +72,9 @@ public:
     const auto& seazone_ranges()     const noexcept { return _seazone_vec; }
     const auto& major_river_set()    const noexcept { return _major_river_set; }
 
-    constexpr bool is_valid_province(uint prov_id) const noexcept { return prov_id > 0 && prov_id <= _max_prov_id; }
+    bool is_valid_province(uint prov_id) const noexcept {
+        return prov_id > 0 && prov_id <= _max_prov_id;
+    }
 
     bool is_water_province(uint prov_id) const noexcept;
 };

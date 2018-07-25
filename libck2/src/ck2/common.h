@@ -6,11 +6,13 @@
 #define _CK2_NAMESPACE_END }
 
 
-#include "Error.h"
-#include <string_view>
 #include <iosfwd>
+#include <limits>
 #include <cstdint>
-#include <cassert>
+#include <cassert> // TODO: add our own assert()-like choice which is always enabled, even if NDEBUG is defined
+
+// TODO: remove these from the common header:
+#include "Error.h"
 #include <cstring>
 
 
@@ -18,14 +20,9 @@ _CK2_NAMESPACE_BEGIN;
 
 
 typedef unsigned int uint;
-using str_view = std::string_view;
 
-#ifndef SIZE_MAX
-#define SIZE_MAX (~(size_t)0)
-#endif
-
-inline const char* const EOL = "\n";
-inline const char* const TAB = "\t";
+inline constexpr char const* EOL = "\n";
+inline constexpr char const* TAB = "\t";
 
 
 /* generate_int_array< N, template<size_t> F >::result
@@ -75,7 +72,7 @@ struct generate_int_array {
 
 // motivation for creation: strncpy is practically obsolete and broken -- but it's also slow due to a poor POSIX
 // standardization choice, sprintf and similar are also slower, and of course, strcpy can overflow its output buffer.
-static inline size_t mdh_strncpy(char* dst, size_t dst_sz, const char* src, size_t length) {
+static inline size_t mdh_strncpy(char* dst, size_t dst_sz, const char* const src, size_t length) {
     size_t n = (length > dst_sz) ? dst_sz : length;
     memcpy(dst, src, n);
     dst[n] = '\0'; // only sometimes necessary (when not using as a replacement for strcpy on well-formed input)

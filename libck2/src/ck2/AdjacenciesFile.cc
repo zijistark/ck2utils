@@ -1,9 +1,10 @@
 
 #include "AdjacenciesFile.h"
 #include "FileLocation.h"
-#include "stdio.h"
 #include <memory>
 #include <fstream>
+#include <string_view>
+#include <string>
 #include <cstdio>
 #include <cstdlib>
 #include <cerrno>
@@ -12,7 +13,11 @@
 _CK2_NAMESPACE_BEGIN;
 
 
-static uint col_to_province_id(const FLoc& fl, const char* col, const str_view& col_name, const DefaultMap& dm)
+static uint col_to_province_id(
+    const FLoc& fl,
+    const char* col,
+    const std::string_view& col_name,
+    const DefaultMap& dm)
 {
     /* allow a special case where the column is completely unspecified to resolve to the invalid
      * province ID of 0
@@ -39,7 +44,7 @@ static uint col_to_province_id(const FLoc& fl, const char* col, const str_view& 
 
 AdjacenciesFile::AdjacenciesFile(const VFS& vfs, const DefaultMap& dm)
 {
-    auto path = vfs["map" / dm.definitions_path()];
+    auto path = vfs["map" / dm.adjacencies_path()];
     auto spath = path.generic_string();
 
     // unique_file_ptr will automatically destroy/close its FILE* if we throw an exception (or return)
@@ -84,7 +89,7 @@ AdjacenciesFile::AdjacenciesFile(const VFS& vfs, const DefaultMap& dm)
         }
 
         /* trim potential EOL from final column */
-        str_view rest( cols[NUM_COLS - 1] );
+        std::string_view rest( cols[NUM_COLS - 1] );
         if (!rest.empty() && rest.back() == '\n') rest.remove_suffix(1);
         if (!rest.empty() && rest.back() == '\r') rest.remove_suffix(1);
 

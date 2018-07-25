@@ -1,4 +1,3 @@
-
 #include "Location.h"
 #include "token.h"
 #include "lexer.h"
@@ -7,7 +6,8 @@
 _CK2_NAMESPACE_BEGIN;
 
 
-bool lexer::read_token_into(token& t, size_t max_copy_sz) {
+bool lexer::read_token_into(token& t, size_t max_copy_sz)
+{
     bool ret = true;
 
     t.type( yylex() );
@@ -48,11 +48,12 @@ bool lexer::read_token_into(token& t, size_t max_copy_sz) {
 }
 
 lexer::lexer(const fs::path& path)
-    : _f( std::fopen(path.generic_string().c_str(), "rb"), std::fclose ),
-      _path(path) {
+: _f( std::fopen(path.generic_string().c_str(), "rb"), std::fclose ),
+  _path(path)
+{
 
     if (_f.get() == nullptr)
-        throw Error("could not open file (for reading): {}", path.generic_string());
+        throw Error("Failed to open file: {}: {}", strerror(errno), path.generic_string());
 
     yyin = _f.get();
     yylineno = 1;

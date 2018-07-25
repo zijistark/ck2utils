@@ -30,13 +30,14 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
     // unique_file_ptr will automatically destroy/close its FILE* if we throw an exception (or return)
     typedef std::unique_ptr<std::FILE, int (*)(std::FILE *)> unique_file_ptr;
     unique_file_ptr ufp( std::fopen(spath.c_str(), "rb"), std::fclose );
+    FILE* f = ufp.get();
 
-    if (ufp.get() == nullptr)
+    if (f == nullptr)
         throw Error("Failed to open file: {}: {}", strerror(errno), spath);
 
     BMPHeader bf_hdr;
 
-    if (errno = 0; fread(&bf_hdr, sizeof(bf_hdr), 1, ufp.get()) < 1)
+    if (errno = 0; fread(&bf_hdr, sizeof(bf_hdr), 1, f) < 1)
     {
         if (errno)
             throw FLError(path, "Failed to read bitmap file header: {}", strerror(errno));
@@ -71,18 +72,18 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
     _up_map = std::make_unique<uint16_t[]>(_n_width * _n_height);
 
     /* seek past any other bytes and directly to offset of pixel array (if needed). */
-    if (fseek(ufp.get(), bf_hdr.n_bitmap_offset, SEEK_SET) != 0)
+    if (fseek(f, bf_hdr.n_bitmap_offset, SEEK_SET) != 0)
         throw FLError(path, "Failed to seek to raw bitmap data (offset={0:010X}/{0}): {1}",
                       bf_hdr.n_bitmap_offset,
                       strerror(errno));
 
     /* read bitmap image data (pixel array), row by row, in bottom-to-top raster scan order */
 
-    uint8_t* p_row = new uint8_t[n_row_sz];
+    auto p_row = std::make_unique<uint8_t[]>(n_row_sz);
 
     for (uint row = 0; row < _n_height; ++row)
     {
-        if (errno = 0; fread(p_row, n_row_sz, 1, ufp.get()) < 1)
+        if (errno = 0; fread(&p_row, n_row_sz, 1, f) < 1)
         {
             if (errno)
                 throw FLError(path, "Failed to read scanline #{} of bitmap data: {}", row, strerror(errno));
@@ -90,7 +91,7 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
                 throw FLError(path, "Unexpected EOF while reading bitmap data");
         }
 
-        const uint y = _n_height - 1 - row;
+        const auto y = _n_height - 1 - row;
 
         /* cache previous pixel's value & province ID */
         uint8_t  prev_b = 0;
