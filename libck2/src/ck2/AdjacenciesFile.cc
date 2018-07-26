@@ -1,10 +1,9 @@
-
 #include "AdjacenciesFile.h"
 #include "FileLocation.h"
+#include "DefaultMap.h"
+#include "VFS.h"
 #include <memory>
 #include <fstream>
-#include <string_view>
-#include <string>
 #include <cstdio>
 #include <cstdlib>
 #include <cerrno>
@@ -16,7 +15,7 @@ _CK2_NAMESPACE_BEGIN;
 static uint col_to_province_id(
     const FLoc& fl,
     const char* col,
-    const std::string_view& col_name,
+    const string_view& col_name,
     const DefaultMap& dm)
 {
     /* allow a special case where the column is completely unspecified to resolve to the invalid
@@ -47,11 +46,10 @@ AdjacenciesFile::AdjacenciesFile(const VFS& vfs, const DefaultMap& dm)
     auto path = vfs["map" / dm.adjacencies_path()];
     auto spath = path.generic_string();
 
-    // unique_file_ptr will automatically destroy/close its FILE* if we throw an exception (or return)
-    typedef std::unique_ptr<std::FILE, int (*)(std::FILE *)> unique_file_ptr;
     unique_file_ptr ufp( std::fopen(spath.c_str(), "rb"), std::fclose );
-
-    if (ufp.get() == nullptr)
+    FILE* f = ufp.get();
+    
+    if (f == nullptr)
         throw Error("Failed to open file: {}: {}", strerror(errno), spath);
 
     char buf[512];
@@ -59,12 +57,12 @@ AdjacenciesFile::AdjacenciesFile(const VFS& vfs, const DefaultMap& dm)
 
     const auto fl = [&]() { return FLoc(path, n_line); };
 
-    if (fgets(&buf[0], sizeof(buf), ufp.get()) == nullptr) // consume CSV header
+    if (fgets(&buf[0], sizeof(buf), f) == nullptr) // consume CSV header
         throw FLError(path, "This type of CSV file must have a header line");
 
     ++n_line;
 
-    while (fgets(&buf[0], sizeof(buf), ufp.get()) != nullptr)
+    while (fgets(&buf[0], sizeof(buf), f) != nullptr)
     {
         ++n_line;
         char* p = &buf[0];
@@ -89,7 +87,7 @@ AdjacenciesFile::AdjacenciesFile(const VFS& vfs, const DefaultMap& dm)
         }
 
         /* trim potential EOL from final column */
-        std::string_view rest( cols[NUM_COLS - 1] );
+        string_view rest( cols[NUM_COLS - 1] );
         if (!rest.empty() && rest.back() == '\n') rest.remove_suffix(1);
         if (!rest.empty() && rest.back() == '\r') rest.remove_suffix(1);
 
@@ -110,7 +108,7 @@ void AdjacenciesFile::write(const fs::path& out_path)
     // TODO: needs a unique_file_ptr-like thing (exception guard to close/release the file should we return
     // unexpectedly)
 
-    const std::string spath = out_path.generic_string();
+    const string spath = out_path.generic_string();
     std::ofstream os(spath);
 
     // don't think errno is set for ofstream failure, and the C++ exception model for iostreams is fucking uber-

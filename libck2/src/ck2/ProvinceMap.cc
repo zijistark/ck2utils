@@ -3,6 +3,9 @@
 #include "BMPHeader.h"
 #include "FileLocation.h"
 #include "Color.h"
+#include "VFS.h"
+#include "DefaultMap.h"
+#include "DefinitionsTable.h"
 #include <cstdio>
 #include <cerrno>
 #include <cstdlib>
@@ -14,9 +17,9 @@ _CK2_NAMESPACE_BEGIN;
 
 
 ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const DefinitionsTable& def_tbl)
-: _up_map(nullptr),
-  _n_width(0),
-  _n_height(0)
+: _map(nullptr),
+  _cols(0),
+  _rows(0)
 {
     /* map provinces.bmp color to province ID */
     std::unordered_map<RGB, uint16_t> color2id_map;
@@ -25,10 +28,9 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
         color2id_map.emplace(row.color, row.id);
 
     const auto path = vfs["map" / dm.province_map_path()];
-    const std::string spath = path.generic_string();
+    const string spath = path.generic_string();
 
     // unique_file_ptr will automatically destroy/close its FILE* if we throw an exception (or return)
-    typedef std::unique_ptr<std::FILE, int (*)(std::FILE *)> unique_file_ptr;
     unique_file_ptr ufp( std::fopen(spath.c_str(), "rb"), std::fclose );
     FILE* f = ufp.get();
 
@@ -42,7 +44,7 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
         if (errno)
             throw FLError(path, "Failed to read bitmap file header: {}", strerror(errno));
         else
-            throw FLError(path, "Unexpected EOF while reading bitmap file header (corrupted?)");
+            throw FLError(path, "Unexpected EOF while reading bitmap file header (likely a corrupt file)");
     }
 
     if (bf_hdr.magic != BMPHeader::MAGIC)
@@ -59,17 +61,17 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
     assert( bf_hdr.n_colors == 0 );
     assert( bf_hdr.n_important_colors == 0 );
 
-    _n_width = bf_hdr.n_width;
-    _n_height = bf_hdr.n_height;
+    _cols = bf_hdr.n_width;
+    _rows = bf_hdr.n_height;
 
     /* calculate row size with 32-bit alignment padding */
-    uint n_row_sz = 4 * ((bf_hdr.n_bpp * _n_width + 31) / 32);
+    uint row_sz = 4 * ((bf_hdr.n_bpp * _cols + 31) / 32);
 
     if (bf_hdr.n_bitmap_size)
-        assert( bf_hdr.n_bitmap_size == n_row_sz * _n_height );
+        assert( bf_hdr.n_bitmap_size == row_sz * _rows );
 
     /* allocate ID map */
-    _up_map = std::make_unique<uint16_t[]>(_n_width * _n_height);
+    _map = std::make_unique<id_t[]>(_cols * _rows);
 
     /* seek past any other bytes and directly to offset of pixel array (if needed). */
     if (fseek(f, bf_hdr.n_bitmap_offset, SEEK_SET) != 0)
@@ -79,11 +81,11 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
 
     /* read bitmap image data (pixel array), row by row, in bottom-to-top raster scan order */
 
-    auto p_row = std::make_unique<uint8_t[]>(n_row_sz);
+    auto row_buf = std::make_unique<uint8_t[]>(row_sz);
 
-    for (uint row = 0; row < _n_height; ++row)
+    for (uint row = 0; row < _rows; ++row)
     {
-        if (errno = 0; fread(&p_row, n_row_sz, 1, f) < 1)
+        if (errno = 0; fread(&row_buf, row_sz, 1, f) < 1)
         {
             if (errno)
                 throw FLError(path, "Failed to read scanline #{} of bitmap data: {}", row, strerror(errno));
@@ -91,7 +93,7 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
                 throw FLError(path, "Unexpected EOF while reading bitmap data");
         }
 
-        const auto y = _n_height - 1 - row;
+        const auto y = _rows - 1 - row;
 
         /* cache previous pixel's value & province ID */
         uint8_t  prev_b = 0;
@@ -99,9 +101,9 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
         uint8_t  prev_r = 0;
         uint16_t prev_id = 0;
 
-        for (uint x = 0; x < _n_width; ++x)
+        for (uint x = 0; x < _cols; ++x)
         {
-            const uint8_t* p = &p_row[3*x];
+            const uint8_t* p = &row_buf[3*x];
             uint16_t id;
 
             if (p[0] == 0xFF && p[1] == 0xFF && p[2] == 0xFF)
@@ -122,7 +124,7 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
             prev_b = p[0];
             prev_g = p[1];
             prev_r = p[2];
-            prev_id = _up_map[y*_n_width + x] = id;
+            prev_id = _map[y*_cols + x] = id;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace fs = boost::filesystem;
 
 
 struct PathError : public Error {
-    PathError(const std::string& msg_, const fs::path& path_) : Error(msg_), _path(path_) {}
+    PathError(const string& msg_, const fs::path& path_) : Error(msg_), _path(path_) {}
     auto&       path()       noexcept { return _path; }
     const auto& path() const noexcept { return _path; }
 

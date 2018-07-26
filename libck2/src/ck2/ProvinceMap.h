@@ -1,16 +1,18 @@
-#ifndef __LIBCK2_PROVINCES_MAP_H__
-#define __LIBCK2_PROVINCES_MAP_H__
+#ifndef __LIBCK2_PROVINCE_MAP_H__
+#define __LIBCK2_PROVINCE_MAP_H__
 
 #include "common.h"
-#include "VFS.h"
-#include "DefaultMap.h"
-#include "DefinitionsTable.h"
 #include "filesystem.h"
 #include <memory>
 #include <limits>
 
 
 _CK2_NAMESPACE_BEGIN;
+
+
+class DefinitionsTable;
+class DefaultMap;
+class VFS;
 
 
 // A ProvinceMap class opens & processes the raw bitmap from 'provinces.bmp' & allocates it into a buffer(s) of
@@ -22,26 +24,26 @@ _CK2_NAMESPACE_BEGIN;
 // operator[].]
 //
 // there will probably be a faster, layout-aware means of traversing the grid later.
-class ProvinceMap
+struct ProvinceMap
 {
-public:
-    ProvinceMap() = delete;
+    using id_t = uint16_t;
+
     ProvinceMap(const VFS&, const DefaultMap&, const DefinitionsTable&);
 
-    static constexpr uint16_t PM_IMPASSABLE  = 0; // zero isn't a valid province ID, so reuse it
-    static constexpr uint16_t PM_OCEAN       = std::numeric_limits<uint16_t>::max();
-    static constexpr uint16_t PM_REAL_ID_CAP = std::numeric_limits<uint16_t>::max() - 1;
+    static constexpr id_t PM_IMPASSABLE  = 0; // zero isn't a valid province ID, so reuse it
+    static constexpr id_t PM_OCEAN       = std::numeric_limits<id_t>::max();
+    static constexpr id_t PM_REAL_ID_CAP = PM_OCEAN - 1;
 
-    auto width()  const noexcept { return _n_width; }
-    auto height() const noexcept { return _n_height; }
+    auto width()  const noexcept { return _cols; }
+    auto height() const noexcept { return _rows; }
 
-    uint16_t&       operator()(uint x, uint y)       noexcept { return _up_map[ y*_n_width + x ]; }
-    uint16_t const& operator()(uint x, uint y) const noexcept { return _up_map[ y*_n_width + x ]; }
+    id_t&       operator()(uint x, uint y)       noexcept { return _map[ y * _cols + x ]; }
+    id_t const& operator()(uint x, uint y) const noexcept { return _map[ y * _cols + x ]; }
 
 private:
-    std::unique_ptr<uint16_t[]> _up_map;
-    uint _n_width;
-    uint _n_height;
+    unique_ptr<id_t[]> _map;
+    uint _cols;
+    uint _rows;
 };
 
 

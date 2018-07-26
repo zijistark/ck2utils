@@ -46,7 +46,7 @@ private:
     ocean_vec_t       _ocean_vec;
     major_river_set_t _major_river_set;
 
-    const std::unordered_map<std::string_view, fs::path&> _req_path_map;
+    const std::unordered_map<string_view, fs::path&> _req_path_map;
 
 public:
     DefaultMap(const VFS& vfs);

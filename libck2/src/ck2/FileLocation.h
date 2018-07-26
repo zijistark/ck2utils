@@ -5,7 +5,6 @@
 #include "Error.h"
 #include "Location.h"
 #include "filesystem.h"
-//#include <utility>
 
 
 _CK2_NAMESPACE_BEGIN;
@@ -46,11 +45,11 @@ public:
     auto const& floc() const noexcept { return _fl; }
     auto&       floc()       noexcept { return _fl; }
 
-    FLError(const FLoc& fl_, const std::string& msg)
+    FLError(const FLoc& fl_, const string& msg)
         : Base(fl_.to_string_prefix() + msg), _fl(fl_) {}
 
     template<typename... Args>
-    FLError(const FLoc& fl_, std::string_view format, const Args& ...args)
+    FLError(const FLoc& fl_, string_view format, const Args& ...args)
         : Base(fl_.to_string_prefix() + fmt::vformat(format, fmt::make_format_args(args...))), _fl(fl_) {}
 
 private:

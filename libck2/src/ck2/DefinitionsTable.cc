@@ -1,5 +1,6 @@
-
 #include "DefinitionsTable.h"
+#include "DefaultMap.h"
+#include "VFS.h"
 #include "FileLocation.h"
 #include "filesystem.h"
 #include <cstdio>
@@ -11,18 +12,17 @@
 _CK2_NAMESPACE_BEGIN;
 
 
-static char* strsep(char** stringp, const char* delim) {
-    char* start = *stringp;
-    char* p;
+static inline auto strsep(char** sptr, int delim)
+{
+    auto start = *sptr;
+    char* p = (start) ? strchr(start, delim) : nullptr;
 
-    p = (start != NULL) ? strpbrk(start, delim) : NULL;
-
-    if (p == NULL)
-        *stringp = NULL;
-    else {
+    if (p) {
         *p = '\0';
-        *stringp = p + 1;
+        *sptr = p + 1;
     }
+    else
+        *sptr = nullptr;
 
     return start;
 }
@@ -45,7 +45,6 @@ DefinitionsTable::DefinitionsTable(const VFS& vfs, const DefaultMap& dm)
     // extract valid values (presumably simply reusing the [variadic] tuple utility class & a callback function
     // provided by the user code to process a record)
 
-    typedef std::unique_ptr<std::FILE, int (*)(std::FILE *)> unique_file_ptr;
     unique_file_ptr ufp( std::fopen(spath.c_str(), "rb"), std::fclose );
     FILE* f = ufp.get();
     
@@ -59,6 +58,8 @@ DefinitionsTable::DefinitionsTable(const VFS& vfs, const DefaultMap& dm)
 
     if (fgets(&buf[0], sizeof(buf), f) == nullptr) // consume CSV header
         throw FLError(fl(), "This type of CSV file must have a header line");
+
+    ++n_line;
 
     while (fgets(&buf[0], sizeof(buf), f) != nullptr)
     {
@@ -76,12 +77,12 @@ DefinitionsTable::DefinitionsTable(const VFS& vfs, const DefaultMap& dm)
 
         for (uint x = 0; x < N_COLS; ++x)
         {
-            if ((n_str[x] = strsep(&p, ";")) == nullptr)
+            if ((n_str[x] = strsep(&p, ';')) == nullptr)
                 throw FLError(fl(),
                               "Not enough columns in CSV record (need at least {} but only {} found)", N_COLS, x);
         }
 
-        std::string_view rest(p);
+        string_view rest(p);
         if (!rest.empty() && rest.back() == '\n') rest.remove_suffix(1);
         if (!rest.empty() && rest.back() == '\r') rest.remove_suffix(1);
 
@@ -111,6 +112,7 @@ DefinitionsTable::DefinitionsTable(const VFS& vfs, const DefaultMap& dm)
         if (!dm.is_valid_province(n[0]))
             throw FLError(fl(), "Invalid province ID #{}", n[0]);
 
+        // commented-out because I'm not entirely sure that this is a 100% valid constraint anymore.
         /*
         if ((uint)n[0] != n_line - 1)
             throw FLError(fl(), "CSV record with province ID #{} is out of order or IDs were skipped", n[0]);
@@ -132,12 +134,11 @@ void DefinitionsTable::write(const fs::path& path) const {
 
     // in the future, use a unique_file_ptr that doesn't discard the return value of std::fclose(FILE*) and checks
     // it for an error condition.
-    typedef std::unique_ptr<std::FILE, int (*)(std::FILE *)> unique_file_ptr;
     unique_file_ptr ufp( std::fopen(spath.c_str(), "wb"), std::fclose );
     auto f = ufp.get();
 
     if (f == nullptr)
-        throw FLError(path, "Failed to open file for writing: {}", strerror(errno));
+        throw Error("Failed to open file for writing: {}: {}", strerror(errno), spath);
 
     fmt::print(f, "province;red;green;blue;name;x\n");
 

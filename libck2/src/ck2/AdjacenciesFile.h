@@ -2,8 +2,6 @@
 #define __LIBCK2_ADJACENCIES_FILE_H__
 
 #include "common.h"
-#include "DefaultMap.h"
-#include "VFS.h"
 #include "filesystem.h"
 #include <string_view>
 #include <string>
@@ -13,16 +11,20 @@
 _CK2_NAMESPACE_BEGIN;
 
 
+class VFS;
+class DefaultMap;
+
+
 class AdjacenciesFile {
 public:
     struct Adjacency {
         uint from;
         uint to;
         uint through;
-        std::string type;
-        std::string comment;
+        string type;
+        string comment;
 
-        Adjacency(uint _from, uint _to, uint _through, std::string_view _type, std::string_view _comment)
+        Adjacency(uint _from, uint _to, uint _through, string_view _type, string_view _comment)
             : from(_from), to(_to), through(_through), type(_type), comment(_comment) {}
     };
 

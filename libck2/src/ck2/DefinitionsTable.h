@@ -2,8 +2,6 @@
 #define __LIBCK2_DEFINITIONS_TABLE_H__
 
 #include "common.h"
-#include "DefaultMap.h"
-#include "VFS.h"
 #include "Color.h"
 #include "filesystem.h"
 #include <string>
@@ -13,16 +11,20 @@
 _CK2_NAMESPACE_BEGIN;
 
 
+class DefaultMap;
+class VFS;
+
+
 class DefinitionsTable
 {
 public:
     struct Row {
         uint        id;
         RGB         color;
-        std::string name;
-        std::string rest;
+        string name;
+        string rest;
 
-        Row(uint id_, RGB color_, std::string_view name_, std::string_view rest_ = "")
+        Row(uint id_, RGB color_, string_view name_, string_view rest_ = "")
             : id(id_), color(color_), name(name_), rest(rest_) {}
     };
 

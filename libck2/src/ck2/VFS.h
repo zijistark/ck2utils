@@ -36,7 +36,7 @@ struct VFS {
     }
 
     auto to_string() {
-        std::string s = "{";
+        string s = "{";
 
         if (_root_paths.empty())
             return s += '}';

@@ -9,15 +9,29 @@
 #include <iosfwd>
 #include <limits>
 #include <cstdint>
-#include <cassert> // TODO: add our own assert()-like choice which is always enabled, even if NDEBUG is defined
 
-// TODO: remove these from the common header:
-#include "Error.h"
+// TODO: remove these from this common header soon:
+#include <cassert>
 #include <cstring>
+#include "Error.h"
+
+
+// std forward-decls for convenience/consistency inside CK2 namespace
+
+namespace std {
+    template<class T, class Deleter> class unique_ptr;
+};
 
 
 _CK2_NAMESPACE_BEGIN;
 
+
+using std::string_view;
+using std::string;
+using std::numeric_limits;
+using std::ostream;
+using std::unique_ptr;
+using unique_file_ptr = std::unique_ptr< std::FILE, int (*)(std::FILE*) >;
 
 typedef unsigned int uint;
 

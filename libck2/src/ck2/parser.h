@@ -130,7 +130,7 @@ public:
 
     /* convenience equality operator overloads */
     bool operator==(const char* s)        const noexcept { return is_string() && strcmp(as_string(), s) == 0; }
-    bool operator==(const std::string& s) const noexcept { return is_string() && s == as_string(); }
+    bool operator==(const string& s) const noexcept { return is_string() && s == as_string(); }
     bool operator==(int i)   const noexcept { return is_integer() && as_integer() == i; }
     bool operator==(date d)  const noexcept { return is_date() && as_date() == d; }
     bool operator==(fp3 f)   const noexcept { return is_number() && as_decimal() == f; }
@@ -138,7 +138,7 @@ public:
 
     /* inequality operator overloads (OK, do I really have to be this explicit by default, C++?) */
     bool operator!=(const char* arg)        const noexcept { return !(*this == arg); }
-    bool operator!=(const std::string& arg) const noexcept { return !(*this == arg); }
+    bool operator!=(const string& arg) const noexcept { return !(*this == arg); }
     bool operator!=(int arg)   const noexcept { return !(*this == arg); }
     bool operator!=(date arg)  const noexcept { return !(*this == arg); }
     bool operator!=(fp3 arg)   const noexcept { return !(*this == arg); }
@@ -309,7 +309,7 @@ protected:
 
 public:
     parser() = delete;
-    parser(const std::string& p, bool is_save = false) : parser(p.c_str(), is_save) {}
+    parser(const string& p, bool is_save = false) : parser(p.c_str(), is_save) {}
     parser(const fs::path& p, bool is_save = false) : parser(p.generic_string().c_str(), is_save) {}
     parser(const char* p, bool is_save = false) : _lex(p), _tq_done(false), _tq_head_idx(0), _tq_n(0) {
         // hook our preallocated token text buffers into the lookahead queue
@@ -329,15 +329,15 @@ public:
     auto floc(const object& obj)   const noexcept { return FLoc(path(), obj.loc()); }
     auto floc()                    const noexcept { return FLoc(path()); }
 
-    template<typename... Args> auto err(const Location& loc, std::string_view format, Args&& ...args) const {
+    template<typename... Args> auto err(const Location& loc, string_view format, Args&& ...args) const {
         return FLError(floc(loc), format, std::forward<Args>(args)...);
     }
 
-    template<typename... Args> auto err(const object& obj, std::string_view format, Args&& ...args) const {
+    template<typename... Args> auto err(const object& obj, string_view format, Args&& ...args) const {
         return FLError(floc(obj), format, std::forward<Args>(args)...);
     }
 
-    template<typename... Args> auto err(std::string_view format, Args&& ...args) const {
+    template<typename... Args> auto err(string_view format, Args&& ...args) const {
         return FLError(floc(), format, std::forward<Args>(args)...);
     }
 };
