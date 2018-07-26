@@ -10,6 +10,7 @@
 #include "lexer.h"
 #include "token.h"
 #include "filesystem.h"
+#include <ostream>
 #include <memory>
 #include <algorithm>
 #include <string>
@@ -144,7 +145,7 @@ public:
     bool operator!=(fp3 arg)   const noexcept { return !(*this == arg); }
     bool operator!=(binop arg) const noexcept { return !(*this == arg); }
 
-    void print(std::ostream&, uint indent = 0) const;
+    void print(ostream&, uint indent = 0) const;
 };
 
 
@@ -158,7 +159,7 @@ public:
     list() = delete;
     list(parser&);
 
-    void print(std::ostream&, uint indent = 0) const;
+    void print(ostream&, uint indent = 0) const;
 
     object&       operator[](size_t i)       noexcept { return _vec[i]; }
     const object& operator[](size_t i) const noexcept { return _vec[i]; }
@@ -187,7 +188,7 @@ public:
     const object& op()    const noexcept { return _op; }
     const object& value() const noexcept { return _v; }
 
-    void print(std::ostream&, uint indent = 0) const;
+    void print(ostream&, uint indent = 0) const;
 };
 
 
@@ -226,7 +227,7 @@ public:
     block() { }
     block(parser&, bool is_root = false, bool is_save = false);
 
-    void print(std::ostream&, uint indent = 0) const;
+    void print(ostream&, uint indent = 0) const;
 
     vec_t::size_type      size()  const noexcept { return _vec.size(); }
     bool                  empty() const noexcept { return size() == 0; }
@@ -374,7 +375,7 @@ bool looks_like_title(const char*);
 _CK2_NAMESPACE_END;
 #endif
 
-inline std::ostream& operator<<(std::ostream& os, const ck2::block& a) { a.print(os); return os; }
-inline std::ostream& operator<<(std::ostream& os, const ck2::list& a) { a.print(os); return os; }
+inline std::ostream& operator<<(std::ostream& os, const ck2::block& a)     { a.print(os); return os; }
+inline std::ostream& operator<<(std::ostream& os, const ck2::list& a)      { a.print(os); return os; }
 inline std::ostream& operator<<(std::ostream& os, const ck2::statement& a) { a.print(os); return os; }
-inline std::ostream& operator<<(std::ostream& os, const ck2::object& a) { a.print(os); return os; }
+inline std::ostream& operator<<(std::ostream& os, const ck2::object& a)    { a.print(os); return os; }

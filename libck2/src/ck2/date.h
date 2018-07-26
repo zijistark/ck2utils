@@ -40,7 +40,7 @@ public:
     bool operator> (const date& o) const noexcept { return *this >= o && *this != o; }
     bool operator<=(const date& o) const noexcept { return *this < o || *this == o; }
 
-    friend std::ostream& operator<<(std::ostream& os, date d) {
+    friend ostream& operator<<(ostream& os, date d) {
         return os << (int)d.year() << '.' << (int)d.month() << '.' << (int)d.day();
     }
 }

@@ -214,13 +214,13 @@ bool parser::next(token* p_tok, bool eof_ok) {
 }
 
 
-void block::print(std::ostream& os, uint indent) const {
+void block::print(ostream& os, uint indent) const {
     for (auto&& stmt : _vec)
         stmt.print(os, indent);
 }
 
 
-void list::print(std::ostream& os, uint indent) const {
+void list::print(ostream& os, uint indent) const {
     for (auto&& obj : _vec) {
         obj.print(os, indent);
         os << ' ';
@@ -228,7 +228,7 @@ void list::print(std::ostream& os, uint indent) const {
 }
 
 
-void statement::print(std::ostream& os, uint indent) const {
+void statement::print(ostream& os, uint indent) const {
     os << std::setfill(' ') << std::setw(indent) << "";
     _k.print(os, indent);
     os << " = ";
@@ -237,7 +237,7 @@ void statement::print(std::ostream& os, uint indent) const {
 }
 
 
-void object::print(std::ostream& os, uint indent) const {
+void object::print(ostream& os, uint indent) const {
 
     if (_type == STRING) {
         if (strpbrk(as_string(), " \t\r\n\'"))

@@ -57,5 +57,23 @@ private:
 };
 
 
+// binds a lambda/functor which produces the current path/line/column (floc) on-demand to a factory which returns
+// appropriate FLError objects (presumably to throw).  this is purely for improving convenience & reducing
+// redunancy in code that may throw a lot of FLError-style exceptions.
+template<typename FLocFuncT>
+struct FLErrorFactory {
+    constexpr FLErrorFactory(const FLocFuncT& fl_func_) : _fl_func(fl_func_) {}
+
+    template<typename... Args>
+    constexpr auto operator()(string_view format, Args&& ...args) const
+    {
+        return FLError(_fl_func(), format, std::forward<Args>(args)...);
+    }
+
+private:
+    const FLocFuncT& _fl_func;
+};
+
+
 _CK2_NAMESPACE_END;
 #endif

@@ -39,7 +39,7 @@ DefaultMap::DefaultMap(const VFS& vfs)
         if (s.key() == "max_provinces")
         {
             if (!s.value().is_integer())
-                throw prs.err(s.value(), "invalid value type for 'max_provinces' (requires an integer)");
+                throw prs.err(s.value(), "Invalid value type for 'max_provinces' (requires an integer)");
 
             const auto max_provinces = s.value().as_integer();
             const auto min_cap = 2;
@@ -47,12 +47,12 @@ DefaultMap::DefaultMap(const VFS& vfs)
 
             if (max_provinces < min_cap)
                 throw prs.err(s.value(),
-                              "max_provinces' value ({}) too low (should be at least {})",
+                              "'max_provinces' value ({}) too low (should be at least {})",
                               max_provinces, min_cap);
 
             if (max_provinces > max_cap)
                 throw prs.err(s.value(),
-                              "max_provinces' value ({}) too high (should be no more than {})",
+                              "'max_provinces' value ({}) too high (should be no more than {})",
                               max_provinces, max_cap);
 
             _max_prov_id = max_provinces - 1;
@@ -77,35 +77,35 @@ DefaultMap::DefaultMap(const VFS& vfs)
             for (auto& o : obj_list)
             {
                 if (!o.is_integer())
-                    throw prs.err(o, "non-integer found within 'sea_zones' range (may only contain province IDs)");
+                    throw prs.err(o, "Non-integer found within 'sea_zones' range (may only contain province IDs)");
 
                 auto& prov_id = prov_id_range[i++] = o.as_integer();
 
                 if (!is_valid_province(prov_id))
-                    throw prs.err(o, "invalid province ID #{} in 'sea_zones' range", prov_id);
+                    throw prs.err(o, "Invalid province ID #{} in 'sea_zones' range", prov_id);
             }
 
             if (auto [start, end] = prov_id_range; start <= end)
                 _seazone_vec.emplace_back( SeaRange{uint(start), uint(end)} );
             else
-                throw prs.err(s.key(), "in 'sea_zones' range, start ID #{} is greater than end ID #{}", start, end);
+                throw prs.err(s.key(), "In 'sea_zones' range, start ID #{} is greater than end ID #{}", start, end);
         }
         else if (s.key() == "major_rivers")
         {
             if (!s.value().is_list())
-                throw prs.err(s.value(), "invalid value type for 'major_rivers' clause (needs province ID list)");
+                throw prs.err(s.value(), "Invalid value type for 'major_rivers' clause (needs province ID list)");
 
             const auto& obj_list = *s.value().as_list();
 
             for (auto& o : obj_list)
             {
                 if (!o.is_integer())
-                    throw prs.err(o, "non-integer in 'major_rivers' clause (may only contain province IDs)");
+                    throw prs.err(o, "Non-integer in 'major_rivers' clause (may only contain province IDs)");
 
                 if (int prov_id = o.as_integer(); is_valid_province(prov_id))
                     _major_river_set.insert(prov_id);
                 else
-                    throw prs.err(o, "invalid province ID #{} in 'major_rivers' clause", prov_id);
+                    throw prs.err(o, "Invalid province ID #{} in 'major_rivers' clause", prov_id);
             }
         }
         else if (s.key().is_string())
@@ -114,7 +114,7 @@ DefaultMap::DefaultMap(const VFS& vfs)
                 auto&& [k, v] = *it;
 
                 if (!s.value().is_string())
-                    throw prs.err(s.value(), "invalid value type for '{}' (requires a string)", k);
+                    throw prs.err(s.value(), "Invalid value type for '{}' (requires a string)", k);
 
                 v = s.value().as_string();
             }
@@ -123,10 +123,10 @@ DefaultMap::DefaultMap(const VFS& vfs)
 
     // TODO: marshal & validate externals and ocean_region too!
 
-    if (_seazone_vec.empty()) throw prs.err("no 'sea_zones' range(s) defined");
+    if (_seazone_vec.empty()) throw prs.err("No 'sea_zones' range(s) defined");
 
     for (auto&& [k, v] : _req_path_map)
-        if (v.empty()) throw prs.err("required key '{}' not defined (value should be a path)", k);
+        if (v.empty()) throw prs.err("Required key '{}' not defined (value should be a path)", k);
 }
 
 

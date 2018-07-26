@@ -12,6 +12,12 @@
  */
 
 #include "common.h"
+#include <cstring> // only used in out-of-class defs
+
+// used in in-class defs
+#include <cstdlib>
+#include <iomanip>
+#include <ostream>
 
 
 _CK2_NAMESPACE_BEGIN;
@@ -65,33 +71,21 @@ public:
     bool operator==(int i) const noexcept { return _m == i * scale; }
     bool operator!=(int i) const noexcept { return _m != i * scale; }
 
+
+    friend ostream& operator<<(ostream& os, ck2::fp_decimal<FractionalDigits> fp) {
+        os << fp.integral();
+
+        if (int f = abs(fp.fractional()))
+            os << '.' << std::setfill('0') << std::setw(FractionalDigits) << f;
+
+        return os;
+    }
+
 private:
     /* fractional digit power const-tbl */
     template<size_t I> struct fractional_digit_power { enum { value = exp10< FractionalDigits - I - 1 >::value }; };
     typedef typename generate_int_array<FractionalDigits, fractional_digit_power>::result fractional_digit_powers;
 };
-
-
-_CK2_NAMESPACE_END;
-
-
-#include <cstring>
-#include <cstdlib>
-#include <iomanip>
-
-
-template<unsigned int D>
-std::ostream& operator<<(std::ostream& os, ck2::fp_decimal<D> fp) {
-    os << fp.integral();
-
-    if (int f = abs(fp.fractional()))
-        os << '.' << std::setfill('0') << std::setw(D) << f;
-
-    return os;
-}
-
-
-_CK2_NAMESPACE_BEGIN;
 
 
 /* construct from well-formed c-string. as mentioned, this conversion routine is intended to be run by the parser after
