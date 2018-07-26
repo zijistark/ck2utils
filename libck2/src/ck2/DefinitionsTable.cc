@@ -15,9 +15,8 @@ _CK2_NAMESPACE_BEGIN;
 static inline auto strsep(char** sptr, int delim)
 {
     auto start = *sptr;
-    char* p = (start) ? strchr(start, delim) : nullptr;
-
-    if (p) {
+    
+    if (auto p = (start) ? strchr(start, delim) : nullptr) {
         *p = '\0';
         *sptr = p + 1;
     }
