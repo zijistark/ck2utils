@@ -1,14 +1,14 @@
-#ifndef __LIBCK2_STRING_UTILITY_H__
-#define __LIBCK2_STRING_UTILITY_H__
+#ifndef __LIBCK2_STRUTIL_H__
+#define __LIBCK2_STRUTIL_H__
+
+#include <cstring>
+#include <string_view>
 
 #include "common.h"
 
-#include <string_view>
-#include <algorithm>
-#include <cstring>
-
 
 _CK2_NAMESPACE_BEGIN;
+namespace strutil {
 
 
 // works like linux's strsep(), although implementation may differ. thread-safe way to quickly split a *mutable*
@@ -34,7 +34,7 @@ static inline auto strsep(char** sptr, int delim)
 
 
 // test if an entire string is effectively empty (literally or just full of blank characters or EOL characters)
-static inline constexpr auto str_is_blank(string_view s)
+static inline constexpr auto is_blank(string_view s)
 {
     for (const auto& c : s)
         if ( !(c == ' ' || c == '\t' || c == '\n' || c == '\r') )
@@ -44,5 +44,6 @@ static inline constexpr auto str_is_blank(string_view s)
 }
 
 
+} // end strutil namespace
 _CK2_NAMESPACE_END;
 #endif

@@ -1,16 +1,17 @@
-
 #include "ProvinceMap.h"
-#include "BMPHeader.h"
-#include "FileLocation.h"
-#include "Color.h"
-#include "VFS.h"
-#include "DefaultMap.h"
-#include "DefinitionsTable.h"
-#include <cstdio>
+
 #include <cerrno>
+#include <cstdio>
 #include <cstdlib>
 #include <string>
 #include <unordered_map>
+
+#include "BMPHeader.h"
+#include "Color.h"
+#include "DefaultMap.h"
+#include "DefinitionsTable.h"
+#include "FileLocation.h"
+#include "VFS.h"
 
 
 _CK2_NAMESPACE_BEGIN;

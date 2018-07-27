@@ -1,13 +1,15 @@
 #include "DefinitionsTable.h"
-#include "DefaultMap.h"
-#include "VFS.h"
-#include "FileLocation.h"
-#include "filesystem.h"
-#include "string_utility.h"
+
+#include <cerrno>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cerrno>
+
+#include "DefaultMap.h"
+#include "FileLocation.h"
+#include "VFS.h"
+#include "filesystem.h"
+#include "strutil.h"
 
 
 _CK2_NAMESPACE_BEGIN;
@@ -63,7 +65,7 @@ DefinitionsTable::DefinitionsTable(const VFS& vfs, const DefaultMap& dm)
 
         for (uint x = 0; x < N_COLS; ++x)
         {
-            if ((n_str[x] = strsep(&p, ';')) == nullptr)
+            if ((n_str[x] = strutil::strsep(&p, ';')) == nullptr)
                 throw flerr("Not enough columns in CSV record (need at least {} but only {} found)", N_COLS, x);
         }
 
@@ -77,7 +79,7 @@ DefinitionsTable::DefinitionsTable(const VFS& vfs, const DefaultMap& dm)
 
         for (uint x = 0; x < N_INT_COLS; ++x)
         {
-            if (str_is_blank(n_str[x]))
+            if (strutil::is_blank(n_str[x]))
                 throw flerr("CSV column #{} is empty/blank (integer expected)", x + 1);
 
             // this allows much less strict integer syntax than CK2 does, another reason for specialized CSVReader

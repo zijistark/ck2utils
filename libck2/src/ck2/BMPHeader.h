@@ -2,10 +2,30 @@
 #define __LIBCK2_BMP_HEADER_H__
 
 #include "common.h"
+#include <cstdio>
 
 
 _CK2_NAMESPACE_BEGIN;
 
+
+// Apparently GCC 7.3 on MinGW64 is only paying attention to these 'pack' pragmas (which are traditionally the MSVC
+// way to override data alignment & packing choices of the compiler) while actually _ignoring_ GCC's traditional
+// __attribute__((packed)) system for expressing the same stuff. IDEK, man.
+
+// TODO: Investigate this further so that we can be as portable as we'd like to be for this library. Particularly:
+// A) Does GCC just support the MSVC pragmas on all platforms now? If so, which version added this, because we
+//    should just use whatever approach is unified (though I personally prefer GCC-style attributes to pragmas).
+// B) Does Clang support these pragmas?
+
+// Explanation of packing pragmas:
+//
+// Until we pop this pragma, `pack` shall be set to 1, which means that every variable/class declaration
+// recursively encountered will be "packed into place" by the compiler on 1-byte boundaries (i.e., maximum possible
+// packing with no ability for the compiler to add any padding bytes to align data — in contrast, one could specify
+// 2 and the compiler would be allowed to add a padding byte to an inconveniently placed 'char' variable in order
+// to at least make it accessible on a 16-bit memory address if the compiler thinks it will actually improve any
+// performance). Full documentation is on MSDN somewhere, although I guess that w/ GCC now supporting it at least
+// on the MinGW-64 port, there's probably plenty of other docs too.
 
 #pragma pack(push, 1)
 
