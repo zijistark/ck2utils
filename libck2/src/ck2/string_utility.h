@@ -3,6 +3,7 @@
 
 #include "common.h"
 
+#include <string_view>
 #include <algorithm>
 #include <cstring>
 
@@ -35,17 +36,11 @@ static inline auto strsep(char** sptr, int delim)
 // test if an entire string is effectively empty (literally or just full of blank characters or EOL characters)
 static inline constexpr auto str_is_blank(string_view s)
 {
-    // COMMENT-WHY: apparently gcc 7.3 isn't yet up to C++17 constexpr standard for std::none_of
-    
-    // return std::none_of(cbegin(s), cend(s), [](const string_view::value_type& c) {
-    //     return c == ' ' || c == '\t' || c == '\n' || c == '\r';
-    // });
+    for (const auto& c : s)
+        if ( !(c == ' ' || c == '\t' || c == '\n' || c == '\r') )
+            return false;
 
-    for (int i = s.size(); i >= 0; --i)
-        if (auto c = s[i]; c != ' ' && c != '\t' && c != '\n' && c != '\r')
-            return true;
-
-    return false;
+    return true;
 }
 
 

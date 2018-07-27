@@ -29,6 +29,7 @@ public:
     };
 
 public:
+    AdjacenciesFile() {}
     AdjacenciesFile(const VFS&, const DefaultMap&);
     void write(const fs::path&);
 
@@ -41,6 +42,7 @@ public:
     auto end()   const noexcept { return _v.cend(); }
 
     // TODO: should have methods for adding entries, removing them, etc. that are forwarded to underlying vector.
+    // same goes for DefinitionsTable.
 
 private:
     std::vector<Adjacency> _v;

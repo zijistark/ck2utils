@@ -27,7 +27,8 @@ public:
 
     auto to_string_prefix() const { return to_string() + ": "; }
 
-    auto to_string_suffix() const {
+    auto to_string_suffix() const
+    {
         return Base::to_string_suffix() + fmt::format(" in '{}'", _path.generic_string());
     }
 
@@ -61,8 +62,10 @@ private:
 // appropriate FLError objects (presumably to throw).  this is purely for improving convenience & reducing
 // redunancy in code that may throw a lot of FLError-style exceptions.
 template<typename FLocFuncT>
-struct FLErrorFactory {
-    constexpr FLErrorFactory(const FLocFuncT& fl_func_) : _fl_func(fl_func_) {}
+struct FLErrorFactory
+{
+    constexpr FLErrorFactory(FLocFuncT& fl_func_)
+        : _fl_func(fl_func_) {}
 
     template<typename... Args>
     constexpr auto operator()(string_view format, Args&& ...args) const
@@ -71,7 +74,7 @@ struct FLErrorFactory {
     }
 
 private:
-    const FLocFuncT& _fl_func;
+    FLocFuncT& _fl_func;
 };
 
 

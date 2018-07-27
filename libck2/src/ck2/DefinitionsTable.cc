@@ -39,7 +39,8 @@ DefinitionsTable::DefinitionsTable(const VFS& vfs, const DefaultMap& dm)
     char buf[512];
     uint n_line = 0;
 
-    const auto flerr = FLErrorFactory( [&]() { return FLoc(path, n_line); } );
+    auto floc = [&]() { return FLoc(path, n_line); };
+    auto flerr = FLErrorFactory(floc);
 
     if (fgets(&buf[0], sizeof(buf), f) == nullptr) // consume CSV header
         throw flerr("This type of CSV file must have a header line");
@@ -103,6 +104,12 @@ DefinitionsTable::DefinitionsTable(const VFS& vfs, const DefaultMap& dm)
 
         _v.emplace_back(n[0], RGB{ (uint)n[1], (uint)n[2], (uint)n[3] }, n_str[4], rest);
 
+        // TODO: Find a different way to ignore extranneous province entries in definitions.csv (e.g., vanilla and
+        // SWMH both have some extra 2-10,000 extra lines simply for pre-filled RGB values should more provinces be
+        // added). Why? For the same reason I commented out the error check for the current province ID not being
+        // equal to the current line number (minus 1) above; I'm not sure that entries need to appear in order, and
+        // if they don't, quitting reading entries as soon as we see the max. province ID will fail to read all of
+        // the necessary data.
         if ((unsigned)n[0] == dm.max_province_id())
             break;
     }

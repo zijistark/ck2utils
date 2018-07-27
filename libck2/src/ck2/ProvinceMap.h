@@ -32,7 +32,7 @@ struct ProvinceMap
 
     static constexpr id_t PM_IMPASSABLE  = 0; // zero isn't a valid province ID, so reuse it
     static constexpr id_t PM_OCEAN       = std::numeric_limits<id_t>::max();
-    static constexpr id_t PM_REAL_ID_CAP = PM_OCEAN - 1;
+    static constexpr id_t PM_REAL_ID_CAP = std::numeric_limits<id_t>::max() - 1;
 
     auto width()  const noexcept { return _cols; }
     auto height() const noexcept { return _rows; }

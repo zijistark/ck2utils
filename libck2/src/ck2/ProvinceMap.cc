@@ -22,7 +22,7 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
   _rows(0)
 {
     /* map provinces.bmp color to province ID */
-    std::unordered_map<RGB, uint16_t> color2id_map;
+    std::unordered_map<RGB, id_t> color2id_map;
 
     for (const auto& row : def_tbl)
         color2id_map.emplace(row.color, row.id);
@@ -44,11 +44,11 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
         if (errno)
             throw FLError(path, "Failed to read bitmap file header: {}", strerror(errno));
         else
-            throw FLError(path, "Unexpected EOF while reading bitmap file header (likely a corrupt file)");
+            throw FLError(path, "Unexpected EOF while reading bitmap file header (file corruption)");
     }
 
     if (bf_hdr.magic != BMPHeader::MAGIC)
-        throw FLError(path, "Unsupported bitmap file type (magic={:06X} but want magic={:06X})",
+        throw FLError(path, "Unsupported bitmap file type (magic=0x{:04X} but want magic=0x{:04X})",
                       bf_hdr.magic, BMPHeader::MAGIC);
 
     // TODO: all these not to be handled by compile-time assertions (every damn one from here one!)
@@ -75,17 +75,17 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
 
     /* seek past any other bytes and directly to offset of pixel array (if needed). */
     if (fseek(f, bf_hdr.n_bitmap_offset, SEEK_SET) != 0)
-        throw FLError(path, "Failed to seek to raw bitmap data (offset={0:010X}/{0}): {1}",
+        throw FLError(path, "Failed to seek to raw bitmap data (offset=0x{0:08X}/{0}): {1}",
                       bf_hdr.n_bitmap_offset,
                       strerror(errno));
 
     /* read bitmap image data (pixel array), row by row, in bottom-to-top raster scan order */
 
-    auto row_buf = std::make_unique<uint8_t[]>(row_sz);
+    auto up_row_buf = std::make_unique<uint8_t[]>(row_sz);
 
     for (uint row = 0; row < _rows; ++row)
     {
-        if (errno = 0; fread(&row_buf, row_sz, 1, f) < 1)
+        if (errno = 0; fread(up_row_buf.get(), row_sz, 1, f) < 1)
         {
             if (errno)
                 throw FLError(path, "Failed to read scanline #{} of bitmap data: {}", row, strerror(errno));
@@ -103,7 +103,7 @@ ProvinceMap::ProvinceMap(const VFS& vfs, const DefaultMap& dm, const Definitions
 
         for (uint x = 0; x < _cols; ++x)
         {
-            const uint8_t* p = &row_buf[3*x];
+            const uint8_t* p = &up_row_buf[3*x];
             uint16_t id;
 
             if (p[0] == 0xFF && p[1] == 0xFF && p[2] == 0xFF)
