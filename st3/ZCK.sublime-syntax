@@ -999,6 +999,9 @@ variables:
     |   disable_non_aggression_pacts
     |   is_religious
     |   same_religion
+    |   purple_born_heirs
+    |   has_top_de_jure_capital
+    |   top_de_jure_capital
     |   is_crusade
     |   as_if_liege
     |   random

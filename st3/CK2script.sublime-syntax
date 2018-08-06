@@ -994,6 +994,9 @@ variables:
     |   is_religious
     |   same_religion
     |   is_crusade
+    |   purple_born_heirs
+    |   has_top_de_jure_capital
+    |   top_de_jure_capital
     |   as_if_liege
     |   random
     |   customizer
