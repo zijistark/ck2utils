@@ -406,6 +406,7 @@ variables:
     | is_married
     | is_mother
     | is_nibling_of
+    | is_null
     | is_older_than
     | is_opposite_sex
     | is_parent_of
@@ -802,6 +803,7 @@ variables:
     | add_weak_pressed_claim
     | banish
     | break_alliance
+    | break_betrothal
     | clear_wealth
     | conquest_culture
     | copy_title_history
