@@ -345,7 +345,8 @@ variables:
     )
   vTriggerTarget: |-
     (?x:
-      can_marry
+      at_location
+    | can_marry
     | character
     | claimed_by
     | completely_controls
@@ -716,6 +717,7 @@ variables:
     |   their_opinion
     |   clan_opinion
     |   personal_opinion
+    |   plot_power_contribution
     |   relative_power
     |   relative_power_including_allies_attacker
     |   relative_power_including_allies_defender
@@ -779,6 +781,7 @@ variables:
     | set_father
     | set_looter_hostility_days
     | set_mother
+    | set_real_father
     | treasury
     | wealth
     )
@@ -834,6 +837,7 @@ variables:
     | set_mother
     | set_offmap_holder
     | set_preferred_capital
+    | set_real_father
     | set_secret_religion
     | show_portrait
     | unsafe_destroy_landed_title
@@ -863,6 +867,7 @@ variables:
     | make_capital_holding
     | make_primary_title
     | plot_succeeds
+    | recalc_succession
     | refill_holding_levy
     | remove_guardian
     | reveal_plot
@@ -934,6 +939,13 @@ variables:
     | unsafe_destroy_artifact
     | unsafe_religion
     | unsafe_give_minor_title
+    )
+  vParamTarget: |-
+    (?x:
+        plotter
+    |   target
+    |   who
+    |   where
     )
   vParamNumber: |-
     (?x:
@@ -1269,6 +1281,14 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.language.ck2script
+    - match: '\b({{vParamTarget}})\s*=\s*({{vEventTarget}})\b'
+      captures:
+        1: support.function.zck
+        2: variable.other.zck
+    - match: '\b({{vParamTarget}})\s*=\s*({{vLangRHSTarget}})\b'
+      captures:
+        1: support.function.zck
+        2: variable.language.zck
     - match: '\b({{vEffectTitleID}})\s*=\s*({{vTitleID}})\b'
       captures:
         1: support.function.ck2script

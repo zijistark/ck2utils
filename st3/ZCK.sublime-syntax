@@ -54,7 +54,7 @@ variables:
   vOffmapID: |-
     (?x: offmap _ [a-zA-Z] [a-zA-Z0-9_-]* )
   vEventTarget: |-
-    (?x: (?:event_)? t (?:arget)? : {{vStrictID}} )
+    (?x: (?:event_)? [Tt] (?:arget)? : {{vStrictID}} )
   vLangTarget: |-
     (?xi:
       (?:ROOT (?: _ (?:FROM){1,4} )? )
@@ -349,7 +349,8 @@ variables:
     )
   vTriggerTarget: |-
     (?x:
-      can_marry
+      at_location
+    | can_marry
     | character
     | claimed_by
     | completely_controls
@@ -721,6 +722,7 @@ variables:
     |   their_opinion
     |   clan_opinion
     |   personal_opinion
+    |   plot_power_contribution
     |   relative_power
     |   relative_power_including_allies_attacker
     |   relative_power_including_allies_defender
@@ -785,6 +787,7 @@ variables:
     | set_father
     | set_looter_hostility_days
     | set_mother
+    | set_real_father
     | treasury
     | wealth
     )
@@ -836,6 +839,7 @@ variables:
     | seize_trade_post
     | set_defacto_liege
     | set_defacto_vassal
+    | set_real_father
     | set_father
     | set_mother
     | set_offmap_holder
@@ -871,6 +875,7 @@ variables:
     | plot_succeeds
     | recalc_succession
     | refill_holding_levy
+    | recalc_succession
     | remove_guardian
     | reveal_plot
     | reveal_plot_w_message
@@ -941,6 +946,13 @@ variables:
     | unsafe_destroy_artifact
     | unsafe_religion
     | unsafe_give_minor_title
+    )
+  vParamTarget: |-
+    (?x:
+        plotter
+    |   target
+    |   who
+    |   where
     )
   vParamNumber: |-
     (?x:
@@ -1285,6 +1297,14 @@ contexts:
         1: support.function.zck
         2: variable.other.zck
     - match: '\b({{vEffectTarget}})\s*=\s*({{vLangRHSTarget}})\b'
+      captures:
+        1: support.function.zck
+        2: variable.language.zck
+    - match: '\b({{vParamTarget}})\s*=\s*({{vEventTarget}})\b'
+      captures:
+        1: support.function.zck
+        2: variable.other.zck
+    - match: '\b({{vParamTarget}})\s*=\s*({{vLangRHSTarget}})\b'
       captures:
         1: support.function.zck
         2: variable.language.zck
