@@ -23,7 +23,7 @@ try:
 except ImportError:
     git_present = False
 
-VERSION = 2
+VERSION = 3
 
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
                      quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
@@ -737,6 +737,7 @@ class SimpleParser:
         self.no_fold_to_depth = -1
         self.newlines_to_depth = -1
         self.crlf = True
+        self.encoding = 'cp1252'
         self.ignore_cache = False
         self.vanilla_is_repo = True
         self.cachedir = cachedir / self.__class__.__name__
@@ -786,8 +787,9 @@ class SimpleParser:
             if bad_repo_path != None:
                 del self.repos[bad_repo_path]
 
-    def get_cachepath(self, path):
+    def get_cachepath(self, path, encoding):
         m = hashlib.md5()
+        m.update(encoding.encode())
         m.update(bytes(path))
         cachedir = self.cachedir
         name = m.hexdigest()
@@ -865,7 +867,7 @@ class SimpleParser:
             if path.is_file():
                 yield path.resolve(), self.parse_file(path, **kwargs)
 
-    def parse_file(self, path, encoding='cp1252', errors='replace',
+    def parse_file(self, path, encoding=None, errors='replace',
                    memcache=None, diskcache=None):
         try:
             path = path.resolve()
@@ -876,12 +878,13 @@ class SimpleParser:
             memcache = self.memcache_default
         if diskcache is None:
             diskcache = self.diskcache_default
-        ignore_cache = (self.ignore_cache or encoding != 'cp1252' or
-                        errors != 'replace')
+        if encoding is None:
+            encoding = self.encoding
+        ignore_cache = (self.ignore_cache or errors != 'replace')
         if not ignore_cache:
             if path in self.parse_tree_cache:
                 return self.parse_tree_cache[path]
-            cachepath, is_indexed = self.get_cachepath(path)
+            cachepath, is_indexed = self.get_cachepath(path, encoding)
             try:
                 if cachepath.exists() and (is_indexed or
                                            (os.path.getmtime(str(cachepath)) >=
@@ -926,7 +929,7 @@ class SimpleParser:
     def write(self, tree, path):
         path.parent.mkdir(parents=True, exist_ok=True)
         try:
-            with path.open('w', encoding='cp1252',
+            with path.open('w', encoding=encoding,
                            newline=('\r\n' if self.crlf else '\n')) as f:
                 f.write(tree.str(self))
         except:
