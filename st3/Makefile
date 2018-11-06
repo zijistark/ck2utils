@@ -10,7 +10,7 @@ all:
 
 reverse:
 	rsync -thhi \
-		$(INSTALL_DIR)/{CK2script,ZCK}.sublime-syntax \
-		$(INSTALL_DIR)/{CK2script,ZCK}.tmPreferences \
+		$(INSTALL_DIR)/{CK2script,ZCK,HoI4}.sublime-syntax \
+		$(INSTALL_DIR)/{CK2script,ZCK,HoI4}.tmPreferences \
 		$(INSTALL_DIR)/Zizzle.tmTheme \
 		$(SOURCE_DIR)/
