@@ -18,7 +18,7 @@ def process_province_history(parser):
     return title_id
 
 def build_trigger(parser, counties_by_barony_count, title_id):
-    trigger_outer = ck2parser.Pair('emf_can_add_holding_slot_trigger')
+    trigger_outer = ck2parser.Pair('emf_can_add_holding_slot')
     trigger = ck2parser.Pair('NOR')
     trigger.value.contents.append(ck2parser.Pair('num_of_max_settlements',
                                                  ck2parser.Number(7)))
@@ -46,7 +46,7 @@ def build_trigger(parser, counties_by_barony_count, title_id):
 def main():
     parser = ck2parser.FullParser(ck2parser.rootpath / 'SWMH-BETA/SWMH')
     parser.crlf = False
-    parser.tab_indents = False
+    parser.tab_indents = True
     parser.indent_width = 4
     outpath = ck2parser.rootpath / ('EMF/EMF+SWMH/common/scripted_triggers/'
                                     'emf_can_add_holding_slot_trigger.txt')

@@ -181,7 +181,8 @@ def main():
 
     with tempfile.TemporaryDirectory() as td:
         lt_t = pathlib.Path(td)
-        for inpath, tree in full_parser.parse_files('common/landed_titles/*'):
+        for inpath, tree in full_parser.parse_files(
+            'common/landed_titles/*.txt'):
             outpath = lt_t / inpath.name
             update_tree(tree)
             with outpath.open('w', encoding='cp1252', newline='\r\n') as f:

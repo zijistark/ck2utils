@@ -51,13 +51,13 @@ class TitleHistory:
         'liege', 'holder', 'pentarch', 'law', 'vice_royalty', 'active',
         'clear_tribute_suzerain', 'set_tribute_suzerain', 'conquest_culture',
         'name', 'reset_name', 'adjective', 'reset_adjective',
-        'set_global_flag', 'clr_global_flag', 'effect'
+        'set_global_flag', 'clr_global_flag', 'effect', 'capital', 'government'
     ]
     keys_sort_key = lambda cls, x: (
         x.key.val != 'active' or x.value.val != 'yes',
         cls.keys.index(x.key.val))
 
-    def __init__(self, name, djl):
+    def __init__(self, name, djl, cap = 0):
         self.name = name
         self.has_file = False
         self.attr = {k: [(Date.EARLIEST, v)] for k, v in [
@@ -72,7 +72,9 @@ class TitleHistory:
             ('conquest_culture', 0),
             ('name', ''),
             ('adjective', ''),
-            ('suzerain', 0)
+            ('suzerain', 0),
+            ('capital', cap),
+            ('government', '')
         ]}
         self.date_comments = defaultdict(list)
         self.date_ker_comments = defaultdict(list)
@@ -333,15 +335,17 @@ def main():
         nonlocal current_index
         for n, v in tree:
             if is_codename(n.val):
+                cap = v.get('capital', Number(0)).val
                 histories[n.val] = TitleHistory(n.val,
-                                                stack[-1] if stack else 0)
+                                                stack[-1] if stack else 0,
+                                                cap)
                 landed_titles_index[n.val] = current_index
                 current_index += 1
                 stack.append(n.val)
                 title_djls[n.val] = stack.copy()
                 recurse(v, stack=stack)
                 stack.pop()
-    for _, tree in simple_parser.parse_files('common/landed_titles/*'):
+    for _, tree in simple_parser.parse_files('common/landed_titles/*.txt'):
         recurse(tree)
     date_filter = IntervalTree()
     if not CLEANUP_TITLE_HISTORY:
@@ -446,7 +450,11 @@ def main():
                         attr_vals = histories[title].attr[n2.val[6:]]
                         value = ''
                     if attr_vals is None:
-                        attr_vals = histories[title].attr[n2.val]
+                        try:
+                            attr_vals = histories[title].attr[n2.val]
+                        except:
+                            print(title)
+                            raise
                     if value is None:
                         value = v2.val
                     if attr_vals[-1][0] == date:

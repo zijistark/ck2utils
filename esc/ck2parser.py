@@ -929,7 +929,7 @@ class SimpleParser:
     def write(self, tree, path):
         path.parent.mkdir(parents=True, exist_ok=True)
         try:
-            with path.open('w', encoding=encoding,
+            with path.open('w', encoding=self.encoding,
                            newline=('\r\n' if self.crlf else '\n')) as f:
                 f.write(tree.str(self))
         except:
