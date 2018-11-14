@@ -505,6 +505,7 @@ variables:
     | is_adult
     | is_alive
     | is_allowed_to_loot
+    | is_alternate_start
     | is_attacker
     | is_capital
     | is_consort
@@ -584,6 +585,7 @@ variables:
     | prisoner
     | rebel
     | religion_allows_female_temple_holders
+    | religion_allows_male_temple_holders
     | remove_spouse
     | risks_minor_clan_rising
     | society_can_rank_up
@@ -647,6 +649,7 @@ variables:
     | government
     | has_{{vEventModifierType}}_modifier
     | has_{{vFlagType}}_flag
+    | has_religion_feature
     | has_ambition
     | has_any_building
     | has_any_opinion_modifier
@@ -716,6 +719,7 @@ variables:
     |   reverse_opinion
     |   their_opinion
     |   clan_opinion
+    |   has_alternate_start_parameter
     |   personal_opinion
     |   plot_power_contribution
     |   relative_power
@@ -1389,7 +1393,7 @@ contexts:
       scope: keyword.other.tooltip.ck2script
     - match: \b(custom|conditional)_tooltip\b
       scope: keyword.control.ck2script
-    - match: \b(if|else|else_if|trigger_switch|limit|on_trigger|while|break|show_scope_change|generate_tooltip)\b
+    - match: \b(if|else|else_if|trigger_switch|limit|on_trigger|while|break|show_scope_change|generate_tooltip|trigger_if|trigger_else_if|trigger_else)\b
       scope: keyword.control.ck2script
     - match: \b((mult_)?modifier|modifier|additive_modifier|additive_power_diff_modifier|additive_opinion_modifier|additive_compared_realm_size_modifier|additive_realm_size_modifier)\b
       scope: keyword.control.ck2script
