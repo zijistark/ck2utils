@@ -225,6 +225,9 @@ variables:
     | among_most_powerful_vassals
     | character
     | combat_rating
+    | crusade_preparation_time_elapsed
+    | crusade_preparation_time_remaining
+    | crusade_(?:gold|prestige|piety|artifact)_pot
     | day_of_birth
     | days_at_current_society_rank
     | days_in_society
@@ -306,6 +309,8 @@ variables:
   vTriggerDecimal: |-
     (?x:
       base_health
+    | crusade_defense_strength
+    | crusade_preparation_strength
     | demesne_efficiency
     | demesne_size_compared_to_limit
     | health
@@ -468,6 +473,7 @@ variables:
     | can_marry
     | controls_religion
     | clan
+    | crusade_war_has_started
     | flank_has_leader
     | from_ruler_dynasty
     | has_autocephaly
@@ -488,6 +494,8 @@ variables:
     | has_mercenary_band
     | has_nickname
     | has_owner
+    | has_pledged_crusade_defense
+    | has_pledged_crusade_participation
     | has_polygamy
     | has_raised_standing_troops
     | has_regent
@@ -512,6 +520,7 @@ variables:
     | is_contested
     | is_conquered
     | is_councillor
+    | is_crusade_target
     | is_de_jure_title
     | is_dying
     | is_father_real_father
@@ -541,6 +550,7 @@ variables:
     | is_patrician
     | is_powerful_vassal
     | is_pregnant
+    | is_preparing_crusade
     | is_priest
     | is_primary_heir
     | is_primary_holder_title
@@ -555,6 +565,7 @@ variables:
     | is_plot_active
     | is_recent_grant
     | is_reformed_religion
+    | is_religion_crusade_target
     | is_republic
     | is_ruler
     | is_save_game
@@ -736,6 +747,7 @@ variables:
     |   add_law
     |   create_character
     |   create_title
+    |   distribute_crusade_pot
     |   gain_settlements_under_title
     |   gain_title
     |   grant_title
@@ -752,6 +764,7 @@ variables:
     |   make_tributary
     |   death
     |   activate_title
+    |   set_crusade_target
     |   set_title_adventurer
     |   set_title_nomad
     |   set_title_landless
@@ -765,6 +778,7 @@ variables:
   vEffectNumber: |-
     (?x:
       add_holding_slot
+    | add_to_crusade_(?:gold|prestige|piety|artifact)_pot
     | change_{{vCharAttr}}
     | change_society_currency
     | culture_techpoints
@@ -782,6 +796,7 @@ variables:
     | scaled_piety
     | scaled_prestige
     | scaled_wealth
+    | set_crusade_pot_multiplier
     | set_father
     | set_looter_hostility_days
     | set_mother
@@ -835,10 +850,12 @@ variables:
     | reverse_banish
     | reverse_remove_favor
     | seize_trade_post
+    | set_crusader_king
     | set_defacto_liege
     | set_defacto_vassal
     | set_father
     | set_mother
+    | set_official_crusade_recipient
     | set_offmap_holder
     | set_preferred_capital
     | set_real_father
@@ -858,18 +875,23 @@ variables:
     | ambition_succeeds
     | banish
     | cancel_ambition
+    | cancel_crusade
     | clear_focus
     | clear_secret_religion
     | clear_wealth
     | cut_mercenary_creator_relation
     | death
     | diplomatic_immunity
+    | distribute_crusade_target_title
     | destroy_landed_title
     | excommunicate
     | impregnate
     | imprison
+    | lock_crusade_target
     | make_capital_holding
     | make_primary_title
+    | pledge_crusade_defense
+    | pledge_crusade_participation
     | plot_succeeds
     | recalc_succession
     | refill_holding_levy
@@ -1093,7 +1115,12 @@ variables:
     | controller
     | county
     | crownlaw_title
+    | crusade_beneficiary
+    | crusade_religion_targeting_us
     | crusade_target
+    | crusade_target_char
+    | crusade_target_title
+    | crusader_king
     | culture_scope
     | current_heir
     | defacto_liege_title
@@ -1142,6 +1169,7 @@ variables:
     | new_artifact
     | new_character
     | new_title
+    | official_crusade_recipient
     | offmap_power
     | owner
     | parent_religion_head
