@@ -472,6 +472,7 @@ variables:
     | can_change_religion
     | can_have_more_leadership_traits
     | can_marry
+    | character
     | controls_religion
     | clan
     | crusade_war_has_started
@@ -663,6 +664,7 @@ variables:
     | has_{{vEventModifierType}}_modifier
     | has_{{vFlagType}}_flag
     | has_religion_feature
+    | has_selected_religion_feature
     | has_ambition
     | has_any_building
     | has_any_opinion_modifier
@@ -911,6 +913,7 @@ variables:
     | lock_crusade_target
     | make_capital_holding
     | make_primary_title
+    | make_reformer_head_of_religion
     | pledge_crusade_defense
     | pledge_crusade_participation
     | plot_succeeds
@@ -925,6 +928,7 @@ variables:
     | set_pacifist
     | set_hard_to_convert
     | set_raised_vassal_opinion_loss
+    | set_no_head_of_religion
     | set_piety_loss_for_attacking_same_religion
     | set_feminist
     | set_heir_designation
@@ -1009,6 +1013,7 @@ variables:
     | remove_special_character_title
     | remove_title
     | remove_trait
+    | set_branch_tag
     | set_focus
     | set_{{vFlagType}}_flag
     | set_offmap_name
@@ -1019,6 +1024,7 @@ variables:
     | set_policy
     | set_name
     | set_offmap_name
+    | set_religious_branch
     | set_secret_religion
     | set_special_character_title
     | set_status
@@ -1083,6 +1089,8 @@ variables:
     | title_prefix
     | foa
     | foa_female
+    | key
+    | localisation_key
     )
   vParamBool: |-
     (?x:
@@ -1370,6 +1378,10 @@ contexts:
         1: support.function.ck2script
         2: variable.other.ck2script
     - match: '\b(dynasty)\s*=\s*(none|father_bastard|mother_bastard|random|culture|actually_culture)\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.ck2script
+    - match: '\b(set_religion_head)\s*=\s*(none)\b' # haven't seen in vanilla or tested myself using anything but 'none' here, but it might take targets. 'til then, special case.
       captures:
         1: support.function.ck2script
         2: constant.language.ck2script
