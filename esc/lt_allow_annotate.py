@@ -62,7 +62,7 @@ def main():
     full_parser = FullParser()
     annotate_mod(simple_parser, full_parser, rootpath / 'SWMH-BETA/SWMH')
     full_parser.crlf = False
-    full_parser.tab_indents = False
+    full_parser.tab_indents = True
     full_parser.indent_width = 4
     annotate_mod(simple_parser, full_parser, rootpath / 'EMF/EMF+Vanilla')
 

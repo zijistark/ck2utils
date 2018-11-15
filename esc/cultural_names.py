@@ -15,7 +15,8 @@ def main():
         for n, v in tree:
             if n.val == 'italian_group':
                 cultures.update(n2.val for n2, v2 in v
-                                if n2.val != 'graphical_cultures')
+                                if n2.val not in ['graphical_cultures',
+                                                  'alternate_start'])
     name_freqs = {c: {False: Counter(), True: Counter()} for c in cultures}
     rulers = set()
     for _, tree in parser.parse_files('history/titles/*.txt'):

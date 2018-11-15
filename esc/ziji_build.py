@@ -61,7 +61,7 @@ def process_cultures(parser, build):
         for n, v in tree:
             culture_groups.append(n.val)
             for n2, v2 in v:
-                if n2.val != 'graphical_cultures':
+                if n2.val not in ['graphical_cultures', 'alternate_start']:
                     cultures.append(n2.val)
                     mutated |= update_obj(v2)
             mutated |= update_obj(v)

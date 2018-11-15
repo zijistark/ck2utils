@@ -53,7 +53,8 @@ def get_cultures(parser, groups=True):
         for n, v in tree:
             culture_groups.append(n.val)
             cultures.extend(n2.val for n2, v2 in v
-                            if n2.val != 'graphical_cultures')
+                            if n2.val not in ['graphical_cultures',
+                                              'alternate_start'])
     return (cultures, culture_groups) if groups else cultures
 
 def get_religions(parser, groups=True):

@@ -730,13 +730,16 @@ def format_other_provs_table():
 
 def duchy_path():
     from pprint import pprint
+    # start_region = {
+    #     'd_jiuquan'
+    # }
     start_region = {
-        'd_jiuquan'
+        'd_lhasa', 'd_yarlung', 'd_shigatse', 'd_nagchu', 'd_sumparu', 'd_bhutan', 'd_purang', 'd_ngari', 'd_ladakh', 'd_dege', 'd_qamdo', 'd_nyingchi', 'd_kathmandu', 'd_gorkha', 'd_kashmir', 'd_pamir', 'd_uttaranchal', 'd_jiuquan', 'd_qinghai', 'd_nagormo', 'd_nangqen'
     }
     end_region = {
         'd_marrakech', 'd_fes', 'd_tangiers', 'd_tlemcen', 'd_alger', 'd_kabylia', 'd_tunis', 'd_tripolitania', 'd_cyrenaica', 'd_alexandria', 'd_damietta', 'd_cairo', 'd_aswan'
     }
-    when = 769, 1, 1
+    when = 867, 1, 1
     for u, v in Title.province_graph.edges():
         try:
             d_u = Title.id_title_map[u].liege(when).codename
@@ -824,20 +827,20 @@ def main():
 
     province_map_out = rootpath
     maps = [
-        # 'max_settlements',
-        # 'defined_baronies',
-        # 'defined_baronies_minus_max_settlements',
-        # '1066_built_holdings',
-        # 'max_settlements_minus_1066_built_holdings',
-        # 'max_settlements_divided_by_area',
-        # 'log_max_settlements_divided_by_area',
-        # '1066_built_holdings_divided_by_area',
-        # 'log_1066_built_holdings_divided_by_area',
+        'max_settlements',
+        'defined_baronies',
+        'defined_baronies_minus_max_settlements',
+        '1066_built_holdings',
+        'max_settlements_minus_1066_built_holdings',
+        'max_settlements_divided_by_area',
+        'log_max_settlements_divided_by_area',
+        '1066_built_holdings_divided_by_area',
+        'log_1066_built_holdings_divided_by_area',
     ]
-    for value in maps:
-        generate_province_map(map_provinces, province_map_out, value)
+    # for value in maps:
+    #     generate_province_map(map_provinces, province_map_out, value)
 
-    import pdb;pdb.set_trace()
+    # import pdb;pdb.set_trace()
 
 # def parse_map_test():
 #     Title.province_graph = networkx.Graph()
