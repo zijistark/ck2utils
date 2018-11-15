@@ -1476,6 +1476,14 @@ contexts:
       captures:
         1: support.function.ck2script # should use a different scope for these
         2: variable.identifier.ck2script
+    - match: '\b({{vCBParamTextID}})\s*=\s*(\"{{vTextID}}\")'
+      captures:
+        1: support.function.ck2script # should use a different scope for these
+        2: string.quoted.double.ck2script
+    - match: '\b({{vParamTextID}})\s*=\s*(\"{{vTextID}}\")'
+      captures:
+        1: support.function.ck2script # should use a different scope for these
+        2: string.quoted.double.ck2script
     - match: '\b({{vParamID}})\s*=\s*({{vStrictID}})\b'
       captures:
         1: support.function.ck2script # should use a different scope for these
