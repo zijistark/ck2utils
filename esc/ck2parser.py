@@ -61,12 +61,14 @@ def get_religions(parser, groups=True):
     religion_groups = []
     for _, tree in parser.parse_files('common/religions/*.txt'):
         for n, v in tree:
-            if n.val == 'secret_religion_visibility_trigger':
+            if n.val in 'secret_religion_visibility_trigger':
                 continue
             religion_groups.append(n.val)
             religions.extend(n2.val for n2, v2 in v
                              if (isinstance(v2, Obj) and
-                                 n2.val not in ['male_names', 'female_names']))
+                                 n2.val not in ['color', 'male_names',
+                                                'female_names',
+                                                'interface_skin']))
     return (religions, religion_groups) if groups else religions
 
 def get_province_id_name_map(parser):

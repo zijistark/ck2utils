@@ -13,7 +13,8 @@ def get_crsdr_grp_map(parser):
         for n, v in tree:
             for n2, v2 in v:
                 if (isinstance(v2, Obj) and
-                    n2.val not in ('male_names', 'female_names') and
+                    n2.val not in ('color', 'male_names', 'female_names',
+                                   'interface_skin') and
                     v2.has_pair('can_call_crusade', 'yes')):
                     crsdr_grp_map[n2.val] = n.val
                     crsdr_grp_map[n.val] = None
