@@ -20,7 +20,7 @@ variables:
   vLiteralMisc: '(?:none|public|true|secret|random|actually_culture|culture)'
   vLiteralInt: '(?:[-]?\d+)'
   vLiteralDecimal: '(?x: [-]? (?: (?: \d* \. \d+ ) | (?: \d+ \. \d*) | \d+ ) )'
-  vLiteralDate: '(?x: [-]? \d{1,4}} \. [-]? \d{1,2} \. [-]? \d{1,2} )'
+  vLiteralDate: '(?x: -? \d{1,4} \. -? \d{1,2} \. -? \d{1,2} )'
   vLiteralTier: |-
     (?xi:
       BARON
@@ -1310,10 +1310,6 @@ contexts:
         2: entity.function.name
         # 4: some scope for namespaces or identifiers (entity.name... ?)
         5: constant.numeric.integer.ck2script
-    - match: (?<!\w)\-?[0-9]*\.\-?[0-9]*\.\-?[0-9]*\b
-      scope: constant.other.date.ck2script
-    - match: (?<!\w)\-?([0-9]+\.)?[0-9]+\b
-      scope: constant.numeric.double.ck2script
     - match: '\b(clear(?:_global)?_event_target|save(?:_global)?_event_target_as)\s*=\s*({{vStrictID}})\b'
       captures:
         1: keyword.control.ck2script
@@ -1488,6 +1484,7 @@ contexts:
       captures:
         1: support.function.ck2script # should use a different scope for these
         2: variable.identifier.ck2script
+    # catch-all standalone scopes/targets
     - match: '\b{{vEventTarget}}\b'
       scope: variable.other.ck2script
     - match: '\b{{vLangTarget}}\b'
@@ -1500,6 +1497,7 @@ contexts:
       scope: keyword.control.ck2script
     - match: '\b{{vOffmapID}}\b'
       scope: variable.other.ck2script
+      # standalone constants
     - match: '\b{{vLiteralMisc}}\b'
       scope: constant.language.ck2script
     - match: '\b{{vLiteralTier}}\b'
@@ -1508,6 +1506,10 @@ contexts:
       scope: constant.language.boolean.true.ck2script
     - match: \bno\b
       scope: constant.language.boolean.false.ck2script
+    - match: (?<!\w){{vLiteralDate}}\b
+      scope: constant.other.date.ck2script
+    - match: (?<!\w)\-?([0-9]+\.)?[0-9]+\b
+      scope: constant.numeric.double.ck2script
       # >>>> hereafter, these are the wild untamed lands of free-form match rules that really need shit done about them >>>>
     - match: \b(tooltip|hidden_tooltip|hidden_trigger|hidden_effect)\b
       scope: keyword.other.tooltip.ck2script
