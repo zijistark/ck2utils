@@ -1,0 +1,136 @@
+any_army
+any_artifact
+any_attacker # lacks a random_ dual
+any_backed_character
+any_character
+any_child
+any_child_even_if_dead
+any_claim
+any_claimant # lacks a random_ dual
+any_close_relative
+any_consort
+any_courtier
+any_courtier_or_vassal
+any_current_enemy
+any_de_jure_liege_title
+any_de_jure_vassal
+any_de_jure_vassal # lacks a random_ dual
+any_de_jure_vassal_title
+any_defender # lacks a random_ dual
+any_dejure_liege
+any_demesne_province
+any_demesne_title
+any_direct_de_jure_vassal_title
+any_dynasty_member
+any_dynasty_member_even_if_dead
+any_eldership_title
+any_elector_character
+any_enemy_plotter
+any_faction_backer # lacks a random_ dual
+any_favor_holder # lacks a random_ dual
+any_favor_ower # lacks a random_ dual
+any_fleet
+any_friend
+any_heir_title # lacks a random_ dual
+any_host_courtier
+any_independent_ruler
+any_known_enemy_plotter
+any_known_plotter # lacks a random_ dual
+any_landed_title
+any_liege # lacks a random_ dual
+any_lover
+any_mercenary_band # lacks a random_ dual
+any_neighbor_independent_ruler
+any_neighbor_province
+any_non_aggression_pact_character
+any_opinion_modifier_target
+any_owned_bloodline
+any_playable_ruler
+any_player
+any_plot_backer # lacks a random_ dual
+any_plotter # lacks a random_ dual
+any_potential_tribal_county
+any_pretender_title # lacks a random_ dual
+any_previous_holder # lacks a random_ dual
+any_province
+any_province_character
+any_province_holding
+any_province_lord
+any_pupil
+any_realm_character
+any_realm_lord
+any_realm_province
+any_realm_title
+any_rival
+any_sibling
+any_sibling_even_if_dead
+any_society_member
+any_spouse
+any_spouse_even_if_dead
+any_suzerain # lacks a random_ dual
+any_title # lacks a random_ dual
+any_title_under
+any_trade_post
+any_trade_route_province # lacks a random_ dual
+any_tributary
+any_unique_dynasty_vassal # lacks a random_ dual
+any_unit
+any_unknown_enemy_plotter
+any_vassal
+any_voter
+any_war # lacks a random_ dual
+any_ward
+random_army
+random_artifact
+random_backed_character
+random_character
+random_child
+random_child_even_if_dead
+random_claim
+random_close_relative
+random_consort
+random_courtier
+random_courtier_or_vassal
+random_current_enemy
+random_demesne_province
+random_demesne_title
+random_dynasty_member
+random_dynasty_member_even_if_dead
+random_eldership_title
+random_enemy_plotter
+random_fleet
+random_friend
+random_host_courtier
+random_independent_ruler
+random_known_enemy_plotter
+random_landed_title
+random_lover
+random_neighbor_independent_ruler
+random_neighbor_province
+random_non_aggression_pact_character
+random_opinion_modifier_target
+random_playable_ruler
+random_player
+random_potential_tribal_county
+random_province
+random_province_character
+random_province_holding
+random_province_lord
+random_pupil
+random_realm_character
+random_realm_lord
+random_realm_province
+random_realm_title
+random_rival
+random_sibling
+random_sibling_even_if_dead
+random_society_member
+random_spouse
+random_spouse_even_if_dead
+random_trade_post
+random_tributary
+random_unit
+random_unknown_enemy_plotter
+random_vassal
+random_voter
+random_ward

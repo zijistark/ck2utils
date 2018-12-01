@@ -19,7 +19,7 @@ variables:
   vLiteralBool: '(?:yes|no)'
   vLiteralMisc: '(?:none|public|true|secret|random|actually_culture|culture)'
   vLiteralInt: '(?:[-]?\d+)'
-  vLiteralDecimal: '(?x: [-]? (?: (?: \d* \. \d+ ) | (?: \d+ \. \d*) | \d+ ) )'
+  vLiteralNum: '(?x: [-]? (?: (?: \d* \. \d+ ) | (?: \d+ \. \d*) | \d+ ) )'
   vLiteralDate: '(?x: -? \d{1,4} \. -? \d{1,2} \. -? \d{1,2} )'
   vLiteralTier: |-
     (?xi:
@@ -215,118 +215,6 @@ variables:
     | real_tier
     | tier
     )
-  vTriggerInt: |-
-    (?x:
-      age
-    | ai_ambition
-    | ai_greed
-    | ai_honor
-    | ai_rationality
-    | ai_zeal
-    | among_most_powerful_vassals
-    | character
-    | combat_rating
-    | crusade_preparation_time_elapsed
-    | crusade_preparation_time_remaining
-    | crusade_(?:gold|prestige|piety|artifact)_pot
-    | day_of_birth
-    | days_at_current_society_rank
-    | days_in_society
-    | decadence
-    | demesne_size
-    | dynasty
-    | hospital_level
-    | killer
-    | month
-    | month_of_birth
-    | monthly_income
-    | num_fitting_characters_for_title
-    | num_of_baron_titles
-    | num_of_baron_titles_in_realm
-    | num_of_duke_titles
-    | num_of_duke_titles_in_realm
-    | num_of_emperor_titles
-    | num_of_king_titles
-    | num_of_king_titles_in_realm
-    | num_of_buildings
-    | num_of_children
-    | num_of_claims
-    | num_of_consorts
-    | num_of_count_titles
-    | num_of_count_titles_in_realm
-    | num_of_demesne_castles
-    | num_of_demesne_cities
-    | num_of_demesne_empty_provinces
-    | num_of_demesne_temples
-    | num_of_demesne_tribes
-    | num_of_dynasty_members
-    | num_of_empty_holdings
-    | num_of_extra_landed_titles
-    | num_of_feuds
-    | num_of_forts
-    | num_of_friends
-    | num_of_holy_sites
-    | num_of_lovers
-    | num_of_max_settlements
-    | num_of_plot_backers
-    | num_of_prisoners
-    | num_of_rivals
-    | num_of_settlements
-    | num_of_spouses
-    | num_of_subrealm_castles
-    | num_of_subrealm_cities
-    | num_of_subrealm_empty_provinces
-    | num_of_subrealm_temples
-    | num_of_subrealm_tribes
-    | num_of_symptoms
-    | num_of_titles
-    | num_of_titles_in_realm
-    | num_of_trade_posts
-    | num_of_traits
-    | num_of_unique_dynasty_vassals
-    | num_of_vassals
-    | over_vassal_limit
-    | over_max_demesne_size
-    | piety
-    | population
-    | prestige
-    | province_id
-    | realm_diplomacy
-    | realm_intrigue
-    | realm_learning
-    | realm_martial
-    | realm_size
-    | realm_stewardship
-    | ruled_years
-    | society_rank
-    | total_years_played
-    | war_score
-    | wealth
-    | year
-    | yearly_income
-    | {{vCharAttr}}
-    | artifact_age
-    )
-  vTriggerDecimal: |-
-    (?x:
-      base_health
-    | crusade_defense_strength
-    | crusade_preparation_strength
-    | demesne_efficiency
-    | demesne_size_compared_to_limit
-    | health
-    | relative_income_to_liege
-    | relative_power
-    | relative_power_to_liege
-    | religion_authority
-    | revolt_risk
-    | scaled_piety
-    | scaled_prestige
-    | scaled_wealth
-    | dynasty_realm_power
-    | population_factor
-    | society_currency
-    )
   vTriggerTitleID: |-
     (?x:
       completely_controls
@@ -349,375 +237,6 @@ variables:
     |   government
     |   is_offmap_governor
     )
-  vTriggerTarget: |-
-    (?x:
-      at_location
-    | can_marry
-    | character
-    | claimed_by
-    | completely_controls
-    | conquest_culture
-    | could_be_parent_of
-    | culture
-    | culture_group
-    | de_facto_liege
-    | de_facto_liege_title
-    | de_jure_liege
-    | de_jure_liege_or_above
-    | de_jure_vassal_or_below
-    | dynasty
-    | excommunicated_for
-    | family
-    | government
-    | has_blood_oath_with
-    | has_claim
-    | has_embargo
-    | has_feud_with
-    | has_landed_title
-    | has_non_aggression_pact_with
-    | has_offmap_news_enabled
-    | has_raised_levies
-    | has_truce
-    | has_strong_claim
-    | has_weak_claim
-    | held_title_rating
-    | higher_real_tier_than
-    | higher_tier_than
-    | holder
-    | is_allied_with
-    | is_allowed_holding_type
-    | is_ancestor_of
-    | is_aunt_uncle_of
-    | is_capital
-    | is_child_of
-    | is_close_relative
-    | is_consort
-    | is_cousin_of
-    | is_descendant_of
-    | is_father
-    | is_foe
-    | is_former_lover
-    | is_friend
-    | is_grandchild_of
-    | is_grandparent_of
-    | is_heresy_of
-    | is_holy_site
-    | is_landed_title_allowed
-    | is_liege_of
-    | is_liege_or_above
-    | is_lover
-    | is_married
-    | is_mother
-    | is_nibling_of
-    | is_older_than
-    | is_opposite_sex
-    | is_parent_of
-    | is_parent_religion
-    | is_plot_target_of
-    | is_preferred_holding_type
-    | is_primary_heir
-    | is_quest_target_of
-    | is_reformed_religion
-    | is_rival
-    | is_title_active
-    | is_valid_viking_invasion_target
-    | is_vassal_or_below
-    | liege_or_above_of
-    | vassal_or_below_of
-    | is_within_diplo_range
-    | lower_real_tier_than
-    | lower_tier_than
-    | overlord_of
-    | pays_tribute_to
-    | plot_is_known_by
-    | province
-    | province_id
-    | real_tier
-    | religion
-    | religion_group
-    | reverse_has_truce
-    | rightful_religious_head
-    | same_liege
-    | same_realm
-    | same_sex
-    | same_society_as
-    | secret_religion
-    | secret_religion_group
-    | set_name
-    | shares_realm_border_with
-    | sibling
-    | tier
-    | title
-    | true_religion
-    | true_religion_group
-    | vassal_of
-    | war_title
-    | war_with
-    )
-  vTriggerBool: |-
-    (?x:
-      adventurer
-    | ai
-    | always
-    | best_de_jure_liege_title_holder_FROM
-    | best_de_jure_liege_title_holder_ROOT
-    | best_de_jure_liege_title_holder_target_ruler
-    | best_de_jure_liege_title_under_FROM
-    | best_de_jure_liege_title_under_ROOT
-    | best_de_jure_liege_title_under_target_ruler
-    | borders_major_river
-    | borders_lake
-    | can_be_given_away
-    | can_call_crusade
-    | can_change_religion
-    | can_have_more_leadership_traits
-    | can_marry
-    | character
-    | controls_religion
-    | clan
-    | crusade_war_has_started
-    | flank_has_leader
-    | from_ruler_dynasty
-    | has_autocephaly
-    | has_called_crusade
-    | has_concubinage
-    | has_empty_holding
-    | has_epidemic
-    | has_fort
-    | has_game_started
-    | has_guardian
-    | has_holder
-    | has_horde_culture
-    | has_hospital
-    | has_inheritance_blocker
-    | has_job_title
-    | has_known_creation_date
-    | has_lover
-    | has_mercenary_band
-    | has_nickname
-    | has_owner
-    | has_pledged_crusade_defense
-    | has_pledged_crusade_participation
-    | has_polygamy
-    | has_raised_standing_troops
-    | has_regent
-    | has_secret_religion
-    | has_settlement_construction
-    | has_siege
-    | has_trade_post
-    | historical
-    | holy_order
-    | immortal
-    | in_command
-    | in_revolt
-    | in_seclusion
-    | independent
-    | is_adult
-    | is_alive
-    | is_allowed_to_loot
-    | is_alternate_start
-    | is_attacker
-    | is_capital
-    | is_consort
-    | is_contested
-    | is_conquered
-    | is_councillor
-    | is_crusade_target
-    | is_de_jure_title
-    | is_dying
-    | is_father_real_father
-    | is_female
-    | is_feudal
-    | is_flanking
-    | is_heir
-    | is_heretic
-    | is_incapable
-    | is_ill
-    | is_in_society
-    | is_island
-    | is_land
-    | is_landed
-    | is_landless_type_title
-    | is_lowborn
-    | is_marriage_adult
-    | is_married
-    | is_married_matrilineally
-    | is_merchant_republic
-    | is_multiplayer_host_character
-    | is_nomadic
-    | is_occupied
-    | is_offmap_governor
-    | is_offmap_ruler
-    | is_or_was_offmap_power_ruler
-    | is_patrician
-    | is_powerful_vassal
-    | is_pregnant
-    | is_preparing_crusade
-    | is_priest
-    | is_primary_heir
-    | is_primary_holder_title
-    | is_primary_holder_title_tier
-    | is_primary_type_title
-    | is_primary_war_attacker
-    | is_primary_war_defender
-    | is_primary_war_participant
-    | is_pregnant
-    | is_pretender
-    | is_playable
-    | is_plot_active
-    | is_recent_grant
-    | is_reformed_religion
-    | is_religion_crusade_target
-    | is_republic
-    | is_ruler
-    | is_save_game
-    | is_seafarer
-    | is_society_grandmaster
-    | is_theocracy
-    | is_titular
-    | is_titular_title
-    | is_tribal
-    | is_tribal_type_title
-    | is_tributary
-    | is_vice_royalty
-    | is_voter
-    | is_virtous # yes, the trigger is misspelled in the API
-    | mercenary
-    | multiplayer
-    | owner_under_FROM
-    | owner_under_FROMFROM
-    | owner_under_FROMFROMFROM
-    | owner_under_PREV
-    | owner_under_PREVPREV
-    | owner_under_PREVPREVPREV
-    | owner_under_ROOT
-    | owner_under_target_ruler
-    | pacifist
-    | port
-    | preparing_invasion
-    | prisoner
-    | rebel
-    | religion_allows_female_temple_holders
-    | religion_allows_male_temple_holders
-    | remove_spouse
-    | risks_minor_clan_rising
-    | society_can_rank_up
-    | technology_can_spread
-    | temporary
-    | under_FROM
-    | under_FROMFROM
-    | under_FROMFROMFROM
-    | under_PREV
-    | under_PREVPREV
-    | under_PREVPREVPREV
-    | under_ROOT
-    | under_target_ruler
-    | uses_decadence
-    | war
-    | is_inaccessible_trigger
-    | emf_hostile_religion_to_ROOT
-    | emf_hostile_religion_to_FROM
-    | emf_hostile_religion_to_PREV
-    | emf_hostile_religion_to_target_ruler
-    | emf_unreformed_pagan
-    | emf_not_unreformed_pagan
-    | emf_polytheist_religion
-    | emf_feminist_religion
-    | emf_western_christian_religion
-    | emf_can_religion_excommunicate
-    | emf_religion_head_divorce
-    | emf_divine_blood_religion
-    | emf_is_formidable_woman
-    | emf_can_inherit
-    | emf_is_voter
-    | emf_can_convert_religion
-    | emf_can_disturb
-    | emf_ROOT_completely_controls_counties
-    | emf_has_swmh
-    | emf_not_has_swmh
-    | emf_can_execute_ROOT
-    | title_duke_basic_allow
-    | title_tribe_basic_allow
-    | title_king_basic_allow
-    | title_emperor_basic_allow
-    | is_smart_trigger
-    | is_dumb_trigger
-    | is_weak_trigger
-    | is_strong_trigger
-    | is_infertile_trigger
-    | is_attractive_trigger
-    )
-  vTriggerID: |-
-    (?x:
-      artifact_type
-    | can_hold_title
-    | completely_controls_region
-    | continent
-    | controls_religion
-    | culture
-    | culture_group
-    | death_reason
-    | disease
-    | fort_has_building
-    | fort_has_any_building
-    | government
-    | has_{{vEventModifierType}}_modifier
-    | has_{{vFlagType}}_flag
-    | has_religion_feature
-    | has_selected_religion_feature
-    | has_ambition
-    | has_any_building
-    | has_any_opinion_modifier
-    | has_artifact
-    | has_assigned_minor_title
-    | has_building
-    | has_earmarked_regiments
-    | has_focus
-    | has_job_action
-    | has_job_title
-    | has_law
-    | has_minor_title
-    | has_nickname
-    | has_offmap_name
-    | has_plot
-    | has_policy
-    | has_quest
-    | has_secret_religion
-    | has_status
-    | in_faction
-    | is_decision_allowed
-    | is_decision_potential
-    | is_fort_decision_allowed
-    | is_fort_decision_potential
-    | is_government_allowed
-    | is_government_potential
-    | is_law_allowed
-    | is_law_potential
-    | is_settlement_decision_allowed
-    | is_settlement_decision_potential
-    | is_targetted_decision_allowed
-    | is_targetted_decision_potential
-    | is_title_decision_allowed
-    | is_title_decision_potential
-    | is_trade_post_decision_allowed
-    | is_trade_post_decision_potential
-    | leads_faction
-    | phase
-    | region
-    | religion
-    | religion_group
-    | secret_religion
-    | secret_religion_group
-    | society_member_of
-    | terrain
-    | trade_post_has_building
-    | trade_post_has_any_building
-    | trade_route
-    | trait
-    | true_religion
-    | true_religion_group
-    | using_cb
-    )
   vTriggerEffectQString: |-
     (?x:
         set_name
@@ -727,248 +246,6 @@ variables:
     |   set_offmap_name
     |   set_special_character_title
     |   remove_special_character_title
-    )
-  vTriggerBlock: |-
-    (?x:
-        opinion
-    |   reverse_opinion
-    |   their_opinion
-    |   clan_opinion
-    |   distance_from_realm
-    |   has_alternate_start_parameter
-    |   personal_opinion
-    |   plot_power_contribution
-    |   relative_power
-    |   relative_power_including_allies_attacker
-    |   relative_power_including_allies_defender
-    |   relative_realm_size
-    |   is_tributary
-    |   disliked_by_offmap
-    |   liked_by_offmap
-    )
-  vEffectBlock: |-
-    (?x:
-        abdicate
-    |   add_law
-    |   add_offmap_currency
-    |   clear_delayed_event
-    |   create_character
-    |   create_title
-    |   distribute_crusade_pot
-    |   gain_settlements_under_title
-    |   gain_title
-    |   grant_title
-    |   grant_title_no_opinion
-    |   prompt_name
-    |   reverse_unsafe_war
-    |   reverse_war
-    |   transfer_artifact
-    |   unsafe_war
-    |   usurp_title
-    |   usurp_title_only
-    |   usurp_title_plus_barony_if_unlanded
-    |   usurp_title_plus_barony_if_unlanded_and_vassals
-    |   usurp_title_plus_barony_if_unlanded_and_vassals_no_adj
-    |   war
-    |   make_tributary
-    |   death
-    |   activate_title
-    |   save_persistent_event_target
-    |   set_crusade_target
-    |   set_title_adventurer
-    |   set_title_nomad
-    |   set_title_landless
-    |   set_unit_modifier
-    |   set_unit_home_modifier
-    |   set_character_modifier
-    |   change_variable
-    |   set_variable
-    |   subtract_variable
-    |   multiply_variable
-    |   divide_variable
-    |   export_to_variable
-    )
-  vEffectNumber: |-
-    (?x:
-      add_holding_slot
-    | add_to_crusade_(?:gold|prestige|piety|artifact)_pot
-    | change_{{vCharAttr}}
-    | change_society_currency
-    | culture_techpoints
-    | fertility
-    | health
-    | decadence
-    | economy_techpoints
-    | manpower
-    | military_techpoints
-    | participation_scaled_decadence
-    | participation_scaled_piety
-    | participation_scaled_prestige
-    | piety
-    | prestige
-    | scaled_piety
-    | scaled_prestige
-    | scaled_wealth
-    | set_crusade_pot_multiplier
-    | set_father
-    | set_looter_hostility_days
-    | set_mother
-    | set_real_father
-    | set_peace_piety_gain
-    | set_convert_other_groups
-    | set_convert_same_group
-    | set_peace_prestige_loss
-    | set_ai_aggression
-    | set_max_wives
-    | set_max_consorts
-    | set_short_reign_opinion_year_mult
-    | treasury
-    | wealth
-    )
-  vEffectTarget: |-
-    (?x:
-      abdicate_to
-    | abdicate_to_most_liked_by
-    | add_claim
-    | add_favor
-    | add_friend
-    | add_intermarry
-    | add_lover
-    | add_pressed_claim
-    | add_rival
-    | add_spouse
-    | add_weak_claim
-    | add_weak_pressed_claim
-    | banish
-    | break_alliance
-    | break_betrothal
-    | clear_wealth
-    | conquest_culture
-    | copy_title_history
-    | copy_title_laws
-    | de_jure_liege
-    | destroy_landed_title
-    | destroy_settlement
-    | embargo
-    | force_host
-    | gain_title
-    | grant_title
-    | grant_title_no_opinion
-    | impregnate
-    | imprison
-    | move_character
-    | occupy_minors_of_occupied_settlements
-    | press_claim
-    | remove_claim
-    | remove_consort
-    | remove_favor
-    | remove_friend
-    | remove_intermarry
-    | remove_lover
-    | remove_spouse
-    | remove_rival
-    | remove_tributary
-    | reveal_plot
-    | reverse_add_favor
-    | reverse_banish
-    | reverse_remove_favor
-    | seize_trade_post
-    | set_crusader_king
-    | set_defacto_liege
-    | set_defacto_vassal
-    | set_father
-    | set_mother
-    | set_official_crusade_recipient
-    | set_offmap_holder
-    | set_preferred_capital
-    | set_real_father
-    | set_secret_religion
-    | show_portrait
-    | unsafe_destroy_landed_title
-    | unsafe_impregnate
-    | usurp_title
-    | usurp_title_only
-    | usurp_title_plus_barony_if_unlanded
-    | usurp_title_plus_barony_if_unlanded_and_vassals
-    | usurp_title_plus_barony_if_unlanded_and_vassals_no_adj
-    )
-  vEffectBool: |-
-    (?x:
-      abdicate
-    | ambition_succeeds
-    | banish
-    | cancel_ambition
-    | cancel_crusade
-    | clear_focus
-    | clear_secret_religion
-    | clear_wealth
-    | cut_mercenary_creator_relation
-    | death
-    | diplomatic_immunity
-    | distribute_crusade_target_title
-    | destroy_landed_title
-    | excommunicate
-    | impregnate
-    | imprison
-    | lock_crusade_target
-    | make_capital_holding
-    | make_primary_title
-    | make_reformer_head_of_religion
-    | pledge_crusade_defense
-    | pledge_crusade_participation
-    | plot_succeeds
-    | recalc_succession
-    | refill_holding_levy
-    | remove_guardian
-    | reveal_plot
-    | reveal_plot_w_message
-    | revoke_capital_holding
-    | set_can_toggle_looting
-    | set_looting
-    | set_pacifist
-    | set_hard_to_convert
-    | set_raised_vassal_opinion_loss
-    | set_no_head_of_religion
-    | set_piety_loss_for_attacking_same_religion
-    | set_feminist
-    | set_heir_designation
-    | set_jizya_tax
-    | set_can_retire_to_monastery
-    | set_can_excommunicate
-    | set_can_grant_divorce
-    | set_can_grant_invasion_cb
-    | set_can_grant_claim
-    | set_can_call_crusade
-    | set_pc_marriage
-    | set_bs_marriage
-    | set_psc_marriage
-    | set_cousin_marriage
-    | set_seafaring
-    | set_allow_looting
-    | set_allow_rivermovement
-    | set_autocephaly
-    | set_pentarchy
-    | set_divine_blood
-    | set_uses_decadence
-    | set_can_have_antipopes
-    | set_priests_can_marry
-    | set_priests_can_inherit
-    | set_ignores_defensive_attrition
-    | set_defensive_attrition
-    | clear_intermarry
-    | set_allows_matrilineal_marriage
-    | unsafe_destroy_landed_title
-    | unsafe_impregnate
-    | emf_liege_change
-    | emf_abdicate
-    | emf_copy_title_state_from_PREV
-    | emf_destroy_title
-    | emf_unsafe_destroy_title
-    | emf_ROOT_subjugate_ruler
-    | emf_FROM_subjugate_ruler
-    | emf_set_viceroy_exemption
-    | pf_liege_change_under_title_begin_effect
-    | pf_liege_change_under_title_end_effect
     )
   vEffectTitleID: |-
     (?x:
@@ -981,103 +258,6 @@ variables:
     | set_defacto_liege
     | set_preferred_capital
     | copy_title_history
-    )
-  vEffectID: |-
-    (?x:
-      add_artifact
-    | add_building
-    | add_evil_god_name
-    | add_god_name
-    | add_intermarry
-    | add_law
-    | add_law_w_cooldown
-    | add_trait
-    | adjective
-    | cancel_plot
-    | clear_flags_with_prefix
-    | clr_{{vFlagType}}_flag
-    | clr_offmap_tmp_flag
-    | culture
-    | disband_event_forces
-    | give_minor_title
-    | give_nickname
-    | join_society
-    | pass_law
-    | religion
-    | remove_building
-    | remove_evil_god_names
-    | remove_god_names
-    | remove_intermarry
-    | remove_nickname
-    | remove_{{vEventModifierType}}_modifier
-    | remove_special_character_title
-    | remove_title
-    | remove_trait
-    | set_branch_tag
-    | set_focus
-    | set_{{vFlagType}}_flag
-    | set_offmap_name
-    | set_offmap_tmp_flag
-    | set_government_type
-    | set_graphical_culture
-    | set_high_god_name
-    | set_policy
-    | set_name
-    | set_offmap_name
-    | set_religious_branch
-    | set_secret_religion
-    | set_special_character_title
-    | set_status
-    | sound_effect
-    | unsafe_destroy_artifact
-    | unsafe_religion
-    | unsafe_give_minor_title
-    )
-  vParamTarget: |-
-    (?x:
-        plotter
-    |   target
-    |   player
-    |   who
-    |   where
-    )
-  vParamNumber: |-
-    (?x:
-      size
-    | power
-    | for_population
-    | match_mult
-    | match_min
-    | match_max
-    | scaled_by_biggest_garrison
-    | strength_growth_per_century
-    | hire_range
-    | extra_ai_eval_troops
-    | attrition
-    | reinforce_rate_multiplier
-    | maintenance_multiplier
-    )
-  vParamID: |-
-    (?x:
-      death_reason
-    | flag
-    | modifier
-    | name
-    | faction
-    | border
-    | picture
-    | key
-    | value
-    | group
-    | type
-    | earmark
-    | casus_belli
-    | technology
-    | law
-    | tributary_type
-    | graphical_culture
-    | mercenary_type
-    | society
     )
   vParamTextID: |-
     (?x:
@@ -1092,37 +272,13 @@ variables:
     | key
     | localisation_key
     )
-  vParamBool: |-
-    (?x:
-        opinion_effect
-    |   cooldown
-    |   move
-    |   hidden
-    |   inherit
-    |   crime
-    |   stacking
-    |   disable_non_aggression_pacts
-    |   is_religious
-    |   same_religion
-    |   is_crusade
-    |   purple_born_heirs
-    |   has_top_de_jure_capital
-    |   top_de_jure_capital
-    |   as_if_liege
-    |   random
-    |   customizer
-    |   can_be_usurped
-    |   can_be_claimed
-    |   offmap
-    |   historical
-    )
   vCBParamTier: (?:check_de_jure_tier)
   vCBParamInt: |-
     (?x:
         sprite
     |   truce_days
     )
-  vCBParamNumber: |-
+  vCBParamNum: |-
     (?x:
         max_attacker_occupation_score
     |   max_defender_occupation_score
@@ -1171,8 +327,977 @@ variables:
         name
     |   war_name
     )
-  vScope: |-
-    (?x:
+  vAnyScope: |-
+    (?xi:
+      any_army
+    | any_artifact
+    | any_attacker
+    | any_backed_character
+    | any_character
+    | any_child
+    | any_child_even_if_dead
+    | any_claim
+    | any_claimant
+    | any_close_relative
+    | any_consort
+    | any_courtier
+    | any_courtier_or_vassal
+    | any_current_enemy
+    | any_de_jure_liege_title
+    | any_de_jure_vassal
+    | any_de_jure_vassal
+    | any_de_jure_vassal_title
+    | any_defender
+    | any_dejure_liege
+    | any_demesne_province
+    | any_demesne_title
+    | any_direct_de_jure_vassal_title
+    | any_dynasty_member
+    | any_dynasty_member_even_if_dead
+    | any_eldership_title
+    | any_elector_character
+    | any_enemy_plotter
+    | any_faction_backer
+    | any_favor_holder
+    | any_favor_ower
+    | any_fleet
+    | any_friend
+    | any_heir_title
+    | any_host_courtier
+    | any_independent_ruler
+    | any_known_enemy_plotter
+    | any_known_plotter
+    | any_landed_title
+    | any_liege
+    | any_lover
+    | any_mercenary_band
+    | any_neighbor_independent_ruler
+    | any_neighbor_province
+    | any_non_aggression_pact_character
+    | any_opinion_modifier_target
+    | any_owned_bloodline
+    | any_playable_ruler
+    | any_player
+    | any_plot_backer
+    | any_plotter
+    | any_potential_tribal_county
+    | any_pretender_title
+    | any_previous_holder
+    | any_province
+    | any_province_character
+    | any_province_holding
+    | any_province_lord
+    | any_pupil
+    | any_realm_character
+    | any_realm_lord
+    | any_realm_province
+    | any_realm_title
+    | any_rival
+    | any_sibling
+    | any_sibling_even_if_dead
+    | any_society_member
+    | any_spouse
+    | any_spouse_even_if_dead
+    | any_suzerain
+    | any_title
+    | any_title_under
+    | any_trade_post
+    | any_trade_route_province
+    | any_tributary
+    | any_unique_dynasty_vassal
+    | any_unit
+    | any_unknown_enemy_plotter
+    | any_vassal
+    | any_voter
+    | any_war
+    | any_ward
+    | random_army
+    | random_artifact
+    | random_backed_character
+    | random_character
+    | random_child
+    | random_child_even_if_dead
+    | random_claim
+    | random_close_relative
+    | random_consort
+    | random_courtier
+    | random_courtier_or_vassal
+    | random_current_enemy
+    | random_demesne_province
+    | random_demesne_title
+    | random_dynasty_member
+    | random_dynasty_member_even_if_dead
+    | random_eldership_title
+    | random_enemy_plotter
+    | random_fleet
+    | random_friend
+    | random_host_courtier
+    | random_independent_ruler
+    | random_known_enemy_plotter
+    | random_landed_title
+    | random_lover
+    | random_neighbor_independent_ruler
+    | random_neighbor_province
+    | random_non_aggression_pact_character
+    | random_opinion_modifier_target
+    | random_playable_ruler
+    | random_player
+    | random_potential_tribal_county
+    | random_province
+    | random_province_character
+    | random_province_holding
+    | random_province_lord
+    | random_pupil
+    | random_realm_character
+    | random_realm_lord
+    | random_realm_province
+    | random_realm_title
+    | random_rival
+    | random_sibling
+    | random_sibling_even_if_dead
+    | random_society_member
+    | random_spouse
+    | random_spouse_even_if_dead
+    | random_trade_post
+    | random_tributary
+    | random_unit
+    | random_unknown_enemy_plotter
+    | random_vassal
+    | random_voter
+    | random_ward
+    )
+  vExpectBlock: |-
+    (?xi:
+      abdicate
+    | activate_title
+    | add_law
+    | add_offmap_currency
+    | age_diff
+    | attribute_diff
+    | change_variable
+    | check_variable
+    | clan_opinion
+    | clear_delayed_event
+    | create_character
+    | create_title
+    | death
+    | disliked_by_offmap
+    | distance
+    | distance_from_realm
+    | distribute_crusade_pot
+    | divide_variable
+    | export_to_variable
+    | faction_power
+    | gain_settlements_under_title
+    | gain_title
+    | grant_title
+    | grant_title_no_opinion
+    | had_{{vFlagType}}_flag
+    | has_alternate_start_parameter
+    | has_elector_stance
+    | has_game_rule
+    | is_tributary
+    | is_variable_equal
+    | liked_by_offmap
+    | make_tributary
+    | multiply_variable
+    | opinion
+    | personal_opinion
+    | plot_power_contribution
+    | prompt_name
+    | relative_power
+    | relative_power_including_allies_attacker
+    | relative_power_including_allies_defender
+    | relative_realm_size
+    | reverse_opinion
+    | reverse_unsafe_war
+    | reverse_war
+    | save_persistent_event_target
+    | set_character_modifier
+    | set_crusade_target
+    | set_title_adventurer
+    | set_title_landless
+    | set_title_nomad
+    | set_unit_home_modifier
+    | set_unit_modifier
+    | set_variable
+    | subtract_variable
+    | succession
+    | their_opinion
+    | transfer_artifact
+    | unsafe_war
+    | usurp_title
+    | usurp_title_only
+    | usurp_title_plus_barony_if_unlanded
+    | usurp_title_plus_barony_if_unlanded_and_vassals
+    | usurp_title_plus_barony_if_unlanded_and_vassals_no_adj
+    | war
+    )
+  vExpectBool: |-
+    (?xi:
+      abdicate
+    | adventurer
+    | ai
+    | always
+    | ambition_succeeds
+    | as_if_liege
+    | banish
+    | best_de_jure_liege_title_holder_FROM
+    | best_de_jure_liege_title_holder_ROOT
+    | best_de_jure_liege_title_holder_target_ruler
+    | best_de_jure_liege_title_under_FROM
+    | best_de_jure_liege_title_under_ROOT
+    | best_de_jure_liege_title_under_target_ruler
+    | borders_lake
+    | borders_major_river
+    | can_be_claimed
+    | can_be_given_away
+    | can_be_usurped
+    | can_call_crusade
+    | can_change_religion
+    | can_have_more_leadership_traits
+    | can_marry
+    | cancel_ambition
+    | cancel_crusade
+    | character
+    | clan
+    | clear_focus
+    | clear_intermarry
+    | clear_secret_religion
+    | clear_wealth
+    | controls_religion
+    | cooldown
+    | crime
+    | crusade_war_has_started
+    | customizer
+    | cut_mercenary_creator_relation
+    | death
+    | destroy_landed_title
+    | diplomatic_immunity
+    | disable_non_aggression_pacts
+    | distribute_crusade_target_title
+    | emf_FROM_subjugate_ruler
+    | emf_ROOT_completely_controls_counties
+    | emf_ROOT_subjugate_ruler
+    | emf_abdicate
+    | emf_can_convert_religion
+    | emf_can_disturb
+    | emf_can_execute_ROOT
+    | emf_can_inherit
+    | emf_can_religion_excommunicate
+    | emf_copy_title_state_from_PREV
+    | emf_destroy_title
+    | emf_divine_blood_religion
+    | emf_feminist_religion
+    | emf_has_swmh
+    | emf_hostile_religion_to_FROM
+    | emf_hostile_religion_to_PREV
+    | emf_hostile_religion_to_ROOT
+    | emf_hostile_religion_to_target_ruler
+    | emf_is_formidable_woman
+    | emf_is_voter
+    | emf_liege_change
+    | emf_not_has_swmh
+    | emf_not_unreformed_pagan
+    | emf_polytheist_religion
+    | emf_religion_head_divorce
+    | emf_set_viceroy_exemption
+    | emf_unreformed_pagan
+    | emf_unsafe_destroy_title
+    | emf_western_christian_religion
+    | excommunicate
+    | flank_has_leader
+    | from_ruler_dynasty
+    | has_autocephaly
+    | has_called_crusade
+    | has_concubinage
+    | has_empty_holding
+    | has_epidemic
+    | has_fort
+    | has_game_started
+    | has_guardian
+    | has_holder
+    | has_horde_culture
+    | has_hospital
+    | has_inheritance_blocker
+    | has_job_title
+    | has_known_creation_date
+    | has_lover
+    | has_mercenary_band
+    | has_nickname
+    | has_owner
+    | has_pledged_crusade_defense
+    | has_pledged_crusade_participation
+    | has_polygamy
+    | has_raised_standing_troops
+    | has_regent
+    | has_regiments
+    | has_secret_religion
+    | has_settlement_construction
+    | has_siege
+    | has_top_de_jure_capital
+    | has_trade_post
+    | hidden
+    | historical
+    | holy_order
+    | immortal
+    | impregnate
+    | imprison
+    | in_command
+    | in_revolt
+    | in_seclusion
+    | independent
+    | inherit
+    | is_adult
+    | is_alive
+    | is_allowed_to_loot
+    | is_alternate_start
+    | is_ascetic_trigger
+    | is_attacker
+    | is_attractive_trigger
+    | is_capital
+    | is_conquered
+    | is_consort
+    | is_contested
+    | is_councillor
+    | is_crusade
+    | is_crusade_target
+    | is_de_jure_title
+    | is_dumb_trigger
+    | is_dying
+    | is_father_real_father
+    | is_female
+    | is_feudal
+    | is_flanking
+    | is_heir
+    | is_heretic
+    | is_ill
+    | is_in_society
+    | is_inaccessible_trigger
+    | is_incapable
+    | is_infertile_trigger
+    | is_island
+    | is_land
+    | is_landed
+    | is_landless_type_title
+    | is_lowborn
+    | is_marriage_adult
+    | is_married
+    | is_married_matrilineally
+    | is_merchant_republic
+    | is_multiplayer_host_character
+    | is_nomadic
+    | is_occupied
+    | is_offmap_governor
+    | is_offmap_ruler
+    | is_or_was_offmap_power_ruler
+    | is_patrician
+    | is_playable
+    | is_plot_active
+    | is_powerful_vassal
+    | is_pregnant
+    | is_preparing_crusade
+    | is_pretender
+    | is_priest
+    | is_primary_heir
+    | is_primary_holder_title
+    | is_primary_holder_title_tier
+    | is_primary_type_title
+    | is_primary_war_attacker
+    | is_primary_war_defender
+    | is_primary_war_participant
+    | is_recent_grant
+    | is_reformed_religion
+    | is_religion_crusade_target
+    | is_religious
+    | is_republic
+    | is_ruler
+    | is_save_game
+    | is_seafarer
+    | is_smart_trigger
+    | is_society_grandmaster
+    | is_strong_trigger
+    | is_theocracy
+    | is_titular
+    | is_titular_title
+    | is_tribal
+    | is_tribal_type_title
+    | is_tributary
+    | is_vice_royalty
+    | is_virtous
+    | is_voter
+    | is_weak_trigger
+    | lock_crusade_target
+    | make_capital_holding
+    | make_primary_title
+    | make_reformer_head_of_religion
+    | mercenary
+    | move
+    | multiplayer
+    | offmap
+    | opinion_effect
+    | owner_under_FROM
+    | owner_under_FROMFROM
+    | owner_under_FROMFROMFROM
+    | owner_under_PREV
+    | owner_under_PREVPREV
+    | owner_under_PREVPREVPREV
+    | owner_under_ROOT
+    | owner_under_target_ruler
+    | pacifist
+    | pf_liege_change_under_title_begin_effect
+    | pf_liege_change_under_title_end_effect
+    | pledge_crusade_defense
+    | pledge_crusade_participation
+    | plot_succeeds
+    | port
+    | preparing_invasion
+    | prisoner
+    | purple_born_heirs
+    | random
+    | rebel
+    | recalc_succession
+    | refill_holding_levy
+    | religion_allows_female_temple_holders
+    | religion_allows_male_temple_holders
+    | remove_guardian
+    | remove_spouse
+    | reveal_plot
+    | reveal_plot_w_message
+    | revoke_capital_holding
+    | risks_minor_clan_rising
+    | same_religion
+    | set_allow_looting
+    | set_allow_rivermovement
+    | set_allows_matrilineal_marriage
+    | set_autocephaly
+    | set_bs_marriage
+    | set_can_call_crusade
+    | set_can_excommunicate
+    | set_can_grant_claim
+    | set_can_grant_divorce
+    | set_can_grant_invasion_cb
+    | set_can_have_antipopes
+    | set_can_retire_to_monastery
+    | set_can_toggle_looting
+    | set_cousin_marriage
+    | set_defensive_attrition
+    | set_divine_blood
+    | set_feminist
+    | set_hard_to_convert
+    | set_heir_designation
+    | set_ignores_defensive_attrition
+    | set_jizya_tax
+    | set_looting
+    | set_no_head_of_religion
+    | set_pacifist
+    | set_pc_marriage
+    | set_pentarchy
+    | set_piety_loss_for_attacking_same_religion
+    | set_priests_can_inherit
+    | set_priests_can_marry
+    | set_psc_marriage
+    | set_raised_vassal_opinion_loss
+    | set_seafaring
+    | set_uses_decadence
+    | society_can_rank_up
+    | stacking
+    | technology_can_spread
+    | temporary
+    | title_duke_basic_allow
+    | title_emperor_basic_allow
+    | title_king_basic_allow
+    | title_tribe_basic_allow
+    | top_de_jure_capital
+    | under_FROM
+    | under_FROMFROM
+    | under_FROMFROMFROM
+    | under_PREV
+    | under_PREVPREV
+    | under_PREVPREVPREV
+    | under_ROOT
+    | under_target_ruler
+    | unsafe_destroy_landed_title
+    | unsafe_impregnate
+    | uses_decadence
+    | war
+    )
+  vExpectID: |-
+    (?xi:
+      add_artifact
+    | add_building
+    | add_evil_god_name
+    | add_god_name
+    | add_intermarry
+    | add_law
+    | add_law_w_cooldown
+    | add_trait
+    | adjective
+    | artifact_type
+    | base_type
+    | border
+    | can_hold_title
+    | cancel_plot
+    | casus_belli
+    | clear_flags_with_prefix
+    | clr_offmap_tmp_flag
+    | clr_{{vFlagType}}_flag
+    | completely_controls_region
+    | continent
+    | controls_religion
+    | culture
+    | culture_group
+    | death_reason
+    | disband_event_forces
+    | disease
+    | earmark
+    | elective_voting_rules
+    | faction
+    | flag
+    | fort_has_any_building
+    | fort_has_building
+    | gender_succ
+    | give_minor_title
+    | give_nickname
+    | government
+    | graphical_culture
+    | group
+    | has_ambition
+    | has_any_building
+    | has_any_opinion_modifier
+    | has_artifact
+    | has_assigned_minor_title
+    | has_building
+    | has_earmarked_regiments
+    | has_focus
+    | has_job_action
+    | has_job_title
+    | has_law
+    | has_minor_title
+    | has_nickname
+    | has_offmap_name
+    | has_plot
+    | has_policy
+    | has_quest
+    | has_religion_feature
+    | has_secret_religion
+    | has_selected_religion_feature
+    | has_status
+    | has_{{vEventModifierType}}_modifier
+    | has_{{vFlagType}}_flag
+    | in_faction
+    | is_decision_allowed
+    | is_decision_potential
+    | is_fort_decision_allowed
+    | is_fort_decision_potential
+    | is_government_allowed
+    | is_government_potential
+    | is_law_allowed
+    | is_law_potential
+    | is_settlement_decision_allowed
+    | is_settlement_decision_potential
+    | is_targetted_decision_allowed
+    | is_targetted_decision_potential
+    | is_title_decision_allowed
+    | is_title_decision_potential
+    | is_trade_post_decision_allowed
+    | is_trade_post_decision_potential
+    | join_society
+    | key
+    | law
+    | leads_faction
+    | mercenary_type
+    | modifier
+    | name
+    | pass_law
+    | phase
+    | picture
+    | region
+    | religion
+    | religion_group
+    | remove_building
+    | remove_evil_god_names
+    | remove_god_names
+    | remove_intermarry
+    | remove_nickname
+    | remove_special_character_title
+    | remove_title
+    | remove_trait
+    | remove_{{vEventModifierType}}_modifier
+    | secret_religion
+    | secret_religion_group
+    | set_branch_tag
+    | set_focus
+    | set_government_type
+    | set_graphical_culture
+    | set_high_god_name
+    | set_name
+    | set_offmap_name
+    | set_offmap_tmp_flag
+    | set_policy
+    | set_religious_branch
+    | set_secret_religion
+    | set_special_character_title
+    | set_status
+    | set_{{vFlagType}}_flag
+    | society
+    | society_member_of
+    | sound_effect
+    | stance
+    | succession
+    | technology
+    | terrain
+    | trade_post_has_any_building
+    | trade_post_has_building
+    | trade_route
+    | trait
+    | tributary_type
+    | true_religion
+    | true_religion_group
+    | type
+    | unsafe_destroy_artifact
+    | unsafe_give_minor_title
+    | unsafe_religion
+    | using_cb
+    | value
+    | voting_rules
+    )
+  vExpectInt: |-
+    (?xi:
+      age
+    | ai_ambition
+    | ai_greed
+    | ai_honor
+    | ai_rationality
+    | ai_zeal
+    | among_most_powerful_vassals
+    | artifact_age
+    | character
+    | combat_rating
+    | crusade_(?:gold|prestige|piety|artifact)_pot
+    | crusade_preparation_time_elapsed
+    | crusade_preparation_time_remaining
+    | day_of_birth
+    | days_at_current_society_rank
+    | days_in_society
+    | decadence
+    | demesne_size
+    | dynasty
+    | hospital_level
+    | killer
+    | month
+    | month_of_birth
+    | monthly_income
+    | num_fitting_characters_for_title
+    | num_of_baron_titles
+    | num_of_baron_titles_in_realm
+    | num_of_buildings
+    | num_of_children
+    | num_of_claims
+    | num_of_consorts
+    | num_of_count_titles
+    | num_of_count_titles_in_realm
+    | num_of_demesne_castles
+    | num_of_demesne_cities
+    | num_of_demesne_empty_provinces
+    | num_of_demesne_temples
+    | num_of_demesne_tribes
+    | num_of_duke_titles
+    | num_of_duke_titles_in_realm
+    | num_of_dynasty_members
+    | num_of_emperor_titles
+    | num_of_empty_holdings
+    | num_of_extra_landed_titles
+    | num_of_feuds
+    | num_of_forts
+    | num_of_friends
+    | num_of_holy_sites
+    | num_of_king_titles
+    | num_of_king_titles_in_realm
+    | num_of_lovers
+    | num_of_max_settlements
+    | num_of_plot_backers
+    | num_of_prisoners
+    | num_of_rivals
+    | num_of_settlements
+    | num_of_spouses
+    | num_of_subrealm_castles
+    | num_of_subrealm_cities
+    | num_of_subrealm_empty_provinces
+    | num_of_subrealm_temples
+    | num_of_subrealm_tribes
+    | num_of_symptoms
+    | num_of_titles
+    | num_of_titles_in_realm
+    | num_of_trade_posts
+    | num_of_traits
+    | num_of_unique_dynasty_vassals
+    | num_of_vassals
+    | over_max_demesne_size
+    | over_vassal_limit
+    | piety
+    | population
+    | prestige
+    | province_id
+    | rank
+    | realm_diplomacy
+    | realm_intrigue
+    | realm_learning
+    | realm_martial
+    | realm_size
+    | realm_stewardship
+    | ruled_years
+    | society_rank
+    | total_years_played
+    | war_score
+    | wealth
+    | year
+    | yearly_income
+    | {{vCharAttr}}
+    )
+  vExpectNum: |-
+    (?xi:
+      add_holding_slot
+    | add_to_crusade_artifact_pot
+    | add_to_crusade_gold_pot
+    | add_to_crusade_piety_pot
+    | add_to_crusade_prestige_pot
+    | attrition
+    | base_health
+    | change_society_currency
+    | change_{{vCharAttr}}
+    | crusade_defense_strength
+    | crusade_preparation_strength
+    | culture_techpoints
+    | decadence
+    | demesne_efficiency
+    | demesne_size_compared_to_limit
+    | dynasty_realm_power
+    | economy_techpoints
+    | extra_ai_eval_troops
+    | fertility
+    | for_population
+    | health
+    | hire_range
+    | maintenance_multiplier
+    | manpower
+    | match_max
+    | match_min
+    | match_mult
+    | military_techpoints
+    | participation_scaled_decadence
+    | participation_scaled_piety
+    | participation_scaled_prestige
+    | piety
+    | population_factor
+    | power
+    | prestige
+    | reinforce_rate_multiplier
+    | relative_income_to_liege
+    | relative_power
+    | relative_power_to_liege
+    | religion_authority
+    | revolt_risk
+    | scaled_by_biggest_garrison
+    | scaled_piety
+    | scaled_prestige
+    | scaled_wealth
+    | set_ai_aggression
+    | set_convert_other_groups
+    | set_convert_same_group
+    | set_crusade_pot_multiplier
+    | set_father
+    | set_looter_hostility_days
+    | set_max_consorts
+    | set_max_wives
+    | set_mother
+    | set_peace_piety_gain
+    | set_peace_prestige_loss
+    | set_real_father
+    | set_short_reign_opinion_year_mult
+    | size
+    | society_currency
+    | strength_growth_per_century
+    | treasury
+    | wealth
+    )
+  vExpectTarget: |-
+    (?xi:
+      abdicate_to
+    | abdicate_to_most_liked_by
+    | add_claim
+    | add_favor
+    | add_friend
+    | add_intermarry
+    | add_lover
+    | add_pressed_claim
+    | add_rival
+    | add_spouse
+    | add_weak_claim
+    | add_weak_pressed_claim
+    | at_location
+    | banish
+    | break_alliance
+    | break_betrothal
+    | can_marry
+    | character
+    | claimed_by
+    | clear_wealth
+    | completely_controls
+    | conquest_culture
+    | copy_title_history
+    | copy_title_laws
+    | could_be_parent_of
+    | culture
+    | culture_group
+    | de_facto_liege
+    | de_facto_liege_title
+    | de_jure_liege
+    | de_jure_liege_or_above
+    | de_jure_vassal_or_below
+    | destroy_landed_title
+    | destroy_settlement
+    | dynasty
+    | embargo
+    | excommunicated_for
+    | family
+    | force_host
+    | gain_title
+    | government
+    | grant_title
+    | grant_title_no_opinion
+    | has_blood_oath_with
+    | has_claim
+    | has_embargo
+    | has_feud_with
+    | has_landed_title
+    | has_non_aggression_pact_with
+    | has_offmap_news_enabled
+    | has_raised_levies
+    | has_strong_claim
+    | has_truce
+    | has_weak_claim
+    | held_title_rating
+    | higher_real_tier_than
+    | higher_tier_than
+    | holder
+    | holds_favor_on
+    | impregnate
+    | imprison
+    | is_allied_with
+    | is_allowed_holding_type
+    | is_ancestor_of
+    | is_aunt_uncle_of
+    | is_capital
+    | is_child_of
+    | is_close_relative
+    | is_consort
+    | is_cousin_of
+    | is_descendant_of
+    | is_father
+    | is_foe
+    | is_former_lover
+    | is_friend
+    | is_grandchild_of
+    | is_grandparent_of
+    | is_heresy_of
+    | is_holy_site
+    | is_landed_title_allowed
+    | is_liege_of
+    | is_liege_or_above
+    | is_lover
+    | is_married
+    | is_mother
+    | is_nibling_of
+    | is_older_than
+    | is_opposite_sex
+    | is_parent_of
+    | is_parent_religion
+    | is_plot_target_of
+    | is_preferred_holding_type
+    | is_primary_heir
+    | is_quest_target_of
+    | is_reformed_religion
+    | is_rival
+    | is_title_active
+    | is_valid_viking_invasion_target
+    | is_vassal_or_below
+    | is_within_diplo_range
+    | killer
+    | liege_or_above_of
+    | lower_real_tier_than
+    | lower_tier_than
+    | move_character
+    | occupy_minors_of_occupied_settlements
+    | overlord_of
+    | owes_favor_to
+    | pays_tribute_to
+    | player
+    | plot_is_known_by
+    | plotter
+    | press_claim
+    | province
+    | province_id
+    | real_tier
+    | religion
+    | religion_group
+    | remove_claim
+    | remove_consort
+    | remove_favor
+    | remove_friend
+    | remove_intermarry
+    | remove_lover
+    | remove_rival
+    | remove_spouse
+    | remove_tributary
+    | reveal_plot
+    | reverse_add_favor
+    | reverse_banish
+    | reverse_has_truce
+    | reverse_remove_favor
+    | rightful_religious_head
+    | same_liege
+    | same_realm
+    | same_sex
+    | same_society_as
+    | secret_religion
+    | secret_religion_group
+    | seize_trade_post
+    | set_crusader_king
+    | set_defacto_liege
+    | set_defacto_vassal
+    | set_father
+    | set_mother
+    | set_name
+    | set_official_crusade_recipient
+    | set_offmap_holder
+    | set_preferred_capital
+    | set_real_father
+    | set_secret_religion
+    | shares_realm_border_with
+    | show_portrait
+    | sibling
+    | target
+    | tier
+    | title
+    | true_religion
+    | true_religion_group
+    | unsafe_destroy_landed_title
+    | unsafe_impregnate
+    | usurp_title
+    | usurp_title_only
+    | usurp_title_plus_barony_if_unlanded
+    | usurp_title_plus_barony_if_unlanded_and_vassals
+    | usurp_title_plus_barony_if_unlanded_and_vassals_no_adj
+    | vassal_of
+    | vassal_or_below_of
+    | war_title
+    | war_with
+    | where
+    | who
+    )
+  vSimpleScope: |-
+    (?xi:
       attacker
     | band_creator
     | best_crusade_claimant
@@ -1252,9 +1377,9 @@ variables:
     | preferred_war_target
     | primary_title
     | quest_target
-    | realm
     | real_father
     | real_father_even_if_dead
+    | realm
     | regent
     | reincarnation_scope
     | religion_head
@@ -1279,7 +1404,6 @@ variables:
     | trade_post_owner
     | true_religion_scope
     )
-
 
 contexts:
   main:
@@ -1322,25 +1446,17 @@ contexts:
       captures:
         1: keyword.control.ck2script
         2: variable.other.ck2script
-    - match: '\b{{vOpBool}}\b'
-      scope: keyword.operator.logical.ck2script keyword.operator.word.ck2script
-      # general common triggers & effects
-    - match: '\b({{vTriggerInt}})\s*{{vOpBinary}}\s*({{vLiteralInt}})\b'
+    - match: '\b({{vOpBool}})\s*=\s*(?=\{)'
+      captures:
+        1: keyword.operator.logical.ck2script keyword.operator.word.ck2script
+    - match: '\b({{vExpectInt}})\s*{{vOpBinary}}\s*({{vLiteralInt}})\b'
       captures:
         1: support.function.ck2script
         2: constant.numeric.integer.ck2script
-    - match: '\b({{vTriggerDecimal}})\s*{{vOpBinary}}\s*({{vLiteralDecimal}})\b'
+    - match: '\b({{vExpectNum}})\s*{{vOpBinary}}\s*({{vLiteralNum}})\b'
       captures:
         1: support.function.ck2script
         2: constant.numeric.double.ck2script
-    - match: '\b({{vTriggerBool}})\s*=\s*(yes)\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.language.boolean.true.ck2script
-    - match: '\b({{vTriggerBool}})\s*=\s*(no)\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.language.boolean.false.ck2script
     - match: '\b({{vTriggerTier}})\s*=\s*({{vLiteralTier}})\b'
       captures:
         1: support.function.ck2script
@@ -1357,14 +1473,6 @@ contexts:
       captures:
         1: support.function.ck2script
         2: constant.language.enum.ck2script
-    - match: '\b({{vTriggerTarget}})\s*=\s*({{vEventTarget}})\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.other.ck2script
-    - match: '\b({{vTriggerTarget}})\s*=\s*({{vLangRHSTarget}})\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.language.ck2script
     - match: '\b({{vTriggerTitleID}})\s*=\s*({{vTitleID}})\b'
       captures:
         1: support.function.ck2script
@@ -1385,19 +1493,11 @@ contexts:
       captures:
         1: support.function.ck2script
         2: constant.numeric.ck2script
-    - match: '\b({{vEffectTarget}})\s*=\s*({{vEventTarget}})\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.other.ck2script
-    - match: '\b({{vEffectTarget}})\s*=\s*({{vLangRHSTarget}})\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.language.ck2script
-    - match: '\b({{vParamTarget}})\s*=\s*({{vEventTarget}})\b'
+    - match: '\b({{vExpectTarget}})\s*=\s*({{vEventTarget}})\b'
       captures:
         1: support.function.zck
         2: variable.other.zck
-    - match: '\b({{vParamTarget}})\s*=\s*({{vLangRHSTarget}})\b'
+    - match: '\b({{vExpectTarget}})\s*=\s*({{vLangRHSTarget}})\b'
       captures:
         1: support.function.zck
         2: variable.language.zck
@@ -1405,21 +1505,20 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.other.ck2script
-    - match: '\b({{vEffectNumber}})\s*=\s*({{vLiteralDecimal}})\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.numeric.ck2script
-    - match: '\b({{vEffectBool}})\s*=\s*(yes)\b'
+    - match: '\b({{vExpectBool}})\s*=\s*(yes)\b'
       captures:
         1: support.function.ck2script
         2: constant.language.boolean.true.ck2script
-    - match: '\b({{vEffectBool}})\s*=\s*(no)\b'
+    - match: '\b({{vExpectBool}})\s*=\s*(no)\b'
       captures:
         1: support.function.ck2script
         2: constant.language.boolean.false.ck2script
-    - match: '\b({{vEffectBlock}}|{{vTriggerBlock}})\s*=\s*(?=\{)'
+    - match: '\b({{vExpectBlock}})\s*=\s*(?=\{)'
       captures:
         1: support.function.ck2script
+    - match: '\b({{vSimpleScope}}|{{vAnyScope}})\s*=\s*(?=\{)'
+      captures:
+        1: keyword.control.scope.ck2script
     - match: '\b(end_war)\s*=\s*(invalid|reverse_demand|success|whitepeace)\b'
       captures:
         1: support.function.ck2script
@@ -1428,13 +1527,9 @@ contexts:
       captures:
         1: keyword.control.ck2script
         2: constant.language.enum.ck2script
-    - match: '\b({{vEffectID}}|{{vTriggerID}})\s*=\s*({{vID}})\b'
+    - match: '\b({{vExpectID}})\s*=\s*({{vID}})\b'
       captures:
         1: support.function.ck2script
-        2: variable.identifier.ck2script
-    - match: '\b({{vParamNumber}})\s*{{vOpBinary}}\s*({{vLiteralDecimal}})\b'
-      captures:
-        1: support.function.ck2script # should use a different scope for these
         2: variable.identifier.ck2script
     - match: '\b({{vCBParamTier}})\s*=\s*({{vLiteralTier}})\b'
       captures:
@@ -1444,7 +1539,7 @@ contexts:
       captures:
         1: support.function.ck2script # should use a different scope for these
         2: constant.numeric.ck2script
-    - match: '\b({{vCBParamNumber}})\s*=\s*({{vLiteralDecimal}})\b'
+    - match: '\b({{vCBParamNum}})\s*=\s*({{vLiteralNum}})\b'
       captures:
         1: support.function.ck2script # should use a different scope for these
         2: constant.numeric.ck2script
@@ -1453,14 +1548,6 @@ contexts:
         1: support.function.ck2script # should use a different scope for these
         2: constant.language.boolean.true.ck2script
     - match: '\b({{vCBParamBool}})\s*=\s*(no)\b'
-      captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: constant.language.boolean.false.ck2script
-    - match: '\b({{vParamBool}})\s*=\s*(yes)\b'
-      captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: constant.language.boolean.true.ck2script
-    - match: '\b({{vParamBool}})\s*=\s*(no)\b'
       captures:
         1: support.function.ck2script # should use a different scope for these
         2: constant.language.boolean.false.ck2script
@@ -1480,10 +1567,6 @@ contexts:
       captures:
         1: support.function.ck2script # should use a different scope for these
         2: string.quoted.double.ck2script
-    - match: '\b({{vParamID}})\s*=\s*({{vStrictID}})\b'
-      captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: variable.identifier.ck2script
     # catch-all standalone scopes/targets
     - match: '\b{{vEventTarget}}\b'
       scope: variable.other.ck2script
@@ -1493,8 +1576,6 @@ contexts:
       scope: variable.other.ck2script
     - match: \bc_\d+\b # character scope, not a title; integer is character ID
       scope: variable.other.ck2script
-    - match: '\b{{vScope}}\b'
-      scope: keyword.control.ck2script
     - match: '\b{{vOffmapID}}\b'
       scope: variable.other.ck2script
       # standalone constants
@@ -1511,13 +1592,11 @@ contexts:
     - match: (?<!\w)\-?([0-9]+\.)?[0-9]+\b
       scope: constant.numeric.double.ck2script
       # >>>> hereafter, these are the wild untamed lands of free-form match rules that really need shit done about them >>>>
-    - match: \b(tooltip|hidden_tooltip|hidden_trigger|hidden_effect)\b
+    - match: \b(tooltip|hidden_tooltip|hidden_trigger|hidden_effect|custom_tooltip)\b
       scope: keyword.other.tooltip.ck2script
-    - match: \b(custom|conditional)_tooltip\b
+    - match: \b(if|else|else_if|conditional_tooltip|trigger_switch|limit|preferred_limit|on_trigger|while|break|show_scope_change|generate_tooltip|trigger_if|trigger_else_if|trigger_else)\b
       scope: keyword.control.ck2script
-    - match: \b(if|else|else_if|trigger_switch|limit|preferred_limit|on_trigger|while|break|show_scope_change|generate_tooltip|trigger_if|trigger_else_if|trigger_else)\b
-      scope: keyword.control.ck2script
-    - match: \b((mult_)?modifier|modifier|additive_modifier|additive_power_diff_modifier|additive_opinion_modifier|additive_compared_realm_size_modifier|additive_realm_size_modifier)\b
+    - match: \b((mult_|additive_)?modifier|additive_power_diff_modifier|additive_opinion_modifier|additive_compared_realm_size_modifier|additive_realm_size_modifier)\b
       scope: keyword.control.ck2script
       # these are the names of parameters for numerous triggers & effects which have multiple named parameters possible
     - match: \b(target|type|target_type|who|where|which|amount|value|count|attribute|percentage|authority|duration|days|months|years|status|chance|factor|casus_belli|tier|thirdparty_title|infamy|first|second|enemy|title|as_if_allied_to|to|min|max|multiplier)\b
@@ -1543,8 +1622,6 @@ contexts:
       scope: keyword.control.ck2script
     - match: \b(((reverse_)?realm_levy_diff)|num_of_trade_post_diff|create_(title|character|artifact|(random_(soldier|priest|steward|diplomat|intriguer))))\b
       scope: keyword.control.ck2script
-    - match: '\bhad_({{vFlagType}})_flag\b'
-      scope: keyword.control.ck2script
       # create_title
     - match: \b(create_title|landless|nomad|adventurer|army_template|rebel|temporary|mercenary|replace_captain_on_death|siphons_income_to_creator|custom_created|base_title|copy_title_laws|ruler|ruler_female|foa)\b
       scope: support.function.ck2script
@@ -1556,28 +1633,7 @@ contexts:
       scope: support.function.ck2script
     - match: \b(attributes|diplomacy|martial|stewardship|intrigue|learning)\b
       scope: keyword.control.ck2script
-    - match: \b(((check|change|subtract|multiply|divide|export_to|set)_variable)|is_variable_equal|attribute_diff|age_diff)\b
-      scope: keyword.control.ck2script
-    - match: \b(has_game_rule|secret_religion(_group)?|true_religion(_group)?|religion(_group)?|culture(_group)?)\b
-      scope: keyword.control.ck2script
-    - match: \b(has_regiments|holds_favor_on|owes_favor_to|faction_power)\b
-      scope: keyword.control.ck2script
-    - match: \b(is_quest_target|rank|society|plot_power|can_swap_job_title|killer|has_disease|distance)\b
-      scope: keyword.control.ck2script
-      # general scopes ( ideally would be a different color )
-    - match: \b((any_(direct_)?de_jure_vassal_title)|any_de_jure_liege_title|any_title_under|((any|random)_(demesne|realm)_(title|province))|((any|random)_province_holding)|((any|random)_neighbor_province))|(any_owned_bloodline)\b
-      scope: keyword.control.ck2script
-      # these scopes all have any & random versions
-    - match: \b(((any|random)_(society_member|tributary|pupil|artifact|player|character|rival|consort|trade_post|friend|voter|ward|opinion_modifier_target|non_aggression_pact_character|lover|((un)?known_)?enemy_plotter|close_relative|backed_character|landed_title|claim|potential_tribal_county|(neighbor_)?province))|((any|random)_(child|spouse|sibling|dynasty_member)(_even_if_dead)?))\b
-      scope: keyword.control.ck2script
-      # these scopes all have any & random versions -- unit scopes
-    - match: \b(any|random)_(army|fleet|unit)\b
-      scope: keyword.control.ck2script
-      # these scopes only have any_ versions (no random_); might want to have a slightly different saturation or something for these when highlighting, kinda like the multi-scopes that exclude ROOT
-    - match: \bany_(war|claimant|attacker|defender|de_jure_vassal|faction_backer|favor_(holder|ower)|known_plotter|liege|plot_backer|plotter|previous_holder|suzerain|unique_dynasty_vassal|title|heir_title|mercenary_band|pretender_title|trade_route_province)\b
-      scope: keyword.control.ck2script
-      # scopes that exclude ROOT
-    - match: \b((any|random)_province_(character|lord)|((any|random)_courtier(_or_vassal)?)|(any|random)_host_courtier|((any|random)_realm_(lord|character))|(any|random)_current_enemy|(any|random)_vassal|(any|random)_dynasty_member|(any|random)_((neighbor_)?independent|playable)_ruler)\b
+    - match: \b(is_quest_target||society|plot_power|can_swap_job_title|has_disease)\b
       scope: keyword.control.ck2script
       # top-level event trigger blocks
     - match: \b(trigger|major_trigger)\b
@@ -1615,7 +1671,7 @@ contexts:
       scope: keyword.control.ck2script
     - match: \b(effect|pass_effect)\b # effects
       scope: keyword.control.ck2script
-    - match: \b(ai_will_do|ai_will_revoke)\b # modifier sets
+    - match: \b(ai_will_do|ai_will_revoke|default_selection)\b # modifier sets
       scope: keyword.control.ck2script
       # FUTURE MINOR TITLE / RELIGIOUS TITLE CONTEXT:
     - match: \b(allowed_to_grant|allowed_to_hold|revoke_trigger)\b # triggers

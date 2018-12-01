@@ -66,6 +66,19 @@
 			<key>name</key>
 			<string>Constant</string>
 			<key>scope</key>
+			<string>constant.language.enum.ideology</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#B093C1</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Constant</string>
+			<key>scope</key>
 			<string>constant.language.boolean</string>
 			<key>settings</key>
 			<dict>
@@ -144,6 +157,19 @@
 			<key>name</key>
 			<string>Keyword</string>
 			<key>scope</key>
+			<string>keyword.other.top</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#87935A</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Keyword</string>
+			<key>scope</key>
 			<string>keyword.operator.logical</string>
 			<key>settings</key>
 			<dict>
@@ -161,9 +187,35 @@
 			<key>settings</key>
 			<dict>
 				<key>fontStyle</key>
-				<string></string>
+				<string>bold</string>
 				<key>foreground</key>
 				<string>#ccbb8f</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Keyword</string>
+			<key>scope</key>
+			<string>keyword.control</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#ccbb8f</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Keyword: CK2 Scope</string>
+			<key>scope</key>
+			<string>keyword.control.scope.ck2script</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#79A8C9</string>
 			</dict>
 		</dict>
 		<dict>
@@ -207,6 +259,19 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>Support</string>
+			<key>scope</key>
+			<string>support.constant.modifier</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#CCCCCC</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>Variable</string>
 			<key>scope</key>
 			<string>variable</string>
@@ -214,6 +279,19 @@
 			<dict>
 				<key>foreground</key>
 				<string>#7587A6</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Variable</string>
+			<key>scope</key>
+			<string>variable.other.tag.hi4</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#79A8C9</string>
 			</dict>
 		</dict>
 		<dict>
