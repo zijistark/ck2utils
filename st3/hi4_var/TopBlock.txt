@@ -1,0 +1,12 @@
+idea_categories
+autonomy_state
+focus_tree
+ideas
+instant_effect
+leader_traits
+modifiers
+on_actions
+opinion_modifiers
+technologies
+technology_sharing_group
+units

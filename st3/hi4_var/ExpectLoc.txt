@@ -1,0 +1,8 @@
+create_faction
+custom_effect_tooltip
+has_dlc
+load_oob
+oob
+remove_from_faction
+set_state_name
+sound_effect

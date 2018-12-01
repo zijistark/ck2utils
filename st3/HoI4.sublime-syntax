@@ -1,0 +1,1316 @@
+%YAML 1.2
+---
+name: HoI4
+scope: source.hi4
+first_line_match: '(?x: (?xi: //? ho?i4? ) | (?xi: -\*- \s* ho?i4? (?x: \. \w[\w\.]* )? \s* -\*- ) )'
+
+variables:
+  vOpBool: |-
+    (?xi:
+      and
+    | not
+    | or
+    | count_triggers
+    )
+  vOp: '(?x: > | < | = )'
+  vBool: '(?x: yes | no )'
+  vInt: '(?x: \-? \d+ )'
+  vNum: '(?x: \-? (?: (?: \d* \. \d+ ) | (?: \d+ \. \d*) | \d+ ) )'
+  vDate: '(?x: \d{1,4} \. \d{1,2} \. \d{1,2} )'
+  vStr: '"(?x: [^\r\n"\\] | \\" | \\n )*"'
+  vID: '(?x: [\w/\.-]+ )'
+  vTextID: '(?x: [\w/\.-]+ )' # same as vID currently
+  vStrictID: '(?x: [a-zA-Z_] [a-zA-Z0-9_-]* )'
+  vVarCmp: |-
+    (?x:
+      less_than
+    | less_than_or_equals
+    | greater_than
+    | greater_than_or_equals
+    | equals
+    | not_equals
+    )
+  vResource: |-
+    (?x:
+      oil
+    | rubber
+    | aluminium
+    | steel
+    | tungsten
+    | chromium
+    )
+  vIdeology: |-
+    (?x:
+      democratic
+    | fascism
+    | communism
+    | neutrality
+    )
+  vStateBuilding: |-
+    (?x:
+      infrastructure
+    | anti_air_building
+    | nuclear_reactor
+    | synthetic_refinery
+    | rocket_site
+    | industrial_complex
+    | arms_factory
+    | radar_station
+    | air_base
+    | dockyard
+    | dummy
+    )
+  vProvBuilding: |-
+    (?x:
+      naval_base
+    | bunker
+    | coastal_bunker
+    )
+  vBuilding: '(?:{{vStateBuilding}}|{{vProvBuilding}})'
+  vCountryTarget: |-
+    (?x:
+      GER|ENG|SOV|SWE|FRA|LUX|BEL|HOL|CZE|POL|AUS|LIT|EST|LAT|SPR|ITA|ROM|YUG|SWI|TUR|GRE|ALB|NOR|DEN|BUL|POR|FIN|IRE
+    | HUN|AFG|ARG|AST|BHU|BOL|BRA|CAN|CHI|CHL|COL|COS|ECU|ELS|ETH|GUA|HON|IRQ|JAP|LIB|MEX|NEP|NIC|NZL|PAN|PER|PHI|PRU
+    | SAF|SAU|SIA|SIK|TIB|URG|VEN|YUN|USA|MON|MEN|TAN|PAR|CUB|DOM|HAI|YEM|OMA|SLO|RAJ|CRO|PRC|GXC|SHX|XSM|LBA|EGY|PAL
+    | LEB|JOR|SYR|SER|ICE|UKR|AZR|GEO|ARM|LAO|INS|VIN|CAM|MAL|MNT|BLR|MAN|ANG|COG|MZB|KEN|ZIM|BOT|PAK|WGR|DDR|KOR|ISR
+    | D01|D02|D03|D04|D05|D06|D07|D08|D09|D10|D11|D12|D13|D14|D15
+    | SEN|ALG
+    )
+  vEventTarget: |-
+    (?x:
+      (?:global_)? event_target : {{vStrictID}}
+    )
+  vLangTarget: '(?i:ROOT|FROM|PREV|THIS)(?:\.(?i:ROOT|FROM|PREV|THIS))*' # might allow chaining of OWNER, CONTROLLER, etc. too, but IDK.
+  vLangRHSTarget: |-
+    (?xi:
+      {{vLangTarget}}
+    | controller
+    | owner
+    )
+  vFlagType: |-
+    (?xi:
+      country
+    | global
+    | state
+    | unit_leader
+    )
+  vEventType: |-
+    (?xi:
+      country_event
+    | news_event
+    | state_event
+    | unit_leader_event
+    )
+  vUniscope: |-
+    (?xi:
+      capital_scope
+    | controller
+    | overlord
+    | owner
+    )
+  vControlBlock: |-
+    (?xi:
+      abort
+    | activation
+    | ai_chance
+    | ai_national_focuses
+    | ai_overlord_wants_garrison
+    | ai_overlord_wants_lower
+    | ai_strategy
+    | ai_subject_wants_higher
+    | ai_will_do
+    | air_chief
+    | aircraft_manufacturer
+    | allow
+    | allowed
+    | allowed_civil_war
+    | army_chief
+    | available
+    | bypass
+    | can_lose_level
+    | can_take_level
+    | cancel
+    | complete_effect
+    | complete_tooltip
+    | completion_reward
+    | country
+    | country_event
+    | do_effect
+    | effect
+    | enable
+    | events
+    | focus
+    | focus_factors
+    | high_command
+    | historical_ai
+    | immediate
+    | industrial_concern
+    | materiel_manufacturer
+    | mean_time_to_happen
+    | naval_manufacturer
+    | navy_chief
+    | news_event
+    | on_ace_killed
+    | on_ace_killed_by_ace
+    | on_ace_killed_other_ace
+    | on_ace_promoted
+    | on_aces_killed_each_other
+    | on_add
+    | on_annex
+    | on_army_leader_daily
+    | on_army_leader_lost_combat
+    | on_army_leader_promoted
+    | on_army_leader_won_combat
+    | on_border_war_lost
+    | on_capitulation
+    | on_civil_war_end
+    | on_coup_succeeded
+    | on_create_faction
+    | on_declare_war
+    | on_faction_formed
+    | on_join_faction
+    | on_justifying_wargoal_pulse
+    | on_leave_faction
+    | on_new_term_election
+    | on_nuke_drop
+    | on_offer_join_faction
+    | on_peaceconference_ended
+    | on_puppet
+    | on_release_as_free
+    | on_release_as_puppet
+    | on_startup
+    | on_state_control_changed
+    | on_subject_annexed
+    | on_subject_autonomy_level_change
+    | on_subject_free
+    | on_uncapitulation
+    | on_unit_leader_created
+    | on_unit_leader_level_up
+    | on_wargoal_expire
+    | option
+    | political_advisor
+    | remove_effect
+    | research
+    | state_event
+    | tank_manufacturer
+    | target_trigger
+    | theorist
+    | trigger
+    | unit_leader_event
+    | visible
+    | weight
+    )
+  vExpectBlock: |-
+    (?xi:
+      activate_targeted_decision
+    | add_ace
+    | add_ai_strategy
+    | add_autonomy_ratio
+    | add_autonomy_score
+    | add_building_construction
+    | add_equipment_production
+    | add_equipment_to_stockpile
+    | add_ideas
+    | add_named_threat
+    | add_offsite_building
+    | add_opinion_modifier
+    | add_popularity
+    | add_relation_modifier
+    | add_resource
+    | add_state_modifier
+    | add_tech_bonus
+    | add_timed_idea
+    | add_timed_unit_leader_trait
+    | add_to_temp_variable
+    | add_to_variable
+    | add_to_war
+    | ai_liberate_desire
+    | air_wings
+    | amount_taken_ideas
+    | annex_country
+    | any_province_building_level
+    | categories
+    | check_variable
+    | clamp_temp_variable
+    | clamp_variable
+    | country_event
+    | create_corps_commander
+    | create_country_leader
+    | create_equipment_variant
+    | create_field_marshal
+    | create_import
+    | create_navy_leader
+    | create_production_license
+    | create_unit
+    | create_wargoal
+    | custom_trigger_tooltip
+    | damage_building
+    | declare_war_on
+    | delete_unit_template_and_units
+    | destroy_ships
+    | diplomatic_relation
+    | distance_to
+    | divide_temp_variable
+    | divide_variable
+    | division
+    | division_template
+    | divisions_in_border_state
+    | divisions_in_state
+    | equipment_bonus
+    | estimated_intel_max_armor
+    | estimated_intel_max_piercing
+    | finalize_border_war
+    | focus_progress
+    | folder
+    | free_building_slots
+    | has_army_manpower
+    | has_army_size
+    | has_available_idea_with_traits
+    | has_border_war_between
+    | has_built
+    | has_country_leader
+    | has_deployed_air_force_size
+    | has_equipment
+    | has_license
+    | has_manpower_for_recruit_change_to
+    | has_navy_size
+    | has_opinion
+    | has_relation_modifier
+    | has_resources_amount
+    | has_tech_bonus
+    | has_volunteers_amount_from
+    | has_{{vFlagType}}_flag
+    | ic_ratio
+    | is_licensing_to
+    | modifier
+    | modify_building_resources
+    | modify_tech_sharing_bonus
+    | modify_timed_idea
+    | modify_{{vFlagType}}_flag
+    | multiply_temp_variable
+    | multiply_variable
+    | naval_strength_ratio
+    | navy
+    | news_event
+    | num_claimed_peace_conference_neighbour_states
+    | num_owned_neighbour_states
+    | print_variables
+    | release_autonomy
+    | remove_building
+    | remove_ideas
+    | remove_opinion_modifier
+    | remove_relation_modifier
+    | research_bonus
+    | reverse_add_opinion_modifier
+    | send_equipment
+    | set_autonomy
+    | set_border_war_data
+    | set_building_level
+    | set_division_template_lock
+    | set_party_name
+    | set_political_party
+    | set_politics
+    | set_province_name
+    | set_rule
+    | set_technology
+    | set_temp_variable
+    | set_truce
+    | set_variable
+    | set_{{vFlagType}}_flag
+    | ship
+    | ships_in_area
+    | ships_in_state_ports
+    | start_border_war
+    | start_civil_war
+    | stockpile_ratio
+    | strength_ratio
+    | subtract_from_temp_variable
+    | subtract_from_variable
+    | swap_ideas
+    | transfer_navy
+    | transfer_ship
+    | white_peace
+    )
+  vExpectBool: |-
+    (?xi:
+      always
+    | any_claim
+    | break
+    | clear_global_event_targets
+    | demote_leader
+    | dismantle_faction
+    | doctrine
+    | drop_cosmetic_tag
+    | exists
+    | has_any_custom_difficulty_setting
+    | has_any_license
+    | has_attache
+    | has_border_war
+    | has_capitulated
+    | has_civil_war
+    | has_country_custom_difficulty_setting
+    | has_damaged_buildings
+    | has_defensive_war
+    | has_elections
+    | has_offensive_war
+    | has_war
+    | is_ai
+    | is_assigned
+    | is_border_conflict
+    | is_border_war
+    | is_capital
+    | is_coastal
+    | is_demilitarized_zone
+    | is_faction_leader
+    | is_field_marshal
+    | is_historical_focus_on
+    | is_in_faction
+    | is_in_home_area
+    | is_in_peace_conference
+    | is_ironman
+    | is_island_state
+    | is_leading_army
+    | is_leading_army_group
+    | is_lend_leasing
+    | is_major
+    | is_puppet
+    | is_staging_coup
+    | is_subject
+    | is_target_of_coup
+    | is_tutorial
+    | kill_country_leader
+    | leave_faction
+    | promote_leader
+    | reset_state_name
+    | retire
+    | retire_country_leader
+    | set_border_war
+    | set_demilitarized_zone
+    | set_major
+    )
+  vExpectDate: |-
+    (?xi:
+      date
+    | has_start_date
+    )
+  vExpectID: |-
+    (?xi:
+      activate_decision
+    | activate_mission
+    | activate_mission_tooltip
+    | add_country_leader_trait
+    | add_ideas
+    | add_to_tech_sharing_group
+    | add_unit_leader_trait
+    | ai_has_role_division
+    | ai_has_role_template
+    | can_research
+    | can_select_trait
+    | clear_variable
+    | clr_{{vFlagType}}_flag
+    | compare_autonomy_state
+    | complete_national_focus
+    | create_faction
+    | graphical_culture_2d
+    | has_ability
+    | has_active_mission
+    | has_autonomy_state
+    | has_completed_focus
+    | has_cosmetic_tag
+    | has_custom_difficulty_setting
+    | has_decision
+    | has_focus_tree
+    | has_idea
+    | has_idea_with_trait
+    | has_opinion_modifier
+    | has_state_category
+    | has_tech
+    | has_template_ai_majority_unit
+    | has_template_containing_unit
+    | has_template_majority_unit
+    | has_trait
+    | has_variable
+    | has_{{vFlagType}}_flag
+    | is_in_tech_sharing_group
+    | is_on_continent
+    | is_researching_technology
+    | load_focus_tree
+    | load_oob
+    | remove_country_leader_trait
+    | remove_from_tech_sharing_group
+    | remove_ideas
+    | remove_ideas_with_trait
+    | remove_mission
+    | remove_targeted_decision
+    | remove_unit_leader_trait
+    | round_variable
+    | set_cosmetic_tag
+    | set_country_leader_ideology
+    | set_state_category
+    | set_{{vFlagType}}_flag
+    | show_ideas_tooltip
+    | unlock_decision_category_tooltip
+    | unlock_decision_tooltip
+    | unlock_national_focus
+    )
+  vExpectInt: |-
+    (?xi:
+      add_command_power
+    | add_extra_state_shared_building_slots
+    | add_manpower
+    | add_political_power
+    | add_research_slot
+    | add_state_claim
+    | add_state_core
+    | ai_irrationality
+    | ai_wants_divisions
+    | air_experience
+    | amount_research_slots
+    | area
+    | army_experience
+    | attack_skill_level
+    | average_stats
+    | casualties
+    | controls_state
+    | defense_skill_level
+    | difficulty
+    | goto_province
+    | goto_state
+    | has_full_control_of_state
+    | has_id
+    | has_unit_leader
+    | land_doctrine_level
+    | logistics_skill_level
+    | num_divisions
+    | num_faction_members
+    | num_occupied_states
+    | num_of_(?:civilian|military|naval)_factories
+    | num_of_available_(?:civilian|military|naval)_factories
+    | num_of_civilian_factories_available_for_projects
+    | num_of_controlled_states
+    | num_of_factories
+    | num_of_nukes
+    | num_subjects
+    | num_tech_sharing_groups
+    | num_units
+    | original_research_slots
+    | owns_state
+    | planning_skill_level
+    | randomize_weather
+    | region
+    | remove_state_claim
+    | remove_state_core
+    | remove_unit_leader
+    | reset_province_name
+    | set_capital
+    | set_convoys
+    | set_political_power
+    | set_province_controller
+    | set_research_slots
+    | set_state_controller
+    | set_state_owner
+    | skill
+    | skill_advantage
+    | state
+    | state_and_terrain_strategic_value
+    | state_strategic_value
+    | transfer_state
+    | {{vStateBuilding}}
+    )
+  vExpectLoc: |-
+    (?xi:
+      create_faction
+    | custom_effect_tooltip
+    | has_dlc
+    | load_oob
+    | oob
+    | remove_from_faction
+    | set_state_name
+    | sound_effect
+    )
+  vExpectNum: |-
+    (?xi:
+      add_stability
+    | add_threat
+    | add_war_support
+    | alliance_naval_strength_ratio
+    | alliance_strength_ratio
+    | amount_manpower_in_deployment_queue
+    | any_war_score
+    | command_power
+    | command_power_daily
+    | compare_autonomy_progress_ratio
+    | cost
+    | enemies_naval_strength_ratio
+    | enemies_strength_ratio
+    | has_added_tension_amount
+    | has_air_experience
+    | has_army_experience
+    | has_manpower
+    | has_navy_experience
+    | has_political_power
+    | has_stability
+    | has_war_support
+    | manpower_per_military_factory
+    | political_power_daily
+    | political_power_growth
+    | research_cost
+    | set_equipment_fraction
+    | set_stability
+    | set_war_support
+    | state_population
+    | surrender_progress
+    | threat
+    )
+  vExpectTarget: |-
+    (?xi:
+      add_claim_by
+    | add_core_of
+    | add_state_claim
+    | add_state_core
+    | add_to_faction
+    | change_tag_from
+    | civilwar_target
+    | controls_state
+    | country_exists
+    | end_puppet
+    | give_guarantee
+    | give_military_access
+    | gives_military_access_to
+    | goto_state
+    | has_annex_war_goal
+    | has_attache_from
+    | has_border_war_with
+    | has_claimed_state_in_peace_conference
+    | has_defensive_war_with
+    | has_full_control_of_state
+    | has_government
+    | has_guaranteed
+    | has_military_access_to
+    | has_non_aggression_pact_with
+    | has_offensive_war_with
+    | has_war_together_with
+    | has_war_with
+    | has_wargoal_against
+    | hold_election
+    | is_claimed_by
+    | is_controlled_by
+    | is_core_of
+    | is_fully_controlled_by
+    | is_guaranteed_by
+    | is_in_faction_with
+    | is_justifying_wargoal_against
+    | is_lend_leasing
+    | is_licensing_any_to
+    | is_neighbor_of
+    | is_owned_and_controlled_by
+    | is_owned_by
+    | is_owner_neighbor_of
+    | is_puppet_of
+    | is_subject_of
+    | original_tag
+    | owns_state
+    | puppet
+    | recall_attache
+    | release
+    | release_puppet
+    | remove_claim_by
+    | remove_core_of
+    | remove_from_faction
+    | remove_state_claim
+    | remove_state_core
+    | set_capital
+    | set_nationality
+    | set_state_controller
+    | set_state_owner
+    | state
+    | tag
+    | transfer_state
+    | white_peace
+    )
+  vModifierNum: |-
+    (?xi:
+      acclimatization_cold_climate_gain_factor
+    | acclimatization_hot_climate_gain_factor
+    | ai_badass_factor
+    | ai_call_ally_desire_factor
+    | ai_focus_aggressive_factor
+    | ai_get_ally_desire_factor
+    | ai_join_ally_desire_factor
+    | air_accidents_factor
+    | air_ace_generation_chance_factor
+    | air_air_superiority_agility_factor
+    | air_air_superiority_attack_factor
+    | air_air_superiority_defence_factor
+    | air_cas_present_factor
+    | air_chief_cost_factor
+    | air_close_air_support_agility_factor
+    | air_close_air_support_attack_factor
+    | air_close_air_support_defence_factor
+    | air_interception_agility_factor
+    | air_interception_attack_factor
+    | air_interception_defence_factor
+    | air_night_penalty
+    | air_paradrop_agility_factor
+    | air_paradrop_attack_factor
+    | air_paradrop_defence_factor
+    | air_strategic_bomber_agility_factor
+    | air_strategic_bomber_attack_factor
+    | air_strategic_bomber_bombing_factor
+    | air_strategic_bomber_defence_factor
+    | air_weather_penalty
+    | amphibious_invasion
+    | army_armor_attack_factor
+    | army_armor_defence_factor
+    | army_armor_speed_factor
+    | army_artillery_attack_factor
+    | army_artillery_defence_factor
+    | army_attack_factor
+    | army_bonus_air_superiority_factor
+    | army_chief_cost_factor
+    | army_core_attack_factor
+    | army_core_defence_factor
+    | army_defence_factor
+    | army_infantry_attack_factor
+    | army_infantry_defence_factor
+    | army_leader_start_attack_level
+    | army_leader_start_defense_level
+    | army_leader_start_level
+    | army_leader_start_logistics_level
+    | army_leader_start_planning_level
+    | army_morale_factor
+    | army_org
+    | army_org_factor
+    | army_speed_factor
+    | attack_bonus_against
+    | attrition
+    | autonomy_gain
+    | cavalry_attack_factor
+    | cavalry_defence_factor
+    | cic_to_target_factor
+    | civilian_factory_use
+    | command_power_gain
+    | command_power_gain_mult
+    | conscription
+    | conscription_factor
+    | consumer_goods_factor
+    | conversion_cost_civ_to_mil_factor
+    | convoy_escort_efficiency
+    | convoy_raiding_efficiency_factor
+    | decryption_factor
+    | defence
+    | defense_bonus_against
+    | defensive_war_stability_factor
+    | dig_in_speed
+    | dig_in_speed_factor
+    | drift_defence_factor
+    | economy_cost_factors
+    | encryption_factor
+    | enemy_army_bonus_air_superiority_factor
+    | enemy_justify_war_goal_time
+    | enemy_partisan_effect
+    | equipment_conversion_speed
+    | experience_gain_air
+    | experience_gain_air_factor
+    | experience_gain_army
+    | experience_gain_army_factor
+    | experience_gain_navy
+    | experience_gain_navy_factor
+    | experience_loss_factor
+    | extra_trade_to_target_factor
+    | foreign_subversive_activites
+    | generate_wargoal_tension
+    | global_building_slots_factor
+    | guarantee_cost
+    | guarantee_tension
+    | heat_attrition_factor
+    | high_command_cost_factor
+    | improve_relations_maintain_cost_factor
+    | industrial_capacity_dockyard
+    | industrial_capacity_factory
+    | industry_air_damage_factor
+    | industry_free_repair_factor
+    | industry_repair_factor
+    | invasion_preparation
+    | join_faction_tension
+    | justify_war_goal_time
+    | land_reinforce_rate
+    | lend_lease_tension
+    | license_air_purchase_cost
+    | license_armor_purchase_cost
+    | license_infantry_purchase_cost
+    | license_naval_purchase_cost
+    | license_production_speed
+    | license_purchase_cost
+    | license_tech_difference_speed
+    | line_change_production_efficiency_factor
+    | local_resources_factor
+    | max_command_power
+    | max_dig_in
+    | max_planning
+    | mic_to_target_factor
+    | military_leader_cost_factor
+    | min_export
+    | minimum_training_level
+    | mobilization_laws_cost_factor
+    | mobilization_speed
+    | monthly_population
+    | motorized_attack_factor
+    | motorized_defence_factor
+    | naval_coordination
+    | naval_hit_chance
+    | naval_retreat_chance
+    | naval_retreat_speed
+    | naval_speed_factor
+    | naval_strike_agility_factor
+    | naval_strike_attack_factor
+    | naval_strike_targetting_factor
+    | naval_torpedo_range_factor
+    | navy_anti_air_attack_factor
+    | navy_capital_ship_attack_factor
+    | navy_capital_ship_defence_factor
+    | navy_carrier_air_agility_factor
+    | navy_carrier_air_attack_factor
+    | navy_carrier_air_targetting_factor
+    | navy_chief_cost_factor
+    | navy_max_range_factor
+    | navy_screen_attack_factor
+    | navy_screen_defence_factor
+    | navy_submarine_attack_factor
+    | navy_submarine_defence_factor
+    | navy_submarine_detection_factor
+    | no_supply_grace
+    | non_core_manpower
+    | nuclear_production_factor
+    | offence
+    | offensive_war_stability_factor
+    | opinion_gain_monthly_factor
+    | opinion_gain_monthly_same_ideology_factor
+    | out_of_supply_factor
+    | partisan_effect
+    | planning_speed
+    | political_advisor_cost_factor
+    | political_power_factor
+    | political_power_gain
+    | production_factory_efficiency_gain_factor
+    | production_factory_max_efficiency_factor
+    | production_factory_start_efficiency_factor
+    | production_oil_factor
+    | production_speed_buildings_factor
+    | production_speed_{{vBuilding}}_factor
+    | recon_factor
+    | research_time_factor
+    | send_volunteer_divisions_required
+    | send_volunteer_size
+    | send_volunteers_tension
+    | ships_at_battle_start
+    | sortie_efficiency
+    | special_forces_attack_factor
+    | special_forces_cap
+    | special_forces_defence_factor
+    | special_forces_min
+    | spotting_chance
+    | stability_factor
+    | stability_weekly
+    | subjects_autonomy_gain
+    | subversive_activites_upkeep
+    | supply_consumption_factor
+    | surrender_limit
+    | terrain_penalty_reduction
+    | trade_cost_for_target_factor
+    | trade_laws_cost_factor
+    | trade_opinion_factor
+    | training_time_army_factor
+    | training_time_factor
+    | war_support_factor
+    | war_support_weekly
+    | winter_attrition_factor
+    | {{vIdeology}}_acceptance
+    | {{vIdeology}}_drift
+    )
+  vParamBlock: |-
+    (?xi:
+      attacker
+    | defender
+    | division_name
+    | equipment
+    | events
+    | force_equipment_variants
+    | generator
+    | keep_unit_leaders
+    | keep_unit_leaders_trigger
+    | modifier
+    | mutually_exclusive
+    | parties
+    | prerequisite
+    | province
+    | random_events
+    | regiments
+    | rule
+    | slots
+    | states
+    | states_filter
+    | support
+    | targeted_modifier
+    | traits
+    | upgrades
+    | var_list
+    )
+  vParamBool: |-
+    (?xi:
+      active
+    | all_provinces
+    | append
+    | attacker_win
+    | available_if_capitulated
+    | banned
+    | can_be_called_to_war
+    | can_boost_other_ideologies
+    | can_create_factions
+    | can_declare_war_on_same_ideology
+    | can_declare_war_without_wargoal_when_in_war
+    | can_decline_call_to_war
+    | can_force_government
+    | can_generate_female_aces
+    | can_guarantee_other_ideologies
+    | can_join_factions
+    | can_join_factions_not_allowed_diplomacy
+    | can_join_opposite_factions
+    | can_lower_tension
+    | can_not_declare_war
+    | can_occupy_non_war
+    | can_only_justify_war_on_threat_country
+    | can_puppet
+    | can_send_volunteers
+    | can_use_kamikaze_pilots
+    | cancel_if_invalid
+    | change_state_after_war
+    | continue_if_invalid
+    | default
+    | defender_win
+    | designer
+    | dont_fire_events
+    | dynamic
+    | elections_allowed
+    | female
+    | fire_only_once
+    | hidden
+    | include_locked
+    | instant
+    | instant_build
+    | is_faction_sharing
+    | is_female
+    | is_locked
+    | is_name_ordered
+    | is_triggered_only
+    | limit_to_border
+    | limit_to_coastal
+    | limit_to_naval_base
+    | limit_to_victory_point
+    | major
+    | obsolete
+    | only_own_territory
+    | print_global
+    | ruling_only
+    | trade
+    | transfer_troops
+    | units_deployed_to_overlord
+    )
+  vParamID: |-
+    (?xi:
+      add_idea
+    | archetype
+    | autonomous_state
+    | autonomy_state
+    | category
+    | decision
+    | definition
+    | division_names_group
+    | equipment
+    | flag
+    | focus
+    | group
+    | icon
+    | id
+    | idea
+    | ideology
+    | max
+    | min
+    | modifier
+    | on_cancel
+    | on_lose
+    | on_win
+    | picture
+    | relation
+    | relative_position_id
+    | remove_idea
+    | resource
+    | technology
+    | trait
+    | type
+    | value
+    | var
+    )
+  vParamInt: |-
+    (?xi:
+      amount
+    | area
+    | attack_skill
+    | attacker
+    | border_state
+    | capital
+    | combat_width
+    | cost
+    | count
+    | days
+    | days_re_enable
+    | days_remove
+    | defender
+    | defense_skill
+    | election_frequency
+    | hours
+    | id
+    | level
+    | limit
+    | location
+    | logistics_skill
+    | max_trust
+    | months
+    | name_order
+    | navy_experience
+    | num_provinces
+    | parent_version
+    | planning_skill
+    | prioritize_location
+    | priority
+    | province
+    | random
+    | requested_factories
+    | size
+    | skill
+    | state
+    | target
+    | threat
+    | uses
+    | value
+    | version
+    | x
+    | y
+    | years
+    )
+  vParamLoc: |-
+    (?xi:
+      callsign
+    | creator
+    | desc
+    | division_template
+    | file
+    | hostility_reason
+    | id
+    | localisation_key
+    | localization
+    | long_name
+    | message
+    | name
+    | owner
+    | picture
+    | prefer_name
+    | surname
+    | text
+    | title
+    | tooltip
+    | version_name
+    )
+  vParamNum: |-
+    (?xi:
+      add
+    | ahead_reduction
+    | attacker_modifier
+    | base
+    | bonus
+    | cost_factor
+    | count
+    | damage
+    | defender_modifier
+    | efficiency
+    | factor
+    | freedom_level
+    | max
+    | min
+    | min_freedom_level
+    | popularity
+    | progress
+    | ratio
+    | removal_cost
+    | research_sharing_per_country_bonus
+    | size
+    | start_equipment_factor
+    | start_experience_factor
+    | value
+    )
+  vParamTarget: |-
+    (?xi:
+      attacker
+    | country
+    | creator
+    | defender
+    | enemy
+    | exporter
+    | from
+    | id
+    | ideology
+    | owner
+    | producer
+    | state
+    | target
+    | targeted_alliance
+    | trigger_for
+    | will_lead_to_war_with
+    )
+  vScope: |-
+    (?xi:
+      (?:all|any)_allied_country
+    | (?:all|any|every|random)(?:_(?:neighbor|enemy))?_country
+    | (?:all|any|every|random)(?:_(?:owned|neighbor))?_state
+    | (?:all|any|every|random)_army_leader
+    | (?:all|any|every|random)_navy_leader
+    | (?:all|any|every|random)_unit_leader
+    | (?:any|every|random)_other_country
+    | any_home_area_neighbor_country
+    | global_every_army_leader
+    | random_owned_controlled_state
+    )
+  vTopBlock: |-
+    (?xi:
+      autonomy_state
+    | focus_tree
+    | ideas
+    | instant_effect
+    | leader_traits
+    | modifiers
+    | on_actions
+    | opinion_modifiers
+    | technologies
+    | technology_sharing_group
+    | units
+    )
+  vTopID: |-
+    (?xi:
+      add_namespace
+    )
+
+contexts:
+  main:
+    - match: '#.*'
+      scope: comment.line.number-sign.hi4
+    # - match: '"'
+    #   scope: punctuation.definition.string.begin.hi4
+    #   push:
+    #     - meta_scope: string.quoted.double.hi4
+    #     - match: '"'
+    #       scope: punctuation.definition.string.end.hi4
+    #       pop: true
+    #     - match: \n
+    #       scope: invalid.illegal.newline.hi4
+    #     - match: \\.
+    #       scope: invalid.illegal.escape.hi4
+    - match: \{
+      push: braces
+    - match: \}
+      scope: invalid.illegal.stray-bracket-end
+    - match: \b(id|{{vEventType}})\s*=\s*(((\w+)\.)?(0|([1-9][0-9]*)))\b
+      captures:
+        1: keyword.control.hi4
+        2: entity.function.name
+        # 4: some scope for namespaces or identifiers (entity.name... ?)
+        5: constant.numeric.integer.hi4
+    - match: '\b(clear(?:_global)?_event_target|save(?:_global)?_event_target_as)\s*=\s*({{vStrictID}})\b'
+      captures:
+        1: keyword.control.hi4
+        2: variable.other.hi4
+    - match: '\b(has_event_target)\s*=\s*({{vStrictID}})\b'
+      captures:
+        1: keyword.control.hi4
+        2: variable.other.hi4
+    - match: '\b({{vModifierNum}})\s*=\s*({{vNum}})\b'
+      captures:
+        1: support.constant.modifier.hi4
+        2: constant.numeric.hi4
+      # general common triggers & effects & params to them
+      # special case highlighting for non-params
+    - match: '\b({{vIdeology}})\s*{{vOp}}\s*({{vNum}})\b'
+      captures:
+        1: constant.language.enum.ideology.hi4
+        2: constant.numeric.hi4
+    - match: '\b(has_government)\s*=\s*({{vIdeology}})\b'
+      captures:
+        1: support.function.hi4
+        2: constant.language.enum.ideology.hi4
+    - match: '\b(log)\s*=\s*({{vStr}})'
+      captures:
+        1: keyword.control.hi4
+        2: string.quoted.double.hi4
+      # end special cases
+    - match: '\b({{vExpectTarget}})\s*=\s*({{vEventTarget}})\b'
+      captures:
+        1: support.function.hi4
+        2: variable.other.hi4
+    - match: '\b({{vExpectTarget}})\s*=\s*({{vCountryTarget}})\b'
+      captures:
+        1: support.function.hi4
+        2: variable.other.tag.hi4
+    - match: '\b({{vExpectTarget}})\s*=\s*({{vLangRHSTarget}})\b'
+      captures:
+        1: support.function.hi4
+        2: variable.language.hi4
+    - match: '\b({{vExpectDate}})\s*{{vOp}}\s*({{vDate}})\b'
+      captures:
+        1: support.function.hi4
+        2: constant.other.date.hi4
+    - match: '\b({{vExpectNum}})\s*{{vOp}}\s*({{vNum}})\b'
+      captures:
+        1: support.function.hi4
+        2: constant.numeric.hi4
+    - match: '\b({{vExpectInt}})\s*{{vOp}}\s*({{vInt}})\b'
+      captures:
+        1: support.function.hi4
+        2: constant.numeric.integer.hi4
+    - match: '\b({{vExpectBool}})\s*=\s*(yes)\b'
+      captures:
+        1: support.function.hi4
+        2: constant.language.boolean.true.hi4
+    - match: '\b({{vExpectBool}})\s*=\s*(no)\b'
+      captures:
+        1: support.function.hi4
+        2: constant.language.boolean.false.hi4
+    - match: '\b({{vExpectBlock}})\s*=?\s*(?=\{)'
+      captures:
+        1: support.function.hi4
+    - match: '\b({{vExpectID}})\s*{{vOp}}\s*({{vID}})\b'
+      captures:
+        1: support.function.hi4
+        2: variable.identifier.hi4
+    - match: '\b({{vExpectLoc}})\s*=\s*({{vTextID}})\b'
+      captures:
+        1: support.function.hi4
+        2: variable.identifier.hi4
+    - match: '\b({{vExpectLoc}})\s*=\s*({{vStr}})'
+      captures:
+        1: support.function.hi4
+        2: string.quoted.double.hi4
+      # special cases for Param
+    - match: '\b(ideology|ruling_party)\s*=\s*({{vIdeology}})\b'
+      captures:
+        1: support.function.hi4
+        2: constant.language.enum.ideology.hi4
+    - match: '\b(building)\s*=\s*({{vBuilding}})\b'
+      captures:
+        1: support.function.hi4
+        2: constant.language.enum.building.hi4
+    - match: '\b(expire|last_election)\s*=\s*("{{vDate}}")'
+      captures:
+        1: support.function.hi4
+        2: string.quoted.double.hi4
+    - match: '\b(expire|last_election)\s*=\s*({{vDate}})\b'
+      captures:
+        1: support.function.hi4
+        2: constant.other.date.hi4
+    - match: '\b(resource)\s*=\s*({{vResource}})\b'
+      captures:
+        1: support.function.hi4
+        2: constant.language.enum.resource.hi4
+    - match: '\b(compare)\s*=\s*({{vVarCmp}})\b'
+      captures:
+        1: support.function.hi4
+        2: keyword.operator.logical.hi4 keyword.operator.word.hi4
+    - match: '\b(count)\s*=\s*(all)\b'
+      captures:
+        1: support.function.hi4
+        2: constant.language.enum.hi4
+      # end special cases
+    - match: '\b({{vParamTarget}})\s*=\s*({{vEventTarget}})\b'
+      captures:
+        1: support.function.param.hi4
+        2: variable.other.hi4
+    - match: '\b({{vParamTarget}})\s*=\s*({{vCountryTarget}})\b'
+      captures:
+        1: support.function.param.hi4
+        2: variable.other.tag.hi4
+    - match: '\b({{vParamTarget}})\s*=\s*({{vLangRHSTarget}})\b'
+      captures:
+        1: support.function.param.hi4
+        2: variable.language.hi4
+    - match: '\b({{vParamNum}})\s*{{vOp}}\s*({{vNum}})\b'
+      captures:
+        1: support.function.param.hi4
+        2: constant.numeric.hi4
+    - match: '\b({{vParamInt}})\s*{{vOp}}\s*({{vInt}})\b'
+      captures:
+        1: support.function.param.hi4
+        2: constant.numeric.integer.hi4
+    - match: '\b({{vParamBool}})\s*=\s*(yes)\b'
+      captures:
+        1: support.function.param.hi4
+        2: constant.language.boolean.true.hi4
+    - match: '\b({{vParamBool}})\s*=\s*(no)\b'
+      captures:
+        1: support.function.param.hi4
+        2: constant.language.boolean.false.hi4
+    - match: '\b({{vIdeology}})\s*=?\s*(?=\{)'
+      captures:
+        1: constant.language.enum.ideology.hi4
+    - match: '\b({{vParamBlock}})\s*=?\s*(?=\{)'
+      captures:
+        1: support.function.param.hi4
+    - match: '\b({{vParamID}})\s*=\s*({{vID}})\b'
+      captures:
+        1: support.function.param.hi4
+        2: variable.identifier.hi4
+    - match: '\b({{vParamLoc}})\s*=\s*({{vTextID}})\b'
+      captures:
+        1: support.function.param.hi4
+        2: variable.identifier.hi4
+    - match: '\b({{vParamLoc}})\s*=\s*({{vStr}})'
+      captures:
+        1: support.function.param.hi4
+        2: string.quoted.double.hi4
+    - match: '\b({{vControlBlock}})\s*=\s*(?=\{)'
+      captures:
+        1: keyword.control.hi4
+    - match: '\b({{vTopBlock}})\s*=\s*(?=\{)'
+      captures:
+        1: keyword.other.top.hi4
+    - match: '\b({{vTopID}})\s*=\s*({{vID}})'
+      captures:
+        1: keyword.other.top.hi4
+        2: variable.identifier.hi4
+    - match: '\b{{vOpBool}}\b'
+      scope: keyword.operator.logical.hi4 keyword.operator.word.hi4
+    - match: (?<!\w){{vDate}}\b
+      scope: constant.other.date.hi4
+    - match: (?<!\w)\-?([0-9]+\.)?[0-9]+\b
+      scope: constant.numeric.double.hi4
+    - match: '\b{{vCountryTarget}}\b'
+      scope: variable.other.tag.hi4
+    - match: '\b{{vEventTarget}}\b'
+      scope: variable.other.hi4
+    - match: '\b{{vLangTarget}}\b'
+      scope: variable.language.hi4
+    - match: '\b{{vUniscope}}|{{vScope}}\b'
+      scope: keyword.control.scope.hi4
+    - match: \byes\b
+      scope: constant.language.boolean.true.hi4
+    - match: \bno\b
+      scope: constant.language.boolean.false.hi4
+      # >>>> hereafter, these are the wild untamed lands of free-form match rules that really need shit done about them >>>>
+    - match: \b(hidden_trigger|hidden_effect|effect_tooltip)\b
+      scope: keyword.other.tooltip.hi4
+    - match: \b(if|else(?:_if)?|limit)\b
+      scope: keyword.control.hi4
+    - match: \b(random|random_list)\b # effects w/ modifier sets
+      scope: keyword.control.random.hi4
+
+  braces:
+    - match: \}
+      pop: true
+    - include: main

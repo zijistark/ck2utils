@@ -1,0 +1,10 @@
+(?:all|any)_allied_country
+(?:all|any|every|random)(?:_(?:neighbor|enemy))?_country
+(?:all|any|every|random)(?:_(?:owned|neighbor))?_state
+(?:all|any|every|random)_army_leader
+(?:all|any|every|random)_navy_leader
+(?:all|any|every|random)_unit_leader
+(?:any|every|random)_other_country
+any_home_area_neighbor_country
+global_every_army_leader
+random_owned_controlled_state
