@@ -1,0 +1,6 @@
+higher_real_tier_than
+higher_tier_than
+lower_real_tier_than
+lower_tier_than
+real_tier
+tier

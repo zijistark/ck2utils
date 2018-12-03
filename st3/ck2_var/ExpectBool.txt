@@ -149,6 +149,7 @@ is_married
 is_married_matrilineally
 is_merchant_republic
 is_multiplayer_host_character
+is_name_randomized
 is_nomadic
 is_occupied
 is_offmap_governor

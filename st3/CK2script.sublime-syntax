@@ -21,6 +21,7 @@ variables:
   vLiteralInt: '(?:[-]?\d+)'
   vLiteralNum: '(?x: [-]? (?: (?: \d* \. \d+ ) | (?: \d+ \. \d*) | \d+ ) )'
   vLiteralDate: '(?x: -? \d{1,4} \. -? \d{1,2} \. -? \d{1,2} )'
+  vLiteralStr: '"[^"\r\n]*"'
   vLiteralTier: |-
     (?xi:
       BARON
@@ -201,76 +202,6 @@ variables:
   vDecisionPropertyInt: |-
     (?x:
       ai_check_interval
-    )
-  vTriggerDate: |-
-    (?x:
-        start_date
-    )
-  vTriggerTier: |-
-    (?x:
-      higher_real_tier_than
-    | higher_tier_than
-    | lower_real_tier_than
-    | lower_tier_than
-    | real_tier
-    | tier
-    )
-  vTriggerTitleID: |-
-    (?x:
-      completely_controls
-    | de_facto_liege
-    | de_facto_liege_title
-    | de_jure_liege_or_above
-    | de_jure_liege
-    | de_jure_vassal_or_below
-    | government
-    | has_claim
-    | has_landed_title
-    | is_landed_title_allowed
-    | is_title_active
-    | title
-    )
-  vTriggerOffmapID: |-
-    (?x:
-        has_offmap_news_enabled
-    |   is_offmap_tag
-    |   government
-    |   is_offmap_governor
-    )
-  vTriggerEffectQString: |-
-    (?x:
-        set_name
-    |   log
-    |   text
-    |   has_offmap_name
-    |   set_offmap_name
-    |   set_special_character_title
-    |   remove_special_character_title
-    )
-  vEffectTitleID: |-
-    (?x:
-      add_claim
-    | add_pressed_claim
-    | add_weak_claim
-    | add_weak_pressed_claim
-    | de_jure_liege
-    | remove_claim
-    | set_defacto_liege
-    | set_preferred_capital
-    | copy_title_history
-    )
-  vParamTextID: |-
-    (?x:
-      desc
-    | name
-    | text
-    | title
-    | title_female
-    | title_prefix
-    | foa
-    | foa_female
-    | key
-    | localisation_key
     )
   vCBParamTier: (?:check_de_jure_tier)
   vCBParamInt: |-
@@ -686,6 +617,7 @@ variables:
     | is_married_matrilineally
     | is_merchant_republic
     | is_multiplayer_host_character
+    | is_name_randomized
     | is_nomadic
     | is_occupied
     | is_offmap_governor
@@ -821,6 +753,10 @@ variables:
     | unsafe_impregnate
     | uses_decadence
     | war
+    )
+  vExpectDate: |-
+    (?xi:
+      start_date
     )
   vExpectID: |-
     (?xi:
@@ -1047,6 +983,8 @@ variables:
     | realm_size
     | realm_stewardship
     | ruled_years
+    | set_father
+    | set_mother
     | society_rank
     | total_years_played
     | war_score
@@ -1054,6 +992,25 @@ variables:
     | year
     | yearly_income
     | {{vCharAttr}}
+    )
+  vExpectLoc: |-
+    (?xi:
+      desc
+    | foa
+    | foa_female
+    | has_offmap_name
+    | key
+    | localisation_key
+    | log
+    | name
+    | remove_special_character_title
+    | set_name
+    | set_offmap_name
+    | set_special_character_title
+    | text
+    | title
+    | title_female
+    | title_prefix
     )
   vExpectNum: |-
     (?xi:
@@ -1120,6 +1077,13 @@ variables:
     | strength_growth_per_century
     | treasury
     | wealth
+    )
+  vExpectOffmapID: |-
+    (?xi:
+      government
+    | has_offmap_news_enabled
+    | is_offmap_governor
+    | is_offmap_tag
     )
   vExpectTarget: |-
     (?xi:
@@ -1205,6 +1169,7 @@ variables:
     | is_landed_title_allowed
     | is_liege_of
     | is_liege_or_above
+    | is_liege_or_above_of
     | is_lover
     | is_married
     | is_mother
@@ -1222,9 +1187,9 @@ variables:
     | is_title_active
     | is_valid_viking_invasion_target
     | is_vassal_or_below
+    | is_vassal_or_below_of
     | is_within_diplo_range
     | killer
-    | liege_or_above_of
     | lower_real_tier_than
     | lower_tier_than
     | move_character
@@ -1290,11 +1255,128 @@ variables:
     | usurp_title_plus_barony_if_unlanded_and_vassals
     | usurp_title_plus_barony_if_unlanded_and_vassals_no_adj
     | vassal_of
-    | vassal_or_below_of
     | war_title
     | war_with
     | where
     | who
+    )
+  vExpectTier: |-
+    (?xi:
+      higher_real_tier_than
+    | higher_tier_than
+    | lower_real_tier_than
+    | lower_tier_than
+    | real_tier
+    | tier
+    )
+  vExpectTitleID: |-
+    (?xi:
+      add_claim
+    | add_pressed_claim
+    | add_weak_claim
+    | add_weak_pressed_claim
+    | completely_controls
+    | copy_title_history
+    | de_facto_liege
+    | de_facto_liege_title
+    | de_jure_liege
+    | de_jure_liege_or_above
+    | de_jure_vassal_or_below
+    | destroy_landed_title
+    | government
+    | has_claim
+    | has_landed_title
+    | is_landed_title_allowed
+    | is_title_active
+    | remove_claim
+    | set_defacto_liege
+    | set_preferred_capital
+    | title
+    )
+  vReligion: |-
+    (?xi:
+      adoptionist
+    | apostolic
+    | arian
+    | aztec
+    | aztec_reformed
+    | baltic_pagan
+    | baltic_pagan_reformed
+    | bogomilist
+    | bon
+    | bon_reformed
+    | buddhist
+    | cathar
+    | catholic
+    | druze
+    | east_african_pagan
+    | east_african_pagan_reformed
+    | finnish_pagan
+    | finnish_pagan_reformed
+    | fraticelli
+    | haruri
+    | hellenic_pagan
+    | hellenic_pagan_reformed
+    | hindu
+    | hip_religion
+    | hurufi
+    | ibadi
+    | iconoclast
+    | ismaili
+    | jain
+    | jewish
+    | karaite
+    | kharijite
+    | khurmazta
+    | lollard
+    | mahdiyya
+    | mandaean
+    | manichean
+    | maronite
+    | mazdaki
+    | messalian
+    | miaphysite
+    | monophysite
+    | monothelite
+    | nabawiyya
+    | nestorian
+    | norse_pagan
+    | norse_pagan_reformed
+    | orthodox
+    | pagan
+    | paulician
+    | qarmatian
+    | samaritan
+    | shiite
+    | slavic_pagan
+    | slavic_pagan_reformed
+    | sunni
+    | syriac
+    | taoist
+    | tengri_pagan
+    | tengri_pagan_reformed
+    | tondrakian
+    | waldensian
+    | waqifi
+    | west_african_pagan
+    | west_african_pagan_reformed
+    | yazidi
+    | zaydi
+    | zikri
+    | zoroastrian
+    | zun_pagan
+    | zun_pagan_reformed
+    | zurvanist
+    )
+  vReligionGroup: |-
+    (?xi:
+      christian
+    | hip_religion_group
+    | indian_group
+    | jewish_group
+    | muslim
+    | pagan_group
+    | zoroastrian_group
     )
   vSimpleScope: |-
     (?xi:
@@ -1403,16 +1485,22 @@ variables:
     | top_liege
     | trade_post_owner
     | true_religion_scope
+    | {{vReligionGroup}}
+    | {{vReligion}}
+    )
+  vTooltipBlock: |-
+    (?xi:
+      custom_tooltip
+    | hidden_effect
+    | hidden_tooltip
+    | hidden_trigger
+    | tooltip
     )
 
 contexts:
   main:
     - match: '#.*'
       scope: comment.line.number-sign.ck2script
-    - match: '\b({{vTriggerEffectQString}})\s*=\s*("[^"\r\n]*")'
-      captures:
-        1: support.function.ck2script
-        2: string.quoted.double.ck2script
     - match: '"'
       scope: punctuation.definition.string.begin.ck2script
       push:
@@ -1449,22 +1537,31 @@ contexts:
     - match: '\b({{vOpBool}})\s*=\s*(?=\{)'
       captures:
         1: keyword.operator.logical.ck2script keyword.operator.word.ck2script
-    - match: '\b({{vExpectInt}})\s*{{vOpBinary}}\s*({{vLiteralInt}})\b'
+    - match: '({{vTooltipBlock}})\s*=\s*(?=\{)'
       captures:
-        1: support.function.ck2script
-        2: constant.numeric.integer.ck2script
-    - match: '\b({{vExpectNum}})\s*{{vOpBinary}}\s*({{vLiteralNum}})\b'
+        1: keyword.other.tooltip.ck2script
+    - match: '\b({{vEventTarget}})\s*=\s*(?=\{)'
       captures:
-        1: support.function.ck2script
-        2: constant.numeric.double.ck2script
-    - match: '\b({{vTriggerTier}})\s*=\s*({{vLiteralTier}})\b'
+        1: variable.other.ck2script
+    - match: '\b({{vLangTarget}})\s*=\s*(?=\{)'
       captures:
-        1: support.function.ck2script
-        2: constant.language.enum.tier.ck2script
-    - match: '\b({{vTriggerDate}})\s*{{vOpBinary}}\s*({{vLiteralDate}})\b'
+        1: variable.language.ck2script
+    - match: '\b({{vTitleID}})\s*=\s*(?=\{)'
       captures:
-        1: support.function.ck2script
-        2: constant.other.date.ck2script
+        1: variable.other.ck2script
+    - match: '\b(c_\d+)\s*=\s*(?=\{)' # character scope, not a title; integer is character ID
+      captures:
+        1: variable.other.ck2script
+    - match: '\b({{vOffmapID}})\s*=\s*(?=\{)'
+      captures:
+        1: variable.other.ck2script
+    # - match: '\b({{vReligion}})\s*=\s*(?=\{)'
+    #   captures:
+    #     1: support.constant.ck2script
+    # - match: '\b({{vReligionGroup}})\s*=\s*(?=\{)'
+    #   captures:
+    #     1: support.constant.ck2script
+    #### end language fundamentals, so to speak -- some special case enumerations now ####
     - match: '\b(holding_type)\s*=\s*({{vLiteralHoldingType}})\b'
       captures:
         1: support.function.ck2script
@@ -1473,14 +1570,6 @@ contexts:
       captures:
         1: support.function.ck2script
         2: constant.language.enum.ck2script
-    - match: '\b({{vTriggerTitleID}})\s*=\s*({{vTitleID}})\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.other.ck2script
-    - match: '\b({{vTriggerOffmapID}})\s*=\s*({{vOffmapID}})\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.other.ck2script
     - match: '\b(dynasty)\s*=\s*(none|father_bastard|mother_bastard|random|culture|actually_culture)\b'
       captures:
         1: support.function.ck2script
@@ -1489,10 +1578,39 @@ contexts:
       captures:
         1: support.function.ck2script
         2: constant.language.ck2script
-    - match: '\b(set_father|set_mother)\s*=\s*(0)\b'
+    - match: '\b(end_war)\s*=\s*(invalid|reverse_demand|success|whitepeace)\b'
       captures:
         1: support.function.ck2script
-        2: constant.numeric.ck2script
+        2: constant.language.enum.end_war.ck2script
+    - match: '\b(offmap)\s*=\s*(allow|only)\b'
+      captures:
+        1: keyword.control.ck2script
+        2: constant.language.enum.ck2script
+    #### end special case enumerations, now general case LHS OP RHS / 'pair' pattern ####
+    - match: '\b({{vExpectInt}})\s*{{vOpBinary}}\s*({{vLiteralInt}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.numeric.integer.ck2script
+    - match: '\b({{vExpectNum}})\s*{{vOpBinary}}\s*({{vLiteralNum}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.numeric.double.ck2script
+    - match: '\b({{vExpectTier}})\s*=\s*({{vLiteralTier}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.enum.tier.ck2script
+    - match: '\b({{vExpectDate}})\s*{{vOpBinary}}\s*({{vLiteralDate}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.other.date.ck2script
+    - match: '\b({{vExpectTitleID}})\s*=\s*({{vTitleID}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.other.ck2script
+    - match: '\b({{vExpectOffmapID}})\s*=\s*({{vOffmapID}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.other.ck2script
     - match: '\b({{vExpectTarget}})\s*=\s*({{vEventTarget}})\b'
       captures:
         1: support.function.zck
@@ -1501,10 +1619,6 @@ contexts:
       captures:
         1: support.function.zck
         2: variable.language.zck
-    - match: '\b({{vEffectTitleID}})\s*=\s*({{vTitleID}})\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.other.ck2script
     - match: '\b({{vExpectBool}})\s*=\s*(yes)\b'
       captures:
         1: support.function.ck2script
@@ -1519,18 +1633,19 @@ contexts:
     - match: '\b({{vSimpleScope}}|{{vAnyScope}})\s*=\s*(?=\{)'
       captures:
         1: keyword.control.scope.ck2script
-    - match: '\b(end_war)\s*=\s*(invalid|reverse_demand|success|whitepeace)\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.language.enum.end_war.ck2script
-    - match: '\b(offmap)\s*=\s*(allow|only)\b'
-      captures:
-        1: keyword.control.ck2script
-        2: constant.language.enum.ck2script
     - match: '\b({{vExpectID}})\s*=\s*({{vID}})\b'
       captures:
         1: support.function.ck2script
         2: variable.identifier.ck2script
+    - match: '\b({{vExpectLoc}})\s*=\s*({{vTextID}})\b'
+      captures:
+        1: support.function.ck2script # should use a different scope for these
+        2: variable.identifier.ck2script
+    - match: '\b({{vExpectLoc}})\s*=\s*({{vLiteralStr}})'
+      captures:
+        1: support.function.ck2script # should use a different scope for these
+        2: string.quoted.double.ck2script
+    #### end generalized logic in form of LHS <OP> RHS ####
     - match: '\b({{vCBParamTier}})\s*=\s*({{vLiteralTier}})\b'
       captures:
         1: support.function.ck2script # should use a different scope for these
@@ -1555,45 +1670,18 @@ contexts:
       captures:
         1: support.function.ck2script # should use a different scope for these
         2: variable.identifier.ck2script
-    - match: '\b({{vParamTextID}})\s*=\s*({{vTextID}})\b'
-      captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: variable.identifier.ck2script
     - match: '\b({{vCBParamTextID}})\s*=\s*(\"{{vTextID}}\")'
       captures:
         1: support.function.ck2script # should use a different scope for these
         2: string.quoted.double.ck2script
-    - match: '\b({{vParamTextID}})\s*=\s*(\"{{vTextID}}\")'
-      captures:
-        1: support.function.ck2script # should use a different scope for these
-        2: string.quoted.double.ck2script
-    # catch-all standalone scopes/targets
-    - match: '\b{{vEventTarget}}\b'
-      scope: variable.other.ck2script
-    - match: '\b{{vLangTarget}}\b'
-      scope: variable.language.ck2script
-    - match: '\b{{vTitleID}}\b'
-      scope: variable.other.ck2script
-    - match: \bc_\d+\b # character scope, not a title; integer is character ID
-      scope: variable.other.ck2script
-    - match: '\b{{vOffmapID}}\b'
-      scope: variable.other.ck2script
       # standalone constants
     - match: '\b{{vLiteralMisc}}\b'
       scope: constant.language.ck2script
-    - match: '\b{{vLiteralTier}}\b'
-      scope: constant.language.enum.tier.ck2script
-    - match: \byes\b
-      scope: constant.language.boolean.true.ck2script
-    - match: \bno\b
-      scope: constant.language.boolean.false.ck2script
     - match: (?<!\w){{vLiteralDate}}\b
       scope: constant.other.date.ck2script
     - match: (?<!\w)\-?([0-9]+\.)?[0-9]+\b
       scope: constant.numeric.double.ck2script
       # >>>> hereafter, these are the wild untamed lands of free-form match rules that really need shit done about them >>>>
-    - match: \b(tooltip|hidden_tooltip|hidden_trigger|hidden_effect|custom_tooltip)\b
-      scope: keyword.other.tooltip.ck2script
     - match: \b(if|else|else_if|conditional_tooltip|trigger_switch|limit|preferred_limit|on_trigger|while|break|show_scope_change|generate_tooltip|trigger_if|trigger_else_if|trigger_else)\b
       scope: keyword.control.ck2script
     - match: \b((mult_|additive_)?modifier|additive_power_diff_modifier|additive_opinion_modifier|additive_compared_realm_size_modifier|additive_realm_size_modifier)\b

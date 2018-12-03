@@ -1,0 +1,7 @@
+christian
+hip_religion_group
+indian_group
+jewish_group
+muslim
+pagan_group
+zoroastrian_group

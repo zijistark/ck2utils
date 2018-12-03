@@ -80,6 +80,7 @@ is_holy_site
 is_landed_title_allowed
 is_liege_of
 is_liege_or_above
+is_liege_or_above_of
 is_lover
 is_married
 is_mother
@@ -97,9 +98,9 @@ is_rival
 is_title_active
 is_valid_viking_invasion_target
 is_vassal_or_below
+is_vassal_or_below_of
 is_within_diplo_range
 killer
-liege_or_above_of
 lower_real_tier_than
 lower_tier_than
 move_character
@@ -165,7 +166,6 @@ usurp_title_plus_barony_if_unlanded
 usurp_title_plus_barony_if_unlanded_and_vassals
 usurp_title_plus_barony_if_unlanded_and_vassals_no_adj
 vassal_of
-vassal_or_below_of
 war_title
 war_with
 where

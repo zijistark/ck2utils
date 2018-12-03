@@ -1,0 +1,5 @@
+custom_tooltip
+hidden_effect
+hidden_tooltip
+hidden_trigger
+tooltip

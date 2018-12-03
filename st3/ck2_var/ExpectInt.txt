@@ -81,6 +81,8 @@ realm_martial
 realm_size
 realm_stewardship
 ruled_years
+set_father
+set_mother
 society_rank
 total_years_played
 war_score

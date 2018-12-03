@@ -1,0 +1,16 @@
+desc
+foa
+foa_female
+has_offmap_name
+key
+localisation_key
+log
+name
+remove_special_character_title
+set_name
+set_offmap_name
+set_special_character_title
+text
+title
+title_female
+title_prefix

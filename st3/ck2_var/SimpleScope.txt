@@ -103,3 +103,5 @@ title_to_get_rid_of
 top_liege
 trade_post_owner
 true_religion_scope
+{{vReligionGroup}}
+{{vReligion}}
