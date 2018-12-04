@@ -1,0 +1,7 @@
+clr_flag
+clr_{{vFlagType}}_flag
+flag # as a param of had_{{vFlagType}}_flag = { flag = <the_flag> days = <X> }
+has_flag
+has_{{vFlagType}}_flag
+set_flag
+set_{{vFlagType}}_flag

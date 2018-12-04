@@ -1,0 +1,10 @@
+archers
+camel_cavalry
+galleys
+heavy_infantry
+horse_archers
+knights
+light_cavalry
+light_infantry
+pikemen
+war_elephants

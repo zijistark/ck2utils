@@ -1,5 +1,6 @@
 abdicate_to
 abdicate_to_most_liked_by
+add_bloodline_member
 add_claim
 add_favor
 add_friend
@@ -8,10 +9,14 @@ add_lover
 add_pressed_claim
 add_rival
 add_spouse
+add_to_bloodline
 add_weak_claim
 add_weak_pressed_claim
+as_if_allied_to
 at_location
 banish
+base_title # create_title param
+bloodline
 break_alliance
 break_betrothal
 can_marry
@@ -36,8 +41,11 @@ dynasty
 embargo
 excommunicated_for
 family
+first
 force_host
 gain_title
+genetic_father # create_character param
+genetic_mother # create_character param
 government
 grant_title
 grant_title_no_opinion
@@ -57,6 +65,7 @@ higher_real_tier_than
 higher_tier_than
 holder
 holds_favor_on
+home # spawn_unit param
 impregnate
 imprison
 is_allied_with
@@ -103,24 +112,30 @@ is_within_diplo_range
 killer
 lower_real_tier_than
 lower_tier_than
+match_character # spawn_unit param
 move_character
 occupy_minors_of_occupied_settlements
 overlord_of
 owes_favor_to
+owner # spawn_unit param
 pays_tribute_to
 player
 plot_is_known_by
 plotter
+portrait
 press_claim
 province
+province # spawn_unit param
 province_id
 real_tier
 religion
 religion_group
+remove_bloodline_member
 remove_claim
 remove_consort
 remove_favor
 remove_friend
+remove_from_bloodline
 remove_intermarry
 remove_lover
 remove_rival
@@ -136,6 +151,8 @@ same_liege
 same_realm
 same_sex
 same_society_as
+scaled_with_population_of # spawn_unit param
+second
 secret_religion
 secret_religion_group
 seize_trade_post
@@ -150,12 +167,15 @@ set_offmap_holder
 set_preferred_capital
 set_real_father
 set_secret_religion
+shares_any_bloodline_with
 shares_realm_border_with
 show_portrait
 sibling
 target
+thirdparty_title
 tier
 title
+to
 true_religion
 true_religion_group
 unsafe_destroy_landed_title

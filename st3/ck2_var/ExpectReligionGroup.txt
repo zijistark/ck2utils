@@ -1,0 +1,4 @@
+religion_group
+religion_group # event pre-trigger
+secret_religion_group
+true_religion_group

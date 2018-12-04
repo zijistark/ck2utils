@@ -33,6 +33,7 @@ family_palace
 father
 father_even_if_dead
 father_of_unborn
+founder
 governor
 governor_title
 guardian
@@ -64,6 +65,7 @@ most_prestigious_clan_vassal
 mother
 mother_even_if_dead
 new_artifact
+new_bloodline
 new_character
 new_title
 official_crusade_recipient
@@ -103,5 +105,3 @@ title_to_get_rid_of
 top_liege
 trade_post_owner
 true_religion_scope
-{{vReligionGroup}}
-{{vReligion}}

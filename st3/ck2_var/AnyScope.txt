@@ -2,6 +2,9 @@ any_army
 any_artifact
 any_attacker # lacks a random_ dual
 any_backed_character
+any_bloodline
+any_bloodline_member
+any_bloodline_member_including_dead
 any_character
 any_child
 any_child_even_if_dead
@@ -83,6 +86,9 @@ any_ward
 random_army
 random_artifact
 random_backed_character
+random_bloodline
+random_bloodline_member
+random_bloodline_member_including_dead
 random_character
 random_child
 random_child_even_if_dead
@@ -109,6 +115,7 @@ random_neighbor_independent_ruler
 random_neighbor_province
 random_non_aggression_pact_character
 random_opinion_modifier_target
+random_owned_bloodline
 random_playable_ruler
 random_player
 random_potential_tribal_county

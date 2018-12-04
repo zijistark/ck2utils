@@ -1,6 +1,9 @@
 abdicate
 adventurer
+adventurer # create_title param
 ai
+ai # event pre-trigger
+allow_bastards
 always
 ambition_succeeds
 as_if_liege
@@ -13,6 +16,7 @@ best_de_jure_liege_title_under_ROOT
 best_de_jure_liege_title_under_target_ruler
 borders_lake
 borders_major_river
+break # ideally this would be in bold/etc. like ControlBlock, but for now it's a simple ExpectBool
 can_be_claimed
 can_be_given_away
 can_be_usurped
@@ -20,8 +24,11 @@ can_call_crusade
 can_change_religion
 can_have_more_leadership_traits
 can_marry
+can_toggle_looting # spawn_unit param
 cancel_ambition
 cancel_crusade
+cannot_inherit # spawn_unit param
+capable_only # event pre-trigger
 character
 clan
 clear_focus
@@ -30,14 +37,18 @@ clear_secret_religion
 clear_wealth
 controls_religion
 cooldown
+copy_title_laws # create_title param
 crime
 crusade_war_has_started
+custom_created # create_title param
 customizer
 cut_mercenary_creator_relation
 death
+destroy_bloodline # not clear whether this actually does take only or even a boolean due to poor docs & lack of any base game usage currently (3.0)
 destroy_landed_title
 diplomatic_immunity
 disable_non_aggression_pacts
+disband_on_peace # spawn_unit param
 distribute_crusade_target_title
 emf_FROM_subjugate_ruler
 emf_ROOT_completely_controls_counties
@@ -58,6 +69,8 @@ emf_hostile_religion_to_PREV
 emf_hostile_religion_to_ROOT
 emf_hostile_religion_to_target_ruler
 emf_is_formidable_woman
+emf_is_hre
+emf_is_roman_empire
 emf_is_voter
 emf_liege_change
 emf_not_has_swmh
@@ -69,8 +82,11 @@ emf_unreformed_pagan
 emf_unsafe_destroy_title
 emf_western_christian_religion
 excommunicate
+female # create_character param
 flank_has_leader
+friends # event pre-trigger
 from_ruler_dynasty
+generate_tooltip
 has_autocephaly
 has_called_crusade
 has_concubinage
@@ -101,6 +117,9 @@ has_siege
 has_top_de_jure_capital
 has_trade_post
 hidden
+hide_from # event property
+hide_new # event property
+hide_window # event property
 historical
 holy_order
 immortal
@@ -118,6 +137,7 @@ is_alternate_start
 is_ascetic_trigger
 is_attacker
 is_attractive_trigger
+is_bloodline_active
 is_capital
 is_conquered
 is_consort
@@ -132,10 +152,13 @@ is_father_real_father
 is_female
 is_feudal
 is_flanking
+is_friendly # event property
 is_heir
 is_heretic
+is_hostile # event property
 is_ill
 is_in_society
+is_in_society # event pre-trigger
 is_inaccessible_trigger
 is_incapable
 is_infertile_trigger
@@ -143,9 +166,11 @@ is_island
 is_land
 is_landed
 is_landless_type_title
+is_looter # spawn_unit param
 is_lowborn
 is_marriage_adult
 is_married
+is_married # event pre-trigger
 is_married_matrilineally
 is_merchant_republic
 is_multiplayer_host_character
@@ -155,7 +180,9 @@ is_occupied
 is_offmap_governor
 is_offmap_ruler
 is_or_was_offmap_power_ruler
+is_part_of_plot # event pre-trigger
 is_patrician
+is_patrician # event pre-trigger
 is_playable
 is_plot_active
 is_powerful_vassal
@@ -178,6 +205,7 @@ is_republic
 is_ruler
 is_save_game
 is_seafarer
+is_sick # event pre-trigger
 is_smart_trigger
 is_society_grandmaster
 is_strong_trigger
@@ -187,18 +215,32 @@ is_titular_title
 is_tribal
 is_tribal_type_title
 is_tributary
+is_triggered_only # event property
 is_vice_royalty
 is_virtous # yes, the trigger is misspelled in the API
 is_voter
 is_weak_trigger
+landless # create_title param
 lock_crusade_target
+major # event property
 make_capital_holding
 make_primary_title
 make_reformer_head_of_religion
+matrilineal_override
 mercenary
+mercenary # create_title param
+merge # spawn_unit param
 move
 multiplayer
+nomad # create_title param
+notification # event property
 offmap
+only_capable # event pre-trigger
+only_independent # event pre-trigger
+only_men # event pre-trigger
+only_playable # event pre-trigger
+only_rulers # event pre-trigger
+only_women # event pre-trigger
 opinion_effect
 owner_under_FROM
 owner_under_FROMFROM
@@ -217,19 +259,25 @@ plot_succeeds
 port
 preparing_invasion
 prisoner
+prisoner # event pre-trigger
 purple_born_heirs
 random
+random_traits # create_character param
 rebel
+rebel # create_title param
 recalc_succession
 refill_holding_levy
+reinforces # spawn_unit param
 religion_allows_female_temple_holders
 religion_allows_male_temple_holders
 remove_guardian
 remove_spouse
+replace_captain_on_death # create_title param
 reveal_plot
 reveal_plot_w_message
 revoke_capital_holding
 risks_minor_clan_rising
+rivals # event pre-trigger
 same_religion
 set_allow_looting
 set_allow_rivermovement
@@ -264,15 +312,22 @@ set_psc_marriage
 set_raised_vassal_opinion_loss
 set_seafaring
 set_uses_decadence
+show_from_from # event property
+show_from_from_from # event property
+show_root # event property
+show_scope_change
 society_can_rank_up
 stacking
+status
 technology_can_spread
 temporary
+temporary # create_title param
 title_duke_basic_allow
 title_emperor_basic_allow
 title_king_basic_allow
 title_tribe_basic_allow
 top_de_jure_capital
+triggered_from_code # event property
 under_FROM
 under_FROMFROM
 under_FROMFROMFROM
@@ -285,3 +340,4 @@ unsafe_destroy_landed_title
 unsafe_impregnate
 uses_decadence
 war
+war # event pre-trigger

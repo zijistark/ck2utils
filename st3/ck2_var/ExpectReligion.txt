@@ -1,0 +1,5 @@
+religion
+religion # event pre-trigger
+secret_religion
+set_secret_religion
+true_religion
