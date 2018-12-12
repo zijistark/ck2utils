@@ -1,16 +1,33 @@
+add # param
 add_stability
 add_threat
 add_war_support
+ahead_reduction # param
 alliance_naval_strength_ratio
 alliance_strength_ratio
 amount_manpower_in_deployment_queue
+annex_cost
+annex_threat_factor
 any_war_score
+attacker_modifier # param
+base # param
+bonus # param
 command_power
 command_power_daily
 compare_autonomy_progress_ratio
 cost
+cost_factor # param
+count # param
+damage # param
+defender_modifier # param
+efficiency # param
 enemies_naval_strength_ratio
 enemies_strength_ratio
+factor # param
+force_government_cost
+freedom_level # param
+generate_base_cost
+generate_per_state_cost
 has_added_tension_amount
 has_air_experience
 has_army_experience
@@ -20,12 +37,27 @@ has_political_power
 has_stability
 has_war_support
 manpower_per_military_factory
+max # param
+min # param
+min_freedom_level # param
 political_power_daily
 political_power_growth
+popularity # param
+progress # param
+puppet_cost
+ratio # param
+removal_cost # param
 research_cost
+research_sharing_per_country_bonus # param
 set_equipment_fraction
 set_stability
 set_war_support
+size # param
+start_equipment_factor # param
+start_experience_factor # param
 state_population
 surrender_progress
+take_states_cost
+take_states_limit
 threat
+value # param

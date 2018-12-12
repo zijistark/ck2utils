@@ -8,22 +8,48 @@ add_state_core
 ai_irrationality
 ai_wants_divisions
 air_experience
+amount # param
 amount_research_slots
 area
+area # param
 army_experience
+attack_skill # param
 attack_skill_level
+attacker # param
 average_stats
+border_state # param
+capital # param
 casualties
+combat_width # param
 controls_state
+cost # param
+count # param
+days # param
+days_re_enable # param
+days_remove # param
+defender # param
+defense_skill # param
 defense_skill_level
 difficulty
+election_frequency # param
+expire
 goto_province
 goto_state
 has_full_control_of_state
 has_id
 has_unit_leader
+hours # param
+id # param
 land_doctrine_level
+level # param
+limit # param
+location # param
+logistics_skill # param
 logistics_skill_level
+max_trust # param
+months # param
+name_order # param
+navy_experience # param
 num_divisions
 num_faction_members
 num_occupied_states
@@ -33,17 +59,25 @@ num_of_civilian_factories_available_for_projects
 num_of_controlled_states
 num_of_factories
 num_of_nukes
+num_provinces # param
 num_subjects
 num_tech_sharing_groups
 num_units
 original_research_slots
 owns_state
+parent_version # param
+planning_skill # param
 planning_skill_level
+prioritize_location # param
+priority # param
+province # param
+random # param
 randomize_weather
 region
 remove_state_claim
 remove_state_core
 remove_unit_leader
+requested_factories # param
 reset_province_name
 set_capital
 set_convoys
@@ -52,10 +86,21 @@ set_province_controller
 set_research_slots
 set_state_controller
 set_state_owner
+size # param
 skill
+skill # param
 skill_advantage
 state
+state # param
 state_and_terrain_strategic_value
 state_strategic_value
+target # param
+threat # param
 transfer_state
+uses # param
+value # param
+version # param
+x # param
+y # param
+years # param
 {{vStateBuilding}}

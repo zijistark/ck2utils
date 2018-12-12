@@ -8,6 +8,7 @@ add_equipment_production
 add_equipment_to_stockpile
 add_ideas
 add_named_threat
+add_namespace
 add_offsite_building
 add_opinion_modifier
 add_popularity
@@ -25,10 +26,12 @@ air_wings
 amount_taken_ideas
 annex_country
 any_province_building_level
+attacker # param
 categories
 check_variable
 clamp_temp_variable
 clamp_variable
+color
 country_event
 create_corps_commander
 create_country_leader
@@ -42,6 +45,7 @@ create_wargoal
 custom_trigger_tooltip
 damage_building
 declare_war_on
+defender # param
 delete_unit_template_and_units
 destroy_ships
 diplomatic_relation
@@ -49,16 +53,21 @@ distance_to
 divide_temp_variable
 divide_variable
 division
+division_name # param
 division_template
 divisions_in_border_state
 divisions_in_state
+equipment # param
 equipment_bonus
 estimated_intel_max_armor
 estimated_intel_max_piercing
+events # param
 finalize_border_war
 focus_progress
 folder
+force_equipment_variants # param
 free_building_slots
+generator # param
 has_army_manpower
 has_army_size
 has_available_idea_with_traits
@@ -78,19 +87,28 @@ has_volunteers_amount_from
 has_{{vFlagType}}_flag
 ic_ratio
 is_licensing_to
+keep_unit_leaders # param
+keep_unit_leaders_trigger # param
 modifier
+modifier # param
 modify_building_resources
 modify_tech_sharing_bonus
 modify_timed_idea
 modify_{{vFlagType}}_flag
 multiply_temp_variable
 multiply_variable
+mutually_exclusive # param
 naval_strength_ratio
 navy
 news_event
 num_claimed_peace_conference_neighbour_states
 num_owned_neighbour_states
+parties # param
+prerequisite # param
 print_variables
+province # param
+random_events # param
+regiments # param
 release_autonomy
 remove_building
 remove_ideas
@@ -98,6 +116,7 @@ remove_opinion_modifier
 remove_relation_modifier
 research_bonus
 reverse_add_opinion_modifier
+rule # param
 send_equipment
 set_autonomy
 set_border_war_data
@@ -116,13 +135,21 @@ set_{{vFlagType}}_flag
 ship
 ships_in_area
 ships_in_state_ports
+slots # param
 start_border_war
 start_civil_war
+states # param
+states_filter # param
 stockpile_ratio
 strength_ratio
 subtract_from_temp_variable
 subtract_from_variable
+support # param
 swap_ideas
+targeted_modifier # param
+traits # param
 transfer_navy
 transfer_ship
+upgrades # param
+var_list # param
 white_peace

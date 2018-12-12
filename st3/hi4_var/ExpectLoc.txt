@@ -1,8 +1,31 @@
+callsign # param
 create_faction
+creator # param
 custom_effect_tooltip
+desc # param
+division_template # param
+file # param
+gfx # param
 has_dlc
+hostility_reason # param
+id # param
 load_oob
+localisation_key # param
+localization # param
+log
+long_name # param
+message # param
+name # param
 oob
+owner # param
+picture # param
+prefer_name # param
 remove_from_faction
 set_state_name
 sound_effect
+surname # param
+text # param
+title # param
+tooltip # param
+version_name # param
+war_name

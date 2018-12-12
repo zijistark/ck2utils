@@ -1,12 +1,14 @@
-idea_categories
 autonomy_state
 focus_tree
+idea_categories
 ideas
 instant_effect
 leader_traits
 modifiers
 on_actions
 opinion_modifiers
+state_categories
 technologies
 technology_sharing_group
 units
+wargoal_types

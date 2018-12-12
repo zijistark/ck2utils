@@ -3,11 +3,18 @@ add_core_of
 add_state_claim
 add_state_core
 add_to_faction
+attacker # param
 change_tag_from
 civilwar_target
 controls_state
+country # param
 country_exists
+creator # param
+defender # param
 end_puppet
+enemy # param
+exporter # param
+from # param
 give_guarantee
 give_military_access
 gives_military_access_to
@@ -27,6 +34,8 @@ has_war_together_with
 has_war_with
 has_wargoal_against
 hold_election
+id # param
+ideology # param
 is_claimed_by
 is_controlled_by
 is_core_of
@@ -43,7 +52,9 @@ is_owner_neighbor_of
 is_puppet_of
 is_subject_of
 original_tag
+owner # param
 owns_state
+producer # param
 puppet
 recall_attache
 release
@@ -58,6 +69,11 @@ set_nationality
 set_state_controller
 set_state_owner
 state
+state # param
 tag
+target # param
+targeted_alliance # param
 transfer_state
+trigger_for # param
 white_peace
+will_lead_to_war_with # param

@@ -1,0 +1,8 @@
+clear_variable
+clr_{{vFlagType}}_flag
+flag
+has_variable
+has_{{vFlagType}}_flag
+set_{{vFlagType}}_flag
+value
+var

@@ -113,6 +113,7 @@ license_production_speed
 license_purchase_cost
 license_tech_difference_speed
 line_change_production_efficiency_factor
+local_building_slots
 local_resources_factor
 max_command_power
 max_dig_in
@@ -166,8 +167,8 @@ production_factory_efficiency_gain_factor
 production_factory_max_efficiency_factor
 production_factory_start_efficiency_factor
 production_oil_factor
+production_speed_(?x: {{vStateBuilding}} | {{vProvBuilding}} )_factor
 production_speed_buildings_factor
-production_speed_{{vBuilding}}_factor
 recon_factor
 research_time_factor
 send_volunteer_divisions_required

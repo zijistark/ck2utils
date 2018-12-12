@@ -2,19 +2,32 @@ activate_decision
 activate_mission
 activate_mission_tooltip
 add_country_leader_trait
+add_idea # param
 add_ideas
 add_to_tech_sharing_group
 add_unit_leader_trait
 ai_has_role_division
 ai_has_role_template
+archetype # param
+autonomous_state # param
+autonomy_state # param
 can_research
 can_select_trait
+category # param
 clear_variable
 clr_{{vFlagType}}_flag
 compare_autonomy_state
 complete_national_focus
 create_faction
+decision # param
+definition # param
+division_names_group # param
+enable_tactic
+equipment # param
+flag # param
+focus # param
 graphical_culture_2d
+group # param
 has_ability
 has_active_mission
 has_autonomy_state
@@ -34,25 +47,44 @@ has_template_majority_unit
 has_trait
 has_variable
 has_{{vFlagType}}_flag
+icon # param
+id # param
+idea # param
+ideology # param
 is_in_tech_sharing_group
 is_on_continent
 is_researching_technology
 load_focus_tree
 load_oob
+max # param
+min # param
+modifier # param
+on_cancel # param
+on_lose # param
+on_win # param
+picture # param
+relation # param
+relative_position_id # param
 remove_country_leader_trait
 remove_from_tech_sharing_group
+remove_idea # param
 remove_ideas
 remove_ideas_with_trait
 remove_mission
 remove_targeted_decision
 remove_unit_leader_trait
+resource # param
 round_variable
 set_cosmetic_tag
 set_country_leader_ideology
 set_state_category
 set_{{vFlagType}}_flag
 show_ideas_tooltip
+technology # param
+trait # param
+type # param
 unlock_decision_category_tooltip
 unlock_decision_tooltip
 unlock_national_focus
-enable_tactic
+value # param
+var # param

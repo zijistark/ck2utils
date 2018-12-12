@@ -1,12 +1,48 @@
+active # param
+all_provinces # param
 always
 any_claim
+append # param
+attacker_win # param
+available_if_capitulated # param
+banned # param
 break
+can_be_called_to_war # param
+can_boost_other_ideologies # param
+can_create_factions # param
+can_declare_war_on_same_ideology # param
+can_declare_war_without_wargoal_when_in_war # param
+can_decline_call_to_war # param
+can_force_government # param
+can_generate_female_aces # param
+can_guarantee_other_ideologies # param
+can_join_factions # param
+can_join_factions_not_allowed_diplomacy # param
+can_join_opposite_factions # param
+can_lower_tension # param
+can_not_declare_war # param
+can_occupy_non_war # param
+can_only_justify_war_on_threat_country # param
+can_puppet # param
+can_send_volunteers # param
+can_use_kamikaze_pilots # param
+cancel_if_invalid # param
+change_state_after_war # param
 clear_global_event_targets
+continue_if_invalid # param
+default # param
+defender_win # param
 demote_leader
+designer # param
 dismantle_faction
 doctrine
+dont_fire_events # param
 drop_cosmetic_tag
+dynamic # param
+elections_allowed # param
 exists
+female # param
+fire_only_once # param
 has_any_custom_difficulty_setting
 has_any_license
 has_attache
@@ -19,6 +55,10 @@ has_defensive_war
 has_elections
 has_offensive_war
 has_war
+hidden # param
+include_locked # param
+instant # param
+instant_build # param
 is_ai
 is_assigned
 is_border_conflict
@@ -27,6 +67,8 @@ is_capital
 is_coastal
 is_demilitarized_zone
 is_faction_leader
+is_faction_sharing # param
+is_female # param
 is_field_marshal
 is_historical_focus_on
 is_in_faction
@@ -37,18 +79,34 @@ is_island_state
 is_leading_army
 is_leading_army_group
 is_lend_leasing
+is_locked # param
 is_major
+is_name_ordered # param
 is_puppet
 is_staging_coup
 is_subject
 is_target_of_coup
+is_triggered_only # param
 is_tutorial
 kill_country_leader
 leave_faction
+limit_to_border # param
+limit_to_coastal # param
+limit_to_naval_base # param
+limit_to_victory_point # param
+major # param
+obsolete # param
+only_own_territory # param
+print_global # param
 promote_leader
 reset_state_name
 retire
 retire_country_leader
+reversed # param
+ruling_only # param
 set_border_war
 set_demilitarized_zone
 set_major
+trade # param
+transfer_troops # param
+units_deployed_to_overlord # param
