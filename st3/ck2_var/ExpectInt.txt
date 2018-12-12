@@ -7,6 +7,7 @@ ai_rationality
 ai_zeal
 among_most_powerful_vassals
 artifact_age
+capital
 character
 combat_rating
 count
@@ -19,6 +20,7 @@ days_at_current_society_rank
 days_in_society
 decadence
 demesne_size
+dignity # LT param
 duration
 dynasty
 home # spawn_unit param
@@ -30,6 +32,7 @@ min_age # event pre-trigger
 month
 month_of_birth
 monthly_income
+monthly_income # LT param
 months
 multiplier
 num_fitting_characters_for_title

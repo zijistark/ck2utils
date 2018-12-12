@@ -20,6 +20,7 @@ bloodline
 break_alliance
 break_betrothal
 can_marry
+capital
 character
 claimed_by
 clear_wealth

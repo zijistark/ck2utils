@@ -1,6 +1,7 @@
 desc
 desc # event property
 foa
+foa # LT param
 foa # create_title param
 foa_female
 has_dlc
@@ -21,7 +22,10 @@ set_offmap_name
 set_special_character_title
 text
 title
+title # LT param
 title # event property
 title_female
+title_female # LT param
 title_prefix
+title_prefix # LT param
 which

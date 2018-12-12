@@ -381,6 +381,7 @@ variables:
     | ai_will_do
     | ai_will_revoke
     | allow
+    | allow
     | allow_join
     | allowed_to_grant
     | allowed_to_hold
@@ -406,6 +407,7 @@ variables:
     | else_if
     | fail_trigger_effect
     | from_potential
+    | gain_effect
     | gain_effect
     | if
     | immediate
@@ -470,6 +472,9 @@ variables:
     | check_variable
     | clan_opinion
     | clear_delayed_event
+    | coat_of_arms
+    | color
+    | color2
     | command_modifier
     | create_artifact
     | create_bloodline
@@ -480,6 +485,7 @@ variables:
     | create_random_soldier
     | create_random_steward
     | create_title
+    | data
     | death
     | disliked_by_offmap
     | distance
@@ -489,6 +495,7 @@ variables:
     | events
     | export_to_variable
     | faction_power
+    | female_names
     | flags
     | gain_settlements_under_title
     | gain_title
@@ -503,6 +510,7 @@ variables:
     | is_variable_equal
     | liked_by_offmap
     | make_tributary
+    | male_names
     | multiply_variable
     | num_of_trade_post_diff
     | opinion
@@ -563,6 +571,7 @@ variables:
     | always
     | ambition_succeeds
     | as_if_liege
+    | assimilate
     | banish
     | best_de_jure_liege_title_holder_FROM
     | best_de_jure_liege_title_holder_ROOT
@@ -573,6 +582,7 @@ variables:
     | borders_lake
     | borders_major_river
     | break
+    | caliphate
     | can_be_claimed
     | can_be_given_away
     | can_be_usurped
@@ -592,8 +602,10 @@ variables:
     | clear_secret_religion
     | clear_wealth
     | controls_religion
+    | controls_religion
     | cooldown
     | copy_title_laws
+    | creation_requires_capital
     | crime
     | crusade_war_has_started
     | custom_created
@@ -606,6 +618,7 @@ variables:
     | disable_non_aggression_pacts
     | disband_on_peace
     | distribute_crusade_target_title
+    | dynasty_title_names
     | emf_FROM_subjugate_ruler
     | emf_ROOT_completely_controls_counties
     | emf_ROOT_subjugate_ruler
@@ -684,6 +697,7 @@ variables:
     | in_command
     | in_revolt
     | in_seclusion
+    | independent
     | independent
     | inherit
     | is_adult
@@ -777,12 +791,15 @@ variables:
     | is_voter
     | is_weak_trigger
     | landless
+    | landless
+    | location_ruler_title
     | lock_crusade_target
     | major
     | make_capital_holding
     | make_primary_title
     | make_reformer_head_of_religion
     | matrilineal_override
+    | mercenary
     | mercenary
     | mercenary
     | merge
@@ -809,11 +826,13 @@ variables:
     | pacifist
     | pf_liege_change_under_title_begin_effect
     | pf_liege_change_under_title_end_effect
+    | pirate
     | pledge_crusade_defense
     | pledge_crusade_participation
     | plot_succeeds
     | port
     | preparing_invasion
+    | primary
     | prisoner
     | prisoner
     | purple_born_heirs
@@ -868,6 +887,7 @@ variables:
     | set_raised_vassal_opinion_loss
     | set_seafaring
     | set_uses_decadence
+    | short_name
     | show_from_from
     | show_from_from_from
     | show_root
@@ -883,6 +903,7 @@ variables:
     | title_king_basic_allow
     | title_tribe_basic_allow
     | top_de_jure_capital
+    | tribe
     | triggered_from_code
     | under_FROM
     | under_FROMFROM
@@ -939,6 +960,7 @@ variables:
     | controls_religion
     | culture
     | culture
+    | culture
     | culture_group
     | culture_group
     | death_reason
@@ -954,6 +976,7 @@ variables:
     | give_minor_title
     | give_nickname
     | government
+    | graphical_culture
     | graphical_culture
     | group
     | has_ambition
@@ -1004,6 +1027,7 @@ variables:
     | key
     | law
     | leads_faction
+    | mercenary_type
     | mercenary_type
     | modifier
     | name
@@ -1064,6 +1088,7 @@ variables:
     | ai_zeal
     | among_most_powerful_vassals
     | artifact_age
+    | capital
     | character
     | combat_rating
     | count
@@ -1076,6 +1101,7 @@ variables:
     | days_in_society
     | decadence
     | demesne_size
+    | dignity
     | duration
     | dynasty
     | home
@@ -1086,6 +1112,7 @@ variables:
     | min_age
     | month
     | month_of_birth
+    | monthly_income
     | monthly_income
     | months
     | multiplier
@@ -1167,6 +1194,7 @@ variables:
     | desc
     | foa
     | foa
+    | foa
     | foa_female
     | has_dlc
     | has_offmap_name
@@ -1187,7 +1215,10 @@ variables:
     | text
     | title
     | title
+    | title
     | title_female
+    | title_female
+    | title_prefix
     | title_prefix
     | which
     )
@@ -1314,6 +1345,7 @@ variables:
     | break_alliance
     | break_betrothal
     | can_marry
+    | capital
     | character
     | claimed_by
     | clear_wealth
@@ -1491,6 +1523,7 @@ variables:
     | higher_tier_than
     | lower_real_tier_than
     | lower_tier_than
+    | name_tier
     | real_tier
     | tier
     )
@@ -1876,11 +1909,11 @@ contexts:
         2: variable.identifier.ck2script
     - match: '\b({{vExpectLoc}})\s*=\s*({{vTextID}})\b'
       captures:
-        1: support.function.ck2script # should use a different scope for these
+        1: support.function.ck2script
         2: variable.identifier.ck2script
     - match: '\b({{vExpectLoc}})\s*=\s*({{vStr}})'
       captures:
-        1: support.function.ck2script # should use a different scope for these
+        1: support.function.ck2script
         2: string.quoted.double.ck2script
     #### end generalized logic in form of LHS <OP> RHS ####
     #### some special case enumerations now ####
@@ -1971,16 +2004,8 @@ contexts:
       # create_title
     - match: \b(is_quest_target|society|plot_power|can_swap_job_title|has_disease)\b
       scope: keyword.control.ck2script
-      # LANDED_TITLES
-    - match: \b(color2?|((graphical_)?culture)|religion|capital|foa|pirate|tribe|location_ruler_title|controls_religion|(title(_female)?)|dynasty_title_names|short_name|name_tier|landless|primary|dignity|caliphate|creation_requires_capital)\b
-      scope: keyword.control.ck2script
-    - match: \b(monthly_income|coat_of_arms|data|mercenary_type|assimilate|((fe)?male_names)|allow|gain_effect|mercenary|independent)\b
-      scope: keyword.control.ck2script
       # CUSTOMIZABLE_LOCALISATION
     - match: \b(defined_text|text|localisation_key|fallback_text)\b
-      # ON_ACTIONS & JOB_ACTIONS:
-    - match: \b(events)\b
-      scope: keyword.control.ck2script
       # FUTURE DECISION/LAW CONTEXT:
     - match: \b(decisions|title_decisions|settlement_decisions|vassal_decisions|targett?ed_decisions|plot_decisions|society_decisions)\b # top-level
       scope: keyword.control.ck2script
@@ -2001,7 +2026,7 @@ contexts:
         1: keyword.control.ck2script
         2: constant.numeric.ck2script
     - match: \b(vassal_rank_plot|military_plot|intrigue_plot|murder_plot|vassal_intrigue_plot)\b # plot types
-      scope: keyword.control.ck2script
+      scope: constant.language.enum.ck2script
 
   braces:
     - match: \}

@@ -22,6 +22,7 @@ completely_controls_region
 continent
 controls_religion
 culture
+culture # LT param
 culture # event pre-trigger
 culture_group
 culture_group # event pre-trigger
@@ -39,6 +40,7 @@ give_minor_title
 give_nickname
 government
 graphical_culture
+graphical_culture # LT param
 group
 has_ambition
 has_any_building
@@ -89,6 +91,7 @@ key
 law
 leads_faction
 mercenary_type
+mercenary_type # LT param
 modifier
 name
 on_trigger

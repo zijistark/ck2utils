@@ -7,6 +7,7 @@ allow_bastards
 always
 ambition_succeeds
 as_if_liege
+assimilate # LT param
 banish
 best_de_jure_liege_title_holder_FROM
 best_de_jure_liege_title_holder_ROOT
@@ -17,6 +18,7 @@ best_de_jure_liege_title_under_target_ruler
 borders_lake
 borders_major_river
 break # ideally this would be in bold/etc. like ControlBlock, but for now it's a simple ExpectBool
+caliphate # LT param
 can_be_claimed
 can_be_given_away
 can_be_usurped
@@ -36,8 +38,10 @@ clear_intermarry
 clear_secret_religion
 clear_wealth
 controls_religion
+controls_religion # LT param
 cooldown
 copy_title_laws # create_title param
+creation_requires_capital # LT param
 crime
 crusade_war_has_started
 custom_created # create_title param
@@ -50,6 +54,7 @@ diplomatic_immunity
 disable_non_aggression_pacts
 disband_on_peace # spawn_unit param
 distribute_crusade_target_title
+dynasty_title_names # LT param
 emf_FROM_subjugate_ruler
 emf_ROOT_completely_controls_counties
 emf_ROOT_subjugate_ruler
@@ -129,6 +134,7 @@ in_command
 in_revolt
 in_seclusion
 independent
+independent # LT param
 inherit
 is_adult
 is_alive
@@ -220,7 +226,9 @@ is_vice_royalty
 is_virtous # yes, the trigger is misspelled in the API
 is_voter
 is_weak_trigger
+landless # LT param
 landless # create_title param
+location_ruler_title # LT param
 lock_crusade_target
 major # event property
 make_capital_holding
@@ -228,6 +236,7 @@ make_primary_title
 make_reformer_head_of_religion
 matrilineal_override
 mercenary
+mercenary # LT param
 mercenary # create_title param
 merge # spawn_unit param
 move
@@ -253,11 +262,13 @@ owner_under_target_ruler
 pacifist
 pf_liege_change_under_title_begin_effect
 pf_liege_change_under_title_end_effect
+pirate # LT param
 pledge_crusade_defense
 pledge_crusade_participation
 plot_succeeds
 port
 preparing_invasion
+primary # LT param
 prisoner
 prisoner # event pre-trigger
 purple_born_heirs
@@ -312,6 +323,7 @@ set_psc_marriage
 set_raised_vassal_opinion_loss
 set_seafaring
 set_uses_decadence
+short_name # LT param
 show_from_from # event property
 show_from_from_from # event property
 show_root # event property
@@ -327,6 +339,7 @@ title_emperor_basic_allow
 title_king_basic_allow
 title_tribe_basic_allow
 top_de_jure_capital
+tribe # LT param
 triggered_from_code # event property
 under_FROM
 under_FROMFROM

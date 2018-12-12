@@ -11,6 +11,7 @@ ai_chance
 ai_will_do
 ai_will_revoke
 allow
+allow # LT param
 allow_join
 allowed_to_grant
 allowed_to_hold
@@ -37,6 +38,7 @@ else_if
 fail_trigger_effect
 from_potential
 gain_effect
+gain_effect # LT param
 if
 immediate
 is_valid

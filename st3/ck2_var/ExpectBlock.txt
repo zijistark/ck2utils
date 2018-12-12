@@ -10,6 +10,9 @@ change_variable
 check_variable
 clan_opinion
 clear_delayed_event
+coat_of_arms # LT param
+color # LT param
+color2 # LT param
 command_modifier
 create_artifact
 create_bloodline
@@ -20,6 +23,7 @@ create_random_priest
 create_random_soldier
 create_random_steward
 create_title
+data # LT / coa param
 death
 disliked_by_offmap
 distance
@@ -29,6 +33,7 @@ divide_variable
 events
 export_to_variable
 faction_power
+female_names # LT param
 flags
 gain_settlements_under_title
 gain_title
@@ -43,6 +48,7 @@ is_tributary
 is_variable_equal
 liked_by_offmap
 make_tributary
+male_names # LT param
 multiply_variable
 num_of_trade_post_diff
 opinion
