@@ -1,3 +1,0 @@
-hidden_trigger
-hidden_effect
-effect_tooltip
