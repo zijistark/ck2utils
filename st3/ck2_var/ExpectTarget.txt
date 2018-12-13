@@ -146,6 +146,7 @@ reveal_plot
 reverse_add_favor
 reverse_banish
 reverse_has_truce
+reverse_imprison
 reverse_remove_favor
 rightful_religious_head
 same_liege

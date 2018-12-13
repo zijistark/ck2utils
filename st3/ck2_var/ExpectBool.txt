@@ -4,11 +4,15 @@ adventurer # create_title param
 ai
 ai # event pre-trigger
 allow_bastards
+allow_looting
+allow_title_revokation
+allows_matrilineal_marriage
 always
 ambition_succeeds
 as_if_liege
 assimilate # LT param
 banish
+barons_need_dynasty
 best_de_jure_liege_title_holder_FROM
 best_de_jure_liege_title_holder_ROOT
 best_de_jure_liege_title_holder_target_ruler
@@ -21,12 +25,30 @@ break # ideally this would be in bold/etc. like ControlBlock, but for now it's a
 caliphate # LT param
 can_be_claimed
 can_be_given_away
+can_be_granted_kingdoms_and_empires_by_other_government
 can_be_usurped
+can_build_castle
+can_build_city
+can_build_forts
+can_build_holdings
+can_build_hospitals
+can_build_temple
+can_build_tribal
 can_call_crusade
 can_change_religion
+can_change_to_nomad_on_start
+can_create_empires
+can_create_kingdoms
+can_demand_religious_conversion
+can_grant_kingdoms_and_empires_to_other_government
+can_grant_kingdoms_and_empires_to_other_government_group
 can_have_more_leadership_traits
+can_imprison_without_reason
+can_inherit
 can_marry
+can_revoke_without_reason
 can_toggle_looting # spawn_unit param
+can_usurp_kingdoms_and_empires
 cancel_ambition
 cancel_crusade
 cannot_inherit # spawn_unit param
@@ -54,6 +76,7 @@ diplomatic_immunity
 disable_non_aggression_pacts
 disband_on_peace # spawn_unit param
 distribute_crusade_target_title
+dukes_called_kings
 dynasty_title_names # LT param
 emf_FROM_subjugate_ruler
 emf_ROOT_completely_controls_counties
@@ -89,9 +112,13 @@ emf_western_christian_religion
 excommunicate
 female # create_character param
 flank_has_leader
+free_levies_in_offensive_war
+free_retract_vassalage
 friends # event pre-trigger
 from_ruler_dynasty
 generate_tooltip
+gets_religion_opinion_penalties
+gives_religion_opinion_penalties
 has_autocephaly
 has_called_crusade
 has_concubinage
@@ -116,17 +143,20 @@ has_polygamy
 has_raised_standing_troops
 has_regent
 has_regiments
+has_religion_features
 has_secret_religion
 has_settlement_construction
 has_siege
 has_top_de_jure_capital
 has_trade_post
+have_gender_laws
 hidden
 hide_from # event property
 hide_new # event property
 hide_window # event property
 historical
 holy_order
+ignores_de_jure_laws
 immortal
 impregnate
 imprison
@@ -226,6 +256,7 @@ is_vice_royalty
 is_virtous # yes, the trigger is misspelled in the API
 is_voter
 is_weak_trigger
+landed_inheritance
 landless # LT param
 landless # create_title param
 location_ruler_title # LT param
@@ -234,10 +265,12 @@ major # event property
 make_capital_holding
 make_primary_title
 make_reformer_head_of_religion
+marriage_ignore_religion
 matrilineal_override
 mercenary
 mercenary # LT param
 mercenary # create_title param
+merchant_republic
 merge # spawn_unit param
 move
 multiplayer
@@ -351,6 +384,10 @@ under_ROOT
 under_target_ruler
 unsafe_destroy_landed_title
 unsafe_impregnate
+uses_bride_price
 uses_decadence
+uses_piety_for_law_change
+uses_prestige_for_law_change
+vassal_government_opinion_penalties
 war
 war # event pre-trigger

@@ -4,10 +4,12 @@ foa
 foa # LT param
 foa # create_title param
 foa_female
+frame_suffix
 has_dlc
 has_offmap_name
 key
 lacks_dlc
+liege # title hist. effect
 localisation_key
 log
 name

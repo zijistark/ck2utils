@@ -36,6 +36,7 @@ elector_vote_strength
 else
 else_if
 fail_trigger_effect
+feudal_governments
 from_potential
 gain_effect
 gain_effect # LT param
@@ -51,6 +52,7 @@ mean_time_to_happen
 membership
 modifier
 mult_modifier
+nomadic_governments
 on_add
 on_add_posttitle
 on_add_title
@@ -74,11 +76,14 @@ pass_effect
 player_allow
 potential
 preferred_limit
+republic_governments
 retire_effect
 revoke_allowed
 revoke_trigger
 success
 target_potential
+theocracy_governments
+tribal_governments
 trigger
 trigger_else
 trigger_else_if

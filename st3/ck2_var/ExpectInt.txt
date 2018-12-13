@@ -8,6 +8,7 @@ ai_zeal
 among_most_powerful_vassals
 artifact_age
 capital
+capital_move_delay
 character
 combat_rating
 count
@@ -23,11 +24,13 @@ demesne_size
 dignity # LT param
 duration
 dynasty
+holder # title hist. effect
 home # spawn_unit param
 hospital_level
 killer
 max_age # event pre-trigger
 max_amount
+max_consorts
 min_age # event pre-trigger
 month
 month_of_birth

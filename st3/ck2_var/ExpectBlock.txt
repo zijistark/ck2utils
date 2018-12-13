@@ -1,12 +1,19 @@
 abdicate
+accepts_liege_governments
+accepts_liege_governments_culture
+accepts_liege_governments_culture_and_religion
 activate_title
 add_law
 add_offmap_currency
 add_{{vEventModifierType}}_modifier
 age_diff
+allowed_holdings
+allowed_holdings_culture
 attribute_diff
 attributes # create_character param
+builds_with_prestige
 change_variable
+character_modifier
 check_variable
 clan_opinion
 clear_delayed_event
@@ -35,6 +42,13 @@ export_to_variable
 faction_power
 female_names # LT param
 flags
+forced_contract
+free_revoke_on_governments
+free_revoke_on_governments_culture
+free_revoke_on_governments_culture_and_religion
+free_revoke_on_governments_religion
+free_revoke_on_tiers
+gain_all_occupied_titles
 gain_settlements_under_title
 gain_title
 grant_title
@@ -44,17 +58,20 @@ has_alternate_start_parameter
 has_elector_stance
 has_game_rule
 has_opinion_modifier
+ignore_in_vassal_limit_calculation
 is_tributary
 is_variable_equal
 liked_by_offmap
 make_tributary
 male_names # LT param
 multiply_variable
+no_vassal_tax
 num_of_trade_post_diff
 opinion
 opinion_diff
 personal_opinion
 plot_power_contribution
+preferred_holdings
 prompt_name
 random
 random_list
@@ -74,6 +91,7 @@ reverse_remove_opinion
 reverse_unsafe_war
 reverse_war
 save_persistent_event_target
+scaled_wealth
 set_character_modifier
 set_crusade_target
 set_title_adventurer
@@ -88,12 +106,16 @@ subtract_variable
 succession
 their_opinion
 transfer_artifact
+transfer_scaled_wealth
 troops # spawn_unit / spawn_fleet param
+unit_home_modifier
+unit_modifier
 unsafe_war
 usurp_title
 usurp_title_only
 usurp_title_plus_barony_if_unlanded
 usurp_title_plus_barony_if_unlanded_and_vassals
 usurp_title_plus_barony_if_unlanded_and_vassals_no_adj
+vassal_call_to_arms
 war
 {{vTroopType}}
