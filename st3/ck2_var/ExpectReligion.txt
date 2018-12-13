@@ -1,3 +1,4 @@
+parent
 religion
 religion # event pre-trigger
 secret_religion

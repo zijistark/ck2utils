@@ -40,6 +40,7 @@ destroy_landed_title
 destroy_settlement
 dynasty
 embargo
+enemy
 excommunicated_for
 family
 first
@@ -119,6 +120,7 @@ occupy_minors_of_occupied_settlements
 overlord_of
 owes_favor_to
 owner # spawn_unit param
+parent
 pays_tribute_to
 player
 plot_is_known_by

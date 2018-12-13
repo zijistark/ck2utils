@@ -533,6 +533,7 @@ variables:
     | male_names
     | multiply_variable
     | no_vassal_tax
+    | num_of_realm_counties
     | num_of_trade_post_diff
     | opinion
     | opinion_diff
@@ -561,6 +562,7 @@ variables:
     | scaled_wealth
     | set_character_modifier
     | set_crusade_target
+    | set_parent_religion
     | set_title_adventurer
     | set_title_landless
     | set_title_nomad
@@ -977,6 +979,7 @@ variables:
     | unsafe_impregnate
     | uses_bride_price
     | uses_decadence
+    | uses_new_crusade
     | uses_piety_for_law_change
     | uses_prestige_for_law_change
     | vassal_government_opinion_penalties
@@ -1379,7 +1382,8 @@ variables:
     )
   vExpectReligion: |-
     (?xi:
-      religion
+      parent
+    | religion
     | religion
     | secret_religion
     | set_secret_religion
@@ -1436,6 +1440,7 @@ variables:
     | destroy_settlement
     | dynasty
     | embargo
+    | enemy
     | excommunicated_for
     | family
     | first
@@ -1515,6 +1520,7 @@ variables:
     | overlord_of
     | owes_favor_to
     | owner
+    | parent
     | pays_tribute_to
     | player
     | plot_is_known_by

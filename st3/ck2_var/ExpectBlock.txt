@@ -66,6 +66,7 @@ make_tributary
 male_names # LT param
 multiply_variable
 no_vassal_tax
+num_of_realm_counties
 num_of_trade_post_diff
 opinion
 opinion_diff
@@ -94,6 +95,7 @@ save_persistent_event_target
 scaled_wealth
 set_character_modifier
 set_crusade_target
+set_parent_religion
 set_title_adventurer
 set_title_landless
 set_title_nomad

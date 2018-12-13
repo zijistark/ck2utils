@@ -386,6 +386,7 @@ unsafe_destroy_landed_title
 unsafe_impregnate
 uses_bride_price
 uses_decadence
+uses_new_crusade
 uses_piety_for_law_change
 uses_prestige_for_law_change
 vassal_government_opinion_penalties
