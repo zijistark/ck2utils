@@ -17,6 +17,7 @@ at_location
 banish
 base_title # create_title param
 bloodline
+bloodline_is_active_for
 break_alliance
 break_betrothal
 can_marry
@@ -160,6 +161,7 @@ second
 secret_religion
 secret_religion_group
 seize_trade_post
+set_crusade_beneficiary
 set_crusader_king
 set_defacto_liege
 set_defacto_vassal

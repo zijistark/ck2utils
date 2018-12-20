@@ -1,5 +1,6 @@
 add_artifact
 add_building
+add_dynasty_modifier
 add_evil_god_name
 add_god_name
 add_intermarry

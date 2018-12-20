@@ -14,6 +14,7 @@ any_close_relative
 any_consort
 any_courtier
 any_courtier_or_vassal
+any_crusade_participant
 any_current_enemy
 any_de_jure_liege_title
 any_de_jure_vassal
@@ -97,6 +98,7 @@ random_close_relative
 random_consort
 random_courtier
 random_courtier_or_vassal
+random_crusade_participant
 random_current_enemy
 random_demesne_province
 random_demesne_title

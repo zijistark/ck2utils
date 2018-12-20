@@ -88,6 +88,7 @@ variables:
       character
     | province
     | holding
+    | dynasty
     )
   vProvEventType: |-
     (?x:
@@ -238,6 +239,7 @@ variables:
     | any_consort
     | any_courtier
     | any_courtier_or_vassal
+    | any_crusade_participant
     | any_current_enemy
     | any_de_jure_liege_title
     | any_de_jure_vassal
@@ -321,6 +323,7 @@ variables:
     | random_consort
     | random_courtier
     | random_courtier_or_vassal
+    | random_crusade_participant
     | random_current_enemy
     | random_demesne_province
     | random_demesne_title
@@ -766,6 +769,7 @@ variables:
     | is_ascetic_trigger
     | is_attacker
     | is_attractive_trigger
+    | is_betrothed
     | is_bloodline_active
     | is_capital
     | is_conquered
@@ -1004,6 +1008,7 @@ variables:
     (?xi:
       add_artifact
     | add_building
+    | add_dynasty_modifier
     | add_evil_god_name
     | add_god_name
     | add_intermarry
@@ -1233,6 +1238,7 @@ variables:
     | num_of_vassals
     | over_max_demesne_size
     | over_vassal_limit
+    | parent
     | piety
     | population
     | prestige
@@ -1293,6 +1299,12 @@ variables:
     | title_prefix
     | title_prefix
     | which
+    )
+  vExpectNone: |-
+    (?xi:
+      dynasty
+    | set_crusade_beneficiary
+    | set_religion_head
     )
   vExpectNum: |-
     (?xi:
@@ -1417,6 +1429,7 @@ variables:
     | banish
     | base_title
     | bloodline
+    | bloodline_is_active_for
     | break_alliance
     | break_betrothal
     | can_marry
@@ -1560,6 +1573,7 @@ variables:
     | secret_religion
     | secret_religion_group
     | seize_trade_post
+    | set_crusade_beneficiary
     | set_crusader_king
     | set_defacto_liege
     | set_defacto_vassal
@@ -1614,6 +1628,7 @@ variables:
     | base_title
     | completely_controls
     | copy_title_history
+    | copy_title_laws
     | de_facto_liege
     | de_facto_liege_title
     | de_jure_liege
@@ -1621,6 +1636,7 @@ variables:
     | de_jure_vassal_or_below
     | destroy_landed_title
     | government
+    | grant_title
     | grant_title_no_opinion
     | has_claim
     | has_landed_title
@@ -1941,6 +1957,10 @@ contexts:
       captures:
         1: support.function.ck2script
         2: constant.language.enum.relcul.group.ck2script
+    - match: '\b({{vExpectNone}})\s*=\s*(none|NONE)\b' # haven't seen in vanilla or tested myself using anything but 'none' here, but it might take targets. 'til then, special case.
+      captures:
+        1: support.function.ck2script
+        2: constant.language.enum.ck2script
     - match: '\b({{vExpectTitleID}})\s*=\s*({{vTitleID}})\b'
       captures:
         1: support.function.ck2script
@@ -2003,14 +2023,10 @@ contexts:
       captures:
         1: support.function.ck2script
         2: constant.language.enum.ck2script
-    - match: '\b(dynasty)\s*=\s*(none|father_bastard|mother_bastard|random|culture|actually_culture)\b'
+    - match: '\b(dynasty)\s*=\s*(father_bastard|mother_bastard|random|culture|actually_culture)\b'
       captures:
         1: support.function.ck2script
-        2: constant.language.ck2script
-    - match: '\b(set_religion_head)\s*=\s*(none)\b' # haven't seen in vanilla or tested myself using anything but 'none' here, but it might take targets. 'til then, special case.
-      captures:
-        1: support.function.ck2script
-        2: constant.language.ck2script
+        2: constant.language.enum.ck2script
     - match: '\b(end_war)\s*=\s*(invalid|reverse_demand|success|whitepeace)\b'
       captures:
         1: support.function.ck2script
@@ -2020,7 +2036,7 @@ contexts:
         1: keyword.control.ck2script
         2: constant.language.enum.ck2script
     - match: '\b(inheritance)\s*=\s*(all_descendants|matrilineal|patrilineal|no_inheritance)\b'
-      captures: 
+      captures:
         1: support.function.ck2script
         2: constant.language.enum.ck2script
     - match: '\b(attribute)\s*=\s*({{vCharAttr}})\b'

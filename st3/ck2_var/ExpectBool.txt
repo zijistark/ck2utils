@@ -173,6 +173,7 @@ is_alternate_start
 is_ascetic_trigger
 is_attacker
 is_attractive_trigger
+is_betrothed
 is_bloodline_active
 is_capital
 is_conquered

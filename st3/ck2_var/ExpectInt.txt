@@ -85,6 +85,7 @@ num_of_unique_dynasty_vassals
 num_of_vassals
 over_max_demesne_size
 over_vassal_limit
+parent # set_parent_religion param
 piety
 population
 prestige
