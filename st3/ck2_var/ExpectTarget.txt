@@ -128,6 +128,7 @@ plot_is_known_by
 plotter
 portrait
 press_claim
+prisoner
 province
 province # spawn_unit param
 province_id
@@ -161,6 +162,7 @@ second
 secret_religion
 secret_religion_group
 seize_trade_post
+set_coa
 set_crusade_beneficiary
 set_crusader_king
 set_defacto_liege

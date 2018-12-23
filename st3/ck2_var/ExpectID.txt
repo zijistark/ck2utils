@@ -28,6 +28,7 @@ culture # event pre-trigger
 culture_group
 culture_group # event pre-trigger
 death_reason
+diplo_view_region # CB param
 disband_event_forces
 disease
 earmark

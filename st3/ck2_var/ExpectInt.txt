@@ -91,6 +91,7 @@ population
 prestige
 province # spawn_unit param
 province_id
+random
 rank
 realm_diplomacy
 realm_intrigue

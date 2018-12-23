@@ -574,6 +574,7 @@ variables:
     | set_variable
     | spawn_fleet
     | spawn_unit
+    | subjugate_or_take_under_title
     | subtract_variable
     | succession
     | their_opinion
@@ -589,6 +590,8 @@ variables:
     | usurp_title_plus_barony_if_unlanded_and_vassals
     | usurp_title_plus_barony_if_unlanded_and_vassals_no_adj
     | vassal_call_to_arms
+    | vassalize_or_take_under_title
+    | vassalize_or_take_under_title_destroy_duchies
     | war
     | {{vTroopType}}
     )
@@ -1036,6 +1039,7 @@ variables:
     | culture_group
     | culture_group
     | death_reason
+    | diplo_view_region
     | disband_event_forces
     | disease
     | earmark
@@ -1244,6 +1248,7 @@ variables:
     | prestige
     | province
     | province_id
+    | random
     | rank
     | realm_diplomacy
     | realm_intrigue
@@ -1540,6 +1545,7 @@ variables:
     | plotter
     | portrait
     | press_claim
+    | prisoner
     | province
     | province
     | province_id
@@ -1573,6 +1579,7 @@ variables:
     | secret_religion
     | secret_religion_group
     | seize_trade_post
+    | set_coa
     | set_crusade_beneficiary
     | set_crusader_king
     | set_defacto_liege
