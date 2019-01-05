@@ -41,13 +41,11 @@ gender_succ
 give_minor_title
 give_nickname
 government
-revoke_law
 graphical_culture
 graphical_culture # LT param
 group
 has_ambition
 has_any_building
-tooltip_info
 has_any_opinion_modifier
 has_artifact
 has_assigned_minor_title
@@ -114,6 +112,7 @@ remove_special_character_title
 remove_title
 remove_trait
 remove_{{vEventModifierType}}_modifier
+revoke_law
 set_branch_tag
 set_focus
 set_government_type
@@ -132,6 +131,7 @@ stance
 succession
 technology
 terrain
+tooltip_info
 trade_post_has_any_building
 trade_post_has_building
 trade_route

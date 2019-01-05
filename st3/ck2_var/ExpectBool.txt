@@ -29,14 +29,12 @@ can_be_granted_kingdoms_and_empires_by_other_government
 can_be_usurped
 can_build_castle
 can_build_city
-full_hostility # CB param
 can_build_forts
 can_build_holdings
 can_build_hospitals
 can_build_temple
 can_build_tribal
 can_call_crusade
-is_artifact_equipped
 can_change_religion
 can_change_to_nomad_on_start
 can_create_empires
@@ -118,6 +116,7 @@ free_levies_in_offensive_war
 free_retract_vassalage
 friends # event pre-trigger
 from_ruler_dynasty
+full_hostility # CB param
 generate_tooltip
 gets_religion_opinion_penalties
 gives_religion_opinion_penalties
@@ -172,6 +171,7 @@ is_adult
 is_alive
 is_allowed_to_loot
 is_alternate_start
+is_artifact_equipped
 is_ascetic_trigger
 is_attacker
 is_attractive_trigger

@@ -327,6 +327,7 @@ variables:
     | random_current_enemy
     | random_demesne_province
     | random_demesne_title
+    | random_direct_de_jure_vassal_title
     | random_dynasty_member
     | random_dynasty_member_even_if_dead
     | random_eldership_title
@@ -401,6 +402,7 @@ variables:
     | default_selection
     | defender_ai_defeat_worth
     | defender_ai_victory_worth
+    | desc
     | dismiss_trigger
     | effect
     | elector_selection
@@ -425,6 +427,7 @@ variables:
     | membership
     | modifier
     | mult_modifier
+    | name
     | nomadic_governments
     | on_add
     | on_add_posttitle
@@ -446,6 +449,7 @@ variables:
     | on_thirdparty_death
     | option
     | pass_effect
+    | picture
     | player_allow
     | potential
     | preferred_limit
@@ -502,6 +506,7 @@ variables:
     | create_title
     | data
     | death
+    | defending_against_claimant
     | disliked_by_offmap
     | distance
     | distance_from_realm
@@ -571,6 +576,7 @@ variables:
     | set_title_adventurer
     | set_title_landless
     | set_title_nomad
+    | set_truce
     | set_unit_home_modifier
     | set_unit_modifier
     | set_variable
@@ -595,6 +601,7 @@ variables:
     | vassalize_or_take_under_title
     | vassalize_or_take_under_title_destroy_duchies
     | war
+    | war_participation
     | {{vTroopType}}
     )
   vExpectBool: |-
@@ -717,6 +724,7 @@ variables:
     | free_retract_vassalage
     | friends
     | from_ruler_dynasty
+    | full_hostility
     | generate_tooltip
     | gets_religion_opinion_penalties
     | gives_religion_opinion_penalties
@@ -771,6 +779,7 @@ variables:
     | is_alive
     | is_allowed_to_loot
     | is_alternate_start
+    | is_artifact_equipped
     | is_ascetic_trigger
     | is_attacker
     | is_attractive_trigger
@@ -1126,6 +1135,7 @@ variables:
     | remove_title
     | remove_trait
     | remove_{{vEventModifierType}}_modifier
+    | revoke_law
     | set_branch_tag
     | set_focus
     | set_government_type
@@ -1144,6 +1154,7 @@ variables:
     | succession
     | technology
     | terrain
+    | tooltip_info
     | trade_post_has_any_building
     | trade_post_has_building
     | trade_route
@@ -1276,7 +1287,8 @@ variables:
     )
   vExpectLoc: |-
     (?xi:
-      desc
+      border
+    | desc
     | desc
     | foa
     | foa
@@ -1292,6 +1304,7 @@ variables:
     | log
     | name
     | name
+    | picture
     | remove_special_character_title
     | ruler
     | ruler_female
@@ -1373,6 +1386,7 @@ variables:
     | scaled_piety
     | scaled_prestige
     | scaled_wealth
+    | score
     | set_ai_aggression
     | set_convert_other_groups
     | set_convert_same_group
@@ -1433,6 +1447,7 @@ variables:
     | add_pressed_claim
     | add_rival
     | add_spouse
+    | add_spouse_matrilineal
     | add_to_bloodline
     | add_weak_claim
     | add_weak_pressed_claim
@@ -1451,6 +1466,7 @@ variables:
     | clear_wealth
     | completely_controls
     | conquest_culture
+    | controlled_by
     | copy_title_history
     | copy_title_laws
     | could_be_parent_of
@@ -1470,6 +1486,7 @@ variables:
     | family
     | first
     | force_host
+    | from
     | gain_title
     | genetic_father
     | genetic_mother
@@ -1604,6 +1621,7 @@ variables:
     | show_portrait
     | sibling
     | target
+    | third_party_portrait
     | thirdparty_title
     | tier
     | title
@@ -1657,6 +1675,7 @@ variables:
     | is_landed_title_allowed
     | is_title_active
     | remove_claim
+    | set_coa
     | set_defacto_liege
     | set_preferred_capital
     | thirdparty_title

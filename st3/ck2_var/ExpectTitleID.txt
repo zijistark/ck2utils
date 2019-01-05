@@ -20,8 +20,8 @@ has_landed_title
 is_landed_title_allowed
 is_title_active
 remove_claim
+set_coa
 set_defacto_liege
 set_preferred_capital
 thirdparty_title
 title
-set_coa

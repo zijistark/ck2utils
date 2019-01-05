@@ -9,6 +9,7 @@ add_lover
 add_pressed_claim
 add_rival
 add_spouse
+add_spouse_matrilineal
 add_to_bloodline
 add_weak_claim
 add_weak_pressed_claim
@@ -27,6 +28,7 @@ claimed_by
 clear_wealth
 completely_controls
 conquest_culture
+controlled_by
 copy_title_history
 copy_title_laws
 could_be_parent_of
@@ -40,16 +42,13 @@ de_jure_vassal_or_below
 destroy_landed_title
 destroy_settlement
 dynasty
-controlled_by
-add_spouse_matrilineal
 embargo
 enemy
-from
-third_party_portrait # CB param
 excommunicated_for
 family
 first
 force_host
+from
 gain_title
 genetic_father # create_character param
 genetic_mother # create_character param
@@ -184,6 +183,7 @@ shares_realm_border_with
 show_portrait
 sibling
 target
+third_party_portrait # CB param
 thirdparty_title
 tier
 title

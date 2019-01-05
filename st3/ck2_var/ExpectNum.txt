@@ -34,7 +34,6 @@ match_mult
 max
 military_techpoints
 min
-score
 participation_scaled_decadence
 participation_scaled_piety
 participation_scaled_prestige
@@ -53,6 +52,7 @@ scaled_by_biggest_garrison
 scaled_piety
 scaled_prestige
 scaled_wealth
+score
 set_ai_aggression
 set_convert_other_groups
 set_convert_same_group

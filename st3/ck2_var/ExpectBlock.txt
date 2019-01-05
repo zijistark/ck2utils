@@ -28,21 +28,19 @@ create_random_diplomat
 create_random_intriguer
 create_random_priest
 create_random_soldier
-war_participation
 create_random_steward
 create_title
 data # LT / coa param
 death
+defending_against_claimant
 disliked_by_offmap
 distance
 distance_from_realm
-defending_against_claimant
 distribute_crusade_pot
 divide_variable
 events
 export_to_variable
 faction_power
-set_truce
 female_names # LT param
 flags
 forced_contract
@@ -104,6 +102,7 @@ set_parent_religion
 set_title_adventurer
 set_title_landless
 set_title_nomad
+set_truce
 set_unit_home_modifier
 set_unit_modifier
 set_variable
@@ -128,4 +127,5 @@ vassal_call_to_arms
 vassalize_or_take_under_title
 vassalize_or_take_under_title_destroy_duchies
 war
+war_participation
 {{vTroopType}}

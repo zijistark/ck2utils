@@ -27,9 +27,8 @@ conditional_tooltip
 creation_effect
 default_selection
 defender_ai_defeat_worth
-picture
-desc
 defender_ai_victory_worth
+desc
 dismiss_trigger
 effect
 elector_selection
@@ -48,13 +47,13 @@ is_valid
 is_valid_title
 is_visible
 limit
-name
 lose_effect
 major_trigger
 mean_time_to_happen
 membership
 modifier
 mult_modifier
+name
 nomadic_governments
 on_add
 on_add_posttitle
@@ -76,6 +75,7 @@ on_success_title
 on_thirdparty_death
 option
 pass_effect
+picture
 player_allow
 potential
 preferred_limit

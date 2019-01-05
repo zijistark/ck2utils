@@ -24,7 +24,6 @@ any_defender # lacks a random_ dual
 any_dejure_liege
 any_demesne_province
 any_demesne_title
-random_direct_de_jure_vassal_title
 any_direct_de_jure_vassal_title
 any_dynasty_member
 any_dynasty_member_even_if_dead
@@ -103,6 +102,7 @@ random_crusade_participant
 random_current_enemy
 random_demesne_province
 random_demesne_title
+random_direct_de_jure_vassal_title
 random_dynasty_member
 random_dynasty_member_even_if_dead
 random_eldership_title
