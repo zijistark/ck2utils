@@ -525,6 +525,7 @@ variables:
     | grant_title_no_opinion
     | had_{{vFlagType}}_flag
     | has_alternate_start_parameter
+    | has_alternate_start_setting
     | has_elector_stance
     | has_game_rule
     | has_opinion_modifier
@@ -565,6 +566,7 @@ variables:
     | scaled_wealth
     | set_character_modifier
     | set_crusade_target
+    | set_offmap_currency
     | set_parent_religion
     | set_title_adventurer
     | set_title_landless
@@ -841,6 +843,7 @@ variables:
     | is_ruler
     | is_save_game
     | is_seafarer
+    | is_shattered_world
     | is_sick
     | is_smart_trigger
     | is_society_grandmaster
@@ -1108,6 +1111,7 @@ variables:
     | modifier
     | name
     | on_trigger
+    | option
     | pass_law
     | phase
     | picture
@@ -1132,6 +1136,7 @@ variables:
     | set_special_character_title
     | set_status
     | set_{{vFlagType}}_flag
+    | setting
     | society
     | society_member_of
     | sound_effect
@@ -1303,6 +1308,7 @@ variables:
     | title_female
     | title_prefix
     | title_prefix
+    | tooltip
     | which
     )
   vExpectNone: |-
@@ -1395,6 +1401,7 @@ variables:
     | has_offmap_news_enabled
     | is_offmap_governor
     | is_offmap_tag
+    | offmap
     | offmap_power
     )
   vExpectReligion: |-

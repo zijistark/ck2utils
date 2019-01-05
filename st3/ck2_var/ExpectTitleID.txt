@@ -24,3 +24,4 @@ set_defacto_liege
 set_preferred_capital
 thirdparty_title
 title
+set_coa

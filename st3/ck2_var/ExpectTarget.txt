@@ -40,8 +40,12 @@ de_jure_vassal_or_below
 destroy_landed_title
 destroy_settlement
 dynasty
+controlled_by
+add_spouse_matrilineal
 embargo
 enemy
+from
+third_party_portrait # CB param
 excommunicated_for
 family
 first

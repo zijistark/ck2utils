@@ -30,4 +30,7 @@ title_female
 title_female # LT param
 title_prefix
 title_prefix # LT param
+tooltip
 which
+picture
+border

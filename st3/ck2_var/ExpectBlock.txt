@@ -28,6 +28,7 @@ create_random_diplomat
 create_random_intriguer
 create_random_priest
 create_random_soldier
+war_participation
 create_random_steward
 create_title
 data # LT / coa param
@@ -35,11 +36,13 @@ death
 disliked_by_offmap
 distance
 distance_from_realm
+defending_against_claimant
 distribute_crusade_pot
 divide_variable
 events
 export_to_variable
 faction_power
+set_truce
 female_names # LT param
 flags
 forced_contract
@@ -55,6 +58,7 @@ grant_title
 grant_title_no_opinion
 had_{{vFlagType}}_flag
 has_alternate_start_parameter
+has_alternate_start_setting
 has_elector_stance
 has_game_rule
 has_opinion_modifier
@@ -95,6 +99,7 @@ save_persistent_event_target
 scaled_wealth
 set_character_modifier
 set_crusade_target
+set_offmap_currency
 set_parent_religion
 set_title_adventurer
 set_title_landless

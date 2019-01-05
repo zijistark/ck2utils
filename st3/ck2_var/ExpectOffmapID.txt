@@ -2,4 +2,5 @@ government
 has_offmap_news_enabled
 is_offmap_governor
 is_offmap_tag
+offmap
 offmap_power

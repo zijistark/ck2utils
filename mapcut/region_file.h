@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include <boost/filesystem.hpp>
+#include <ck2/filesystem.h>
 #include <vector>
 #include <string>
 #include <memory>
 
-namespace fs = boost::filesystem;
+namespace fs = ck2::fs;
 using std::unique_ptr;
 
 namespace ck2 { class block; }

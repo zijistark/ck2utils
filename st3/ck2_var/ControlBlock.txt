@@ -27,6 +27,8 @@ conditional_tooltip
 creation_effect
 default_selection
 defender_ai_defeat_worth
+picture
+desc
 defender_ai_victory_worth
 dismiss_trigger
 effect
@@ -46,6 +48,7 @@ is_valid
 is_valid_title
 is_visible
 limit
+name
 lose_effect
 major_trigger
 mean_time_to_happen

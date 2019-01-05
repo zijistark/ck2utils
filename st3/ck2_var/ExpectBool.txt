@@ -29,12 +29,14 @@ can_be_granted_kingdoms_and_empires_by_other_government
 can_be_usurped
 can_build_castle
 can_build_city
+full_hostility # CB param
 can_build_forts
 can_build_holdings
 can_build_hospitals
 can_build_temple
 can_build_tribal
 can_call_crusade
+is_artifact_equipped
 can_change_religion
 can_change_to_nomad_on_start
 can_create_empires
@@ -242,6 +244,7 @@ is_republic
 is_ruler
 is_save_game
 is_seafarer
+is_shattered_world
 is_sick # event pre-trigger
 is_smart_trigger
 is_society_grandmaster

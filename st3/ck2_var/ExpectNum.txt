@@ -34,6 +34,7 @@ match_mult
 max
 military_techpoints
 min
+score
 participation_scaled_decadence
 participation_scaled_piety
 participation_scaled_prestige

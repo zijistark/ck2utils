@@ -1,13 +1,9 @@
-
-#include "default_map.h"
-#include "definitions_table.h"
-#include "provsetup.h"
-#include "region_file.h"
-#include "adjacencies_file.h"
 #include <ck2.h>
-#include <ck2/error.h>
+#include <ck2/filesystem.h>
 
-#include <boost/filesystem.hpp>
+#include "region_file.h"
+
+//#include <boost/filesystem.hpp>
 
 #include <cstdio>
 #include <cerrno>
@@ -19,11 +15,12 @@
 #include <algorithm>
 
 
-using namespace boost::filesystem;
+using namespace ck2::fs;
+typedef unsigned int uint;
 
 
 /* TODO: use Boost::ProgramOptions (or just a config file), and end this nonsense */
-
+/*
 const path VROOT_DIR("/var/local/vanilla-ck2");
 const path REPO_ROOT_DIR("/home/hiphub/git");
 const path ROOT_DIR = REPO_ROOT_DIR / "SWMH-BETA/SWMH";
@@ -31,19 +28,17 @@ const path OUT_ROOT_DIR = REPO_ROOT_DIR / "MiniSWMH/MiniSWMH";
 const path EMF_ROOT_DIR = REPO_ROOT_DIR / "EMF/EMF";
 const path EMF_SWMH_ROOT_DIR = REPO_ROOT_DIR / "EMF/EMF+SWMH";
 const path EMF_OUT_ROOT_DIR = REPO_ROOT_DIR / "EMF/EMF+MiniSWMH";
+*/
 
-/*
 const path VROOT_DIR("/home/ziji/vanilla");
 const path ROOT_DIR("/cygdrive/c/git/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("/cygdrive/c/git/MiniSWMH/MiniSWMH");
 const path EMF_ROOT_DIR("/cygdrive/c/git/EMF/EMF");
 const path EMF_SWMH_ROOT_DIR("/cygdrive/c/git/EMF/EMF+SWMH");
 const path EMF_OUT_ROOT_DIR("/cygdrive/c/git/EMF/EMF+MiniSWMH");
-*/
 
 const path TITLES_FILE("swmh_landed_titles.txt");
 const path HOLYSITES_FILE("z_holy_sites.txt");
-const path PROVSETUP_FILE("00_province_setup.txt");
 
 const int TAB_WIDTH = 4;
 
@@ -53,8 +48,8 @@ typedef std::unordered_map<std::string, uint> str2id_map_t;
 
 const ck2::block* find_title(const char* title, const ck2::block* p_root);
 void find_titles_under(const ck2::block*, strvec_t& out);
-void fill_county_to_id_map(const ck2::vfs&, const default_map&, const definitions_table&, str2id_map_t& out);
-void blank_title_history(const ck2::vfs&, const strvec_t&);
+void fill_county_to_id_map(const ck2::VFS&, const ck2::DefaultMap&, const ck2::DefinitionsTable&, str2id_map_t& out);
+void blank_title_history(const ck2::VFS&, const strvec_t&);
 
 
 class lt_printer {
@@ -108,7 +103,7 @@ int main(int argc, char** argv) {
     }
 
     try {
-        ck2::vfs vfs{ VROOT_DIR };
+        ck2::VFS vfs{ VROOT_DIR };
         vfs.push_mod_path(ROOT_DIR);
 
         if (emf) {
@@ -116,12 +111,11 @@ int main(int argc, char** argv) {
             vfs.push_mod_path(EMF_SWMH_ROOT_DIR);
         }
 
-        default_map dm(vfs);
-        definitions_table def_tbl(vfs, dm);
-        region_file geo_regions( vfs["map" / dm.geographical_region_path()] );
+        ck2::DefaultMap dm(vfs);
+        ck2::DefinitionsTable def_tbl(vfs, dm);
+        region_file geo_regions( vfs["map" / dm.geo_region_path()] );
         region_file island_regions( vfs["map" / dm.island_region_path()] );
-        adjacencies_file adjacencies( vfs["map" / dm.adjacencies_path()] );
-        provsetup ps_tbl( vfs["common/province_setup" / PROVSETUP_FILE] );
+        ck2::AdjacenciesFile adjacencies(vfs, dm);
 
         str2id_map_t county_to_id_map;
         fill_county_to_id_map(vfs, dm, def_tbl, county_to_id_map);
@@ -134,7 +128,7 @@ int main(int argc, char** argv) {
             const ck2::block* p_top_title_block = find_title(top_title.c_str(), parse.root_block());
 
             if (p_top_title_block == nullptr)
-                throw ck2::va_error("Top de jure title '%s' not found!", top_title.c_str());
+                throw ck2::Error("Top de jure title '{}' not found!", top_title);
 
             del_titles.emplace_back(top_title);
             find_titles_under(p_top_title_block, del_titles);
@@ -161,7 +155,7 @@ int main(int argc, char** argv) {
             auto i = county_to_id_map.find(t);
 
             if (i == county_to_id_map.end())
-                throw ck2::va_error("County not assigned in province history: %s", t.c_str());
+                throw ck2::Error("County not assigned in province history: {}", t);
 
             uint id = i->second;
 
@@ -176,7 +170,7 @@ int main(int argc, char** argv) {
 
             for (auto&& adj : adjacencies) {
                 if (adj.deleted) continue;
-                if (adj.from == (signed)id || adj.to == (signed)id) {
+                if (adj.from == id || adj.to == id) {
                     adj.deleted = true;
                     ++g_stats.n_adjacencies_cut;
                 }
@@ -184,15 +178,6 @@ int main(int argc, char** argv) {
 
             /* blank the province "name" in definitions to turn it into a wasteland */
             def_tbl[id].name = "";
-
-            /* blank the province's county title in provsetup to turn into a wasteland */
-            std::string& title = ps_tbl.row_vec[id-1].title;
-
-            if (title != t)
-                throw ck2::va_error("province_setup: Province %u assigned as %s but it should be %s",
-                               id, title.c_str(), t.c_str());
-
-            title = "";
 
             ++g_stats.n_counties_cut;
         }
@@ -205,7 +190,7 @@ int main(int argc, char** argv) {
         create_directories(out_map_root);
 
         /* write new region file (already just ensured its directories were created) */
-        geo_regions.write(out_map_root / dm.geographical_region_path());
+        geo_regions.write(out_map_root / dm.geo_region_path());
 
         if (!emf) {
             /* write special adjacencies file */
@@ -216,12 +201,6 @@ int main(int argc, char** argv) {
 
             /* write definition file */
             def_tbl.write(out_map_root / dm.definitions_path());
-
-            /* write province_setup file */
-            path out_ps_path(out_root / "common" / "province_setup");
-            create_directories(out_ps_path);
-            out_ps_path /= PROVSETUP_FILE;
-            ps_tbl.write(out_ps_path);
 
             /* rewrite landed_titles */
             path out_lt_path(out_root / "common" / "landed_titles");
@@ -297,9 +276,9 @@ void find_titles_under(const ck2::block* p_root, strvec_t& found_titles) {
 }
 
 
-void fill_county_to_id_map(const ck2::vfs& vfs,
-                           const default_map& dm,
-                           const definitions_table& def_tbl,
+void fill_county_to_id_map(const ck2::VFS& vfs,
+                           const ck2::DefaultMap& dm,
+                           const ck2::DefinitionsTable& def_tbl,
                            str2id_map_t& county_to_id_map) {
 
     char filename[256];
@@ -308,7 +287,7 @@ void fill_county_to_id_map(const ck2::vfs& vfs,
     for (auto&& r : def_tbl) {
         ++id;
 
-        if (dm.id_is_seazone(id)) // sea | major river
+        if (dm.is_water_province(id)) // sea | major river
             continue;
 
         if (r.name.empty()) // wasteland | external
@@ -342,14 +321,14 @@ void fill_county_to_id_map(const ck2::vfs& vfs,
         }
 
         if (!county_to_id_map.insert( {county, id} ).second) {
-            throw ck2::va_error("County '%s' maps to both province %u and %u (at the least)!",
-                           county, county_to_id_map[county], id);
+            throw ck2::Error("County '{}' maps to both province {} and {} (at the least)!",
+                             county, county_to_id_map[county], id);
         }
     }
 }
 
 
-void blank_title_history(const ck2::vfs& vfs, const strvec_t& deleted_titles) {
+void blank_title_history(const ck2::VFS& vfs, const strvec_t& deleted_titles) {
 
     path title_hist_oroot = OUT_ROOT_DIR / "history/titles";
 
@@ -376,8 +355,8 @@ void blank_title_history(const ck2::vfs& vfs, const strvec_t& deleted_titles) {
             FILE* f;
 
             if ( (f = fopen(title_hist_opath.string().c_str(), "w")) == nullptr )
-                throw ck2::va_error("Failed to blank title history: %s: %s",
-                               strerror(errno), title_hist_opath.c_str());
+                throw ck2::Error("Failed to blank title history: {}: {}",
+                                 strerror(errno), title_hist_opath.generic_string());
 
             fclose(f);
             ++g_stats.n_title_hist_blanked;
@@ -390,7 +369,7 @@ void blank_title_history(const ck2::vfs& vfs, const strvec_t& deleted_titles) {
 lt_printer::lt_printer(const fs::path& p, const strvec_t& _top_titles, const ck2::block* p_root_block)
     : os(p.string()), top_titles(_top_titles), indent(0), in_code_block(false) {
 
-    if (!os) throw std::runtime_error("Could not write to file: " + p.string());
+    if (!os) throw ck2::Error("Could not write to file: {}", p.generic_string());
 
     os << "# -*- ck2.landed_titles -*-\n\n";
     print(*p_root_block);
