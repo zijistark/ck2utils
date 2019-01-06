@@ -1,6 +1,6 @@
 # -*- python -*-
 
-SConscript('../../libck2/sconstruct')
+#SConscript('../../libck2/sconstruct')
 
 env = Environment()
 env.Append(CXXFLAGS='--std=c++17 -Wall -Wextra -g -O2')
