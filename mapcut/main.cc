@@ -3,8 +3,6 @@
 
 #include "region_file.h"
 
-//#include <boost/filesystem.hpp>
-
 #include <cstdio>
 #include <cerrno>
 #include <cstring>
@@ -20,7 +18,7 @@ typedef unsigned int uint;
 
 
 /* TODO: use Boost::ProgramOptions (or just a config file), and end this nonsense */
-/*
+
 const path VROOT_DIR("/var/local/vanilla-ck2");
 const path REPO_ROOT_DIR("/home/hiphub/git");
 const path ROOT_DIR = REPO_ROOT_DIR / "SWMH-BETA/SWMH";
@@ -28,14 +26,15 @@ const path OUT_ROOT_DIR = REPO_ROOT_DIR / "MiniSWMH/MiniSWMH";
 const path EMF_ROOT_DIR = REPO_ROOT_DIR / "EMF/EMF";
 const path EMF_SWMH_ROOT_DIR = REPO_ROOT_DIR / "EMF/EMF+SWMH";
 const path EMF_OUT_ROOT_DIR = REPO_ROOT_DIR / "EMF/EMF+MiniSWMH";
-*/
 
+/*
 const path VROOT_DIR("/home/ziji/vanilla");
 const path ROOT_DIR("/cygdrive/c/git/SWMH-BETA/SWMH");
 const path OUT_ROOT_DIR("/cygdrive/c/git/MiniSWMH/MiniSWMH");
 const path EMF_ROOT_DIR("/cygdrive/c/git/EMF/EMF");
 const path EMF_SWMH_ROOT_DIR("/cygdrive/c/git/EMF/EMF+SWMH");
 const path EMF_OUT_ROOT_DIR("/cygdrive/c/git/EMF/EMF+MiniSWMH");
+*/
 
 const path TITLES_FILE("swmh_landed_titles.txt");
 const path HOLYSITES_FILE("z_holy_sites.txt");

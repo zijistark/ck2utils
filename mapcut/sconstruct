@@ -12,8 +12,13 @@ sources = ['main.cc', 'region_file.cc']
 #boost_fs_lib = File('/usr/lib/x86_64-linux-gnu/' + env['LIBPREFIX'] + 'boost_filesystem' + env['LIBSUFFIX'])
 #boost_sys_lib = File('/usr/lib/x86_64-linux-gnu/' + env['LIBPREFIX'] + 'boost_system' + env['LIBSUFFIX'])
 
-boost_fs_lib = 'boost_filesystem-mt'
-boost_sys_lib = 'boost_system-mt'
+# mingw64:
+#boost_fs_lib = 'boost_filesystem-mt'
+#boost_sys_lib = 'boost_system-mt'
+
+# unix:
+boost_fs_lib = 'boost_filesystem'
+boost_sys_lib = 'boost_system'
 
 env.Program('mapcut', sources, LIBS=['ck2', boost_fs_lib, boost_sys_lib])
 #env.Program('test_escaping', ['test.cc'])
