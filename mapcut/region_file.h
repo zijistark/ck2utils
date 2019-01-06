@@ -3,14 +3,13 @@
 #pragma once
 
 #include <ck2/filesystem.h>
+#include <ck2/parser.h>
 #include <vector>
 #include <string>
 #include <memory>
 
 namespace fs = ck2::fs;
 using std::unique_ptr;
-
-namespace ck2 { class block; }
 
 
 class region_file {
@@ -36,7 +35,7 @@ private:
 
     std::vector< unique_ptr<region> > _regions;
 
-    unique_ptr<region> parse_region(const char* name, const ck2::block* block, const char* path);
+    unique_ptr<region> parse_region(const char* name, const ck2::block* block, const ck2::parser& parser);
 
 public:
     region_file(const fs::path&);
