@@ -10,12 +10,12 @@ first_line_match: -\*- ck2(\.\w[\w\.]*)? -\*-
 variables:
   vOpBool: |-
     (?xi:
-      nand
-    | and
-    | not
-    | nor
-    | or
-    | calc_true_if
+      NAND
+    | AND
+    | NOT
+    | NOR
+    | OR
+    | CALC_TRUE_IF
     )
   vOp: '(?x: ==? | >=? | <=? )'
   vBool: '(?x: yes | no )'
@@ -489,6 +489,7 @@ variables:
     | change_variable
     | character_modifier
     | check_variable
+    | chronicle
     | clan_opinion
     | clear_delayed_event
     | coat_of_arms
@@ -736,6 +737,7 @@ variables:
     | has_fort
     | has_game_started
     | has_guardian
+    | has_heresies
     | has_holder
     | has_horde_culture
     | has_hospital
@@ -1290,6 +1292,7 @@ variables:
       border
     | desc
     | desc
+    | entry
     | foa
     | foa
     | foa

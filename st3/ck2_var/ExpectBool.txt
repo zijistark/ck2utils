@@ -128,6 +128,7 @@ has_epidemic
 has_fort
 has_game_started
 has_guardian
+has_heresies
 has_holder
 has_horde_culture
 has_hospital

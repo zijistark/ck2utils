@@ -15,6 +15,7 @@ builds_with_prestige
 change_variable
 character_modifier
 check_variable
+chronicle
 clan_opinion
 clear_delayed_event
 coat_of_arms # LT param
