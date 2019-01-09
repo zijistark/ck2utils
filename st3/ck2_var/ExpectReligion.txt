@@ -1,3 +1,6 @@
+controls_religion
+is_heresy_of
+is_parent_religion
 parent
 religion
 religion # event pre-trigger

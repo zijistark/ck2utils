@@ -3,6 +3,7 @@ add_pressed_claim
 add_weak_claim
 add_weak_pressed_claim
 base_title
+capital
 completely_controls
 copy_title_history
 copy_title_laws

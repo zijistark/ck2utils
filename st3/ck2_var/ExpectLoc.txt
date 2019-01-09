@@ -1,12 +1,15 @@
+adjective
 border
 desc
 desc # event property
+dlc
 entry
 foa
 foa # LT param
 foa # create_title param
 foa_female
 frame_suffix
+group
 has_dlc
 has_offmap_name
 key

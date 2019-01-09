@@ -28,6 +28,7 @@ creation_effect
 default_selection
 defender_ai_defeat_worth
 defender_ai_victory_worth
+defined_text
 desc
 dismiss_trigger
 effect

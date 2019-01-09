@@ -11,6 +11,7 @@ allowed_holdings
 allowed_holdings_culture
 attribute_diff
 attributes # create_character param
+build_holding
 builds_with_prestige
 change_variable
 character_modifier
@@ -42,6 +43,7 @@ divide_variable
 events
 export_to_variable
 faction_power
+fallback_text
 female_names # LT param
 flags
 forced_contract
@@ -55,6 +57,7 @@ gain_settlements_under_title
 gain_title
 grant_title
 grant_title_no_opinion
+had_flag
 had_{{vFlagType}}_flag
 has_alternate_start_parameter
 has_alternate_start_setting
@@ -64,15 +67,18 @@ has_opinion_modifier
 ignore_in_vassal_limit_calculation
 is_tributary
 is_variable_equal
+layer # LT param
 liked_by_offmap
 make_tributary
 male_names # LT param
 multiply_variable
 no_vassal_tax
+num_of_government_vassals
 num_of_realm_counties
 num_of_trade_post_diff
 opinion
 opinion_diff
+pagan_coa # LT param
 personal_opinion
 plot_power_contribution
 preferred_holdings
@@ -112,6 +118,7 @@ spawn_unit
 subjugate_or_take_under_title
 subtract_variable
 succession
+text
 their_opinion
 transfer_artifact
 transfer_scaled_wealth

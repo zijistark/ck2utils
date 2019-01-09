@@ -63,6 +63,7 @@ controls_religion
 controls_religion # LT param
 cooldown
 copy_title_laws # create_title param
+create_family_palace
 creation_requires_capital # LT param
 crime
 crusade_war_has_started
@@ -70,6 +71,7 @@ custom_created # create_title param
 customizer
 cut_mercenary_creator_relation
 death
+default
 destroy_bloodline # not clear whether this actually does take only or even a boolean due to poor docs & lack of any base game usage currently (3.0)
 destroy_landed_title
 diplomatic_immunity
@@ -360,6 +362,7 @@ set_priests_can_marry
 set_psc_marriage
 set_raised_vassal_opinion_loss
 set_seafaring
+set_short_name
 set_uses_decadence
 short_name # LT param
 show_from_from # event property
@@ -389,6 +392,8 @@ under_ROOT
 under_target_ruler
 unsafe_destroy_landed_title
 unsafe_impregnate
+used_for_dynasty_names
+used_for_random
 uses_bride_price
 uses_decadence
 uses_new_crusade

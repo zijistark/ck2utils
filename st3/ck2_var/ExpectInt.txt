@@ -10,6 +10,7 @@ artifact_age
 capital
 capital_move_delay
 character
+color # LT param
 combat_rating
 count
 crusade_(?:gold|prestige|piety|artifact)_pot
@@ -24,6 +25,7 @@ demesne_size
 dignity # LT param
 duration
 dynasty
+emblem # LT param
 holder # title hist. effect
 home # spawn_unit param
 hospital_level
@@ -104,6 +106,9 @@ set_father
 set_mother
 society_rank
 sort_priority # CB param
+template # LT param
+texture # LT param
+texture_internal # LT param
 total_years_played
 war_score
 wealth

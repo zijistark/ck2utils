@@ -7,7 +7,6 @@ add_intermarry
 add_law
 add_law_w_cooldown
 add_trait
-adjective
 army_template # create_title param
 artifact_type
 base_type
@@ -17,6 +16,7 @@ can_hold_title
 cancel_plot
 casus_belli
 clear_flags_with_prefix
+clr_flag
 clr_offmap_tmp_flag
 clr_{{vFlagType}}_flag
 completely_controls_region
@@ -52,6 +52,7 @@ has_assigned_minor_title
 has_building
 has_character_flag # event pre-trigger
 has_earmarked_regiments
+has_flag
 has_flag # event pre-trigger
 has_focus
 has_global_flag # event pre-trigger
@@ -114,6 +115,7 @@ remove_trait
 remove_{{vEventModifierType}}_modifier
 revoke_law
 set_branch_tag
+set_flag
 set_focus
 set_government_type
 set_graphical_culture
