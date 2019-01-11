@@ -1,6 +1,9 @@
+add_age
 age
 age # spawn_unit param
 ai_ambition
+ai_convert_other_group
+ai_convert_same_group
 ai_greed
 ai_honor
 ai_rationality
@@ -26,13 +29,18 @@ dignity # LT param
 duration
 dynasty
 emblem # LT param
+heresy_icon
 holder # title hist. effect
 home # spawn_unit param
 hospital_level
+icon
+immortal_age
 killer
+leader_traits
 max_age # event pre-trigger
 max_amount
 max_consorts
+max_wives
 min_age # event pre-trigger
 month
 month_of_birth
@@ -40,6 +48,8 @@ monthly_income
 monthly_income # LT param
 months
 multiplier
+naval_distance
+num_culture_provinces
 num_fitting_characters_for_title
 num_of_baron_titles
 num_of_baron_titles_in_realm
@@ -85,11 +95,13 @@ num_of_trade_posts
 num_of_traits
 num_of_unique_dynasty_vassals
 num_of_vassals
+num_religion_provinces
 over_max_demesne_size
 over_vassal_limit
 parent # set_parent_religion param
 piety
 population
+practical_age
 prestige
 province # spawn_unit param
 province_id
@@ -101,6 +113,8 @@ realm_learning
 realm_martial
 realm_size
 realm_stewardship
+religious_clothing_head
+religious_clothing_priest
 ruled_years
 set_father
 set_mother

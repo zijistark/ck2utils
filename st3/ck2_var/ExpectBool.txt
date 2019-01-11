@@ -1,16 +1,24 @@
 abdicate
+active # title history
 adventurer
 adventurer # create_title param
 ai
 ai # event pre-trigger
+ai_fabricate_claims
+ai_peaceful
 allow_bastards
+allow_in_ruler_designer
 allow_looting
+allow_rivermovement
 allow_title_revokation
+allow_viking_invasion
 allows_matrilineal_marriage
 always
 ambition_succeeds
 as_if_liege
 assimilate # LT param
+attacking_same_religion_piety_loss
+autocephaly
 banish
 barons_need_dynasty
 best_de_jure_liege_title_holder_FROM
@@ -22,6 +30,7 @@ best_de_jure_liege_title_under_target_ruler
 borders_lake
 borders_major_river
 break # ideally this would be in bold/etc. like ControlBlock, but for now it's a simple ExpectBool
+bs_marriage
 caliphate # LT param
 can_be_claimed
 can_be_given_away
@@ -40,29 +49,41 @@ can_change_to_nomad_on_start
 can_create_empires
 can_create_kingdoms
 can_demand_religious_conversion
+can_excommunicate
+can_grant_claim
+can_grant_divorce
 can_grant_kingdoms_and_empires_to_other_government
 can_grant_kingdoms_and_empires_to_other_government_group
+can_have_antipopes
 can_have_more_leadership_traits
 can_imprison_without_reason
 can_inherit
 can_marry
+can_retire_to_monastery
 can_revoke_without_reason
 can_toggle_looting # spawn_unit param
 can_usurp_kingdoms_and_empires
 cancel_ambition
 cancel_crusade
+cancel_pregnancy
 cannot_inherit # spawn_unit param
 capable_only # event pre-trigger
 character
 clan
+clear_banish_reasons
+clear_education_trait
+clear_execute_reasons
 clear_focus
 clear_intermarry
+clear_prison_reasons
+clear_revoke_reasons
 clear_secret_religion
 clear_wealth
 controls_religion
 controls_religion # LT param
 cooldown
 copy_title_laws # create_title param
+costs_piety
 create_family_palace
 creation_requires_capital # LT param
 crime
@@ -72,13 +93,17 @@ customizer
 cut_mercenary_creator_relation
 death
 default
+defensive_attrition
 destroy_bloodline # not clear whether this actually does take only or even a boolean due to poor docs & lack of any base game usage currently (3.0)
 destroy_landed_title
 diplomatic_immunity
 disable_non_aggression_pacts
 disband_on_peace # spawn_unit param
+dislike_tribal_organization
 distribute_crusade_target_title
+divine_blood
 dukes_called_kings
+dynamic_cult
 dynasty_title_names # LT param
 emf_FROM_subjugate_ruler
 emf_ROOT_completely_controls_counties
@@ -113,6 +138,8 @@ emf_unsafe_destroy_title
 emf_western_christian_religion
 excommunicate
 female # create_character param
+female_temple_holders
+feminist
 flank_has_leader
 free_levies_in_offensive_war
 free_retract_vassalage
@@ -124,6 +151,7 @@ gets_religion_opinion_penalties
 gives_religion_opinion_penalties
 has_autocephaly
 has_called_crusade
+has_coa_on_barony_only
 has_concubinage
 has_empty_holding
 has_epidemic
@@ -136,11 +164,13 @@ has_horde_culture
 has_hospital
 has_inheritance_blocker
 has_job_title
+has_job_title # event pre-trigger
 has_known_creation_date
 has_lover
 has_mercenary_band
 has_nickname
 has_owner
+has_pentarchy
 has_pledged_crusade_defense
 has_pledged_crusade_participation
 has_polygamy
@@ -159,17 +189,21 @@ hide_from # event property
 hide_new # event property
 hide_window # event property
 historical
+history
 holy_order
+hostile_within_group
 ignores_de_jure_laws
 immortal
 impregnate
 imprison
 in_command
+in_command # event pre-trigger
 in_revolt
 in_seclusion
 independent
 independent # LT param
 inherit
+investiture
 is_adult
 is_alive
 is_allowed_to_loot
@@ -199,6 +233,7 @@ is_heir
 is_heretic
 is_hostile # event property
 is_ill
+is_immune_to_pruning
 is_in_society
 is_in_society # event pre-trigger
 is_inaccessible_trigger
@@ -228,6 +263,7 @@ is_patrician # event pre-trigger
 is_playable
 is_plot_active
 is_powerful_vassal
+is_prefix
 is_pregnant
 is_preparing_crusade
 is_pretender
@@ -247,11 +283,13 @@ is_republic
 is_ruler
 is_save_game
 is_seafarer
+is_senior_consort_party
 is_shattered_world
 is_sick # event pre-trigger
 is_smart_trigger
 is_society_grandmaster
 is_strong_trigger
+is_sub_unit_leader
 is_theocracy
 is_titular
 is_titular_title
@@ -263,7 +301,10 @@ is_vice_royalty
 is_virtous # yes, the trigger is misspelled in the API
 is_voter
 is_weak_trigger
+join_crusade_if_bordering_hostile
+land_gap
 landed_inheritance
+landed_kin_prestige_bonus
 landless # LT param
 landless # create_title param
 location_ruler_title # LT param
@@ -272,7 +313,9 @@ major # event property
 make_capital_holding
 make_primary_title
 make_reformer_head_of_religion
+male_temple_holders
 marriage_ignore_religion
+matrilineal_marriages
 matrilineal_override
 mercenary
 mercenary # LT param
@@ -281,6 +324,7 @@ merchant_republic
 merge # spawn_unit param
 move
 multiplayer
+naval_distance
 nomad # create_title param
 notification # event property
 offmap
@@ -300,18 +344,28 @@ owner_under_PREVPREVPREV
 owner_under_ROOT
 owner_under_target_ruler
 pacifist
+pc_marriage
+peace_prestige_loss
+pentarchy
 pf_liege_change_under_title_begin_effect
 pf_liege_change_under_title_end_effect
 pirate # LT param
+playable
 pledge_crusade_defense
 pledge_crusade_participation
 plot_succeeds
 port
+portrait_in_command
+portrait_is_patrician
 preparing_invasion
+priests_can_inherit
+priests_can_marry
 primary # LT param
 prisoner
 prisoner # event pre-trigger
+psc_marriage
 purple_born_heirs
+raised_vassal_opinion_loss
 random
 random_traits # create_character param
 rebel
@@ -319,6 +373,7 @@ rebel # create_title param
 recalc_succession
 refill_holding_levy
 reinforces # spawn_unit param
+rel_head_defense
 religion_allows_female_temple_holders
 religion_allows_male_temple_holders
 remove_guardian
@@ -330,6 +385,9 @@ revoke_capital_holding
 risks_minor_clan_rising
 rivals # event pre-trigger
 same_religion
+sea_gap
+seafarer
+secret_religion
 set_allow_looting
 set_allow_rivermovement
 set_allows_matrilineal_marriage
@@ -350,6 +408,7 @@ set_feminist
 set_hard_to_convert
 set_heir_designation
 set_ignores_defensive_attrition
+set_immune_to_pruning
 set_jizya_tax
 set_looting
 set_no_head_of_religion
@@ -369,9 +428,16 @@ show_from_from # event property
 show_from_from_from # event property
 show_root # event property
 show_scope_change
+show_value
 society_can_rank_up
+society_has_active_progress
+society_has_members
+society_is_active
 stacking
+start_society_progress
 status
+stop_society_progress
+sub_realm
 technology_can_spread
 temporary
 temporary # create_title param
@@ -392,13 +458,17 @@ under_ROOT
 under_target_ruler
 unsafe_destroy_landed_title
 unsafe_impregnate
+use_first_valid
+use_new_crusade
 used_for_dynasty_names
 used_for_random
 uses_bride_price
 uses_decadence
+uses_jizya_tax
 uses_new_crusade
 uses_piety_for_law_change
 uses_prestige_for_law_change
 vassal_government_opinion_penalties
 war
 war # event pre-trigger
+women_can_take_consorts

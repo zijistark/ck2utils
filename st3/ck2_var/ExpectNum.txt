@@ -1,9 +1,13 @@
 add_holding_slot
+add_society_progress
 add_to_crusade_artifact_pot
 add_to_crusade_gold_pot
 add_to_crusade_piety_pot
 add_to_crusade_prestige_pot
 aggression
+ai_creation_factor
+ai_feudal_modifier
+ai_republic_modifier
 attrition
 base_health
 chance
@@ -18,12 +22,17 @@ demesne_size_compared_to_limit
 dynasty_realm_power
 economy_techpoints
 extra_ai_eval_troops
+extra_tech_building_start
 factor
 female # create_character param (chance that char will be female)
 fertility
 for_population
 health
 hire_range
+holding_garrison_percent
+holding_raisable_levy_percent
+holding_total_levy_percent
+independence_war_score_bonus
 infamy
 maintenance_multiplier
 maintenance_multiplier # spawn_unit param
@@ -66,11 +75,15 @@ set_peace_piety_gain
 set_peace_prestige_loss
 set_real_father
 set_short_reign_opinion_year_mult
+set_society_progress
+short_reign_opinion_year_mult
 siphons_income_to_creator # create_title param
 size
 society_currency
+society_progress
 strength_growth_per_century
 treasury
 value
 warning_level
 wealth
+{{vTech}}

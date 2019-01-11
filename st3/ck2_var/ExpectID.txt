@@ -12,7 +12,9 @@ artifact_type
 base_type
 border
 border # event property
+can_grant_invasion_cb
 can_hold_title
+can_join_society
 cancel_plot
 casus_belli
 clear_flags_with_prefix
@@ -22,6 +24,9 @@ clr_{{vFlagType}}_flag
 completely_controls_region
 continent
 controls_religion
+convert_to_castle
+convert_to_city
+crusade_cb
 culture
 culture # LT param
 culture # event pre-trigger
@@ -83,6 +88,7 @@ is_law_allowed
 is_law_potential
 is_settlement_decision_allowed
 is_settlement_decision_potential
+is_society
 is_targetted_decision_allowed
 is_targetted_decision_potential
 is_title_decision_allowed
@@ -126,6 +132,7 @@ set_special_character_title
 set_status
 set_{{vFlagType}}_flag
 setting
+show_trait
 society
 society_member_of
 sound_effect
@@ -143,6 +150,7 @@ type
 unsafe_destroy_artifact
 unsafe_give_minor_title
 unsafe_religion
+upgrades_from
 using_cb
 value
 voting_rules

@@ -3,6 +3,7 @@ add_pressed_claim
 add_weak_claim
 add_weak_pressed_claim
 base_title
+can_naval_path_to
 capital
 completely_controls
 copy_title_history
@@ -24,5 +25,7 @@ remove_claim
 set_coa
 set_defacto_liege
 set_preferred_capital
+sub_realm
+target
 thirdparty_title
 title

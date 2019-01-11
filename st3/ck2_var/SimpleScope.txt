@@ -71,12 +71,14 @@ new_title
 official_crusade_recipient
 offmap_power
 owner
+parent_religion
 parent_religion_head
 player_heir
 plot_target_char
 plot_target_province
 plot_target_title
 preferred_war_target
+previous_artifact_owner
 primary_title
 quest_target
 real_father
@@ -104,4 +106,8 @@ thirdparty_title_scope
 title_to_get_rid_of
 top_liege
 trade_post_owner
+true_father
+true_father_even_if_dead
 true_religion_scope
+twin
+twin_even_if_dead

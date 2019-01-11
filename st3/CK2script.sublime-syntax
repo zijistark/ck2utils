@@ -65,11 +65,8 @@ variables:
   vLangRHSTarget: |-
     (?xi:
       {{vLangTarget}}
-    | LIEGE
-    | FATHER
-    | MOTHER
-    | SPOUSE
-    | NEW
+    | new
+    | {{vSimpleScope}}
     )
   vFlagType: |-
     (?x:
@@ -225,6 +222,7 @@ variables:
     (?xi:
       any_army
     | any_artifact
+    | any_artifact_owner
     | any_attacker
     | any_backed_character
     | any_bloodline
@@ -236,6 +234,7 @@ variables:
     | any_claim
     | any_claimant
     | any_close_relative
+    | any_connected_province
     | any_consort
     | any_courtier
     | any_courtier_or_vassal
@@ -250,6 +249,7 @@ variables:
     | any_demesne_province
     | any_demesne_title
     | any_direct_de_jure_vassal_title
+    | any_disconnected_province
     | any_dynasty_member
     | any_dynasty_member_even_if_dead
     | any_eldership_title
@@ -279,6 +279,7 @@ variables:
     | any_plot_backer
     | any_plotter
     | any_potential_tribal_county
+    | any_pretender
     | any_pretender_title
     | any_previous_holder
     | any_province
@@ -304,6 +305,7 @@ variables:
     | any_tributary
     | any_unique_dynasty_vassal
     | any_unit
+    | any_unit_leader
     | any_unknown_enemy_plotter
     | any_vassal
     | any_voter
@@ -311,6 +313,7 @@ variables:
     | any_ward
     | random_army
     | random_artifact
+    | random_artifact_owner
     | random_backed_character
     | random_bloodline
     | random_bloodline_member
@@ -320,6 +323,7 @@ variables:
     | random_child_even_if_dead
     | random_claim
     | random_close_relative
+    | random_connected_province
     | random_consort
     | random_courtier
     | random_courtier_or_vassal
@@ -328,9 +332,11 @@ variables:
     | random_demesne_province
     | random_demesne_title
     | random_direct_de_jure_vassal_title
+    | random_disconnected_province
     | random_dynasty_member
     | random_dynasty_member_even_if_dead
     | random_eldership_title
+    | random_elector_character
     | random_enemy_plotter
     | random_fleet
     | random_friend
@@ -347,6 +353,7 @@ variables:
     | random_playable_ruler
     | random_player
     | random_potential_tribal_county
+    | random_pretender
     | random_province
     | random_province_character
     | random_province_holding
@@ -365,6 +372,7 @@ variables:
     | random_trade_post
     | random_tributary
     | random_unit
+    | random_unit_leader
     | random_unknown_enemy_plotter
     | random_vassal
     | random_voter
@@ -458,7 +466,9 @@ variables:
     | retire_effect
     | revoke_allowed
     | revoke_trigger
+    | secret_religion_visibility_trigger
     | success
+    | succession_laws
     | target_potential
     | theocracy_governments
     | tribal_governments
@@ -480,14 +490,17 @@ variables:
     | activate_title
     | add_law
     | add_offmap_currency
+    | add_special_interest
     | add_{{vEventModifierType}}_modifier
     | age_diff
     | allowed_holdings
     | allowed_holdings_culture
+    | alternate_start
     | attribute_diff
     | attributes
     | build_holding
     | builds_with_prestige
+    | can_naval_path_to
     | change_variable
     | character_modifier
     | check_variable
@@ -516,8 +529,10 @@ variables:
     | distribute_crusade_pot
     | divide_variable
     | events
+    | evil_god_names
     | export_to_variable
     | faction_power
+    | fallback
     | fallback_text
     | female_names
     | flags
@@ -530,6 +545,7 @@ variables:
     | gain_all_occupied_titles
     | gain_settlements_under_title
     | gain_title
+    | god_names
     | grant_title
     | grant_title_no_opinion
     | had_flag
@@ -539,13 +555,17 @@ variables:
     | has_elector_stance
     | has_game_rule
     | has_opinion_modifier
+    | holy_site_distance
     | ignore_in_vassal_limit_calculation
+    | interface_skin
+    | is_connected_to
     | is_tributary
     | is_variable_equal
     | layer
     | liked_by_offmap
     | make_tributary
     | male_names
+    | modulo_variable
     | multiply_variable
     | no_vassal_tax
     | num_of_government_vassals
@@ -566,6 +586,7 @@ variables:
     | relative_power_including_allies_defender
     | relative_realm_size
     | religion_authority
+    | religion_distance
     | remove_opinion
     | remove_{{vEventModifierType}}_modifiers
     | repeat_event
@@ -577,6 +598,7 @@ variables:
     | reverse_war
     | save_persistent_event_target
     | scaled_wealth
+    | score_value
     | set_character_modifier
     | set_crusade_target
     | set_offmap_currency
@@ -593,6 +615,7 @@ variables:
     | subjugate_or_take_under_title
     | subtract_variable
     | succession
+    | supply_limit
     | text
     | their_opinion
     | transfer_artifact
@@ -616,18 +639,26 @@ variables:
   vExpectBool: |-
     (?xi:
       abdicate
+    | active
     | adventurer
     | adventurer
     | ai
     | ai
+    | ai_fabricate_claims
+    | ai_peaceful
     | allow_bastards
+    | allow_in_ruler_designer
     | allow_looting
+    | allow_rivermovement
     | allow_title_revokation
+    | allow_viking_invasion
     | allows_matrilineal_marriage
     | always
     | ambition_succeeds
     | as_if_liege
     | assimilate
+    | attacking_same_religion_piety_loss
+    | autocephaly
     | banish
     | barons_need_dynasty
     | best_de_jure_liege_title_holder_FROM
@@ -639,6 +670,7 @@ variables:
     | borders_lake
     | borders_major_river
     | break
+    | bs_marriage
     | caliphate
     | can_be_claimed
     | can_be_given_away
@@ -657,29 +689,41 @@ variables:
     | can_create_empires
     | can_create_kingdoms
     | can_demand_religious_conversion
+    | can_excommunicate
+    | can_grant_claim
+    | can_grant_divorce
     | can_grant_kingdoms_and_empires_to_other_government
     | can_grant_kingdoms_and_empires_to_other_government_group
+    | can_have_antipopes
     | can_have_more_leadership_traits
     | can_imprison_without_reason
     | can_inherit
     | can_marry
+    | can_retire_to_monastery
     | can_revoke_without_reason
     | can_toggle_looting
     | can_usurp_kingdoms_and_empires
     | cancel_ambition
     | cancel_crusade
+    | cancel_pregnancy
     | cannot_inherit
     | capable_only
     | character
     | clan
+    | clear_banish_reasons
+    | clear_education_trait
+    | clear_execute_reasons
     | clear_focus
     | clear_intermarry
+    | clear_prison_reasons
+    | clear_revoke_reasons
     | clear_secret_religion
     | clear_wealth
     | controls_religion
     | controls_religion
     | cooldown
     | copy_title_laws
+    | costs_piety
     | create_family_palace
     | creation_requires_capital
     | crime
@@ -689,13 +733,17 @@ variables:
     | cut_mercenary_creator_relation
     | death
     | default
+    | defensive_attrition
     | destroy_bloodline
     | destroy_landed_title
     | diplomatic_immunity
     | disable_non_aggression_pacts
     | disband_on_peace
+    | dislike_tribal_organization
     | distribute_crusade_target_title
+    | divine_blood
     | dukes_called_kings
+    | dynamic_cult
     | dynasty_title_names
     | emf_FROM_subjugate_ruler
     | emf_ROOT_completely_controls_counties
@@ -730,6 +778,8 @@ variables:
     | emf_western_christian_religion
     | excommunicate
     | female
+    | female_temple_holders
+    | feminist
     | flank_has_leader
     | free_levies_in_offensive_war
     | free_retract_vassalage
@@ -741,6 +791,7 @@ variables:
     | gives_religion_opinion_penalties
     | has_autocephaly
     | has_called_crusade
+    | has_coa_on_barony_only
     | has_concubinage
     | has_empty_holding
     | has_epidemic
@@ -753,11 +804,13 @@ variables:
     | has_hospital
     | has_inheritance_blocker
     | has_job_title
+    | has_job_title
     | has_known_creation_date
     | has_lover
     | has_mercenary_band
     | has_nickname
     | has_owner
+    | has_pentarchy
     | has_pledged_crusade_defense
     | has_pledged_crusade_participation
     | has_polygamy
@@ -776,17 +829,21 @@ variables:
     | hide_new
     | hide_window
     | historical
+    | history
     | holy_order
+    | hostile_within_group
     | ignores_de_jure_laws
     | immortal
     | impregnate
     | imprison
+    | in_command
     | in_command
     | in_revolt
     | in_seclusion
     | independent
     | independent
     | inherit
+    | investiture
     | is_adult
     | is_alive
     | is_allowed_to_loot
@@ -816,6 +873,7 @@ variables:
     | is_heretic
     | is_hostile
     | is_ill
+    | is_immune_to_pruning
     | is_in_society
     | is_in_society
     | is_inaccessible_trigger
@@ -845,6 +903,7 @@ variables:
     | is_playable
     | is_plot_active
     | is_powerful_vassal
+    | is_prefix
     | is_pregnant
     | is_preparing_crusade
     | is_pretender
@@ -864,11 +923,13 @@ variables:
     | is_ruler
     | is_save_game
     | is_seafarer
+    | is_senior_consort_party
     | is_shattered_world
     | is_sick
     | is_smart_trigger
     | is_society_grandmaster
     | is_strong_trigger
+    | is_sub_unit_leader
     | is_theocracy
     | is_titular
     | is_titular_title
@@ -880,7 +941,10 @@ variables:
     | is_virtous
     | is_voter
     | is_weak_trigger
+    | join_crusade_if_bordering_hostile
+    | land_gap
     | landed_inheritance
+    | landed_kin_prestige_bonus
     | landless
     | landless
     | location_ruler_title
@@ -889,7 +953,9 @@ variables:
     | make_capital_holding
     | make_primary_title
     | make_reformer_head_of_religion
+    | male_temple_holders
     | marriage_ignore_religion
+    | matrilineal_marriages
     | matrilineal_override
     | mercenary
     | mercenary
@@ -898,6 +964,7 @@ variables:
     | merge
     | move
     | multiplayer
+    | naval_distance
     | nomad
     | notification
     | offmap
@@ -917,18 +984,28 @@ variables:
     | owner_under_ROOT
     | owner_under_target_ruler
     | pacifist
+    | pc_marriage
+    | peace_prestige_loss
+    | pentarchy
     | pf_liege_change_under_title_begin_effect
     | pf_liege_change_under_title_end_effect
     | pirate
+    | playable
     | pledge_crusade_defense
     | pledge_crusade_participation
     | plot_succeeds
     | port
+    | portrait_in_command
+    | portrait_is_patrician
     | preparing_invasion
+    | priests_can_inherit
+    | priests_can_marry
     | primary
     | prisoner
     | prisoner
+    | psc_marriage
     | purple_born_heirs
+    | raised_vassal_opinion_loss
     | random
     | random_traits
     | rebel
@@ -936,6 +1013,7 @@ variables:
     | recalc_succession
     | refill_holding_levy
     | reinforces
+    | rel_head_defense
     | religion_allows_female_temple_holders
     | religion_allows_male_temple_holders
     | remove_guardian
@@ -947,6 +1025,9 @@ variables:
     | risks_minor_clan_rising
     | rivals
     | same_religion
+    | sea_gap
+    | seafarer
+    | secret_religion
     | set_allow_looting
     | set_allow_rivermovement
     | set_allows_matrilineal_marriage
@@ -967,6 +1048,7 @@ variables:
     | set_hard_to_convert
     | set_heir_designation
     | set_ignores_defensive_attrition
+    | set_immune_to_pruning
     | set_jizya_tax
     | set_looting
     | set_no_head_of_religion
@@ -986,9 +1068,16 @@ variables:
     | show_from_from_from
     | show_root
     | show_scope_change
+    | show_value
     | society_can_rank_up
+    | society_has_active_progress
+    | society_has_members
+    | society_is_active
     | stacking
+    | start_society_progress
     | status
+    | stop_society_progress
+    | sub_realm
     | technology_can_spread
     | temporary
     | temporary
@@ -1009,16 +1098,20 @@ variables:
     | under_target_ruler
     | unsafe_destroy_landed_title
     | unsafe_impregnate
+    | use_first_valid
+    | use_new_crusade
     | used_for_dynasty_names
     | used_for_random
     | uses_bride_price
     | uses_decadence
+    | uses_jizya_tax
     | uses_new_crusade
     | uses_piety_for_law_change
     | uses_prestige_for_law_change
     | vassal_government_opinion_penalties
     | war
     | war
+    | women_can_take_consorts
     )
   vExpectDate: |-
     (?xi:
@@ -1050,7 +1143,9 @@ variables:
     | base_type
     | border
     | border
+    | can_grant_invasion_cb
     | can_hold_title
+    | can_join_society
     | cancel_plot
     | casus_belli
     | clear_flags_with_prefix
@@ -1060,6 +1155,9 @@ variables:
     | completely_controls_region
     | continent
     | controls_religion
+    | convert_to_castle
+    | convert_to_city
+    | crusade_cb
     | culture
     | culture
     | culture
@@ -1121,6 +1219,7 @@ variables:
     | is_law_potential
     | is_settlement_decision_allowed
     | is_settlement_decision_potential
+    | is_society
     | is_targetted_decision_allowed
     | is_targetted_decision_potential
     | is_title_decision_allowed
@@ -1164,6 +1263,7 @@ variables:
     | set_status
     | set_{{vFlagType}}_flag
     | setting
+    | show_trait
     | society
     | society_member_of
     | sound_effect
@@ -1181,6 +1281,7 @@ variables:
     | unsafe_destroy_artifact
     | unsafe_give_minor_title
     | unsafe_religion
+    | upgrades_from
     | using_cb
     | value
     | voting_rules
@@ -1188,9 +1289,12 @@ variables:
     )
   vExpectInt: |-
     (?xi:
-      age
+      add_age
+    | age
     | age
     | ai_ambition
+    | ai_convert_other_group
+    | ai_convert_same_group
     | ai_greed
     | ai_honor
     | ai_rationality
@@ -1216,13 +1320,18 @@ variables:
     | duration
     | dynasty
     | emblem
+    | heresy_icon
     | holder
     | home
     | hospital_level
+    | icon
+    | immortal_age
     | killer
+    | leader_traits
     | max_age
     | max_amount
     | max_consorts
+    | max_wives
     | min_age
     | month
     | month_of_birth
@@ -1230,6 +1339,8 @@ variables:
     | monthly_income
     | months
     | multiplier
+    | naval_distance
+    | num_culture_provinces
     | num_fitting_characters_for_title
     | num_of_baron_titles
     | num_of_baron_titles_in_realm
@@ -1275,11 +1386,13 @@ variables:
     | num_of_traits
     | num_of_unique_dynasty_vassals
     | num_of_vassals
+    | num_religion_provinces
     | over_max_demesne_size
     | over_vassal_limit
     | parent
     | piety
     | population
+    | practical_age
     | prestige
     | province
     | province_id
@@ -1291,6 +1404,8 @@ variables:
     | realm_martial
     | realm_size
     | realm_stewardship
+    | religious_clothing_head
+    | religious_clothing_priest
     | ruled_years
     | set_father
     | set_mother
@@ -1309,10 +1424,13 @@ variables:
     )
   vExpectLoc: |-
     (?xi:
-      adjective
+      add_building
+    | adjective
     | border
+    | crusade_name
     | desc
     | desc
+    | diplomacy_icon
     | dlc
     | entry
     | foa
@@ -1323,6 +1441,7 @@ variables:
     | group
     | has_dlc
     | has_offmap_name
+    | high_god_name
     | key
     | lacks_dlc
     | liege
@@ -1330,14 +1449,18 @@ variables:
     | log
     | name
     | name
+    | name_list
     | picture
+    | priest_title
     | remove_special_character_title
     | ruler
     | ruler_female
+    | scripture_name
     | set_description
     | set_high_god_name
     | set_name
     | set_offmap_name
+    | set_picture
     | set_special_character_title
     | text
     | title
@@ -1348,22 +1471,28 @@ variables:
     | title_prefix
     | title_prefix
     | tooltip
+    | tooltip_info_custom
     | which
     )
   vExpectNone: |-
     (?xi:
       dynasty
+    | portrait
     | set_crusade_beneficiary
     | set_religion_head
     )
   vExpectNum: |-
     (?xi:
       add_holding_slot
+    | add_society_progress
     | add_to_crusade_artifact_pot
     | add_to_crusade_gold_pot
     | add_to_crusade_piety_pot
     | add_to_crusade_prestige_pot
     | aggression
+    | ai_creation_factor
+    | ai_feudal_modifier
+    | ai_republic_modifier
     | attrition
     | base_health
     | chance
@@ -1378,12 +1507,17 @@ variables:
     | dynasty_realm_power
     | economy_techpoints
     | extra_ai_eval_troops
+    | extra_tech_building_start
     | factor
     | female
     | fertility
     | for_population
     | health
     | hire_range
+    | holding_garrison_percent
+    | holding_raisable_levy_percent
+    | holding_total_levy_percent
+    | independence_war_score_bonus
     | infamy
     | maintenance_multiplier
     | maintenance_multiplier
@@ -1426,14 +1560,18 @@ variables:
     | set_peace_prestige_loss
     | set_real_father
     | set_short_reign_opinion_year_mult
+    | set_society_progress
+    | short_reign_opinion_year_mult
     | siphons_income_to_creator
     | size
     | society_currency
+    | society_progress
     | strength_growth_per_century
     | treasury
     | value
     | warning_level
     | wealth
+    | {{vTech}}
     )
   vExpectOffmapID: |-
     (?xi:
@@ -1446,19 +1584,28 @@ variables:
     )
   vExpectReligion: |-
     (?xi:
-      controls_religion
+      banish_religion
+    | controls_religion
+    | intermarry
     | is_heresy_of
     | is_parent_religion
     | parent
+    | reformed
     | religion
     | religion
+    | remove_holy_site
+    | remove_holy_site_with_heresies
+    | secondary_event_pictures
     | secret_religion
+    | set_holy_site
+    | set_holy_site_with_heresies
     | set_secret_religion
     | true_religion
     )
   vExpectReligionGroup: |-
     (?xi:
-      religion_group
+      intermarry
+    | religion_group
     | religion_group
     | secret_religion_group
     | true_religion_group
@@ -1488,7 +1635,9 @@ variables:
     | bloodline_is_active_for
     | break_alliance
     | break_betrothal
+    | can_land_path_to
     | can_marry
+    | can_naval_path_to
     | capital
     | character
     | claimed_by
@@ -1496,6 +1645,7 @@ variables:
     | completely_controls
     | conquest_culture
     | controlled_by
+    | copy_artifact_history
     | copy_title_history
     | copy_title_laws
     | could_be_parent_of
@@ -1514,6 +1664,7 @@ variables:
     | excommunicated_for
     | family
     | first
+    | for
     | force_host
     | from
     | gain_title
@@ -1529,10 +1680,13 @@ variables:
     | has_landed_title
     | has_non_aggression_pact_with
     | has_offmap_news_enabled
+    | has_pressed_claim
     | has_raised_levies
     | has_strong_claim
+    | has_strong_pressed_claim
     | has_truce
     | has_weak_claim
+    | has_weak_pressed_claim
     | held_title_rating
     | higher_real_tier_than
     | higher_tier_than
@@ -1559,6 +1713,7 @@ variables:
     | is_grandparent_of
     | is_heresy_of
     | is_holy_site
+    | is_in_same_unit_as
     | is_landed_title_allowed
     | is_liege_of
     | is_liege_or_above
@@ -1577,12 +1732,15 @@ variables:
     | is_quest_target_of
     | is_reformed_religion
     | is_rival
+    | is_society
     | is_title_active
+    | is_twin_of
     | is_valid_viking_invasion_target
     | is_vassal_or_below
     | is_vassal_or_below_of
     | is_within_diplo_range
     | killer
+    | leader
     | lower_real_tier_than
     | lower_tier_than
     | match_character
@@ -1614,6 +1772,7 @@ variables:
     | remove_intermarry
     | remove_lover
     | remove_rival
+    | remove_special_interest
     | remove_spouse
     | remove_tributary
     | reveal_plot
@@ -1628,6 +1787,7 @@ variables:
     | same_sex
     | same_society_as
     | scaled_with_population_of
+    | scope
     | second
     | secret_religion
     | secret_religion_group
@@ -1642,6 +1802,7 @@ variables:
     | set_name
     | set_official_crusade_recipient
     | set_offmap_holder
+    | set_player_character
     | set_preferred_capital
     | set_real_father
     | set_secret_religion
@@ -1649,6 +1810,7 @@ variables:
     | shares_realm_border_with
     | show_portrait
     | sibling
+    | sub_realm
     | target
     | third_party_portrait
     | thirdparty_title
@@ -1687,6 +1849,7 @@ variables:
     | add_weak_claim
     | add_weak_pressed_claim
     | base_title
+    | can_naval_path_to
     | capital
     | completely_controls
     | copy_title_history
@@ -1708,6 +1871,8 @@ variables:
     | set_coa
     | set_defacto_liege
     | set_preferred_capital
+    | sub_realm
+    | target
     | thirdparty_title
     | title
     )
@@ -1871,12 +2036,14 @@ variables:
     | official_crusade_recipient
     | offmap_power
     | owner
+    | parent_religion
     | parent_religion_head
     | player_heir
     | plot_target_char
     | plot_target_province
     | plot_target_title
     | preferred_war_target
+    | previous_artifact_owner
     | primary_title
     | quest_target
     | real_father
@@ -1904,7 +2071,32 @@ variables:
     | title_to_get_rid_of
     | top_liege
     | trade_post_owner
+    | true_father
+    | true_father_even_if_dead
     | true_religion_scope
+    | twin
+    | twin_even_if_dead
+    )
+  vTech: |-
+    (?xi:
+      TECH_CASTLE_CONSTRUCTION
+    | TECH_CAVALRY
+    | TECH_CITY_CONSTRUCTION
+    | TECH_CONSTRUCTION
+    | TECH_CULTURE_FLEX
+    | TECH_FORTIFICATIONS_CONSTRUCTION
+    | TECH_HEAVY_INFANTRY
+    | TECH_LEGALISM
+    | TECH_LIGHT_INFANTRY
+    | TECH_MAJESTY
+    | TECH_NAVAL
+    | TECH_NOBLE_CUSTOMS
+    | TECH_POPULAR_CUSTOMS
+    | TECH_RECRUITMENT
+    | TECH_RELIGIOUS_CUSTOMS
+    | TECH_SIEGE_EQUIPMENT
+    | TECH_TEMPLE_CONSTRUCTION
+    | TECH_TRADE_PRACTICES
     )
   vTooltipBlock: |-
     (?xi:
@@ -1953,6 +2145,7 @@ contexts:
         2: entity.function.name
         # 4: some scope for namespaces or identifiers (entity.name... ?)
         5: constant.numeric.integer.ck2script
+    # event targets
     - match: '\b(clear(?:_global)?_event_target|save(?:_global)?_event_target_as)\s*=\s*({{vStrictID}})\b'
       captures:
         1: keyword.control.ck2script
@@ -1961,123 +2154,19 @@ contexts:
       captures:
         1: keyword.control.ck2script
         2: variable.other.ck2script
-    - match: '\b(scope)\s*=\s*({{vStrictID}})\b'
-      captures:
-        1: keyword.control.ck2script
-        2: variable.other.ck2script
-    - match: '\b({{vOpBool}})\s*=\s*(?=\{)'
-      captures:
-        1: keyword.operator.logical.ck2script keyword.operator.word.ck2script
-    - match: '({{vTooltipBlock}})\s*=\s*(?=\{)'
-      captures:
-        1: keyword.other.tooltip.ck2script
-    - match: '\b({{vEventTarget}})\s*=\s*(?=\{)'
-      captures:
-        1: variable.other.ck2script
-    - match: '\b({{vLangTarget}})\s*=\s*(?=\{)'
-      captures:
-        1: variable.language.ck2script
-    - match: '\b({{vTitleID}})\s*=\s*(?=\{)'
-      captures:
-        1: variable.other.ck2script
-    - match: '\b(c_\d+)\s*=\s*(?=\{)' # character scope, not a title; integer is character ID
-      captures:
-        1: variable.other.ck2script
-    - match: '\b({{vOffmapID}})\s*=\s*(?=\{)'
-      captures:
-        1: variable.other.ck2script
-    - match: '\b({{vControlBlock}})\s*=\s*(?=\{)'
-      captures:
-        1: keyword.control.ck2script
-    - match: '\b({{vReligion}})\s*=\s*(?=\{)'
-      captures:
-        1: constant.language.enum.relcul.ck2script
-    - match: '\b({{vReligionGroup}})\s*=\s*(?=\{)'
-      captures:
-        1: constant.language.enum.relcul.group.ck2script
-    #### end special case enumerations, now general case LHS OP RHS / 'pair' pattern ####
-    - match: '\b({{vExpectInt}})\s*{{vOp}}\s*({{vInt}})\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.numeric.integer.ck2script
-    - match: '\b({{vExpectNum}})\s*{{vOp}}\s*({{vNum}})\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.numeric.double.ck2script
-    - match: '\b({{vExpectTier}})\s*=\s*({{vTier}})\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.language.enum.tier.ck2script
-    - match: '\b({{vExpectDate}})\s*{{vOp}}\s*({{vDate}})\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.other.date.ck2script
-    - match: '\b({{vExpectReligion}})\s*=\s*({{vReligion}})\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.language.enum.relcul.ck2script
-    - match: '\b({{vExpectReligionGroup}})\s*=\s*({{vReligionGroup}})\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.language.enum.relcul.group.ck2script
-    - match: '\b({{vExpectNone}})\s*=\s*(none|NONE)\b' # haven't seen in vanilla or tested myself using anything but 'none' here, but it might take targets. 'til then, special case.
+    #### some special case enumerations ####
+    - match: '\b(set_gender)\s*=\s*(male|female|opposite)\b'
       captures:
         1: support.function.ck2script
         2: constant.language.enum.ck2script
-    - match: '\b({{vExpectTitleID}})\s*=\s*({{vTitleID}})\b'
+    - match: '\b(target)\s*=\s*(capital|realm_capital)\b'
       captures:
         1: support.function.ck2script
-        2: variable.other.ck2script
-    - match: '\b({{vExpectOffmapID}})\s*=\s*({{vOffmapID}})\b'
+        2: constant.language.enum.ck2script
+    - match: '\b(name_list)\s*=\s*(religion|culture)\b'
       captures:
         1: support.function.ck2script
-        2: variable.other.ck2script
-    - match: '\b({{vExpectTarget}})\s*=\s*({{vEventTarget}})\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.other.ck2script
-    - match: '\b({{vExpectTarget}})\s*=\s*({{vLangRHSTarget}})\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.language.ck2script
-    - match: '\b({{vExpectBool}})\s*=\s*(yes)\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.language.boolean.true.ck2script
-    - match: '\b({{vExpectBool}})\s*=\s*(no)\b'
-      captures:
-        1: support.function.ck2script
-        2: constant.language.boolean.false.ck2script
-    - match: '\b({{vExpectBlock}})\s*=\s*(?=\{)'
-      captures:
-        1: support.function.ck2script
-    - match: '\b({{vSimpleScope}}|{{vAnyScope}})\s*=\s*(?=\{)'
-      captures:
-        1: keyword.control.scope.ck2script
-    - match: '\b({{vExpectDynamicFlag}})\s*=\s*({{vID}})@({{vEventTarget}})\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.identifier.ck2script
-        3: variable.other.ck2script
-    - match: '\b({{vExpectDynamicFlag}})\s*=\s*({{vID}})@({{vLangTarget}})\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.identifier.ck2script
-        3: variable.language.ck2script
-    - match: '\b({{vExpectID}})\s*=\s*({{vID}})\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.identifier.ck2script
-    - match: '\b({{vExpectLoc}})\s*=\s*({{vTextID}})\b'
-      captures:
-        1: support.function.ck2script
-        2: variable.identifier.ck2script
-    - match: '\b({{vExpectLoc}})\s*=\s*({{vStr}})'
-      captures:
-        1: support.function.ck2script
-        2: string.quoted.double.ck2script
-    #### end generalized logic in form of LHS <OP> RHS ####
-    #### some special case enumerations now ####
+        2: constant.language.enum.ck2script
     - match: '\b(holding_type|convert_to)\s*=\s*({{vHoldingType}})\b'
       captures:
         1: support.function.ck2script
@@ -2110,6 +2199,123 @@ contexts:
       captures:
         1: constant.language.enum.attribute.ck2script
         2: constant.numeric.ck2script
+    # things that open blocks
+    - match: '\b({{vOpBool}})\s*=\s*(?=\{)'
+      captures:
+        1: keyword.operator.logical.ck2script keyword.operator.word.ck2script
+    - match: '({{vTooltipBlock}})\s*=\s*(?=\{)'
+      captures:
+        1: keyword.other.tooltip.ck2script
+    - match: '\b({{vEventTarget}})\s*=\s*(?=\{)'
+      captures:
+        1: variable.other.ck2script
+    - match: '\b({{vLangTarget}})\s*=\s*(?=\{)'
+      captures:
+        1: variable.language.ck2script
+    - match: '\b({{vTitleID}})\s*=\s*(?=\{)'
+      captures:
+        1: variable.other.ck2script
+    - match: '\b(c_\d+)\s*=\s*(?=\{)' # character scope, not a title; integer is character ID
+      captures:
+        1: variable.other.ck2script
+    - match: '\b({{vOffmapID}})\s*=\s*(?=\{)'
+      captures:
+        1: variable.other.ck2script
+    - match: '\b({{vControlBlock}})\s*=\s*(?=\{)'
+      captures:
+        1: keyword.control.ck2script
+    - match: '\b({{vReligion}})\s*=\s*(?=\{)'
+      captures:
+        1: constant.language.enum.relcul.ck2script
+    - match: '\b({{vReligionGroup}})\s*=\s*(?=\{)'
+      captures:
+        1: constant.language.enum.relcul.group.ck2script
+    - match: '\b({{vExpectBlock}})\s*=\s*(?=\{)'
+      captures:
+        1: support.function.ck2script
+    - match: '\b({{vSimpleScope}}|{{vAnyScope}})\s*=\s*(?=\{)'
+      captures:
+        1: keyword.control.scope.ck2script
+    #### general case LHS <OP> RHS / 'pair' pattern ####
+    - match: '\b({{vExpectInt}})\s*{{vOp}}\s*({{vInt}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.numeric.integer.ck2script
+    - match: '\b({{vExpectNum}})\s*{{vOp}}\s*({{vNum}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.numeric.double.ck2script
+    - match: '\b({{vExpectTier}})\s*=\s*({{vTier}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.enum.tier.ck2script
+    - match: '\b({{vExpectDate}})\s*{{vOp}}\s*({{vDate}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.other.date.ck2script
+    - match: '\b({{vExpectReligion}})\s*=\s*({{vReligion}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.enum.relcul.ck2script
+    - match: '\b({{vExpectReligionGroup}})\s*=\s*({{vReligionGroup}})\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.enum.relcul.group.ck2script
+    - match: '\b({{vExpectNone}})\s*=\s*((?i:none))\b' # haven't seen in vanilla or tested myself using anything but 'none' here, but it might take targets. 'til then, special case.
+      captures:
+        1: support.function.ck2script
+        2: constant.language.enum.ck2script
+    - match: '\b({{vExpectTitleID}})\s*=\s*({{vTitleID}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.other.ck2script
+    - match: '\b({{vExpectOffmapID}})\s*=\s*({{vOffmapID}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.other.ck2script
+    - match: '\b({{vExpectTarget}})\s*=\s*({{vEventTarget}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.other.ck2script
+    - match: '\b({{vExpectTarget}})\s*=\s*({{vLangRHSTarget}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.language.ck2script
+    - match: '\b({{vExpectTarget}})\s*=\s*({{vTitleID}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.other.ck2script
+    - match: '\b({{vExpectBool}})\s*=\s*(yes)\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.boolean.true.ck2script
+    - match: '\b({{vExpectBool}})\s*=\s*(no)\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.boolean.false.ck2script
+    - match: '\b({{vExpectDynamicFlag}})\s*=\s*({{vID}})@({{vEventTarget}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.identifier.ck2script
+        3: variable.other.ck2script
+    - match: '\b({{vExpectDynamicFlag}})\s*=\s*({{vID}})@({{vLangTarget}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.identifier.ck2script
+        3: variable.language.ck2script
+    - match: '\b({{vExpectID}})\s*=\s*({{vID}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.identifier.ck2script
+    - match: '\b({{vExpectLoc}})\s*=\s*({{vTextID}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.identifier.ck2script
+    - match: '\b({{vExpectLoc}})\s*=\s*({{vStr}})'
+      captures:
+        1: support.function.ck2script
+        2: string.quoted.double.ck2script
+    #### end generalized logic in form of LHS <OP> RHS ####
     ### file-specific stuff that hasn't yet been fully converted to the new var system ###
     - match: '\b({{vCBParamTier}})\s*=\s*({{vTier}})\b'
       captures:

@@ -1,5 +1,6 @@
 any_army
 any_artifact
+any_artifact_owner
 any_attacker # lacks a random_ dual
 any_backed_character
 any_bloodline
@@ -11,6 +12,7 @@ any_child_even_if_dead
 any_claim
 any_claimant # lacks a random_ dual
 any_close_relative
+any_connected_province
 any_consort
 any_courtier
 any_courtier_or_vassal
@@ -25,6 +27,7 @@ any_dejure_liege
 any_demesne_province
 any_demesne_title
 any_direct_de_jure_vassal_title
+any_disconnected_province
 any_dynasty_member
 any_dynasty_member_even_if_dead
 any_eldership_title
@@ -54,6 +57,7 @@ any_player
 any_plot_backer # lacks a random_ dual
 any_plotter # lacks a random_ dual
 any_potential_tribal_county
+any_pretender
 any_pretender_title # lacks a random_ dual
 any_previous_holder # lacks a random_ dual
 any_province
@@ -79,6 +83,7 @@ any_trade_route_province # lacks a random_ dual
 any_tributary
 any_unique_dynasty_vassal # lacks a random_ dual
 any_unit
+any_unit_leader
 any_unknown_enemy_plotter
 any_vassal
 any_voter
@@ -86,6 +91,7 @@ any_war # lacks a random_ dual
 any_ward
 random_army
 random_artifact
+random_artifact_owner
 random_backed_character
 random_bloodline
 random_bloodline_member
@@ -95,6 +101,7 @@ random_child
 random_child_even_if_dead
 random_claim
 random_close_relative
+random_connected_province
 random_consort
 random_courtier
 random_courtier_or_vassal
@@ -103,9 +110,11 @@ random_current_enemy
 random_demesne_province
 random_demesne_title
 random_direct_de_jure_vassal_title
+random_disconnected_province
 random_dynasty_member
 random_dynasty_member_even_if_dead
 random_eldership_title
+random_elector_character
 random_enemy_plotter
 random_fleet
 random_friend
@@ -122,6 +131,7 @@ random_owned_bloodline
 random_playable_ruler
 random_player
 random_potential_tribal_county
+random_pretender
 random_province
 random_province_character
 random_province_holding
@@ -140,6 +150,7 @@ random_spouse_even_if_dead
 random_trade_post
 random_tributary
 random_unit
+random_unit_leader
 random_unknown_enemy_plotter
 random_vassal
 random_voter

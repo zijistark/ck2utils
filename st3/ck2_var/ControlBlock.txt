@@ -84,7 +84,9 @@ republic_governments
 retire_effect
 revoke_allowed
 revoke_trigger
+secret_religion_visibility_trigger
 success
+succession_laws
 target_potential
 theocracy_governments
 tribal_governments

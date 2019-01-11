@@ -1,9 +1,17 @@
+banish_religion
 controls_religion
+intermarry
 is_heresy_of
 is_parent_religion
 parent
+reformed
 religion
 religion # event pre-trigger
+remove_holy_site
+remove_holy_site_with_heresies
+secondary_event_pictures
 secret_religion
+set_holy_site
+set_holy_site_with_heresies
 set_secret_religion
 true_religion

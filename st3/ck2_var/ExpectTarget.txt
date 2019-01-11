@@ -21,7 +21,9 @@ bloodline
 bloodline_is_active_for
 break_alliance
 break_betrothal
+can_land_path_to
 can_marry
+can_naval_path_to
 capital
 character
 claimed_by
@@ -29,6 +31,7 @@ clear_wealth
 completely_controls
 conquest_culture
 controlled_by
+copy_artifact_history
 copy_title_history
 copy_title_laws
 could_be_parent_of
@@ -47,6 +50,7 @@ enemy
 excommunicated_for
 family
 first
+for
 force_host
 from
 gain_title
@@ -62,10 +66,13 @@ has_feud_with
 has_landed_title
 has_non_aggression_pact_with
 has_offmap_news_enabled
+has_pressed_claim
 has_raised_levies
 has_strong_claim
+has_strong_pressed_claim
 has_truce
 has_weak_claim
+has_weak_pressed_claim
 held_title_rating
 higher_real_tier_than
 higher_tier_than
@@ -92,6 +99,7 @@ is_grandchild_of
 is_grandparent_of
 is_heresy_of
 is_holy_site
+is_in_same_unit_as
 is_landed_title_allowed
 is_liege_of
 is_liege_or_above
@@ -110,12 +118,15 @@ is_primary_heir
 is_quest_target_of
 is_reformed_religion
 is_rival
+is_society
 is_title_active
+is_twin_of
 is_valid_viking_invasion_target
 is_vassal_or_below
 is_vassal_or_below_of
 is_within_diplo_range
 killer
+leader
 lower_real_tier_than
 lower_tier_than
 match_character # spawn_unit param
@@ -147,6 +158,7 @@ remove_from_bloodline
 remove_intermarry
 remove_lover
 remove_rival
+remove_special_interest
 remove_spouse
 remove_tributary
 reveal_plot
@@ -161,6 +173,7 @@ same_realm
 same_sex
 same_society_as
 scaled_with_population_of # spawn_unit param
+scope
 second
 secret_religion
 secret_religion_group
@@ -175,6 +188,7 @@ set_mother
 set_name
 set_official_crusade_recipient
 set_offmap_holder
+set_player_character
 set_preferred_capital
 set_real_father
 set_secret_religion
@@ -182,6 +196,7 @@ shares_any_bloodline_with
 shares_realm_border_with
 show_portrait
 sibling
+sub_realm
 target
 third_party_portrait # CB param
 thirdparty_title
