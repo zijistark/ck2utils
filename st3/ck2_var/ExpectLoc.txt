@@ -25,6 +25,7 @@ name
 name # event property
 name_list
 picture
+portrait
 priest_title
 remove_special_character_title
 ruler # create_title param

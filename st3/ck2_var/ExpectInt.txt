@@ -23,6 +23,7 @@ day_of_birth
 days
 days_at_current_society_rank
 days_in_society
+de_jure_liege
 decadence
 demesne_size
 dignity # LT param

@@ -47,8 +47,6 @@ events
 evil_god_names
 export_to_variable
 faction_power
-fallback
-fallback_text
 female_names # LT param
 flags
 forced_contract
@@ -131,7 +129,6 @@ subjugate_or_take_under_title
 subtract_variable
 succession
 supply_limit
-text
 their_opinion
 transfer_artifact
 transfer_scaled_wealth

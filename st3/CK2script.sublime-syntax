@@ -24,6 +24,7 @@ variables:
   vNum: '(?x: -? (?: (?: \d* \. \d+ ) | (?: \d+ \. \d*) | \d+ ) )'
   vDate: '(?x: -? \d{1,4} \. -? \d{1,2} \. -? \d{1,2} )'
   vStr: '"[^"\r\n]*"'
+  vBracketStr: '\[[^\]\r\n]*\]'
   vTier: |-
     (?xi:
       baron
@@ -69,7 +70,7 @@ variables:
     | {{vSimpleScope}}
     )
   vFlagType: |-
-    (?x:
+    (?xi:
       character
     | province
     | title
@@ -81,22 +82,22 @@ variables:
     | offmap_tmp
     )
   vEventModifierType: |-
-    (?x:
+    (?xi:
       character
     | province
     | holding
     | dynasty
     )
   vProvEventType: |-
-    (?x:
+    (?xi:
       province_event
     )
   vUnitEventType: |-
-    (?x:
+    (?xi:
       unit_event
     )
   vCharEventType: |-
-    (?x:
+    (?xi:
       character_event
     | long_character_event
     | narrative_event
@@ -106,7 +107,7 @@ variables:
     )
   vEventType: '(?x: {{vProvEventType}} | {{vUnitEventType}} | {{vCharEventType}} )'
   vCharAttr: |-
-    (?x:
+    (?xi:
       diplomacy
     | martial
     | stewardship
@@ -114,7 +115,7 @@ variables:
     | learning
     )
   vTargetedDecisionFilter: |-
-    (?x:
+    (?xi:
       self
     | court(?:_including_me)?
     | home_court(?:_including_me)?
@@ -132,6 +133,11 @@ variables:
     | vassal_wars
     | independent_rulers(?:_including_me)?
     )
+  vThirdPartyDecisionFilter: |-
+    (?xi:
+      {{vTargetedDecisionFilter}}
+    | artifacts
+    )
   vTitleDecisionFilter: |-
     (?x:
       capital
@@ -144,7 +150,7 @@ variables:
     | all
     )
   vSettlementDecisionFilter: |-
-    (?x:
+    (?xi:
       capital
     | owned
     | vassal_owned
@@ -154,23 +160,27 @@ variables:
     | all
     )
   vDecisionPropertyBool: |-
-    (?x:
+    (?xi:
       is_high_prio
     | hide_in_decisions_list
     | is_mercenary
+    | show_third_party_score
+    | show_third_party_potential
+    | show_maybe_for_human
     )
   vDecisionPropertyInt: |-
-    (?x:
+    (?xi:
       ai_check_interval
+    | yes_threshold
     )
   vCBParamTier: (?:check_de_jure_tier)
   vCBParamInt: |-
-    (?x:
+    (?xi:
         sprite
     |   truce_days
     )
   vCBParamNum: |-
-    (?x:
+    (?xi:
         max_attacker_occupation_score
     |   max_defender_occupation_score
     |   max_attacker_battle_score
@@ -181,7 +191,7 @@ variables:
     |   def_ticking_war_score_multiplier
     )
   vCBParamBool: |-
-    (?x:
+    (?xi:
         is_permanent
     |   hostages_block_cb
     |   capturing_attacker_is_complete_victory
@@ -214,7 +224,7 @@ variables:
     |   defender_unoccupied_warscore
     )
   vCBParamTextID: |-
-    (?x:
+    (?xi:
         name
     |   war_name
     )
@@ -389,6 +399,7 @@ variables:
     | additive_power_diff_modifier
     | additive_realm_size_modifier
     | after
+    | ai_acceptance
     | ai_chance
     | ai_will_do
     | ai_will_revoke
@@ -407,6 +418,7 @@ variables:
     | chance
     | conditional_tooltip
     | creation_effect
+    | decisions
     | default_selection
     | defender_ai_defeat_worth
     | defender_ai_victory_worth
@@ -420,6 +432,8 @@ variables:
     | else
     | else_if
     | fail_trigger_effect
+    | fallback
+    | fallback_text
     | feudal_governments
     | from_potential
     | gain_effect
@@ -460,6 +474,7 @@ variables:
     | pass_effect
     | picture
     | player_allow
+    | plot_decisions
     | potential
     | preferred_limit
     | republic_governments
@@ -467,16 +482,26 @@ variables:
     | revoke_allowed
     | revoke_trigger
     | secret_religion_visibility_trigger
+    | settlement_decisions
+    | society_decisions
     | success
     | succession_laws
     | target_potential
+    | targeted_decisions
+    | targetted_decisions
+    | text
     | theocracy_governments
+    | third_party_allow
+    | third_party_potential
+    | third_party_score
+    | title_decisions
     | tribal_governments
     | trigger
     | trigger_else
     | trigger_else_if
     | trigger_if
     | trigger_switch
+    | vassal_decisions
     | weight_multiplier
     | while
     | {{vEventType}}
@@ -532,8 +557,6 @@ variables:
     | evil_god_names
     | export_to_variable
     | faction_power
-    | fallback
-    | fallback_text
     | female_names
     | flags
     | forced_contract
@@ -616,7 +639,6 @@ variables:
     | subtract_variable
     | succession
     | supply_limit
-    | text
     | their_opinion
     | transfer_artifact
     | transfer_scaled_wealth
@@ -1314,6 +1336,7 @@ variables:
     | days
     | days_at_current_society_rank
     | days_in_society
+    | de_jure_liege
     | decadence
     | demesne_size
     | dignity
@@ -1451,6 +1474,7 @@ variables:
     | name
     | name_list
     | picture
+    | portrait
     | priest_title
     | remove_special_character_title
     | ruler
@@ -2145,6 +2169,10 @@ contexts:
         2: entity.function.name
         # 4: some scope for namespaces or identifiers (entity.name... ?)
         5: constant.numeric.integer.ck2script
+    - match: (?<!\w){{vDate}}\b
+      scope: constant.other.date.ck2script
+    - match: (?<!\w)\-?([0-9]+\.)?[0-9]+\b
+      scope: constant.numeric.double.ck2script
     # event targets
     - match: '\b(clear(?:_global)?_event_target|save(?:_global)?_event_target_as)\s*=\s*({{vStrictID}})\b'
       captures:
@@ -2171,6 +2199,11 @@ contexts:
       captures:
         1: support.function.ck2script
         2: constant.language.enum.holding_type.ck2script
+    # third_party scope selector in decisions
+    - match: '\b(third_party)\s*=\s*((?i:ROOT|FROM))\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.language.ck2script
     - match: '\b(type)\s*=\s*(offmap|permanent|default|nomadic|holy_war|created|revolt|host|invasion|revoke|claim|inheritance|faction_demand|election|grant|usurp)\b'
       captures:
         1: support.function.ck2script
@@ -2307,6 +2340,10 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.identifier.ck2script
+    - match: '\b({{vExpectLoc}})\s*=\s*({{vBracketStr}})'
+      captures:
+        1: support.function.ck2script
+        2: string.ck2script
     - match: '\b({{vExpectLoc}})\s*=\s*({{vTextID}})\b'
       captures:
         1: support.function.ck2script
@@ -2348,10 +2385,6 @@ contexts:
       # standalone constants
     # - match: '\b{{vMisc}}\b'
     #   scope: constant.language.ck2script
-    - match: (?<!\w){{vDate}}\b
-      scope: constant.other.date.ck2script
-    - match: (?<!\w)\-?([0-9]+\.)?[0-9]+\b
-      scope: constant.numeric.double.ck2script
     - match: \byes\b
       scope: constant.language.boolean.true.ck2script
     - match: \bno\b
@@ -2367,29 +2400,29 @@ contexts:
       # create_title
     - match: \b(is_quest_target|society|plot_power|can_swap_job_title|has_disease)\b
       scope: keyword.control.ck2script
-      # CUSTOMIZABLE_LOCALISATION
-    - match: \b(defined_text|text|localisation_key|fallback_text)\b
       # FUTURE DECISION/LAW CONTEXT:
-    - match: \b(decisions|title_decisions|settlement_decisions|vassal_decisions|targett?ed_decisions|plot_decisions|society_decisions)\b # top-level
-      scope: keyword.control.ck2script
     - match: \b(filter|ai_target_filter)\s*=\s*({{vTargetedDecisionFilter}}|{{vTitleDecisionFilter}}|{{vSettlementDecisionFilter}})\b
       captures:
-        1: keyword.control.ck2script
+        1: support.function.ck2script
+        2: constant.language.enum.decision_filter.ck2script
+    - match: \b(third_party_filter|ai_third_party_filter)\s*=\s*({{vThirdPartyDecisionFilter}})\b
+      captures:
+        1: support.function.ck2script
         2: constant.language.enum.decision_filter.ck2script
     - match: '\b({{vDecisionPropertyBool}})\s*=\s*(yes)\b'
       captures:
-        1: keyword.control.ck2script
+        1: support.function.ck2script
         2: constant.language.boolean.true.ck2script
     - match: '\b({{vDecisionPropertyBool}})\s*=\s*(no)\b'
       captures:
-        1: keyword.control.ck2script
+        1: support.function.ck2script
         2: constant.language.boolean.false.ck2script
     - match: '\b({{vDecisionPropertyInt}})\s*=\s*(\d+)\b'
       captures:
-        1: keyword.control.ck2script
+        1: support.function.ck2script
         2: constant.numeric.ck2script
     - match: \b(vassal_rank_plot|military_plot|intrigue_plot|murder_plot|vassal_intrigue_plot)\b # plot types
-      scope: constant.language.enum.ck2script
+      scope: constant.language.enum.plot_type.ck2script
 
   braces:
     - match: \}
