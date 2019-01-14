@@ -14,6 +14,7 @@ any_claimant # lacks a random_ dual
 any_close_relative
 any_connected_province
 any_consort
+any_controlled_unit
 any_courtier
 any_courtier_or_vassal
 any_crusade_participant
@@ -103,6 +104,7 @@ random_claim
 random_close_relative
 random_connected_province
 random_consort
+random_controlled_unit
 random_courtier
 random_courtier_or_vassal
 random_crusade_participant

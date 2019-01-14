@@ -38,8 +38,10 @@ disband_event_forces
 disease
 earmark
 elective_voting_rules
+expel_modifier
 faction
 flag
+flank_has_tactic
 fort_has_any_building
 fort_has_building
 gender_succ
@@ -75,6 +77,7 @@ has_selected_religion_feature
 has_status
 has_{{vEventModifierType}}_modifier
 has_{{vFlagType}}_flag
+id
 in_faction
 is_bloodline_founder_of
 is_bloodline_member_of
@@ -122,6 +125,7 @@ remove_{{vEventModifierType}}_modifier
 revoke_law
 set_branch_tag
 set_flag
+set_flank_tactic
 set_focus
 set_government_type
 set_graphical_culture
@@ -141,6 +145,7 @@ succession
 technology
 terrain
 tooltip_info
+tooltip_info_modifier
 trade_post_has_any_building
 trade_post_has_building
 trade_route

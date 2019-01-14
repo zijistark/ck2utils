@@ -16,6 +16,8 @@ change_{{vCharAttr}}
 crusade_defense_strength
 crusade_preparation_strength
 culture_techpoints
+damage_unit
+damage_unit_morale
 decadence
 demesne_efficiency
 demesne_size_compared_to_limit
@@ -46,6 +48,7 @@ min
 participation_scaled_decadence
 participation_scaled_piety
 participation_scaled_prestige
+peace_piety_gain
 percentage
 piety
 population_factor

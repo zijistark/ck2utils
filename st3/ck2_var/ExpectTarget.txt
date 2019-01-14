@@ -13,6 +13,7 @@ add_spouse_matrilineal
 add_to_bloodline
 add_weak_claim
 add_weak_pressed_claim
+artifact_type_owned_by
 as_if_allied_to
 at_location
 banish
@@ -32,6 +33,7 @@ completely_controls
 conquest_culture
 controlled_by
 copy_artifact_history
+copy_name
 copy_title_history
 copy_title_laws
 could_be_parent_of

@@ -15,6 +15,7 @@ allow_viking_invasion
 allows_matrilineal_marriage
 always
 ambition_succeeds
+anti_nomad
 as_if_liege
 assimilate # LT param
 attacking_same_religion_piety_loss
@@ -68,6 +69,8 @@ cancel_crusade
 cancel_pregnancy
 cannot_inherit # spawn_unit param
 capable_only # event pre-trigger
+caste_opinions
+castes
 character
 clan
 clear_banish_reasons
@@ -98,6 +101,7 @@ destroy_bloodline # not clear whether this actually does take only or even a boo
 destroy_landed_title
 diplomatic_immunity
 disable_non_aggression_pacts
+disallow_random_traits
 disband_on_peace # spawn_unit param
 dislike_tribal_organization
 distribute_crusade_target_title
@@ -105,6 +109,7 @@ divine_blood
 dukes_called_kings
 dynamic_cult
 dynasty_title_names # LT param
+easter_egg
 emf_FROM_subjugate_ruler
 emf_ROOT_completely_controls_counties
 emf_ROOT_subjugate_ruler
@@ -149,6 +154,7 @@ full_hostility # CB param
 generate_tooltip
 gets_religion_opinion_penalties
 gives_religion_opinion_penalties
+hard_to_convert
 has_autocephaly
 has_called_crusade
 has_coa_on_barony_only
@@ -158,6 +164,7 @@ has_epidemic
 has_fort
 has_game_started
 has_guardian
+has_heir_designation
 has_heresies
 has_holder
 has_horde_culture
@@ -174,6 +181,7 @@ has_pentarchy
 has_pledged_crusade_defense
 has_pledged_crusade_participation
 has_polygamy
+has_quest_target # event pre-trigger
 has_raised_standing_troops
 has_regent
 has_regiments

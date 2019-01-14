@@ -25,6 +25,7 @@ name
 name # event property
 name_list
 picture
+piety_name
 portrait
 priest_title
 remove_special_character_title

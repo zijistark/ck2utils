@@ -246,6 +246,7 @@ variables:
     | any_close_relative
     | any_connected_province
     | any_consort
+    | any_controlled_unit
     | any_courtier
     | any_courtier_or_vassal
     | any_crusade_participant
@@ -335,6 +336,7 @@ variables:
     | random_close_relative
     | random_connected_province
     | random_consort
+    | random_controlled_unit
     | random_courtier
     | random_courtier_or_vassal
     | random_crusade_participant
@@ -521,6 +523,7 @@ variables:
     | allowed_holdings
     | allowed_holdings_culture
     | alternate_start
+    | artifact_owner
     | attribute_diff
     | attributes
     | build_holding
@@ -590,12 +593,14 @@ variables:
     | male_names
     | modulo_variable
     | multiply_variable
+    | new_artifact
     | no_vassal_tax
     | num_of_government_vassals
     | num_of_realm_counties
     | num_of_trade_post_diff
     | opinion
     | opinion_diff
+    | original_artifact_owner
     | pagan_coa
     | personal_opinion
     | plot_power_contribution
@@ -677,6 +682,7 @@ variables:
     | allows_matrilineal_marriage
     | always
     | ambition_succeeds
+    | anti_nomad
     | as_if_liege
     | assimilate
     | attacking_same_religion_piety_loss
@@ -730,6 +736,8 @@ variables:
     | cancel_pregnancy
     | cannot_inherit
     | capable_only
+    | caste_opinions
+    | castes
     | character
     | clan
     | clear_banish_reasons
@@ -760,6 +768,7 @@ variables:
     | destroy_landed_title
     | diplomatic_immunity
     | disable_non_aggression_pacts
+    | disallow_random_traits
     | disband_on_peace
     | dislike_tribal_organization
     | distribute_crusade_target_title
@@ -767,6 +776,7 @@ variables:
     | dukes_called_kings
     | dynamic_cult
     | dynasty_title_names
+    | easter_egg
     | emf_FROM_subjugate_ruler
     | emf_ROOT_completely_controls_counties
     | emf_ROOT_subjugate_ruler
@@ -811,6 +821,7 @@ variables:
     | generate_tooltip
     | gets_religion_opinion_penalties
     | gives_religion_opinion_penalties
+    | hard_to_convert
     | has_autocephaly
     | has_called_crusade
     | has_coa_on_barony_only
@@ -820,6 +831,7 @@ variables:
     | has_fort
     | has_game_started
     | has_guardian
+    | has_heir_designation
     | has_heresies
     | has_holder
     | has_horde_culture
@@ -836,6 +848,7 @@ variables:
     | has_pledged_crusade_defense
     | has_pledged_crusade_participation
     | has_polygamy
+    | has_quest_target
     | has_raised_standing_troops
     | has_regent
     | has_regiments
@@ -1137,7 +1150,8 @@ variables:
     )
   vExpectDate: |-
     (?xi:
-      start_date
+      set_creation_date
+    | start_date
     )
   vExpectDynamicFlag: |-
     (?xi:
@@ -1191,8 +1205,10 @@ variables:
     | disease
     | earmark
     | elective_voting_rules
+    | expel_modifier
     | faction
     | flag
+    | flank_has_tactic
     | fort_has_any_building
     | fort_has_building
     | gender_succ
@@ -1228,6 +1244,7 @@ variables:
     | has_status
     | has_{{vEventModifierType}}_modifier
     | has_{{vFlagType}}_flag
+    | id
     | in_faction
     | is_bloodline_founder_of
     | is_bloodline_member_of
@@ -1275,6 +1292,7 @@ variables:
     | revoke_law
     | set_branch_tag
     | set_flag
+    | set_flank_tactic
     | set_focus
     | set_government_type
     | set_graphical_culture
@@ -1294,6 +1312,7 @@ variables:
     | technology
     | terrain
     | tooltip_info
+    | tooltip_info_modifier
     | trade_post_has_any_building
     | trade_post_has_building
     | trade_route
@@ -1474,6 +1493,7 @@ variables:
     | name
     | name_list
     | picture
+    | piety_name
     | portrait
     | priest_title
     | remove_special_character_title
@@ -1525,6 +1545,8 @@ variables:
     | crusade_defense_strength
     | crusade_preparation_strength
     | culture_techpoints
+    | damage_unit
+    | damage_unit_morale
     | decadence
     | demesne_efficiency
     | demesne_size_compared_to_limit
@@ -1555,6 +1577,7 @@ variables:
     | participation_scaled_decadence
     | participation_scaled_piety
     | participation_scaled_prestige
+    | peace_piety_gain
     | percentage
     | piety
     | population_factor
@@ -1651,6 +1674,7 @@ variables:
     | add_to_bloodline
     | add_weak_claim
     | add_weak_pressed_claim
+    | artifact_type_owned_by
     | as_if_allied_to
     | at_location
     | banish
@@ -1670,6 +1694,7 @@ variables:
     | conquest_culture
     | controlled_by
     | copy_artifact_history
+    | copy_name
     | copy_title_history
     | copy_title_laws
     | could_be_parent_of
@@ -2204,6 +2229,10 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.language.ck2script
+    - match: '\b(tooltip_info)\s*=\s*(yes)\b'
+      captures:
+        1: support.function.ck2script
+        2: constant.language.boolean.true.ck2script
     - match: '\b(type)\s*=\s*(offmap|permanent|default|nomadic|holy_war|created|revolt|host|invasion|revoke|claim|inheritance|faction_demand|election|grant|usurp)\b'
       captures:
         1: support.function.ck2script
