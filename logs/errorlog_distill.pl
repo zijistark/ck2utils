@@ -15,7 +15,10 @@ my $log_file = "$LOG_DIR/$log_leaf";
 croak "file not found: $log_file" unless -e $log_file;
 
 my @title_missing_loc;
-my %title_missing_loc_ignore = ('---' => 1);
+my @title_unlanded_char;
+my @title_holder_unborn;
+my @title_redefined;
+my @title_missing_tech_seed;
 my @char_dup_id;
 my @char_bad_birthdeath_dates;
 my @char_invalid_in_title_history;
@@ -27,19 +30,47 @@ my @char_bad_culture;
 my @char_male_mom;
 my @char_female_dad;
 my @char_samesex_spouse;
-my @title_unlanded_char;
-my @prov_setup_bad_title;
-my @prov_setup_bad_max_settlements;
-my @title_holder_unborn;
-my @title_redefined;
+my @char_bad_dynasty;
+my @char_bad_trait;
+my @char_bad_employer;
+my @char_dead;
+my @dynasty_bad_coa;
 my @region_bad_elem;
 my @region_mult_elem;
+my @prov_setup_bad_title;
+my @prov_setup_bad_max_settlements;
 my @prov_bad_barony;
+my @prov_too_full;
+#my @prov_bad_command;
+my @assert_culture;
+my @assert_title;
+my @assert_undefined_event;
+my @bad_token;
+my @bad_trigger;
 
 my @unrecognized_lines = (); # that weren't filtered due to being uninteresting
 
+my %title_missing_loc_ignore = (
+	'---' => 1
+);
+my @title_redefined_ignored_file = (
+	qr/z_holy_sites\.txt/,
+	qr/zz_emf_heresy/,
+);
+my @assert_culture_ignored_file = (
+#	qr/00_customizable_localisation_/,
+	qr/achievement_events\.txt/,
+	qr/achievements\.txt/,
+);
+my @assert_title_ignored_file = (
+	qr/00_customizable_localisation_/,
+	qr/achievement_events\.txt/,
+	qr/achievements\.txt/,
+);
+
 open(my $f, '<:crlf', $log_file) or croak "open: $!: $log_file";
 my $n_line = 0;
+my $in_tech_seed = 0;
 
 while (<$f>) {
 	++$n_line;
@@ -50,54 +81,106 @@ while (<$f>) {
 	next if /"Duchy defined in region not found. See log."$/;
 	next if /"Region have multiple entries of the same province!"$/;
 
-	if (/Missing localization for ([\w-]+)$/) {
+	if ($in_tech_seed) {
+		if (m{^\[technology.cpp:\d+\]: ([bcdek]_[\w\-]+)$}i) {
+			push @title_missing_tech_seed, [$1,];
+			next;
+		}
+		else {
+			$in_tech_seed = 0;
+		}
+	}
+	elsif (/Missing Tech seed values/i) {
+		$in_tech_seed = 1;
+	}
+	elsif (m{Missing localization for ([\w-]+)$}i) {
 		next if exists $title_missing_loc_ignore{$1};
 		push @title_missing_loc, [$1,];
 	}
-	elsif (m|Invalid character (\d+) in history/titles/([\w-]+)\.txt$|) {
-		push @char_invalid_in_title_history, [$1, $2];
-	}
-	elsif (/Duplicate Historical Character! ID:(\d+)$/) {
-		push @char_dup_id, [$1];
-	}
-	elsif (/SERIOUS: Bad Birth and Death dates for character: (.+?) \((\d+)\)$/) {
-		push @char_bad_birthdeath_dates, [$2, $1];
-	}
-	elsif (/Tried to marry wife that does not exist. ID:(\d+) tried to marry ID: (\d+)$/) {
-		push @char_bad_spouse, [$1, $2];
-	}
-	elsif (/Bad Father for character: (.+?) \((\d+)\)$/) {
-		push @char_bad_father, [$2];
-	}
-	elsif (/Bad Mother for character: (.+?) \((\d+)\)$/) {
-		push @char_bad_mother, [$2];
-	}
-	elsif (m{Failed to read religionchange for character (\d+) to TAG: ([\w\-]+)$}) {
-		push @char_bad_religion, [$1, $2];
-	}
-	elsif (m{Failed to read culturechange for character (\d+) to TAG: ([\w\-]+)$}) { # error not seen [recently] but inferred
-		push @char_bad_culture, [$1, $2];
-	}
-	elsif (/Character ID:(\d+) has a female father!$/) {
-		push @char_female_dad, [$1];
-	}
-	elsif (/Character ID:(\d+) has a male mother!$/) {
-		push @char_male_mom, [$1];
-	}
-	elsif (/Same sex marriage. ID:(\d+) is married to ID: (\d+)$/) {
-		push @char_samesex_spouse, [$1, $2];
-	}
-	elsif (/Character ID:(\d+) holds title '([\w-]+)', but no baronies!$/) {
+	elsif (m{Character ID:(\d+) holds title '([\w-]+)', but no baronies!$}i) {
 		push @title_unlanded_char, [$2, $1];
 	}
-	elsif (/Barony '([\w-]+)' in the wrong province: (.+)$/) {
+	elsif (/Unborn title holder$/i) {
+		my $line = get_line($f);
+		$line =~ m{^\tTitle: ([\w-]+)\(}i;
+		my $title = $1;
+		$line = get_line($f);
+		$line =~ m{^\tDate: ([\d\.]+)$}i;
+		my $date = $1;
+		$line = get_line($f);
+		$line =~ m{^\tCharacter ID: (\d+), Birth date: ([\d\.]+)$}i;
+		my ($char, $birthdate) = ($1, $2);
+		push @title_holder_unborn, [$char, $title, $date, $birthdate];
+	}
+	elsif (/Title Already Exists!$/i) {
+		my $line = get_line($f);
+		$line =~ m{^\tTitle: ([\w-]+)$}i;
+		my $title = $1;
+		$line = get_line($f);
+		$line =~ m{^\tLocation: common/landed_titles/([\w \.+-]+?)\s*\((\d+)\)$}i;
+		my $fn = $1;
+		next if grep { $fn =~ $_ } @title_redefined_ignored_file;
+		push @title_redefined, [$title, $fn, $2];
+	}
+	elsif (m{Invalid character (\d+) in history/titles/([\w\-]+)\.txt$}i) {
+		push @char_invalid_in_title_history, [$1, $2];
+	}
+	elsif (m{Duplicate Historical Character! ID:(\d+)$}i) {
+		push @char_dup_id, [$1,];
+	}
+	elsif (m{Bad Birth and Death dates for character: (.+?) \((\d+)\)$}i) {
+		push @char_bad_birthdeath_dates, [$2, $1];
+	}
+	elsif (m{Tried to marry wife that does not exist. ID:(\d+) tried to marry ID: (\d+)$}i) {
+		push @char_bad_spouse, [$1, $2];
+	}
+	elsif (m{Bad Father for character: (.+?) \((\d+)\)$}i) {
+		push @char_bad_father, [$2];
+	}
+	elsif (m{Bad Mother for character: (.+?) \((\d+)\)$}i) {
+		push @char_bad_mother, [$2];
+	}
+	elsif (m{Failed to read religionchange for character (\d+) to TAG: ([\w\-]+)$}i) {
+		push @char_bad_religion, [$1, $2];
+	}
+	elsif (m{Failed to read culturechange for character (\d+) to TAG: ([\w\-]+)$}i) {
+		push @char_bad_culture, [$1, $2];
+	}
+	elsif (m{Character ID:(\d+) has a female father!$}i) {
+		push @char_female_dad, [$1];
+	}
+	elsif (m{Character ID:(\d+) has a male mother!$}i) {
+		push @char_male_mom, [$1];
+	}
+	elsif (m{Same sex marriage. ID:(\d+) is married to ID: (\d+)$}i) {
+		push @char_samesex_spouse, [$1, $2];
+	}
+	elsif (m{Reference to undefined trait.\s+file:\s+(.+) line: (\d+)$}i) {
+		push @char_bad_trait, [$1, $2];
+	}
+	elsif (m{Reference to undefined dynasty.\s+file:\s+(.+) line: (\d+)$}i) {
+		push @char_bad_dynasty, [$1, $2];
+	}
+	elsif (m{Setting employer of (.+) \( (\d+) \) to (.+) \( (\d+) \) who can't have a court$}i) {
+		push @char_bad_employer, [$1, $2, $3, $4];
+	}
+	elsif (m{[bcdek]_[\w\-]+\((\d+)\) holds title ([bcdek]_[\w\-]+) while scripted as DEAD in (\d+\.\d+\.\d+)$}i) {
+		push @char_dead, [$1, $2, $3];
+	}
+	elsif (m{Scripted Dynasty: ([^\s]+) has an invalid texture in their coat of arms}i) {
+		push @dynasty_bad_coa, [$1,];
+	}
+	elsif (m{Barony '([\w-]+)' in the wrong province: (.+)$}i) {
 		push @prov_bad_barony, [$2, $1];
 	}
-	elsif (m|Error in common/province_setup/([\w \.+-]*?): Title for (\d+) does not correspond to history.$|) {
+	elsif (m{Error in common/province_setup/([\w \.+-]*?): Title for (\d+) does not correspond to history.$}i) {
 		push @prov_setup_bad_title, [$2, $1];
 	}
-	elsif (m|Error in common/province_setup/([\w \.+-]*?): Max settlements for (\d+) does not correspond to history.$|) {
+	elsif (m{Error in common/province_setup/([\w \.+-]*?): Max settlements for (\d+) does not correspond to history.$}i) {
 		push @prov_setup_bad_max_settlements, [$2, $1];
+	}
+	elsif (m{Too many settlements added to province (.+)$}i) {
+		push @prov_too_full, [$1,];
 	}
 	elsif (m{Bad capital title '([\w-]+)' in province (\d+)$}) {
 		# uh, placeholder until I know what that means
@@ -109,25 +192,24 @@ while (<$f>) {
 	elsif (m{Region '([\w\-]+)' have multiple entries for the (?:duchy|county|province) '([\w\-]+)'$}i) {
 		push @region_mult_elem, [$1, $2];
 	}
-	elsif (/Unborn title holder$/) {
-		my $line = get_line($f);
-		$line =~ m|^\tTitle: ([\w-]+)\(|;
-		my $title = $1;
-		$line = get_line($f);
-		$line =~ m|^\tDate: ([\d\.]+)$|;
-		my $date = $1;
-		$line = get_line($f);
-		$line =~ m|^\tCharacter ID: (\d+), Birth date: ([\d\.]+)$|;
-		my ($char, $birthdate) = ($1, $2);
-		push @title_holder_unborn, [$char, $title, $date, $birthdate];
+	elsif (m{"pCulture->IsValid\(\)", type: "\w+", location: " file: (.+) line: (\d+)"$}i) {
+		my $fn = $1;
+		next if grep { $fn =~ $_ } @assert_culture_ignored_file;
+		push @assert_culture, [$fn, $2];
 	}
-	elsif (/Title Already Exists!$/) {
-		my $line = get_line($f);
-		$line =~ m|^\tTitle: ([\w-]+)$|;
-		my $title = $1;
-		$line = get_line($f);
-		$line =~ m|^\tLocation: common/landed_titles/([\w \.+-]*?)\((\d+)\)$|;
-		push @title_redefined, [$title, $1, $2];
+	elsif (m{"pTitle->IsValid\(\)", type: "\w+", location: " file: (.+) line: (\d+)"$}i) {
+		my $fn = $1;
+		next if grep { $fn =~ $_ } @assert_title_ignored_file;
+		push @assert_title, [$fn, $2];
+	}
+	elsif (m{Undefined event!, assert: "_pEvent", type: "\w+", location: " file: (.+) line: (\d+)"$}i) {
+		push @assert_undefined_event, [$1, $2];
+	}
+	elsif (m{Error: "Unexpected token: (.+), near line: (\d+)" in file: "([^"]+)"$}i) {
+		push @bad_token, [$3, $2, $1];
+	}
+	elsif (m{Unknown trigger-type: "([^"]+)" at\s+file: (.+) line: (\d+)$}i) {
+		push @bad_trigger, [$1, $2, $3];
 	}
 	else {
 		push @unrecognized_lines, $_;
@@ -204,15 +286,48 @@ print_data_tables({
 	],
 },
 {
-	title => "province has out-of-place barony",
-	data => \@prov_bad_barony,
-	severity => 2,
+	title => "reference to undefined trait",
+	data => \@char_bad_trait,
 	cols => [
 		{
-			title => "Province Name",
+			title => "Filename",
 		},
 		{
-			title => "Barony Title",
+			title => "Line",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "reference to undefined dynasty",
+	data => \@char_bad_dynasty,
+	severity => 1,
+	cols => [
+		{
+			title => "Filename",
+		},
+		{
+			title => "Line",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "character has invalid / non-ruler employer",
+	data => \@char_bad_employer,
+	cols => [
+		{
+			title => "Name",
+		},
+		{
+			title => "ID",
+			left_align => 1,
+		},
+		{
+			title => "Employer",
+		},
+		{
+			title => "Employer ID",
 			left_align => 1,
 		},
 	],
@@ -229,6 +344,30 @@ print_data_tables({
 		{
 			title => "Title",
 			left_align => 1,
+		},
+	],
+},
+{
+	title => "province has out-of-place barony",
+	data => \@prov_bad_barony,
+	severity => 2,
+	cols => [
+		{
+			title => "Province Name",
+		},
+		{
+			title => "Barony Title",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "province has too many settlements",
+	data => \@prov_too_full,
+	severity => 1,
+	cols => [
+		{
+			title => "Province Name",
 		},
 	],
 },
@@ -311,6 +450,23 @@ print_data_tables({
 	],
 },
 {
+	title => "character dead when scripted to hold title",
+	data => \@char_dead,
+	severity => 1,
+	numeric_sort => 1,
+	cols => [
+		{
+			title => "Character ID",
+		},
+		{
+			title => "Title",
+		},
+		{
+			title => "Date",
+		},
+	],
+},
+{
 	title => "character has same-sex marriage",
 	data => \@char_samesex_spouse,
 	numeric_sort => 1,
@@ -373,6 +529,15 @@ print_data_tables({
 	],
 },
 {
+	title => "dynasty has invalid texture in coat of arms",
+	data => \@dynasty_bad_coa,
+	cols => [
+		{
+			title => "Dynasty Name",
+		},
+	],
+},
+{
 	title => "landed title held by character with no demesne",
 	data => \@title_unlanded_char,
 	cols => [
@@ -382,6 +547,16 @@ print_data_tables({
 		{
 			title => "Character ID",
 			left_align => 1,
+		},
+	],
+},
+{
+	title => "title missing technology seed",
+	data => \@title_missing_tech_seed,
+	suppress_header => 1,
+	cols => [
+		{
+			title => "Title",
 		},
 	],
 },
@@ -406,6 +581,82 @@ print_data_tables({
 			title => "Date Born",
 			left_align => 1,
 			observer => \&aligned_date,
+		},
+	],
+},
+{
+	title => "reference to undefined culture",
+	data => \@assert_culture,
+	severity => -1,
+	cols => [
+		{
+			title => "Filename",
+		},
+		{
+			title => "Line",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "reference to undefined title",
+	data => \@assert_title,
+	severity => -1,
+	cols => [
+		{
+			title => "Filename",
+		},
+		{
+			title => "Line",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "reference to undefined event",
+	data => \@assert_undefined_event,
+	severity => 1,
+	cols => [
+		{
+			title => "Filename",
+		},
+		{
+			title => "Line",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "invalid token",
+	data => \@bad_token,
+	severity => 2,
+	cols => [
+		{
+			title => "Filename",
+		},
+		{
+			title => "Line",
+			left_align => 1,
+		},
+		{
+			title => "Bad Token",
+		},
+	],
+},
+{
+	title => "invalid trigger",
+	data => \@bad_trigger,
+	severity => 2,
+	cols => [
+		{
+			title => "Bad Trigger",
+		},
+		{
+			title => "Filename",
+		},
+		{
+			title => "Line",
+			left_align => 1,
 		},
 	],
 },
