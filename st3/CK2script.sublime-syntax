@@ -1190,7 +1190,6 @@ variables:
     | clr_{{vFlagType}}_flag
     | completely_controls_region
     | continent
-    | controls_religion
     | convert_to_castle
     | convert_to_city
     | crusade_cb
@@ -2190,10 +2189,14 @@ contexts:
       scope: invalid.illegal.stray-bracket-end
     - match: \b(id)\s*=\s*(((\w+)\.)?(0|([1-9][0-9]*)))\b
       captures:
-        1: keyword.control.ck2script
+        1: support.function.ck2script
         2: entity.function.name
         # 4: some scope for namespaces or identifiers (entity.name... ?)
         5: constant.numeric.integer.ck2script
+    - match: \b(namespace)\s*=\s*(\w+)\b
+      captures:
+        1: support.function.ck2script
+        2: entity.ck2script
     - match: (?<!\w){{vDate}}\b
       scope: constant.other.date.ck2script
     - match: (?<!\w)\-?([0-9]+\.)?[0-9]+\b

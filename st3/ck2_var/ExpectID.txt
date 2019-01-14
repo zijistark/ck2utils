@@ -23,7 +23,6 @@ clr_offmap_tmp_flag
 clr_{{vFlagType}}_flag
 completely_controls_region
 continent
-controls_religion
 convert_to_castle
 convert_to_city
 crusade_cb
