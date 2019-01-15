@@ -1,5 +1,6 @@
 banish_religion
 controls_religion
+icon_religion
 intermarry
 is_heresy_of
 is_parent_religion

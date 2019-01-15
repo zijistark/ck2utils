@@ -428,6 +428,7 @@ variables:
     | desc
     | dismiss_trigger
     | effect
+    | effect_even_if_dead
     | elector_selection
     | elector_stances
     | elector_vote_strength
@@ -529,6 +530,7 @@ variables:
     | build_holding
     | builds_with_prestige
     | can_naval_path_to
+    | change_tech
     | change_variable
     | character_modifier
     | check_variable
@@ -1632,6 +1634,7 @@ variables:
     (?xi:
       banish_religion
     | controls_religion
+    | icon_religion
     | intermarry
     | is_heresy_of
     | is_parent_religion
@@ -1879,6 +1882,10 @@ variables:
     | war_with
     | where
     | who
+    )
+  vExpectTech: |-
+    (?xi:
+      technology
     )
   vExpectTier: |-
     (?xi:
@@ -2327,6 +2334,10 @@ contexts:
         1: support.function.ck2script
         2: constant.language.enum.relcul.group.ck2script
     - match: '\b({{vExpectNone}})\s*=\s*((?i:none))\b' # haven't seen in vanilla or tested myself using anything but 'none' here, but it might take targets. 'til then, special case.
+      captures:
+        1: support.function.ck2script
+        2: constant.language.enum.ck2script
+    - match: '\b({{vExpectTech}})\s*=\s*({{vTech}})\b' # haven't seen in vanilla or tested myself using anything but 'none' here, but it might take targets. 'til then, special case.
       captures:
         1: support.function.ck2script
         2: constant.language.enum.ck2script

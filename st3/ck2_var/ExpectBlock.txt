@@ -17,6 +17,7 @@ attributes # create_character param
 build_holding
 builds_with_prestige
 can_naval_path_to
+change_tech
 change_variable
 character_modifier
 check_variable

@@ -34,6 +34,7 @@ defined_text
 desc
 dismiss_trigger
 effect
+effect_even_if_dead
 elector_selection
 elector_stances
 elector_vote_strength
