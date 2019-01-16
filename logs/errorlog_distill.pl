@@ -10,6 +10,12 @@ use List::Util qw(max reduce sum);
 my $LOG_DIR = "/cygdrive/c/Users/$ENV{USER}/Documents/Paradox Interactive/Crusader Kings II/logs";
 my $WIDTH = 120;
 
+# these turn on extra filters for ignoring certain file patterns for certain error/warning types, but they're not required:
+my $EMF_V = 1;
+my $EMF_S = 0;
+my $SWMH = 0;
+croak "only one of \$EMF_V, \$EMF_S, and \$SWMH may be enabled" if ($EMF_V && $EMF_S || $EMF_V && $SWMH || $EMF_S && $SWMH);
+
 my $log_leaf = (@ARGV) ? shift @ARGV : 'error.log';
 my $log_file = "$LOG_DIR/$log_leaf";
 croak "file not found: $log_file" unless -e $log_file;
@@ -35,6 +41,7 @@ my @char_bad_trait;
 my @char_bad_employer;
 my @char_dead;
 my @char_bad_trait_removal;
+my @char_polyandry; #NEW
 my @dynasty_bad_coa;
 my @region_bad_elem;
 my @region_mult_elem;
@@ -43,11 +50,15 @@ my @prov_setup_bad_max_settlements;
 my @prov_bad_barony;
 my @prov_too_full;
 my @prov_bad_capital;
+my @prov_bad_rm_barony;
 #my @prov_bad_command;
 my @barony_building_missing_prereq;
 my @barony_building_not_potential;
 my @event_bad_picture;
+my @event_no_picture;
+my @event_bad_on_action;
 my @assert_culture;
+my @assert_culture_group;
 my @assert_title;
 my @assert_undefined_event;
 my @bad_token;
@@ -73,6 +84,13 @@ my @assert_title_ignored_file = (
 	qr/achievements\.txt/,
 );
 
+if ($EMF_V) {
+	push @assert_culture_ignored_file, qr/castleculture/i;
+	push @assert_culture_ignored_file, qr/tribalculture/i;
+	push @assert_culture_ignored_file, qr/combat_tactics/i;
+	push @assert_culture_ignored_file, qr/retinue_subunits/i;
+}
+
 open(my $f, '<:crlf', $log_file) or croak "open: $!: $log_file";
 my $n_line = 0;
 my $in_tech_seed = 0;
@@ -85,6 +103,8 @@ while (<$f>) {
 	next if /Terrain for \d+ does not correspond to history.$/;
 	next if /"Duchy defined in region not found. See log."$/;
 	next if /"Region have multiple entries of the same province!"$/;
+	next if /Error create vertices [\d\-]+ [\d\-]+ [\d\-]+ [\d\-]+$/;
+	next if /^\[gfx_dx9\.cpp:1493\]: managed$/;
 
 	if ($in_tech_seed) {
 		if (m{^\[technology.cpp:\d+\]: ([bcdek]_[\w\-]+)$}i) {
@@ -167,13 +187,17 @@ while (<$f>) {
 		push @char_bad_dynasty, [$1, $2];
 	}
 	elsif (m{Setting employer of (.+) \( (\d+) \) to (.+) \( (\d+) \) who can't have a court$}i) {
-		push @char_bad_employer, [$1, $2, $3, $4];
+		#push @char_bad_employer, [$1, $2, $3, $4];
+		next;
 	}
 	elsif (m{[bcdek]_[\w\-]+\((\d+)\) holds title ([bcdek]_[\w\-]+) while scripted as DEAD in (\d+\.\d+\.\d+)$}i) {
 		push @char_dead, [$1, $2, $3];
 	}
 	elsif (m{Trying to remove trait '([^']+)' despite character '(\d+)' not having it$}i) {
 		push @char_bad_trait_removal, [$1, $2];
+	}
+	elsif (m{Polyandry not allowed. Female ID:(\d+) is married to more than one living male}i) {
+		push @char_polyandry, [$1,];
 	}
 	elsif (m{Scripted Dynasty: ([^\s]+) has an invalid texture in their coat of arms, randomizing!$}i) {
 		push @dynasty_bad_coa, [$1,];
@@ -191,8 +215,10 @@ while (<$f>) {
 		push @prov_too_full, [$1,];
 	}
 	elsif (m{Bad capital title '([\w-]+)' in province (\d+)$}) {
-		# uh, placeholder until I know what that means
 		push @prov_bad_capital, [$2, $1];
+	}
+	elsif (m{Bad remove_settlement: '([^']+)' in province (\d+)$}) {
+		push @prov_bad_rm_barony, [$2, $1];
 	}
 	elsif (m{Building '(.+)' constructed in '(.+)' while pre-requisite '(.+)' is missing$}i) {
 		push @barony_building_missing_prereq, [$2, $1, $3];
@@ -209,10 +235,21 @@ while (<$f>) {
 	elsif (m{Non-existent image for event picture '([^']+)'. (.+)$}i) {
 		push @event_bad_picture, [$1, $2];
 	}
+	elsif (m{Event #(\d+) has no picture scripted in (.+)$}i) {
+		push @event_no_picture, [$2, $1];
+	}
+	elsif (m{OnAction list is referencing invalid event! event: "([^"]+)", on_action: "([^"]+)"}i) {
+		push @event_bad_on_action, [$1, $2];
+	}
 	elsif (m{"pCulture->IsValid\(\)", type: "\w+", location: " file: (.+) line: (\d+)"$}i) {
 		my $fn = $1;
 		next if grep { $fn =~ $_ } @assert_culture_ignored_file;
 		push @assert_culture, [$fn, $2];
+	}
+	elsif (m{"pCultureGroup->IsValid\(\)", type: "\w+", location: " file: (.+) line: (\d+)"$}i) {
+		my $fn = $1;
+		next if grep { $fn =~ $_ } @assert_culture_ignored_file;
+		push @assert_culture_group, [$fn, $2];
 	}
 	elsif (m{"pTitle->IsValid\(\)", type: "\w+", location: " file: (.+) line: (\d+)"$}i) {
 		my $fn = $1;
@@ -240,12 +277,18 @@ print @unrecognized_lines;
 select $old_fh;
 
 sub markup_province {
-	($_[0] =~ /^\d+$/) ? "province_id[$_[0]]" : $_[0];
+	($_[0] =~ /^\d+$/) ? "PROV($_[0])" : $_[0];
 }
 
 sub aligned_date {
 	my ($y, $m, $d) = split(/\./, $_[0]);
 	sprintf("%4s.%2s.%2s", $y, $m, $d);
+}
+
+sub event_file {
+	my $fn = shift;
+	$fn =~ s|^.+/(\w+)\.txt$|$1|i;
+	return $fn;
 }
 
 print_data_tables({
@@ -530,6 +573,18 @@ print_data_tables({
 	],
 },
 {
+	title => "female married to more than one living male",
+	data => \@char_polyandry,
+	numeric_sort => 1,
+	suppress_header => 1,
+	cols => [
+		{
+			title => "Female ID",
+			left_align => 1,
+		},
+	],
+},
+{
 	title => "dynasty has invalid texture in coat of arms",
 	data => \@dynasty_bad_coa,
 	cols => [
@@ -573,6 +628,21 @@ print_data_tables({
 		},
 		{
 			title => "Barony Title",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "attempted to remove invalid barony",
+	data => \@prov_bad_rm_barony,
+	severity => 0,
+	numeric_sort => 1,
+	cols => [
+		{
+			title => "Province ID",
+		},
+		{
+			title => "Bad Barony Title",
 			left_align => 1,
 		},
 	],
@@ -657,8 +727,51 @@ print_data_tables({
 	],
 },
 {
+	title => "no picture scripted for event",
+	data => \@event_no_picture,
+	severity => 1,
+	cols => [
+		{
+			title => "Event File",
+			observer => \&event_file,
+		},
+		{
+			title => "Raw Event ID",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "invalid event referenced by on_action",
+	data => \@event_bad_on_action,
+	severity => 1,
+	cols => [
+		{
+			title => "Event ID",
+		},
+		{
+			title => "OnAction",
+			left_align => 1,
+		},
+	],
+},
+{
 	title => "reference to undefined culture",
 	data => \@assert_culture,
+	severity => -1,
+	cols => [
+		{
+			title => "Filename",
+		},
+		{
+			title => "Line",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "reference to undefined culture group",
+	data => \@assert_culture_group,
 	severity => -1,
 	cols => [
 		{
