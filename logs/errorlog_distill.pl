@@ -34,6 +34,7 @@ my @char_bad_dynasty;
 my @char_bad_trait;
 my @char_bad_employer;
 my @char_dead;
+my @char_bad_trait_removal;
 my @dynasty_bad_coa;
 my @region_bad_elem;
 my @region_mult_elem;
@@ -41,7 +42,11 @@ my @prov_setup_bad_title;
 my @prov_setup_bad_max_settlements;
 my @prov_bad_barony;
 my @prov_too_full;
+my @prov_bad_capital;
 #my @prov_bad_command;
+my @barony_building_missing_prereq;
+my @barony_building_not_potential;
+my @event_bad_picture;
 my @assert_culture;
 my @assert_title;
 my @assert_undefined_event;
@@ -167,7 +172,10 @@ while (<$f>) {
 	elsif (m{[bcdek]_[\w\-]+\((\d+)\) holds title ([bcdek]_[\w\-]+) while scripted as DEAD in (\d+\.\d+\.\d+)$}i) {
 		push @char_dead, [$1, $2, $3];
 	}
-	elsif (m{Scripted Dynasty: ([^\s]+) has an invalid texture in their coat of arms}i) {
+	elsif (m{Trying to remove trait '([^']+)' despite character '(\d+)' not having it$}i) {
+		push @char_bad_trait_removal, [$1, $2];
+	}
+	elsif (m{Scripted Dynasty: ([^\s]+) has an invalid texture in their coat of arms, randomizing!$}i) {
 		push @dynasty_bad_coa, [$1,];
 	}
 	elsif (m{Barony '([\w-]+)' in the wrong province: (.+)$}i) {
@@ -184,13 +192,22 @@ while (<$f>) {
 	}
 	elsif (m{Bad capital title '([\w-]+)' in province (\d+)$}) {
 		# uh, placeholder until I know what that means
-		push @unrecognized_lines, $_;
+		push @prov_bad_capital, [$2, $1];
+	}
+	elsif (m{Building '(.+)' constructed in '(.+)' while pre-requisite '(.+)' is missing$}i) {
+		push @barony_building_missing_prereq, [$2, $1, $3];
+	}
+	elsif (m{Removed non-potential building from province! building: "(.+)", province: "(.+)"$}i) {
+		push @barony_building_not_potential, [$2, $1];
 	}
 	elsif (m{(?:duchy|county|province) '?([\w\-]+)'? defined in region '([\w\-]+)' not found$}i) {
 		push @region_bad_elem, [$2, $1];
 	}
 	elsif (m{Region '([\w\-]+)' have multiple entries for the (?:duchy|county|province) '([\w\-]+)'$}i) {
 		push @region_mult_elem, [$1, $2];
+	}
+	elsif (m{Non-existent image for event picture '([^']+)'. (.+)$}i) {
+		push @event_bad_picture, [$1, $2];
 	}
 	elsif (m{"pCulture->IsValid\(\)", type: "\w+", location: " file: (.+) line: (\d+)"$}i) {
 		my $fn = $1;
@@ -232,6 +249,65 @@ sub aligned_date {
 }
 
 print_data_tables({
+	title => "landed title held by character with no actual land",
+	data => \@title_unlanded_char,
+	cols => [
+		{
+			title => "Title",
+		},
+		{
+			title => "Character ID",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "title missing technology seed",
+	data => \@title_missing_tech_seed,
+	suppress_header => 1,
+	cols => [
+		{
+			title => "Title",
+		},
+	],
+},
+{
+	title => "title holder not yet born",
+	data => \@title_holder_unborn,
+	numeric_sort => 1,
+	cols => [
+		{
+			title => "Character ID",
+		},
+		{
+			title => "Title",
+			left_align => 1,
+		},
+		{
+			title => "Date Held",
+			left_align => 1,
+			observer => \&aligned_date,
+		},
+		{
+			title => "Date Born",
+			left_align => 1,
+			observer => \&aligned_date,
+		},
+	],
+},
+{
+	title => "titles missing localisation",
+	data => \@title_missing_loc,
+	severity => 1,
+	suppress_header => 1,
+	cols => [
+		{
+			title => "Title",
+			left_align => 1,
+		},
+	],
+},
+{
 	title => "duplicate character ID",
 	data => \@char_dup_id,
 	suppress_header => 1,
@@ -313,6 +389,19 @@ print_data_tables({
 	],
 },
 {
+	title => "trait removed but never added",
+	data => \@char_bad_trait_removal,
+	cols => [
+		{
+			title => "Trait Name",
+		},
+		{
+			title => "Character ID",
+			left_align => 1,
+		},
+	],
+},
+{
 	title => "character has invalid / non-ruler employer",
 	data => \@char_bad_employer,
 	cols => [
@@ -344,94 +433,6 @@ print_data_tables({
 		{
 			title => "Title",
 			left_align => 1,
-		},
-	],
-},
-{
-	title => "province has out-of-place barony",
-	data => \@prov_bad_barony,
-	severity => 2,
-	cols => [
-		{
-			title => "Province Name",
-		},
-		{
-			title => "Barony Title",
-			left_align => 1,
-		},
-	],
-},
-{
-	title => "province has too many settlements",
-	data => \@prov_too_full,
-	severity => 1,
-	cols => [
-		{
-			title => "Province Name",
-		},
-	],
-},
-{
-	title => "province setup: incorrect title",
-	data => \@prov_setup_bad_title,
-	severity => 2,
-	numeric_sort => 1,
-	cols => [
-		{
-			title => "Province ID",
-			left_align => 1,
-		},
-	],
-},
-{
-	title => "province setup: incorrect max_settlements",
-	data => \@prov_setup_bad_max_settlements,
-	severity => 1,
-	numeric_sort => 1,
-	cols => [
-		{
-			title => "Province ID",
-			left_align => 1,
-		},
-	],
-},
-{
-	title => "titles missing localisation",
-	data => \@title_missing_loc,
-	severity => 1,
-	suppress_header => 1,
-	cols => [
-		{
-			title => "Title",
-			left_align => 1,
-		},
-	],
-},
-{
-	title => "regions with undefined titles",
-	data => \@region_bad_elem,
-	severity => 1,
-	cols => [
-		{
-			title => "Region",
-		},
-		{
-			title => "Title",
-			left_align => 1,
-		},
-	],
-},
-{
-	title => "regions with repeated elements",
-	data => \@region_mult_elem,
-	cols => [
-		{
-			title => "Region",
-		},
-		{
-			title => "Element",
-			left_align => 1,
-			observer => \&markup_province,
 		},
 	],
 },
@@ -538,49 +539,120 @@ print_data_tables({
 	],
 },
 {
-	title => "landed title held by character with no demesne",
-	data => \@title_unlanded_char,
+	title => "province has out-of-place barony",
+	data => \@prov_bad_barony,
+	severity => 2,
 	cols => [
 		{
-			title => "Title",
+			title => "Province Name",
 		},
 		{
-			title => "Character ID",
+			title => "Barony Title",
 			left_align => 1,
 		},
 	],
 },
 {
-	title => "title missing technology seed",
-	data => \@title_missing_tech_seed,
-	suppress_header => 1,
+	title => "province has too many settlements",
+	data => \@prov_too_full,
+	severity => 1,
 	cols => [
 		{
-			title => "Title",
+			title => "Province Name",
 		},
 	],
 },
 {
-	title => "title holder not yet born",
-	data => \@title_holder_unborn,
+	title => "province has bad capital barony",
+	data => \@prov_bad_capital,
+	severity => 0,
 	numeric_sort => 1,
 	cols => [
 		{
-			title => "Character ID",
+			title => "Province ID",
+		},
+		{
+			title => "Barony Title",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "province setup: incorrect title",
+	data => \@prov_setup_bad_title,
+	severity => 2,
+	numeric_sort => 1,
+	cols => [
+		{
+			title => "Province ID",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "province setup: incorrect max_settlements",
+	data => \@prov_setup_bad_max_settlements,
+	severity => 1,
+	numeric_sort => 1,
+	cols => [
+		{
+			title => "Province ID",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "regions with undefined titles",
+	data => \@region_bad_elem,
+	severity => 1,
+	cols => [
+		{
+			title => "Region",
 		},
 		{
 			title => "Title",
 			left_align => 1,
 		},
+	],
+},
+{
+	title => "regions with repeated elements",
+	data => \@region_mult_elem,
+	cols => [
 		{
-			title => "Date Held",
-			left_align => 1,
-			observer => \&aligned_date,
+			title => "Region",
 		},
 		{
-			title => "Date Born",
+			title => "Element",
 			left_align => 1,
-			observer => \&aligned_date,
+			observer => \&markup_province,
+		},
+	],
+},
+{
+	title => "building removed due to failing its potential trigger",
+	data => \@barony_building_not_potential,
+	cols => [
+		{
+			title => "Barony Title",
+		},
+		{
+			title => "Building",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "event picture invalid",
+	data => \@event_bad_picture,
+	severity => 1,
+	cols => [
+		{
+			title => "Invalid Picture ID",
+		},
+		{
+			title => "Event",
+			left_align => 1,
 		},
 	],
 },
