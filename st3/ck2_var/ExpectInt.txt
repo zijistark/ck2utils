@@ -26,10 +26,10 @@ days_in_society
 de_jure_liege
 decadence
 demesne_size
-dignity # LT param
 duration
 dynasty
 emblem # LT param
+grant_limit # MT
 heresy_icon
 holder # title hist. effect
 home # spawn_unit param
@@ -97,6 +97,7 @@ num_of_traits
 num_of_unique_dynasty_vassals
 num_of_vassals
 num_religion_provinces
+opinion_effect # MT
 over_max_demesne_size
 over_vassal_limit
 parent # set_parent_religion param

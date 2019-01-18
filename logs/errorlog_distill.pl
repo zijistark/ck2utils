@@ -11,8 +11,8 @@ my $LOG_DIR = "/cygdrive/c/Users/$ENV{USER}/Documents/Paradox Interactive/Crusad
 my $WIDTH = 120;
 
 # these turn on extra filters for ignoring certain file patterns for certain error/warning types, but they're not required:
-my $EMF_V = 1;
-my $EMF_S = 0;
+my $EMF_V = 0;
+my $EMF_S = 1;
 my $SWMH = 0;
 croak "only one of \$EMF_V, \$EMF_S, and \$SWMH may be enabled" if ($EMF_V && $EMF_S || $EMF_V && $SWMH || $EMF_S && $SWMH);
 
@@ -89,6 +89,10 @@ if ($EMF_V) {
 	push @assert_culture_ignored_file, qr/tribalculture/i;
 	push @assert_culture_ignored_file, qr/combat_tactics/i;
 	push @assert_culture_ignored_file, qr/retinue_subunits/i;
+}
+elsif ($EMF_S) {
+	push @title_redefined_ignored_file, qr/color_overrides/i;
+	push @title_redefined_ignored_file, qr/name_tier_overrides/i;
 }
 
 open(my $f, '<:crlf', $log_file) or croak "open: $!: $log_file";

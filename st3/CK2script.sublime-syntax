@@ -529,6 +529,7 @@ variables:
     | attributes
     | build_holding
     | builds_with_prestige
+    | buttons
     | can_naval_path_to
     | change_tech
     | change_variable
@@ -576,6 +577,7 @@ variables:
     | god_names
     | grant_title
     | grant_title_no_opinion
+    | graphical_cultures
     | had_flag
     | had_{{vFlagType}}_flag
     | has_alternate_start_parameter
@@ -719,6 +721,7 @@ variables:
     | can_create_empires
     | can_create_kingdoms
     | can_demand_religious_conversion
+    | can_elect_head
     | can_excommunicate
     | can_grant_claim
     | can_grant_divorce
@@ -756,6 +759,7 @@ variables:
     | cooldown
     | copy_title_laws
     | costs_piety
+    | counts_as_purple_born
     | create_family_palace
     | creation_requires_capital
     | crime
@@ -828,6 +832,7 @@ variables:
     | has_called_crusade
     | has_coa_on_barony_only
     | has_concubinage
+    | has_dejure_empires
     | has_empty_holding
     | has_epidemic
     | has_fort
@@ -852,6 +857,12 @@ variables:
     | has_polygamy
     | has_quest_target
     | has_raised_standing_troops
+    | has_random_culture_names
+    | has_random_dejure
+    | has_random_dejure_or_title_names
+    | has_random_religion_names
+    | has_random_religion_or_culture_names
+    | has_random_title_names
     | has_regent
     | has_regiments
     | has_religion_features
@@ -974,6 +985,7 @@ variables:
     | is_tribal_type_title
     | is_tributary
     | is_triggered_only
+    | is_unique
     | is_vice_royalty
     | is_virtous
     | is_voter
@@ -999,6 +1011,7 @@ variables:
     | mercenary
     | merchant_republic
     | merge
+    | message
     | move
     | multiplayer
     | naval_distance
@@ -1045,6 +1058,7 @@ variables:
     | raised_vassal_opinion_loss
     | random
     | random_traits
+    | realm_in_name
     | rebel
     | rebel
     | recalc_succession
@@ -1056,8 +1070,10 @@ variables:
     | remove_guardian
     | remove_spouse
     | replace_captain_on_death
+    | replace_order
     | reveal_plot
     | reveal_plot_w_message
+    | revoke_allowed
     | revoke_capital_holding
     | risks_minor_clan_rising
     | rivals
@@ -1081,6 +1097,7 @@ variables:
     | set_cousin_marriage
     | set_defensive_attrition
     | set_divine_blood
+    | set_female_temple_holders
     | set_feminist
     | set_hard_to_convert
     | set_heir_designation
@@ -1088,9 +1105,12 @@ variables:
     | set_immune_to_pruning
     | set_jizya_tax
     | set_looting
+    | set_male_temple_holders
+    | set_men_can_take_consorts
     | set_no_head_of_religion
     | set_pacifist
     | set_pc_marriage
+    | set_peace_prestige_loss
     | set_pentarchy
     | set_piety_loss_for_attacking_same_religion
     | set_priests_can_inherit
@@ -1100,7 +1120,9 @@ variables:
     | set_seafaring
     | set_short_name
     | set_uses_decadence
+    | set_women_can_take_consorts
     | short_name
+    | show_as_title
     | show_from_from
     | show_from_from_from
     | show_root
@@ -1110,6 +1132,7 @@ variables:
     | society_has_active_progress
     | society_has_members
     | society_is_active
+    | spouse_context
     | stacking
     | start_society_progress
     | status
@@ -1359,10 +1382,10 @@ variables:
     | de_jure_liege
     | decadence
     | demesne_size
-    | dignity
     | duration
     | dynasty
     | emblem
+    | grant_limit
     | heresy_icon
     | holder
     | home
@@ -1430,6 +1453,7 @@ variables:
     | num_of_unique_dynasty_vassals
     | num_of_vassals
     | num_religion_provinces
+    | opinion_effect
     | over_max_demesne_size
     | over_vassal_limit
     | parent
@@ -1551,6 +1575,7 @@ variables:
     | decadence
     | demesne_efficiency
     | demesne_size_compared_to_limit
+    | dignity
     | dynasty_realm_power
     | economy_techpoints
     | extra_ai_eval_troops
@@ -1575,6 +1600,9 @@ variables:
     | max
     | military_techpoints
     | min
+    | monthly_piety
+    | monthly_prestige
+    | monthly_salary
     | participation_scaled_decadence
     | participation_scaled_piety
     | participation_scaled_prestige
@@ -1881,6 +1909,7 @@ variables:
     | war_title
     | war_with
     | where
+    | which
     | who
     )
   vExpectTech: |-
@@ -2005,6 +2034,48 @@ variables:
     | zun_pagan
     | zun_pagan_reformed
     | zurvanist
+    )
+  vReligionFeature: |-
+    (?xi:
+      religion_adventuring
+    | religion_animistic
+    | religion_astrology
+    | religion_autocephaly
+    | religion_beatification
+    | religion_cosmopolitan
+    | religion_defensive
+    | religion_dogmatic
+    | religion_equal
+    | religion_feature_aztec
+    | religion_feature_baltic
+    | religion_feature_bon
+    | religion_feature_finnish
+    | religion_feature_hellenic
+    | religion_feature_norse
+    | religion_feature_slavic
+    | religion_feature_tengri
+    | religion_feature_west_african
+    | religion_feature_zun
+    | religion_harems
+    | religion_haruspicy
+    | religion_holy_family
+    | religion_jizya
+    | religion_leader_unchanged
+    | religion_matriarchal
+    | religion_meritocratic
+    | religion_monastic
+    | religion_no_leader
+    | religion_patriarchal
+    | religion_peaceful
+    | religion_proselytizing
+    | religion_relentless
+    | religion_ritual_sacrifice
+    | religion_seafaring
+    | religion_stable
+    | religion_syncretic
+    | religion_temporal_head
+    | religion_theocratic_head
+    | religion_warlike
     )
   vReligionGroup: |-
     (?xi:

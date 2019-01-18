@@ -50,6 +50,7 @@ can_change_to_nomad_on_start
 can_create_empires
 can_create_kingdoms
 can_demand_religious_conversion
+can_elect_head # RT/MT
 can_excommunicate
 can_grant_claim
 can_grant_divorce
@@ -87,6 +88,7 @@ controls_religion # LT param
 cooldown
 copy_title_laws # create_title param
 costs_piety
+counts_as_purple_born # MT
 create_family_palace
 creation_requires_capital # LT param
 crime
@@ -159,6 +161,7 @@ has_autocephaly
 has_called_crusade
 has_coa_on_barony_only
 has_concubinage
+has_dejure_empires
 has_empty_holding
 has_epidemic
 has_fort
@@ -183,6 +186,12 @@ has_pledged_crusade_participation
 has_polygamy
 has_quest_target # event pre-trigger
 has_raised_standing_troops
+has_random_culture_names
+has_random_dejure
+has_random_dejure_or_title_names
+has_random_religion_names
+has_random_religion_or_culture_names
+has_random_title_names
 has_regent
 has_regiments
 has_religion_features
@@ -305,6 +314,7 @@ is_tribal
 is_tribal_type_title
 is_tributary
 is_triggered_only # event property
+is_unique # MT
 is_vice_royalty
 is_virtous # yes, the trigger is misspelled in the API
 is_voter
@@ -330,6 +340,7 @@ mercenary # LT param
 mercenary # create_title param
 merchant_republic
 merge # spawn_unit param
+message # MT
 move
 multiplayer
 naval_distance
@@ -376,6 +387,7 @@ purple_born_heirs
 raised_vassal_opinion_loss
 random
 random_traits # create_character param
+realm_in_name # MT
 rebel
 rebel # create_title param
 recalc_succession
@@ -387,8 +399,10 @@ religion_allows_male_temple_holders
 remove_guardian
 remove_spouse
 replace_captain_on_death # create_title param
+replace_order # MT
 reveal_plot
 reveal_plot_w_message
+revoke_allowed # MT
 revoke_capital_holding
 risks_minor_clan_rising
 rivals # event pre-trigger
@@ -412,6 +426,7 @@ set_can_toggle_looting
 set_cousin_marriage
 set_defensive_attrition
 set_divine_blood
+set_female_temple_holders
 set_feminist
 set_hard_to_convert
 set_heir_designation
@@ -419,9 +434,12 @@ set_ignores_defensive_attrition
 set_immune_to_pruning
 set_jizya_tax
 set_looting
+set_male_temple_holders
+set_men_can_take_consorts
 set_no_head_of_religion
 set_pacifist
 set_pc_marriage
+set_peace_prestige_loss
 set_pentarchy
 set_piety_loss_for_attacking_same_religion
 set_priests_can_inherit
@@ -431,7 +449,9 @@ set_raised_vassal_opinion_loss
 set_seafaring
 set_short_name
 set_uses_decadence
+set_women_can_take_consorts
 short_name # LT param
+show_as_title # MT
 show_from_from # event property
 show_from_from_from # event property
 show_root # event property
@@ -441,6 +461,7 @@ society_can_rank_up
 society_has_active_progress
 society_has_members
 society_is_active
+spouse_context # MT
 stacking
 start_society_progress
 status

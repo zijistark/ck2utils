@@ -21,6 +21,7 @@ damage_unit_morale
 decadence
 demesne_efficiency
 demesne_size_compared_to_limit
+dignity
 dynasty_realm_power
 economy_techpoints
 extra_ai_eval_troops
@@ -45,6 +46,9 @@ match_mult
 max
 military_techpoints
 min
+monthly_piety # MT
+monthly_prestige # MT
+monthly_salary # MT
 participation_scaled_decadence
 participation_scaled_piety
 participation_scaled_prestige

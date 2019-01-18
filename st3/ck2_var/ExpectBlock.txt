@@ -16,6 +16,7 @@ attribute_diff
 attributes # create_character param
 build_holding
 builds_with_prestige
+buttons
 can_naval_path_to
 change_tech
 change_variable
@@ -63,6 +64,7 @@ gain_title
 god_names
 grant_title
 grant_title_no_opinion
+graphical_cultures
 had_flag
 had_{{vFlagType}}_flag
 has_alternate_start_parameter
