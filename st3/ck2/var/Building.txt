@@ -179,12 +179,12 @@ ca_culture_portuguese_galician_andalusian_2 # Jinete Riding Grounds
 ca_culture_portuguese_galician_andalusian_3 # Jinete Riding Grounds
 ca_culture_portuguese_galician_andalusian_4 # Jinete Riding Grounds
 ca_culture_portuguese_galician_andalusian_5 # Jinete Riding Grounds
-ca_culture_roman_0                          # Legionary Drilling Grounds
+ca_culture_roman_0                          # Field of Mars
 ca_culture_roman_1                          # Legionary Drilling Grounds
 ca_culture_roman_2                          # Legionary Drilling Grounds
 ca_culture_roman_3                          # Legionary Drilling Grounds
 ca_culture_roman_4                          # Legionary Drilling Grounds
-ca_culture_roman_5                          # Legionary Drilling Grounds
+ca_culture_roman_5                          # Field of Mars
 ca_culture_russian_0                        # Druzhina Training Ground
 ca_culture_russian_1                        # Druzhina Training Ground
 ca_culture_russian_2                        # Druzhina Training Ground
@@ -227,6 +227,11 @@ ca_culture_west_african_2                   # Free Warrior Lodge
 ca_culture_west_african_3                   # Free Warrior Lodge
 ca_culture_west_african_4                   # Free Warrior Lodge
 ca_culture_west_african_5                   # Horon Warrior Lodge
+ca_dannevirke_wall_2                        # Danæwirchi
+ca_dannevirke_wall_3                        # Danæwirchi
+ca_dannevirke_wall_4                        # Danæwirchi
+ca_dannevirke_wall_5                        # Danæwirchi
+ca_dannevirke_wall_6                        # Danæwirchi
 ca_desert_stable_1                          # Desert Cavalry
 ca_desert_stable_2                          # Desert Cavalry
 ca_desert_stable_3                          # Desert Cavalry
@@ -686,10 +691,10 @@ tb_culture_jewish_1                         # [israelite.GetGroupName] Heavy Inf
 tb_culture_jewish_2                         # [israelite.GetGroupName] Heavy Infantry Barracks
 tb_culture_jewish_3                         # [israelite.GetGroupName] Heavy Infantry Barracks
 tb_culture_jewish_4                         # [israelite.GetGroupName] Heavy Infantry Barracks
-tb_culture_ligurian_1
-tb_culture_ligurian_2
-tb_culture_ligurian_3
-tb_culture_ligurian_4
+tb_culture_ligurian_1                       # Balestrieri Drilling Grounds
+tb_culture_ligurian_2                       # Balestrieri Drilling Grounds
+tb_culture_ligurian_3                       # Balestrieri Drilling Grounds
+tb_culture_ligurian_4                       # Balestrieri Drilling Grounds
 tb_culture_nahuatl_1                        # Jaguar Warrior Lodge
 tb_culture_nahuatl_2                        # Jaguar Warrior Lodge
 tb_culture_nahuatl_3                        # Jaguar Warrior Lodge
@@ -701,10 +706,10 @@ tb_culture_pictish_4                        # Hall of War
 tb_culture_portuguese_galician_andalusian_1 # Jinete Riding Grounds
 tb_culture_portuguese_galician_andalusian_2 # Jinete Riding Grounds
 tb_culture_portuguese_galician_andalusian_4 # Jinete Riding Grounds
-tb_culture_roman_1
-tb_culture_roman_2
-tb_culture_roman_3
-tb_culture_roman_4
+tb_culture_roman_1                          # Field of Mars
+tb_culture_roman_2                          # Field of Mars
+tb_culture_roman_3                          # Field of Mars
+tb_culture_roman_4                          # Field of Mars
 tb_culture_russian_1                        # Druzhina Training Ground
 tb_culture_russian_2                        # Druzhina Training Ground
 tb_culture_russian_3                        # Druzhina Training Ground
@@ -725,10 +730,10 @@ tb_culture_tibetan_1                        # Mountaineer Academy
 tb_culture_tibetan_2                        # Mountaineer Academy
 tb_culture_tibetan_3                        # Mountaineer Academy
 tb_culture_tibetan_4                        # Mountaineer Academy
-tb_culture_venetian_1
-tb_culture_venetian_2
-tb_culture_venetian_3
-tb_culture_venetian_4
+tb_culture_venetian_1                       # Marine Barracks
+tb_culture_venetian_2                       # Marine Barracks
+tb_culture_venetian_3                       # Marine Barracks
+tb_culture_venetian_4                       # Marine Barracks
 tb_culture_west_african_1                   # Free Warrior Lodge
 tb_culture_west_african_2                   # Free Warrior Lodge
 tb_culture_west_african_3                   # Free Warrior Lodge

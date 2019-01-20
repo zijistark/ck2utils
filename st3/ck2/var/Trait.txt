@@ -1,9 +1,9 @@
-abdominal_pain                       # Abdominal Pain
-absentminded                         # Absent-Minded
-administrator                        # Administrator
-adopted                              # Adopted
-adventurer                           # Adventurer
-affectionate                         # Affectionate
+abdominal_pain                 # Abdominal Pain
+absentminded                   # Absent-Minded
+administrator                  # Administrator
+adopted                        # Adopted
+adventurer                     # Adventurer
+affectionate                   # Affectionate
 african_tattoo_1
 african_tattoo_10
 african_tattoo_11
@@ -16,90 +16,90 @@ african_tattoo_6
 african_tattoo_7
 african_tattoo_8
 african_tattoo_9
-age_1                                # +1 Year
-age_16                               # +16 Years
-age_2                                # +2 Years
-age_32                               # +32 Years
-age_4                                # +4 Years
-age_8                                # +8 Years
-aggressive_leader                    # Aggressive Leader
-agile                                # Agile
-alexandrine                          # Alexandrine
-amateurish_plotter                   # Amateurish Plotter
-ambidextrous                         # Ambidextrous
-ambitious                            # Ambitious
-antiochene                           # Antiochian
-arbitrary                            # Arbitrary
-architect                            # Architect
-ares_own                             # Ares' Own
-aryika                               # Aryika
-ashari                               # Ash'ari
-augustus                             # Augustus
-bad_priest_aztec                     # Unworthy Priest
-bad_priest_christian                 # Wicked Priest
-bad_priest_muslim                    # Wicked Caliph
-bad_priest_norse                     # Unworthy Priest
-bad_priest_tengri                    # Unworthy Priest
-bad_priest_zoroastrian               # Immoral Priest
-baltic_leader                        # Forest Ambusher
-baptized_by_bishop                   # Baptized by [Root.GetBaptizedByName]
-baptized_by_patriarch                # Baptized by [Root.GetBaptizedByName]
-baptized_by_pope                     # Baptized by [Root.GetBaptizedByName]
-baptized_by_satan                    # Baptized by [baptizing_satanist_per.GetTitledFirstName]
-bastard                              # Bastard
-beatified                            # Beatified
-beauty                               # Famous Beauty
-berserker                            # Berserker
-bhikkhu                              # Bhikkhu
-bhikkhuni                            # Bhikkuni
-blessed_ancestor                     # Blessed Ancestor
-blinded                              # Blinded
-bloodthirsty_gods_1                  # Haemophiliac
-bloodthirsty_gods_2                  # Haemophant
-bloodthirsty_gods_3                  # Haemoarch
-bon_leader                           # Mountain Guardian
-born_in_the_purple                   # Born in the Purple
-brahmin                              # Brahmin
-brave                                # Brave
-brilliant_strategist                 # Brilliant Strategist
-brooding                             # Brooding
-calm_voice                           # Calm Voice
-cancer                               # Cancer
-cannibal_trait                       # Cannibal
+age_1                          # +1 Year
+age_16                         # +16 Years
+age_2                          # +2 Years
+age_32                         # +32 Years
+age_4                          # +4 Years
+age_8                          # +8 Years
+aggressive_leader              # Aggressive Leader
+agile                          # Agile
+alexandrine                    # Alexandrine
+amateurish_plotter             # Amateurish Plotter
+ambidextrous                   # Ambidextrous
+ambitious                      # Ambitious
+antiochene                     # Antiochian
+arbitrary                      # Arbitrary
+architect                      # Architect
+ares_own                       # Ares' Own
+aryika                         # Aryika
+ashari                         # Ash'ari
+augustus                       # Augustus
+bad_priest_aztec               # Unworthy Priest
+bad_priest_christian           # Wicked Priest
+bad_priest_muslim              # Wicked Caliph
+bad_priest_norse               # Unworthy Priest
+bad_priest_tengri              # Unworthy Priest
+bad_priest_zoroastrian         # Immoral Priest
+baltic_leader                  # Forest Ambusher
+baptized_by_bishop             # Baptized by [Root.GetBaptizedByName]
+baptized_by_patriarch          # Baptized by [Root.GetBaptizedByName]
+baptized_by_pope               # Baptized by [Root.GetBaptizedByName]
+baptized_by_satan              # Baptized by [baptizing_satanist_per.GetTitledFirstName]
+bastard                        # Bastard
+beatified                      # Beatified
+beauty                         # Famous Beauty
+berserker                      # Berserker
+bhikkhu                        # Bhikkhu
+bhikkhuni                      # Bhikkuni
+blessed_ancestor               # Blessed Ancestor
+blinded                        # Blinded
+bloodthirsty_gods_1            # Haemophiliac
+bloodthirsty_gods_2            # Haemophant
+bloodthirsty_gods_3            # Haemoarch
+bon_leader                     # Mountain Guardian
+born_in_the_purple             # Born in the Purple
+brahmin                        # Brahmin
+brave                          # Brave
+brilliant_strategist           # Brilliant Strategist
+brooding                       # Brooding
+calm_voice                     # Calm Voice
+cancer                         # Cancer
+cannibal_trait                 # Cannibal
 cannot_marry
-cat                                  # Cat
-cavalry_leader                       # Cavalry Leader
-celibate                             # Celibate
-charismatic_negotiator               # Charismatic Negotiator
-charitable                           # Charitable
-chaste                               # Chaste
-chest_pain                           # Chest Pains
-child_of_consort                     # Child of Concubine
-child_of_consort_male                # Child of Consort
-clubfooted                           # Clubfooted
-commander1                           # Respected Commander
-commander2                           # Distinguished Commander
-commander3                           # Renowned Commander
-commander4                           # Legendary Commander
-conqueror                            # Conqueror
-conscientious                        # Conscientious
-content                              # Content
-cough                                # Cough
-court_anarchy                        # Court Anarchy
-cramps                               # Cramps
-craven                               # Craven
-crowned_by_bishop                    # Crowned by [Root.GetCrownedByName]
-crowned_by_myself                    # Self-Crowned
-crowned_by_pope                      # Crowned by [Root.GetCrownedByName]
-crowned_by_priest                    # Crowned by a Bishop
-cruel                                # Cruel
-crusader                             # Crusader
-crusader_king                        # Crusader King
-crusader_queen                       # Crusader Queen
-cult_of_lucifer                      # Cult of Lucifer
-curious                              # Curious
-cynical                              # Cynical
-dancing_plague                       # Dancing Plague
+cat                            # Cat
+cavalry_leader                 # Cavalry Leader
+celibate                       # Celibate
+charismatic_negotiator         # Charismatic Negotiator
+charitable                     # Charitable
+chaste                         # Chaste
+chest_pain                     # Chest Pains
+child_of_consort               # Child of Concubine
+child_of_consort_male          # Child of Consort
+clubfooted                     # Clubfooted
+commander1                     # Respected Commander
+commander2                     # Distinguished Commander
+commander3                     # Renowned Commander
+commander4                     # Legendary Commander
+conqueror                      # Conqueror
+conscientious                  # Conscientious
+content                        # Content
+cough                          # Cough
+court_anarchy                  # Court Anarchy
+cramps                         # Cramps
+craven                         # Craven
+crowned_by_bishop              # Crowned by [Root.GetCrownedByName]
+crowned_by_myself              # Self-Crowned
+crowned_by_pope                # Crowned by [Root.GetCrownedByName]
+crowned_by_priest              # Crowned by a Bishop
+cruel                          # Cruel
+crusader                       # Crusader
+crusader_king                  # Crusader King
+crusader_queen                 # Crusader Queen
+cult_of_lucifer                # Cult of Lucifer
+curious                        # Curious
+cynical                        # Cynical
+dancing_plague                 # Dancing Plague
 dead_crown_aztec_fylkir
 dead_crown_byzantine
 dead_crown_finnish_fylkir
@@ -115,264 +115,264 @@ dead_cursed_diamond_crown
 dead_iron_crown_lombardy
 dead_scepter_bon_fylkir
 dead_scepter_hellenic_fylkir
-deaf                                 # Deaf
-decadent                             # Decadent
-deceitful                            # Deceitful
-defensive_leader                     # Defender
-depressed                            # Depressed
-desert_father                        # Desert Father
-desert_mother                        # Desert Mother
-desert_terrain_leader                # Desert Expert
-detached_priest                      # Detached Priest
-diarrhea                             # Diarrhea
-digambara_jain                       # Digambara [jain.GetName]
-diligent                             # Diligent
-disfigured                           # Disfigured
+deaf                           # Deaf
+decadent                       # Decadent
+deceitful                      # Deceitful
+defensive_leader               # Defender
+depressed                      # Depressed
+desert_father                  # Desert Father
+desert_mother                  # Desert Mother
+desert_terrain_leader          # Desert Expert
+detached_priest                # Detached Priest
+diarrhea                       # Diarrhea
+digambara_jain                 # Digambara [jain.GetName]
+diligent                       # Diligent
+disfigured                     # Disfigured
 disinherited
-doctores                             # Doctores
-drunkard                             # Drunkard
-druze_ajawid                         # Ajawid
-druze_juhhal                         # Juhhal
-druze_uqqal                          # Uqqal
-duelist                              # Duelist
-dull                                 # Dull
-dwarf                                # Dwarf
-dynastic_kinslayer                   # Dynastic Kinslayer
-dynasty_decadence_high               # Extremely Decadent Dynasty
-dynasty_decadence_low                # Decadent Dynasty
-dynasty_decadence_med                # Very Decadent Dynasty
-dysentery                            # Dysentery
-eagle_warrior                        # Eagle Knight
+doctores                       # Doctores
+drunkard                       # Drunkard
+druze_ajawid                   # Ajawid
+druze_juhhal                   # Juhhal
+druze_uqqal                    # Uqqal
+duelist                        # Duelist
+dull                           # Dull
+dwarf                          # Dwarf
+dynastic_kinslayer             # Dynastic Kinslayer
+dynasty_decadence_high         # Extremely Decadent Dynasty
+dynasty_decadence_low          # Decadent Dynasty
+dynasty_decadence_med          # Very Decadent Dynasty
+dysentery                      # Dysentery
+eagle_warrior                  # Eagle Knight
 east_african_leader
-elusive_shadow                       # Elusive Shadow
-emf_cannot_inherit                   # Cannot Inherit
-emf_crowned                          # Crowned
-emf_crowned_by_pope                  # Crowned By The Pope
-emf_customize_ruler                  # Customize Ruler Dynasty
-emf_saint                            # Saint
-emf_saint_converted                  # HIDDEN (Saint Brought New Faith to Their Realm)
-emf_saint_converter                  # HIDDEN (Saint Converted an Important Ruler)
-emf_saint_religion_head              # HIDDEN (Saint Was Leader of Religion)
-emf_saint_schism                     # HIDDEN (Saint Mended a Schism)
-emf_saint_true_knight                # HIDDEN (Saint Was a True Christian Knight)
-emf_saint_voice_jesus                # HIDDEN (Saint Could Hear the Voice of God)
-emf_seljuk_invader                   # Seljuk Invader
-envious                              # Envious
-erudite                              # Erudite
-eunuch                               # Eunuch
-excommunicated                       # Excommunicated
-experimenter                         # Direct Leader
-fair                                 # Attractive
-falconer                             # Falconer
-familial_kinslayer                   # Familial Kinslayer
-faqih                                # Faqih
-fatigue                              # Fatigue
-feeble                               # Frail
-fertile                              # Fertile
-fever                                # Fever
-finnish_leader                       # Shield of the Tundra
-flamboyant_schemer                   # Flamboyant Schemer
-flanker                              # Flanker
-flat_terrain_leader                  # Flat Terrain Expert
-flu                                  # Flu
-food_poisoning                       # Food Poisoning
-fortune_builder                      # Fortune Builder
-freckles                             # Freckles
-freckles_2                           # Freckles
-freckles_3                           # Freckles
-freckles_4                           # Freckles
-freckles_5                           # Freckles
-fussy                                # Fussy
-gamer                                # Game Master
-gardener                             # Gardener
-genius                               # Genius
-giant                                # Giant
-gluttonous                           # Gluttonous
-gondi_shahansha                      # Gond-i Shahanshah
-gout                                 # Gout
-greedy                               # Greedy
-gregarious                           # Gregarious
-grey_eminence                        # Grey Eminence
-groomed                              # Groomed
-hafiz                                # Hafiz
-hajjaj                               # Hajajj
-hard_pregnancy                       # Difficult Pregnancy
-harelip                              # Harelip
-has_aztec_disease                    # Syphilitic
-has_bubonic_plague                   # The Plague
-has_measles                          # Measles
-has_small_pox                        # Smallpox
-has_tuberculosis                     # Consumption
-has_typhoid_fever                    # Has Slow Fever
-has_typhus                           # Camp Fever
-haughty                              # Haughty
-headache                             # Headache
-heavy_infantry_leader                # Heavy Infantry Leader
-hedgehog                             # Vanghapara Pet
-hedonist                             # Hedonist
-hellenic_leader                      # Aeneator
-heresiarch                           # Heresiarch
-holy_warrior                         # Holy Warrior
-homosexual                           # Homosexual
-honest                               # Honest
-horse                                # Horse
-house_dog                            # House Dog
-humble                               # Humble
-hunchback                            # Hunchback
-hunter                               # Hunter
-hurufi_diwan                         # Diwan Poet
-hurufi_mystic_a                      # Sufi Initiate
-hurufi_mystic_b                      # Sufi Adept
-hurufi_mystic_c                      # Sufi Master
+elusive_shadow                 # Elusive Shadow
+emf_cannot_inherit             # Cannot Inherit
+emf_crowned                    # Crowned
+emf_crowned_by_pope            # Crowned By The Pope
+emf_customize_ruler            # Customize Ruler Dynasty
+emf_saint                      # Saint
+emf_saint_converted            # HIDDEN (Saint Brought New Faith to Their Realm)
+emf_saint_converter            # HIDDEN (Saint Converted an Important Ruler)
+emf_saint_religion_head        # HIDDEN (Saint Was Leader of Religion)
+emf_saint_schism               # HIDDEN (Saint Mended a Schism)
+emf_saint_true_knight          # HIDDEN (Saint Was a True Christian Knight)
+emf_saint_voice_jesus          # HIDDEN (Saint Could Hear the Voice of God)
+emf_seljuk_invader             # Seljuk Invader
+envious                        # Envious
+erudite                        # Erudite
+eunuch                         # Eunuch
+excommunicated                 # Excommunicated
+experimenter                   # Direct Leader
+fair                           # Attractive
+falconer                       # Falconer
+familial_kinslayer             # Familial Kinslayer
+faqih                          # Faqih
+fatigue                        # Fatigue
+feeble                         # Frail
+fertile                        # Fertile
+fever                          # Fever
+finnish_leader                 # Shield of the Tundra
+flamboyant_schemer             # Flamboyant Schemer
+flanker                        # Flanker
+flat_terrain_leader            # Flat Terrain Expert
+flu                            # Flu
+food_poisoning                 # Food Poisoning
+fortune_builder                # Fortune Builder
+freckles                       # Freckles
+freckles_2                     # Freckles
+freckles_3                     # Freckles
+freckles_4                     # Freckles
+freckles_5                     # Freckles
+fussy                          # Fussy
+gamer                          # Game Master
+gardener                       # Gardener
+genius                         # Genius
+giant                          # Giant
+gluttonous                     # Gluttonous
+gondi_shahansha                # Gond-i Shahanshah
+gout                           # Gout
+greedy                         # Greedy
+gregarious                     # Gregarious
+grey_eminence                  # Grey Eminence
+groomed                        # Groomed
+hafiz                          # Hafiz
+hajjaj                         # Hajajj
+hard_pregnancy                 # Difficult Pregnancy
+harelip                        # Harelip
+has_aztec_disease              # Syphilitic
+has_bubonic_plague             # The Plague
+has_measles                    # Measles
+has_small_pox                  # Smallpox
+has_tuberculosis               # Consumption
+has_typhoid_fever              # Has Slow Fever
+has_typhus                     # Camp Fever
+haughty                        # Haughty
+headache                       # Headache
+heavy_infantry_leader          # Heavy Infantry Leader
+hedgehog                       # Vanghapara Pet
+hedonist                       # Hedonist
+hellenic_leader                # Aeneator
+heresiarch                     # Heresiarch
+holy_warrior                   # Holy Warrior
+homosexual                     # Homosexual
+honest                         # Honest
+horse                          # Horse
+house_dog                      # House Dog
+humble                         # Humble
+hunchback                      # Hunchback
+hunter                         # Hunter
+hurufi_diwan                   # Diwan Poet
+hurufi_mystic_a                # Sufi Initiate
+hurufi_mystic_b                # Sufi Adept
+hurufi_mystic_c                # Sufi Master
 i_used_to_be_a_player
-iconoclast_trait                     # Icon-Breaker
-idolizer                             # Idolizer
-ill                                  # Ill
-imamah_claimant                      # [ismaili.GetName] Claimant
-imbecile                             # Imbecile
-immortal                             # Immortal
-impaler                              # Impaler
-imperial_bureaucrat                  # Imperial Bureaucrat
-imperial_courtier                    # Imperial Courtier
-imperial_guard                       # Imperial Guard
-imposing                             # Imposing
-in_hiding                            # In Hiding
-inbred                               # Inbred
-incapable                            # Incapable
-indian_pilgrim                       # Pilgrim
-indolent                             # Indolent
-indulgent_wastrel                    # Indulgent Wastrel
-infection                            # Infection
-infertile                            # Infertile
-infirm                               # Infirm
-inspiring_leader                     # Inspiring Leader
-intricate_webweaver                  # Intricate Webweaver
-is_fat                               # Fat
-is_malnourished                      # Malnourished
-isis                                 # Mother of the Universe
-jungle_terrain_leader                # Jungle Expert
-just                                 # Just
-kailash_guardian                     # Kailash Guardian
-karling_usurper                      # Karling Usurper
-kharijite_kafir                      # Kafir
-kind                                 # Kind
-kinslayer                            # Kinslayer
-koasasa_azrael                       # Koasasa
-koasasa_dardael                      # Koasasa
-koasasa_israfel                      # Koasasa
-koasasa_mihael                       # Koasasa
-koasasa_nurael                       # Koasasa
-koasasa_samael                       # Koasasa
-koasasa_taus                         # Koasasa
-kow_tow_completed_tier_1             # Kowtow
-kow_tow_completed_tier_2             # Kowtow
-kow_tow_completed_tier_3             # Kowtow
-kow_tow_travels                      # On Kowtow
-kshatriya                            # Kshatriya
-lefthanded                           # Lefthanded
-legit_bastard                        # Legitimized Bastard
-leper                                # Leper
-levy_coordinator                     # Way of the Tiger
-light_foot_leader                    # Light Foot Leader
-lisp                                 # Lisp
-logistics_expert                     # Way of the Dog
-lovers_pox                           # Lover's Pox
-lucky_ruler                          # Lucky Ruler
-lunatic                              # Lunatic
-lustful                              # Lustful
-mahayana_buddhist                    # Mahayana [buddhist.GetName]
-maimed                               # Maimed
-malaise                              # Malaise
-mangled                              # Mangled
-martial_cleric                       # Dutiful Cleric
-martyr                               # Martyr
-master_diplomat                      # Master Diplomat
-master_of_flame                      # Way of the Dragon
-master_warrior                       # Formidable Fighter
-masterless_dog                       # Vohunazga Guardian
-mastermind_theologian                # Mastermind Theologian
-melodious_voice                      # Silver Tongue
-messalian_master                     # Perfection
-midas_touched                        # Midas Touched
-mirza                                # Mirza
-misguided_warrior                    # Misguided Warrior
-monk                                 # Monk
-mountain_terrain_leader              # Mountain Expert
-mujahid                              # Mujahid
-muni                                 # Muni
-mutazilite                           # Mu'tazilite
-mystic                               # Mystic
-naive_appeaser                       # Naive Appeaser
-narrow_flank_leader                  # Battlefield Terrain Master
-norse_leader                         # Fearsome
+iconoclast_trait               # Icon-Breaker
+idolizer                       # Idolizer
+ill                            # Ill
+imamah_claimant                # [ismaili.GetName] Claimant
+imbecile                       # Imbecile
+immortal                       # Immortal
+impaler                        # Impaler
+imperial_bureaucrat            # Imperial Bureaucrat
+imperial_courtier              # Imperial Courtier
+imperial_guard                 # Imperial Guard
+imposing                       # Imposing
+in_hiding                      # In Hiding
+inbred                         # Inbred
+incapable                      # Incapable
+indian_pilgrim                 # Pilgrim
+indolent                       # Indolent
+indulgent_wastrel              # Indulgent Wastrel
+infection                      # Infection
+infertile                      # Infertile
+infirm                         # Infirm
+inspiring_leader               # Inspiring Leader
+intricate_webweaver            # Intricate Webweaver
+is_fat                         # Fat
+is_malnourished                # Malnourished
+isis                           # Mother of the Universe
+jungle_terrain_leader          # Jungle Expert
+just                           # Just
+kailash_guardian               # Kailash Guardian
+karling_usurper                # Karling Usurper
+kharijite_kafir                # Kafir
+kind                           # Kind
+kinslayer                      # Kinslayer
+koasasa_azrael                 # Koasasa
+koasasa_dardael                # Koasasa
+koasasa_israfel                # Koasasa
+koasasa_mihael                 # Koasasa
+koasasa_nurael                 # Koasasa
+koasasa_samael                 # Koasasa
+koasasa_taus                   # Koasasa
+kow_tow_completed_tier_1       # Kowtow
+kow_tow_completed_tier_2       # Kowtow
+kow_tow_completed_tier_3       # Kowtow
+kow_tow_travels                # On Kowtow
+kshatriya                      # Kshatriya
+lefthanded                     # Lefthanded
+legit_bastard                  # Legitimized Bastard
+leper                          # Leper
+levy_coordinator               # Way of the Tiger
+light_foot_leader              # Light Foot Leader
+lisp                           # Lisp
+logistics_expert               # Way of the Dog
+lovers_pox                     # Lover's Pox
+lucky_ruler                    # Lucky Ruler
+lunatic                        # Lunatic
+lustful                        # Lustful
+mahayana_buddhist              # Mahayana [buddhist.GetName]
+maimed                         # Maimed
+malaise                        # Malaise
+mangled                        # Mangled
+martial_cleric                 # Dutiful Cleric
+martyr                         # Martyr
+master_diplomat                # Master Diplomat
+master_of_flame                # Way of the Dragon
+master_warrior                 # Formidable Fighter
+masterless_dog                 # Vohunazga Guardian
+mastermind_theologian          # Mastermind Theologian
+melodious_voice                # Silver Tongue
+messalian_master               # Perfection
+midas_touched                  # Midas Touched
+mirza                          # Mirza
+misguided_warrior              # Misguided Warrior
+monk                           # Monk
+mountain_terrain_leader        # Mountain Expert
+mujahid                        # Mujahid
+muni                           # Muni
+mutazilite                     # Mu'tazilite
+mystic                         # Mystic
+naive_appeaser                 # Naive Appeaser
+narrow_flank_leader            # Battlefield Terrain Master
+norse_leader                   # Fearsome
 norse_tattoo_1
 norse_tattoo_2
 norse_tattoo_3
 norse_tattoo_4
 norse_tattoo_5
 norse_tattoo_6
-novellani                            # Novellani
-novice_diplomat                      # Novice Diplomat
-nun                                  # Nun
-nyames_shield                        # Nyame's Shield
-on_hajj                              # On Hajj
-on_indian_pilgrimage                 # On pilgrimage
-on_pilgrimage                        # On pilgrimage
-one_eyed                             # One-Eyed
-one_handed                           # One-Handed
-one_legged                           # One-Legged
-organizer                            # Organizer
-otter                                # Sag-e Aabi Guardian
-pagan_branch_1                       # Syncretist
-pagan_branch_2                       # Spiritualist
-pagan_branch_3                       # Militant
-pagan_branch_4                       # Tribalist
-paragon                              # Paragon
-paranoid                             # Paranoid
-patient                              # Patient
-peasant_leader                       # Peasant Leader
-peasant_ruler                        # Peasant Ruler
-perceptive                           # Perceptive
-perfecti                             # Perfecti
-peruns_chosen                        # Perun's Chosen
-pf_loyalist                          # Loyalist
-pf_neutral                           # Neutral
-pf_rebel                             # Rebel
-physician                            # Renowned Physician
-pilgrim                              # Pilgrim
-pirate                               # Pirate
-playful                              # Playful
-pneumonic                            # Pneumonic
-poet                                 # Poet
-poor_warrior                         # Novice Fighter
-possessed                            # Possessed
-powerful_voice                       # Powerful Voice
-pregnancy_finishing                  # Final Months
-pregnant                             # Pregnant
-proud                                # Proud
-quick                                # Quick
-rabies                               # Rabies
-raider                               # Raider
-rash                                 # Rash
-ravager                              # Ravager
-reincarnated                         # Has Been Reincarnated
-reincarnation                        # Reincarnation of [Reincarnation.GetBestName]
-robust                               # Brawny
-roma_victrix                         # Roma Victrix
-romuvas_own                          # Hound of Dievas
-rough_terrain_leader                 # Rough Terrain Expert
-rowdy                                # Rowdy
-saint                                # Saint
-sandaliati                           # Sandaliati
-sanyasi                              # Sanyasi
-sanyasini                            # Sanyasini
-saoshyant                            # Saoshyant
-saoshyant_descendant                 # Saoshyant Descendant
-sapper                               # Way of the Leopard
-sayyid                               # Sayyid
-scarred                              # Scarred
-scarred_high                         # Horrifically Scarred
-scarred_mid                          # Grievously Scarred
+novellani                      # Novellani
+novice_diplomat                # Novice Diplomat
+nun                            # Nun
+nyames_shield                  # Nyame's Shield
+on_hajj                        # On Hajj
+on_indian_pilgrimage           # On pilgrimage
+on_pilgrimage                  # On pilgrimage
+one_eyed                       # One-Eyed
+one_handed                     # One-Handed
+one_legged                     # One-Legged
+organizer                      # Organizer
+otter                          # Sag-e Aabi Guardian
+pagan_branch_1                 # Syncretist
+pagan_branch_2                 # Spiritualist
+pagan_branch_3                 # Militant
+pagan_branch_4                 # Tribalist
+paragon                        # Paragon
+paranoid                       # Paranoid
+patient                        # Patient
+peasant_leader                 # Peasant Leader
+peasant_ruler                  # Peasant Ruler
+perceptive                     # Perceptive
+perfecti                       # Perfecti
+peruns_chosen                  # Perun's Chosen
+pf_loyalist                    # Loyalist
+pf_neutral                     # Neutral
+pf_rebel                       # Rebel
+physician                      # Renowned Physician
+pilgrim                        # Pilgrim
+pirate                         # Pirate
+playful                        # Playful
+pneumonic                      # Pneumonic
+poet                           # Poet
+poor_warrior                   # Novice Fighter
+possessed                      # Possessed
+powerful_voice                 # Powerful Voice
+pregnancy_finishing            # Final Months
+pregnant                       # Pregnant
+proud                          # Proud
+quick                          # Quick
+rabies                         # Rabies
+raider                         # Raider
+rash                           # Rash
+ravager                        # Ravager
+reincarnated                   # Has Been Reincarnated
+reincarnation                  # Reincarnation of [Reincarnation.GetBestName]
+robust                         # Brawny
+roma_victrix                   # Roma Victrix
+romuvas_own                    # Hound of Dievas
+rough_terrain_leader           # Rough Terrain Expert
+rowdy                          # Rowdy
+saint                          # Saint
+sandaliati                     # Sandaliati
+sanyasi                        # Sanyasi
+sanyasini                      # Sanyasini
+saoshyant                      # Saoshyant
+saoshyant_descendant           # Saoshyant Descendant
+sapper                         # Way of the Leopard
+sayyid                         # Sayyid
+scarred                        # Scarred
+scarred_high                   # Horrifically Scarred
+scarred_mid                    # Grievously Scarred
 scarred_type_1
 scarred_type_10
 scarred_type_2
@@ -383,157 +383,108 @@ scarred_type_6
 scarred_type_7
 scarred_type_8
 scarred_type_9
-schemer                              # Master Schemer
-scholar                              # Scholar
-scholarly_theologian                 # Scholarly Theologian
-scurvy                               # Scurvy
-sea_queen                            # Sea Queen
-seaking                              # Sea King
-secretly_aztec                       # Secretly Aztec
-secretly_aztec_reformed              # Secretly Reformed Aztec Pagan
-secretly_baltic_pagan                # Secretly Romuva
-secretly_baltic_pagan_reformed       # Secretly Reformed Romuva
-secretly_bogomilist                  # Secretly Bogomilist
-secretly_buddhism                    # Secretly Buddhist
-secretly_cathar                      # Secretly Cathar
-secretly_catholic                    # Secretly Catholic
-secretly_druze                       # Secretly Druze
-secretly_finnish_pagan               # Secretly Suomenusko
-secretly_finnish_pagan_reformed      # Secretly Reformed Suomenusko Pagan
-secretly_fraticelli                  # Secretly Fraticelli
-secretly_hellenic_pagan              # Secretly Hellenic Pagan
-secretly_hinduism                    # Secretly Hindu
-secretly_hurufi                      # Secretly Hurufi
-secretly_ibadi                       # Secretly Ibadi
-secretly_iconoclast                  # Secretly Iconoclast
-secretly_ismaili
-secretly_jain                        # Secretly Jain
-secretly_jewish                      # Secretly Jewish
-secretly_karaite                     # Secretly Karaite
-secretly_kharijite                   # Secretly Kharijite
-secretly_lollard                     # Secretly Lollard
-secretly_manichean                   # Secretly Manichean
-secretly_mazdaki                     # Secretly Mazdaki
-secretly_messalian                   # Secretly Messalian
-secretly_miaphysite                  # Secretly Miaphysite
-secretly_monophysite                 # Secretly Monophysite
-secretly_monothelite                 # Secretly Monothelite
-secretly_nestorian                   # Secretly Nestorian
-secretly_norse_pagan                 # Secretly Germanic Pagan
-secretly_norse_pagan_reformed        # Secretly Reformed Germanic Pagan
-secretly_orthodox                    # Secretly Orthodox Christian
-secretly_pagan                       # Secretly Pagan
-secretly_paulician                   # Secretly Paulician
-secretly_samaritan                   # Secretly Samaritan
-secretly_slavic_pagan                # Secretly Slavic Pagan
-secretly_slavic_pagan_reformed       # Secretly Reformed Slavic Pagan
-secretly_sunni                       # Secretly Sunni
-secretly_tengri_pagan                # Secretly Tengri
-secretly_tengri_pagan_reformed       # Secretly Reformed Tengri
-secretly_waldensian                  # Secretly Waldensian
-secretly_west_african_pagan          # Secretly African Pagan
-secretly_west_african_pagan_reformed # Secretly Reformed African Pagan
-secretly_yazidi                      # Secretly Yazidi
-secretly_zikri                       # Secretly Zikri
-secretly_zoroastrian                 # Secretly Zoroastrian
-secretly_zun_pagan                   # Secretly Zun Pagan
-secretly_zun_pagan_reformed          # Secretly Reformed Zun Pagan
-seducer                              # Master Seducer
-seductress                           # Master Seductress
-severely_injured                     # Severely Injured
-shaddai                              # Kanai
-shaivist_hindu                       # Shaivist
-shaktist_hindu                       # Shaktist
-shieldmaiden                         # Shieldmaiden
-shrewd                               # Shrewd
-shy                                  # Shy
+schemer                        # Master Schemer
+scholar                        # Scholar
+scholarly_theologian           # Scholarly Theologian
+scurvy                         # Scurvy
+sea_queen                      # Sea Queen
+seaking                        # Sea King
+seducer                        # Master Seducer
+seductress                     # Master Seductress
+severely_injured               # Severely Injured
+shaddai                        # Kanai
+shaivist_hindu                 # Shaivist
+shaktist_hindu                 # Shaktist
+shieldmaiden                   # Shieldmaiden
+shrewd                         # Shrewd
+shy                            # Shy
 sick_incapable
-sickly                               # Sickly
-siege_leader                         # Siege Leader
-skilled_diplomat                     # Skilled Diplomat
-skilled_tactician                    # Skilled Tactician
-skilled_warrior                      # Skilled Fighter
-slavic_leader                        # Pillar of the Plains
+sickly                         # Sickly
+siege_leader                   # Siege Leader
+skilled_diplomat               # Skilled Diplomat
+skilled_tactician              # Skilled Tactician
+skilled_warrior                # Skilled Fighter
+slavic_leader                  # Pillar of the Plains
 slavic_tattoo_1
 slavic_tattoo_2
 slavic_tattoo_3
 slavic_tattoo_4
 slavic_tattoo_5
 slavic_tattoo_6
-slothful                             # Slothful
-slow                                 # Slow
-smartist_hindu                       # Smartist
-socializer                           # Socializer
-sterile_known                        # Sterile
-sterile_secret                       # Sterile
-strategist                           # Strategist
-stressed                             # Stressed
-strong                               # Strong
-strong_basileus                      # Strong Basileus
-stubborn                             # Stubborn
-sturdy                               # Sturdy
-stutter                              # Stutter
-sun_warrior                          # Warrior of the Sun
-svetambara_jain                      # Svetambara [jain.GetName]
-sympathy_christendom                 # Sympathy for [christian.GetGroupName] religions
-sympathy_indian                      # Sympathy for [indian_group.GetGroupName] religions
-sympathy_islam                       # Sympathy for [muslim.GetGroupName] religions
-sympathy_judaism                     # Sympathy for [jewish.GetName] religions
-sympathy_pagans                      # Sympathy for [pagan_group.GetGroupName] religions
-sympathy_zoroastrianism              # Sympathy for [zoroastrian_group.GetGroupName] religions
-syphilitic                           # Gonorrhea
-tall                                 # Tall
-temperate                            # Temperate
-tengri_leader                        # Marauder
-tengri_warrior                       # Skylord
-theologian                           # Theologian
-theravada_buddhist                   # Theravada [buddhist.GetName]
-thrifty_clerk                        # Thrifty Clerk
-timid                                # Timid
-tough_soldier                        # Tough Soldier
-trained_diplomat                     # Trained Diplomat
-trained_warrior                      # Trained Fighter
-traveling                            # Traveling
-travelling                           # On a Journey
-tribal_kinslayer                     # Tribal Kinslayer
-trickster                            # Trickster
-troubled_pregnancy                   # Troubled Pregnancy
-trusting                             # Trusting
-twin                                 # Twin
-ugly                                 # Ugly
-ukkos_shield                         # Ukko's Hammer
-uncouth                              # Uncouth
-uncrowned                            # Uncrowned
-underhanded_rogue                    # Underhanded Rogue
-unyielding_leader                    # Unyielding
-vaishnavist_hindu                    # Vaishnavist
-vaishya                              # Vaishya
-vajrayana_buddhist                   # Vajrayana [buddhist.GetName]
-valhalla_bound                       # Valhalla Bound
-varangian                            # Varangian
-viking                               # Viking
-vomiting                             # Vomiting
-war_elephant_leader                  # War Elephant Leader
-weak                                 # Weak
-weak_basileus                        # Coronated Basileus
-west_african_leader                  # Spirit Warrior
-willful                              # Willful
-winter_soldier                       # Winter Soldier
-wounded                              # Wounded
-wroth                                # Wroth
-wrymouth                             # Wrymouth
-yazidi_pilgrim                       # [yazidi.GetName] Pilgrim
-zealous                              # Zealous
-zodiac_aquarius                      # Aquarius
-zodiac_aries                         # Aries
-zodiac_cancer                        # Cancer
-zodiac_capricorn                     # Capricorn
-zodiac_gemini                        # Gemini
-zodiac_leo                           # Leo
-zodiac_libra                         # Libra
-zodiac_pisces                        # Pisces
-zodiac_sagittarius                   # Sagittarius
-zodiac_scorpio                       # Scorpio
-zodiac_taurus                        # Taurus
-zodiac_virgo                         # Virgo
-zun_leader                           # Scorcher
+slothful                       # Slothful
+slow                           # Slow
+smartist_hindu                 # Smartist
+socializer                     # Socializer
+sterile_known                  # Sterile
+sterile_secret                 # Sterile
+strategist                     # Strategist
+stressed                       # Stressed
+strong                         # Strong
+strong_basileus                # Strong Basileus
+stubborn                       # Stubborn
+sturdy                         # Sturdy
+stutter                        # Stutter
+sun_warrior                    # Warrior of the Sun
+svetambara_jain                # Svetambara [jain.GetName]
+sympathy_christendom           # Sympathy for [christian.GetGroupName] religions
+sympathy_indian                # Sympathy for [indian_group.GetGroupName] religions
+sympathy_islam                 # Sympathy for [muslim.GetGroupName] religions
+sympathy_judaism               # Sympathy for [jewish.GetName] religions
+sympathy_pagans                # Sympathy for [pagan_group.GetGroupName] religions
+sympathy_zoroastrianism        # Sympathy for [zoroastrian_group.GetGroupName] religions
+syphilitic                     # Gonorrhea
+tall                           # Tall
+temperate                      # Temperate
+tengri_leader                  # Marauder
+tengri_warrior                 # Skylord
+theologian                     # Theologian
+theravada_buddhist             # Theravada [buddhist.GetName]
+thrifty_clerk                  # Thrifty Clerk
+timid                          # Timid
+tough_soldier                  # Tough Soldier
+trained_diplomat               # Trained Diplomat
+trained_warrior                # Trained Fighter
+traveling                      # Traveling
+travelling                     # On a Journey
+tribal_kinslayer               # Tribal Kinslayer
+trickster                      # Trickster
+troubled_pregnancy             # Troubled Pregnancy
+trusting                       # Trusting
+twin                           # Twin
+ugly                           # Ugly
+ukkos_shield                   # Ukko's Hammer
+uncouth                        # Uncouth
+uncrowned                      # Uncrowned
+underhanded_rogue              # Underhanded Rogue
+unyielding_leader              # Unyielding
+vaishnavist_hindu              # Vaishnavist
+vaishya                        # Vaishya
+vajrayana_buddhist             # Vajrayana [buddhist.GetName]
+valhalla_bound                 # Valhalla Bound
+varangian                      # Varangian
+viking                         # Viking
+vomiting                       # Vomiting
+war_elephant_leader            # War Elephant Leader
+weak                           # Weak
+weak_basileus                  # Coronated Basileus
+west_african_leader            # Spirit Warrior
+willful                        # Willful
+winter_soldier                 # Winter Soldier
+wounded                        # Wounded
+wroth                          # Wroth
+wrymouth                       # Wrymouth
+yazidi_pilgrim                 # [yazidi.GetName] Pilgrim
+zealous                        # Zealous
+zodiac_aquarius                # Aquarius
+zodiac_aries                   # Aries
+zodiac_cancer                  # Cancer
+zodiac_capricorn               # Capricorn
+zodiac_gemini                  # Gemini
+zodiac_leo                     # Leo
+zodiac_libra                   # Libra
+zodiac_pisces                  # Pisces
+zodiac_sagittarius             # Sagittarius
+zodiac_scorpio                 # Scorpio
+zodiac_taurus                  # Taurus
+zodiac_virgo                   # Virgo
+zun_leader                     # Scorcher

@@ -1,0 +1,10 @@
+add_building
+fort_has_any_building
+fort_has_building
+has_any_building
+has_building
+hospital_has_any_building
+hospital_has_building
+remove_building
+trade_post_has_any_building
+trade_post_has_building

@@ -1,0 +1,3 @@
+completely_controls_region
+diplo_view_region # CB param
+region

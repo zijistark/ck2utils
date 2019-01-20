@@ -199,6 +199,7 @@ set_mother
 set_name
 set_official_crusade_recipient
 set_offmap_holder
+set_pentarch_title
 set_player_character
 set_preferred_capital
 set_real_father

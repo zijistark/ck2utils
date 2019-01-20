@@ -107,6 +107,7 @@ dynamic_cult
 dynasty_title_names # LT
 easter_egg # title history
 excommunicate
+failure
 female # create_character
 female_temple_holders
 feminist
@@ -390,6 +391,7 @@ set_psc_marriage
 set_raised_vassal_opinion_loss
 set_seafaring
 set_short_name
+set_society_grandmaster
 set_uses_decadence
 set_women_can_take_consorts
 short_name # LT

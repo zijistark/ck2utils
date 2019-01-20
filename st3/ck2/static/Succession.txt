@@ -1,0 +1,15 @@
+appointment
+catholic_bishopric
+elective_gavelkind
+feudal_elective
+gavelkind
+nomad_succession
+offmap_succession
+open_elective
+papal_succession
+patrician_elective
+primogeniture
+seniority
+tanistry
+turkish_succession
+ultimogeniture

@@ -1,0 +1,3 @@
+base_type
+succession
+succession_w_cooldown

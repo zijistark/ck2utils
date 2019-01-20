@@ -11,6 +11,7 @@ age_diff
 allowed_holdings
 allowed_holdings_culture
 alternate_start
+any_quester_targeting_this
 artifact_owner
 attribute_diff
 attributes # create_character param

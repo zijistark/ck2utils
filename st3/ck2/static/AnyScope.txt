@@ -40,6 +40,7 @@ any_favor_ower # lacks a random_ dual
 any_fleet
 any_friend
 any_heir_title # lacks a random_ dual
+any_hospital
 any_host_courtier
 any_independent_ruler
 any_known_enemy_plotter

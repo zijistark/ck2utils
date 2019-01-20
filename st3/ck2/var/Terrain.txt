@@ -1,0 +1,16 @@
+arctic               # Arctic
+coastal_desert       # Marshland
+desert               # Desert
+farmlands            # Farmlands
+forest               # Forest
+hills                # Hills
+impassable_mountains
+inland_ocean
+jungle               # Jungle
+marsh                # Marsh
+mountain             # Mountains
+ocean
+plains               # Plains
+pti                  # Mare incognitum
+steppe               # Steppe
+woods

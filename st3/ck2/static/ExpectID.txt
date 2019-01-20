@@ -1,29 +1,21 @@
 add_artifact
-add_building
 add_dynasty_modifier
 add_evil_god_name
 add_god_name
 add_intermarry
-add_trait
 army_template # create_title param
 artifact_type
-base_type
 border
 border # event property
-can_grant_invasion_cb
 can_join_society
 clear_flags_with_prefix
-climate
 clr_flag
 clr_offmap_tmp_flag
 clr_{{vFlagType}}_flag
-completely_controls_region
 continent
-convert_to_castle
-convert_to_city
-crusade_cb
+convert_to_castle # buildings
+convert_to_city # buildings
 death_reason
-diplo_view_region # CB param
 disband_event_forces
 disease
 earmark
@@ -31,18 +23,12 @@ elective_voting_rules
 expel_modifier
 flag
 flank_has_tactic
-fort_has_any_building
-fort_has_building
-gender_succ
 give_nickname
 graphical_culture
 graphical_culture # LT param
 group
-has_any_building
 has_any_opinion_modifier
 has_artifact
-has_assigned_minor_title
-has_building
 has_character_flag # event pre-trigger
 has_earmarked_regiments
 has_flag
@@ -61,6 +47,8 @@ is_decision_allowed
 is_decision_potential
 is_fort_decision_allowed
 is_fort_decision_potential
+is_hospital_decision_allowed
+is_hospital_decision_potential
 is_settlement_decision_allowed
 is_settlement_decision_potential
 is_society
@@ -81,14 +69,11 @@ option
 phase
 picture
 picture # event property
-region
-remove_building
 remove_evil_god_names
 remove_god_names
 remove_intermarry
 remove_nickname
 remove_special_character_title
-remove_trait
 remove_{{vEventModifierType}}_modifier
 set_branch_tag
 set_flag
@@ -101,25 +86,18 @@ set_special_character_title
 set_status
 set_{{vFlagType}}_flag
 setting
-show_trait
 society
 society_member_of
 sound_effect
+spawn_disease
 stance
-succession
-technology
-terrain
-tooltip_info
+start_outbreak
+symptom
 tooltip_info_modifier
-trade_post_has_any_building
-trade_post_has_building
 trade_route
-trait
 tributary_type
 type
 unsafe_destroy_artifact
-unsafe_religion
-upgrades_from
 value
 voting_rules
 which

@@ -1,0 +1,5 @@
+agnatic
+cognatic
+enatic
+enatic_cognatic
+true_cognatic

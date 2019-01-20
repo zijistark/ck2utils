@@ -1,0 +1,3 @@
+mild_winter   # Mild Winter
+normal_winter # Normal Winter
+severe_winter # Severe Winter

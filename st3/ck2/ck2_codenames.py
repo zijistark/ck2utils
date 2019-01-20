@@ -17,13 +17,13 @@ g_swmh_path = ck2parser.rootpath / 'SWMH-BETA/SWMH'
 
 
 class VarType:
-	def __init__(self, name, globs, nest=0, exclude=None, include=None, mod_dirs=(g_emf_path,)):
+	def __init__(self, name, globs, nest=0, exclude=None, include=None, moddirs=(g_emf_path,)):
 		self.name = name
 		self.globs = list(globs)
 		self.nest = nest
 		self.include = [] if not include else list(include)
 		self.exclude = [] if not exclude else list(exclude)
-		self.moddirs = mod_dirs
+		self.moddirs = moddirs
 
 
 def parse_var_type_recursive(tree, vt, nest):
@@ -65,28 +65,34 @@ def print_ids(ids, loc, file=sys.stdout):
 
 def main():
 	relcul_ignore = (r'color', r'color2', r'(fe)?male_names', r'interface_skin', r'alternate_start', r'(unit_)?graphical_cultures', r'(character|unit(_home_)?)modifier', r'trigger$')
+	scripted_trigger_ignore = (r'^impl_',)
+	#scripted_effect_ignore = (r'^emf_notify_',)
+	scripted_effect_ignore = ()
 	vtype_list = [
 		VarType('Religion', ['common/religions/*.txt'], nest=1, exclude=relcul_ignore),
 		VarType('ReligionGroup', ['common/religions/*.txt'], exclude=relcul_ignore),
-		VarType('Culture', ['common/cultures/*.txt'], nest=1, exclude=relcul_ignore, mod_dirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
-		VarType('CultureGroup', ['common/cultures/*.txt'], exclude=relcul_ignore, mod_dirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
+		VarType('Culture', ['common/cultures/*.txt'], nest=1, exclude=relcul_ignore, moddirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
+		VarType('CultureGroup', ['common/cultures/*.txt'], exclude=relcul_ignore, moddirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
 		VarType('CB', ['common/cb_types/*.txt']),
 		VarType('ReligionFeature', ['common/religion_features/*.txt'], nest=1, exclude=['buttons']),
 		VarType('MinorTitle', ['common/minor_titles/*.txt', 'common/religious_titles/*.txt']),
 		VarType('JobTitle', ['common/job_titles/*.txt']),
 		VarType('JobAction', ['common/job_actions/*.txt']),
 		VarType('Law', ['common/laws/*.txt'], nest=1),
-		VarType('Building', ['common/buildings/*.txt'], nest=1),
+		VarType('Building', ['common/buildings/*.txt'], nest=1, moddirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
 		VarType('Tech', ['common/technology.txt'], nest=1),
 		VarType('Trait', ['common/traits/*.txt']),
-		VarType('ScriptedTrigger', ['common/scripted_triggers/*.txt'], mod_dirs=(g_emf_path, g_emf_swmh_path)),
-		VarType('ScriptedEffect', ['common/scripted_effects/*.txt'], mod_dirs=(g_emf_path, g_emf_swmh_path)),
-		VarType('ScriptedScore', ['common/scripted_score_values/*.txt'], mod_dirs=(g_emf_path, g_emf_swmh_path)),
+		VarType('Region', ['map/geographical_region.txt'], moddirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
+		VarType('Climate', ['map/climate.txt']),
+		VarType('Terrain', ['map/terrain.txt'], nest=1, exclude=['color'], moddirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
+		VarType('ScriptedTrigger', ['common/scripted_triggers/*.txt'], exclude=scripted_trigger_ignore, moddirs=(g_emf_path, g_emf_swmh_path)),
+		VarType('ScriptedEffect', ['common/scripted_effects/*.txt'], exclude=scripted_effect_ignore, moddirs=(g_emf_path, g_emf_swmh_path)),
+		VarType('ScriptedScore', ['common/scripted_score_values/*.txt'], moddirs=(g_emf_path, g_emf_swmh_path)),
 		VarType('Faction', ['common/objectives/*.txt'], include=[r'^faction_']),
 		VarType('Ambition', ['common/objectives/*.txt'], include=[r'^obj_']),
 		VarType('Plot', ['common/objectives/*.txt'], include=[r'^plot_']),
 		VarType('Focus', ['common/objectives/*.txt'], include=[r'^focus_']),
-		VarType('OnAction', ['common/on_actions/*.txt'], mod_dirs=()),
+		VarType('OnAction', ['common/on_actions/*.txt'], moddirs=()),
 		VarType('Government', ['common/governments/*.txt'], nest=1),
 	]
 

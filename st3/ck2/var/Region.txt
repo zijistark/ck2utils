@@ -1,0 +1,98 @@
+custom_andalusian                     # South Iberia
+custom_aragon                         # Aragon
+custom_balearic                       # Balearic Islands
+custom_balkans                        # Balkans
+custom_beja                           # Western Coast of Iberia
+custom_castille                       # Castille
+custom_castillian                     # North Iberia
+custom_catalan                        # East Iberia
+custom_chinese_invasion_target_region # Chinese Region of Influence
+custom_cordoba                        # Central Iberia
+custom_danish                         # Denmark
+custom_eastern_access                 # Vicinity of China
+custom_eastern_baltic                 # Eastern Baltic
+custom_eastern_edge_of_map            # Eastern Edge
+custom_england                        # England
+custom_frisia                         # Frisia
+custom_galicia                        # Galicia
+custom_gothic                         # Götaland
+custom_granada                        # Southern Iberia
+custom_historical_plague_free_zone    # Historical Plague Exclusion Zone
+custom_icelandic                      # Iceland
+custom_jerusalem                      # Palestine
+custom_lebanon                        # Lebanon
+custom_leon                           # León
+custom_mesopotamia                    # Mesopotamia
+custom_navarra                        # Navarra
+custom_neapolitan                     # Neapolitan Melting Pot Region
+custom_norwegian                      # Norway
+custom_portuguese                     # North-West Iberia
+custom_russia                         # Rus Region
+custom_scotland                       # Scotland
+custom_sicilian                       # Sicilian Melting Pot Region
+custom_swedish                        # Sweden
+custom_valencia                       # Eastern Coast of Iberia
+emf_region_arctic_seazone             # Arctic Zone
+emf_region_atlantic_seazone           # Atlantic Ocean Zone
+emf_region_baltic_seazone             # Baltic Sea Zone
+emf_region_black_seazone              # Black Sea Zone
+emf_region_carpathia                  # Carpathian Basin
+emf_region_east_med_seazone           # Eastern Mediterranean Zone
+emf_region_etelkoz                    # Etelköz
+emf_region_indian_seazone             # Indian Ocean Zone
+emf_region_ir_tier_1                  # Imperial Reconquest Tier 1 (Byzantium)
+emf_region_ir_tier_2                  # Imperial Reconquest Tier 2 (Balkans and Sicily)
+emf_region_ir_tier_3                  # Imperial Reconquest Tier 3 (Italia, Levant, and Northeastern Africa)
+emf_region_ir_tier_4                  # Imperial Reconquest Tier 4 (Lombardia, Northwestern Africa, and Iberia)
+emf_region_ir_tier_5                  # Imperial Reconquest Tier 5 (France)
+emf_region_ir_tier_6                  # Imperial Reconquest Tier 6 (England, Wales, and Germany)
+emf_region_levy_boost                 # More Soldiers
+emf_region_lower_carpathia            # Lower Carpathia
+emf_region_manifest_destiny           # Manifest Destiny (Seljuk/Timurid)
+emf_region_manifest_destiny_tier_1    # Manifest Destiny (Seljuk/Timurid): Tier I
+emf_region_manifest_destiny_tier_2    # Manifest Destiny (Seljuk/Timurid): Tier II
+emf_region_manifest_destiny_tier_3    # Manifest Destiny (Seljuk/Timurid): Tier III
+emf_region_mongol_core                # Mongol Conquest Zone (Core)
+emf_region_mongol_core_fringe         # Mongol Conquest Zone (Core Fringe)
+emf_region_mongol_east                # Eastern Mongol Region
+emf_region_mongol_extended            # Mongol Conquest Zone (Extended)
+emf_region_mongol_full                # Mongol Conquest Zone
+emf_region_mongol_south               # Southern Mongol Region
+emf_region_mongol_west                # Western Mongol Region
+emf_region_norman_sicily              # Norman Sicily
+emf_region_north_seazone              # North Sea Zone
+emf_region_sahara                     # Sahara
+emf_region_saoshyant                  # Persia and Mesopotamia
+emf_region_seljuk_invasion_tier_1     # Seljuk Conquest Zone - Tier I
+emf_region_seljuk_invasion_tier_2     # Seljuk Conquest Zone - Tier II
+emf_region_seljuk_invasion_tier_3     # Seljuk Conquest Zone - Tier III
+emf_region_west_med_seazone           # Western Mediterranean Zone
+world_africa                          # Africa
+world_africa_central                  # Central Africa
+world_africa_east                     # East Africa
+world_africa_north                    # North Africa
+world_africa_west                     # West Africa
+world_asia_minor                      # Asia Minor
+world_europe                          # Europe
+world_europe_east                     # Eastern Europe
+world_europe_east_russia              # Russia
+world_europe_north                    # Northern Europe
+world_europe_south                    # Southern Europe
+world_europe_south_east               # South-East Europe
+world_europe_south_italy              # Italia
+world_europe_west                     # Western Europe
+world_europe_west_brittania           # Britannia
+world_europe_west_francia             # Francia
+world_europe_west_germania            # Germania
+world_europe_west_iberia              # Iberia
+world_himalayas                       # Himalayas
+world_india                           # India
+world_india_rajastan                  # Rajastan
+world_middle_east                     # Near East
+world_middle_east_arabia              # Arabian Peninsula
+world_middle_east_jerusalem           # Jerusalem
+world_persia                          # Persia
+world_steppe                          # Steppes
+world_steppe_east                     # Eastern Steppes
+world_steppe_tarim                    # Tarim Basin
+world_steppe_west                     # Western Steppes

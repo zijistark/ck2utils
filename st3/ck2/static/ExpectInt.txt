@@ -76,6 +76,7 @@ num_of_feuds
 num_of_forts
 num_of_friends
 num_of_holy_sites
+num_of_hospitals
 num_of_king_titles
 num_of_king_titles_in_realm
 num_of_lovers

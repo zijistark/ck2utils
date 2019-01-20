@@ -61,8 +61,8 @@ tengri_pagan_reformed       # Tengri
 tondrakian                  # Tondrakian
 waldensian                  # Waldensian
 waqifi                      # Waqifite
-west_african_pagan          # African
-west_african_pagan_reformed # African
+west_african_pagan          # West African
+west_african_pagan_reformed # West African
 yazidi                      # Yazidi
 zaydi                       # Zaydi
 zikri                       # Zikri

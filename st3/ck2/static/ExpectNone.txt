@@ -1,4 +1,5 @@
 dynasty
 portrait
 set_crusade_beneficiary
+set_pentarch_title
 set_religion_head

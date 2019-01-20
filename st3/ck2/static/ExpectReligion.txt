@@ -5,7 +5,8 @@ intermarry
 is_heresy_of
 is_parent_religion
 parent # set_parent_religion param
-reformed
+pentarchy # LT
+reformed # religions
 religion
 religion # event pre-trigger
 remove_holy_site

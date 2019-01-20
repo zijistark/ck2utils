@@ -41,6 +41,7 @@ heir_under_primogeniture_law
 heir_under_seniority_law
 highest_ranked_relative
 holder_scope
+hospital_owner
 host
 invasion_target
 killer

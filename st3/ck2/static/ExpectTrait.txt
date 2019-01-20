@@ -1,3 +1,5 @@
 add_trait
 remove_trait
+show_trait
+tooltip_info
 trait

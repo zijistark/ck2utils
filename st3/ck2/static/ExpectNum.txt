@@ -21,6 +21,7 @@ demesne_efficiency
 demesne_size_compared_to_limit
 dignity
 dignity # LT
+disease_defence
 dynasty_realm_power
 extra_ai_eval_troops # LT
 extra_tech_building_start
