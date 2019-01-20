@@ -6,10 +6,13 @@ import re
 import sys
 from print_time import print_time
 
+# cd ~/mod/modules-alpha
+# find -exec sh -c 'cd {} && audit3.py' \;
+
 IGNORE_COMMENTS = False
 
 BINARY = ['.dds', '.tga', '.xac', '.bmp', '.db', '.jpg', '.yml', '.xlsx',
-          '.ogg', '.wav', '.xcf', '.psd', '.sublime-workspace']
+          '.ogg', '.wav', '.xcf', '.psd', '.sublime-workspace', '.rar']
 
 @print_time
 def main():
