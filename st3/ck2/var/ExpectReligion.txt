@@ -4,7 +4,7 @@ icon_religion
 intermarry
 is_heresy_of
 is_parent_religion
-parent
+parent # set_parent_religion param
 reformed
 religion
 religion # event pre-trigger
@@ -16,3 +16,4 @@ set_holy_site
 set_holy_site_with_heresies
 set_secret_religion
 true_religion
+unsafe_religion

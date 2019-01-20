@@ -1,0 +1,2 @@
+has_religion_feature
+has_selected_religion_feature

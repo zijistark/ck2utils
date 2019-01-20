@@ -1,0 +1,72 @@
+adoptionist                 # Adoptionist
+apostolic                   # Apostolic
+arian                       # Arian
+aztec                       # Aztec
+aztec_reformed              # Aztec
+baltic_pagan                # Romuva
+baltic_pagan_reformed       # Romuva
+bogomilist                  # Bogomilist
+bon                         # Bön
+bon_reformed                # Bön
+buddhist                    # Buddhist
+cathar                      # Cathar
+catholic                    # Catholic
+druze                       # Druze
+east_african_pagan          # East African
+east_african_pagan_reformed # East African
+finnish_pagan               # Muinaisusko
+finnish_pagan_reformed      # Muinaisusko
+fraticelli                  # Fraticelli
+haruri                      # Haruri
+hellenic_pagan              # Hellenic
+hellenic_pagan_reformed     # Hellenic
+hindu                       # Hindu
+hip_religion                # Ma’at
+hurufi                      # Hurufi
+ibadi                       # Ibadi
+iconoclast                  # Iconoclast
+ismaili                     # Isma'ili
+jain                        # Jain
+jewish                      # Jewish
+karaite                     # Karaite
+kharijite                   # Kharijite
+khurmazta                   # Khurmazta
+lollard                     # Lollard
+mahdiyya                    # Mahdite
+mandaean                    # Mandaean
+manichean                   # Manichean
+maronite                    # Maronite
+mazdaki                     # Mazdaki
+messalian                   # Messalian
+miaphysite                  # Coptic
+monophysite                 # Monophysite
+monothelite                 # Monothelite
+nabawiyya                   # Nabawite
+nestorian                   # East Syriac
+norse_pagan                 # Ásatrú
+norse_pagan_reformed        # Ásatrú
+orthodox                    # Orthodox
+pagan                       # Pagan
+paulician                   # Paulician
+qarmatian                   # Qarmati
+samaritan                   # Samaritan
+shiite                      # Shia
+slavic_pagan                # Slavianska Vera
+slavic_pagan_reformed       # Slavianska Vera
+sunni                       # Sunni
+syriac                      # West Syriac
+taoist                      # Taoist
+tengri_pagan                # Tengri
+tengri_pagan_reformed       # Tengri
+tondrakian                  # Tondrakian
+waldensian                  # Waldensian
+waqifi                      # Waqifite
+west_african_pagan          # African
+west_african_pagan_reformed # African
+yazidi                      # Yazidi
+zaydi                       # Zaydi
+zikri                       # Zikri
+zoroastrian                 # Zoroastrian
+zun_pagan                   # Zunist
+zun_pagan_reformed          # Church of Zun
+zurvanist                   # Zurvanist

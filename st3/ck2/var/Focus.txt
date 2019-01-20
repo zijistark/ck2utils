@@ -1,0 +1,23 @@
+focus_business
+focus_carousing
+focus_ch_duty        # Duty
+focus_ch_etiquette   # Etiquette
+focus_ch_faith       # Faith
+focus_ch_heritage    # Heritage
+focus_ch_humility    # Humility
+focus_ch_pride       # Pride
+focus_ch_struggle    # Struggle
+focus_ch_thrift      # Thrift
+focus_ed_diplomacy   # Diplomacy
+focus_ed_intrigue    # Intrigue
+focus_ed_learning    # Learning
+focus_ed_martial     # Martial
+focus_ed_stewardship # Stewardship
+focus_family
+focus_hunting
+focus_intrigue
+focus_rulership
+focus_scholarship
+focus_seduction
+focus_theology
+focus_war

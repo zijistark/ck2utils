@@ -11,8 +11,8 @@ my $LOG_DIR = "/cygdrive/c/Users/$ENV{USER}/Documents/Paradox Interactive/Crusad
 my $WIDTH = 120;
 
 # these turn on extra filters for ignoring certain file patterns for certain error/warning types, but they're not required:
-my $EMF_V = 0;
-my $EMF_S = 1;
+my $EMF_V = 1;
+my $EMF_S = 0;
 my $SWMH = 0;
 croak "only one of \$EMF_V, \$EMF_S, and \$SWMH may be enabled" if ($EMF_V && $EMF_S || $EMF_V && $SWMH || $EMF_S && $SWMH);
 
@@ -63,6 +63,7 @@ my @assert_title;
 my @assert_undefined_event;
 my @bad_token;
 my @bad_trigger;
+my @bad_effect;
 
 my @unrecognized_lines = (); # that weren't filtered due to being uninteresting
 
@@ -268,6 +269,9 @@ while (<$f>) {
 	}
 	elsif (m{Unknown trigger-type: "([^"]+)" at\s+file: (.+) line: (\d+)$}i) {
 		push @bad_trigger, [$1, $2, $3];
+	}
+	elsif (m{Unknown effect-type: "([^"]+)" at\s+file: (.+) line: (\d+)$}i) {
+		push @bad_effect, [$1, $2, $3];
 	}
 	else {
 		push @unrecognized_lines, $_;
@@ -839,6 +843,23 @@ print_data_tables({
 	cols => [
 		{
 			title => "Bad Trigger",
+		},
+		{
+			title => "Filename",
+		},
+		{
+			title => "Line",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "invalid effect",
+	data => \@bad_effect,
+	severity => 2,
+	cols => [
+		{
+			title => "Bad Effect",
 		},
 		{
 			title => "Filename",

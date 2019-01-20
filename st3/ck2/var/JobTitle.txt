@@ -1,0 +1,5 @@
+job_chancellor # Chancellor
+job_marshal    # Marshal
+job_spiritual  # Court Chaplain
+job_spymaster  # Spymaster
+job_treasurer  # Steward

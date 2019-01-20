@@ -1,0 +1,37 @@
+altaic            # Altaic
+arabic            # Arabic
+aramaic           # Aramaic
+baltic            # Baltic
+bear_group        # Bear
+byzantine         # Byzantine
+cat_group         # Cat
+celtic            # Celtic
+central_african   # Central African
+central_germanic  # Central Germanic
+chinese_group     # Chinese
+dog_group         # Canidae
+dragon_group      # Drachidae
+dravidian_group   # Dravidian
+duck_group        # Aves
+east_african      # East African
+east_slavic       # East Slavic
+elephant_group    # Proboscidea
+finno_ugric       # Finno-Ugric
+hedgehog_group    # Erinaceidae
+hip_culture_group # Ennead
+horse_group       # Horse
+iberian           # Ibero-Romance
+indo_aryan_group  # Indo-Aryan
+iranian           # Iranian
+israelite         # Israelite
+italian_group     # Italian
+latin             # Latin
+magyar            # Magyar
+mesoamerican      # Mesoamerican
+north_african     # Berber
+north_germanic    # North Germanic
+south_slavic      # South Slavic
+tibetan_group     # Tibeto-Burman
+west_african      # West African
+west_germanic     # West Germanic
+west_slavic       # West Slavic

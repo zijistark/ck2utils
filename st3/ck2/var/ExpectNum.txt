@@ -1,33 +1,30 @@
-add_holding_slot
 add_society_progress
 add_to_crusade_artifact_pot
 add_to_crusade_gold_pot
 add_to_crusade_piety_pot
 add_to_crusade_prestige_pot
 aggression
-ai_creation_factor
-ai_feudal_modifier
-ai_republic_modifier
-attrition
+ai_creation_factor # buildings
+ai_feudal_modifier # buildings
+ai_republic_modifier # buildings
+attrition # spawn_unit
 base_health
 chance
 change_society_currency
 change_{{vCharAttr}}
 crusade_defense_strength
 crusade_preparation_strength
-culture_techpoints
 damage_unit
 damage_unit_morale
 decadence
 demesne_efficiency
 demesne_size_compared_to_limit
 dignity
+dignity # LT
 dynasty_realm_power
-economy_techpoints
-extra_ai_eval_troops
+extra_ai_eval_troops # LT
 extra_tech_building_start
 factor
-female # create_character param (chance that char will be female)
 fertility
 for_population
 health
@@ -38,26 +35,30 @@ holding_total_levy_percent
 independence_war_score_bonus
 infamy
 maintenance_multiplier
-maintenance_multiplier # spawn_unit param
+maintenance_multiplier # spawn_unit
 manpower
-match_max
-match_min
-match_mult
+match_max # spawn_unit
+match_min # spawn_unit
+match_mult # spawn_unit
 max
-military_techpoints
 min
+monthly_income
+monthly_income # LT
 monthly_piety # MT
 monthly_prestige # MT
 monthly_salary # MT
+naval_distance
 participation_scaled_decadence
 participation_scaled_piety
 participation_scaled_prestige
 peace_piety_gain
 percentage
 piety
+population
 population_factor
 power
 prestige
+random
 reinforce_rate_multiplier
 relative_income_to_liege
 relative_power
@@ -91,6 +92,8 @@ society_progress
 strength_growth_per_century
 treasury
 value
+war_score
 warning_level
 wealth
+yearly_income
 {{vTech}}

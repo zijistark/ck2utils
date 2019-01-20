@@ -1,0 +1,17 @@
+faction_abrahamic_revolters      # Abrahamic Dissidents
+faction_antiking
+faction_claimant
+faction_court
+faction_glory
+faction_increase_council_power
+faction_independence
+faction_lower_crown_authority
+faction_overthrow                # Overthrow Khan
+faction_powerful_vassal_takeover
+faction_prosperity
+faction_succ_feudal_elective
+faction_succ_gavelkind
+faction_succ_primogeniture
+faction_succ_seniority
+faction_tradition
+faction_true_belivers

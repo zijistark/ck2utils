@@ -1,0 +1,84 @@
+title_administrator                 # Scholar-Bureaucrat
+title_anthypatos                    # Anthypatos
+title_appointed_regent              # Designated Regent
+title_baghatur                      # Baghatur
+title_behi                          # Behi
+title_bogomilist_advisor            # Stroinik
+title_caesar                        # Caesar
+title_canjun                        # Canjun
+title_cardinal                      # Cardinal
+title_cathar_deacon                 # Deacon
+title_champion                      # Champion
+title_cherbi                        # Cherbi
+title_chief_architect               # Chief Architect
+title_chief_qadi                    # Chief Qadi
+title_china_emperor                 # Emperor
+title_commander                     # Commander
+title_councilmember_emperor         # Advisor
+title_councilmember_king            # Advisor
+title_court_architect               # Court Architect
+title_court_calligrapher            # Court Calligrapher
+title_court_dwarf                   # Court Dwarf
+title_court_eunuch                  # Court Eunuch
+title_court_jester                  # Court Jester
+title_court_musician                # Court Musician
+title_court_physician               # Court Physician
+title_court_poet                    # Court Poet
+title_court_poet_india              # Court Poet
+title_court_skald                   # Court Skald
+title_courtesan                     # Concubine
+title_cupbearer                     # Cupbearer
+title_darkhan                       # Darkhan
+title_despot                        # Despot
+title_despot_noconclave
+title_drottseti                     # Dróttseti
+title_eran_ambaragbed               # Eran Ambaragbed
+title_food_taster                   # Food Taster
+title_fraticelli_cardinal           # Cardinal
+title_genghis
+title_guru                          # Court Guru
+title_hermetics_apprentice          # Apprentice
+title_high_admiral                  # High Admiral
+title_high_almoner                  # High Almoner
+title_high_judge                    # High Judge
+title_hirdman                       # Hirdman
+title_historiographer               # Historiographer
+title_imperial_eunuch               # Parakoimomenos
+title_ishad                         # Ishad
+title_kardarigan                    # Kardarigan
+title_keeper_of_swans               # Keeper of the Swans
+title_kouropalates                  # Kouropalates
+title_kundur                        # Kündür
+title_lawspeaker                    # Lawspeaker
+title_male_consort                  # Consort
+title_manichean_apostle             # Apostle
+title_marksman                      # Merkismaðr
+title_master_engineer               # Master Engineer
+title_master_of_the_blade           # Master of the Blade
+title_master_of_the_bow             # Master of the Bow
+title_master_of_the_eagle           # Master of the Eagle
+title_master_of_the_horse           # Master of the Horse
+title_master_of_the_hunt            # Master of the Hunt
+title_master_of_the_royal_elephants # Master of the Royal Elephants
+title_noyan                         # Noyan
+title_paramount_knight              # Paramount Knight
+title_patrician_heir                # Designated Heir
+title_prince                        # Prince
+title_pushtigban_salar              # Pushtigban-salar
+title_queen_mother                  # Queen Mother
+title_regent                        # Regent
+title_royal_builder                 # Royal Builder
+title_ruler_consort
+title_sebastokrator                 # Sebastokrator
+title_seneschal                     # Seneschal
+title_shahin                        # Shahin
+title_shahrwaraz                    # Shahrwarãz
+title_spahbod                       # Spahbod
+title_state_inquisitor              # State Inquisitor
+title_tanist                        # Tanist
+title_teacher                       # Court Tutor
+title_venerable_elder               # Venerable Elder
+title_volva                         # Court Völva
+title_yabgu                         # Yabgu
+title_yuhou                         # Yuhou
+title_zhangshi                      # Zhangshi

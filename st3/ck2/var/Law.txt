@@ -1,0 +1,309 @@
+administration              # Administration
+administration_0            # Feudal Administration
+administration_1            # Late Feudal Administration
+administration_2            # Imperial Administration
+agnatic_succession          # Agnatic
+banish_voting_power         # Banishment
+banish_voting_power_0       # Ruler Banishment Sovereignty
+banish_voting_power_1       # Banishment Committee
+bogomilist_church_0         # No [bogomilist.GetName] Organization
+bogomilist_church_1         # Bogmilism Supported
+bogomilist_church_2         # [bogomilist.GetName] Faith Organized
+bogomilist_church_3         # [bogomilist.GetName] Faith Formalized
+bogomilist_church_4         # Pemanently Established
+bogomilist_church_group     # Faith Organization
+bureaucratic_infighting     # Court Infighting
+centralization              # Demesne Centralization
+centralization_0            # Decentralized
+centralization_1            # Low Demesne Centralization
+centralization_2            # Medium Demesne Centralization
+centralization_3            # High Demesne Centralization
+centralization_4            # Centralized
+city_obligations            # Burgher Obligations
+city_obligations_0          # Minimal Burgher Obligations
+city_obligations_1          # Low Burgher Obligations
+city_obligations_2          # Medium Burgher Obligations
+city_obligations_3          # High Burgher Obligations
+city_obligations_4          # Harsh Burgher Obligations
+city_slider                 # Burgher Focus
+city_slider_0               # Highly Levy Oriented Burgher Focus
+city_slider_1               # Moderately Levy Oriented Burgher Focus
+city_slider_2               # Balanced Burgher Focus
+city_slider_3               # Moderately Tax Oriented Burgher Focus
+city_slider_4               # Highly Tax Oriented Burgher Focus
+cognatic_succession         # Agnatic-Cognatic
+crown_authority             # Crown Authority
+crown_authority_0           # Autonomous Vassals
+crown_authority_1           # Limited Crown Authority
+crown_authority_2           # Medium Crown Authority
+crown_authority_3           # High Crown Authority
+crown_authority_4           # Absolute Crown Authority
+dynlevy0                    # Levy Efficiency
+dynlevy0_0                  # 100% Realm Levy-Raising Efficiency
+dynlevy1                    # Levy Efficiency
+dynlevy10                   # Levy Efficiency
+dynlevy10_0                 # 80.6% Realm Levy-Raising Efficiency
+dynlevy11                   # Levy Efficiency
+dynlevy11_0                 # 79.2% Realm Levy-Raising Efficiency
+dynlevy12                   # Levy Efficiency
+dynlevy12_0                 # 78% Realm Levy-Raising Efficiency
+dynlevy13                   # Levy Efficiency
+dynlevy13_0                 # 76.8% Realm Levy-Raising Efficiency
+dynlevy14                   # Levy Efficiency
+dynlevy14_0                 # 75.6% Realm Levy-Raising Efficiency
+dynlevy15                   # Levy Efficiency
+dynlevy15_0                 # 74.5% Realm Levy-Raising Efficiency
+dynlevy16                   # Levy Efficiency
+dynlevy16_0                 # 73.5% Realm Levy-Raising Efficiency
+dynlevy17                   # Levy Efficiency
+dynlevy17_0                 # 72.5% Realm Levy-Raising Efficiency
+dynlevy18                   # Levy Efficiency
+dynlevy18_0                 # 71.5% Realm Levy-Raising Efficiency
+dynlevy19                   # Levy Efficiency
+dynlevy19_0                 # 70.6% Realm Levy-Raising Efficiency
+dynlevy1_0                  # 97.4% Realm Levy-Raising Efficiency
+dynlevy2                    # Levy Efficiency
+dynlevy20                   # Levy Efficiency
+dynlevy20_0                 # 69.7% Realm Levy-Raising Efficiency
+dynlevy21                   # Levy Efficiency
+dynlevy21_0                 # 68.9% Realm Levy-Raising Efficiency
+dynlevy22                   # Levy Efficiency
+dynlevy22_0                 # 68.1% Realm Levy-Raising Efficiency
+dynlevy23                   # Levy Efficiency
+dynlevy23_0                 # 67.3% Realm Levy-Raising Efficiency
+dynlevy24                   # Levy Efficiency
+dynlevy24_0                 # 66.6% Realm Levy-Raising Efficiency
+dynlevy25                   # Levy Efficiency
+dynlevy25_0                 # 65.8% Realm Levy-Raising Efficiency
+dynlevy26                   # Levy Efficiency
+dynlevy26_0                 # 65.1% Realm Levy-Raising Efficiency
+dynlevy27                   # Levy Efficiency
+dynlevy27_0                 # 64.5% Realm Levy-Raising Efficiency
+dynlevy28                   # Levy Efficiency
+dynlevy28_0                 # 63.8% Realm Levy-Raising Efficiency
+dynlevy29                   # Levy Efficiency
+dynlevy29_0                 # 63.2% Realm Levy-Raising Efficiency
+dynlevy2_0                  # 95% Realm Levy-Raising Efficiency
+dynlevy3                    # Levy Efficiency
+dynlevy30                   # Levy Efficiency
+dynlevy30_0                 # 62.6% Realm Levy-Raising Efficiency
+dynlevy31                   # Levy Efficiency
+dynlevy31_0                 # 62% Realm Levy-Raising Efficiency
+dynlevy32                   # Levy Efficiency
+dynlevy32_0                 # 61.5% Realm Levy-Raising Efficiency
+dynlevy33                   # Levy Efficiency
+dynlevy33_0                 # 60.9% Realm Levy-Raising Efficiency
+dynlevy34                   # Levy Efficiency
+dynlevy34_0                 # 60.4% Realm Levy-Raising Efficiency
+dynlevy35                   # Levy Efficiency
+dynlevy35_0                 # 59.9% Realm Levy-Raising Efficiency
+dynlevy36                   # Levy Efficiency
+dynlevy36_0                 # 59.4% Realm Levy-Raising Efficiency
+dynlevy37                   # Levy Efficiency
+dynlevy37_0                 # 58.9% Realm Levy-Raising Efficiency
+dynlevy38                   # Levy Efficiency
+dynlevy38_0                 # 58.5% Realm Levy-Raising Efficiency
+dynlevy39                   # Levy Efficiency
+dynlevy39_0                 # 58% Realm Levy-Raising Efficiency
+dynlevy3_0                  # 92.7% Realm Levy-Raising Efficiency
+dynlevy4                    # Levy Efficiency
+dynlevy40                   # Levy Efficiency
+dynlevy40_0                 # 57.6% Realm Levy-Raising Efficiency
+dynlevy41                   # Levy Efficiency
+dynlevy41_0                 # 57.2% Realm Levy-Raising Efficiency
+dynlevy42                   # Levy Efficiency
+dynlevy42_0                 # 56.7% Realm Levy-Raising Efficiency
+dynlevy43                   # Levy Efficiency
+dynlevy43_0                 # 56.3% Realm Levy-Raising Efficiency
+dynlevy44                   # Levy Efficiency
+dynlevy44_0                 # 56% Realm Levy-Raising Efficiency
+dynlevy45                   # Levy Efficiency
+dynlevy45_0                 # 55.6% Realm Levy-Raising Efficiency
+dynlevy46                   # Levy Efficiency
+dynlevy46_0                 # 55.2% Realm Levy-Raising Efficiency
+dynlevy47                   # Levy Efficiency
+dynlevy47_0                 # 54.8% Realm Levy-Raising Efficiency
+dynlevy48                   # Levy Efficiency
+dynlevy48_0                 # 54.5% Realm Levy-Raising Efficiency
+dynlevy49                   # Levy Efficiency
+dynlevy49_0                 # 54.1% Realm Levy-Raising Efficiency
+dynlevy4_0                  # 90.6% Realm Levy-Raising Efficiency
+dynlevy5                    # Levy Efficiency
+dynlevy50                   # Levy Efficiency
+dynlevy50_0                 # 53.8% Realm Levy-Raising Efficiency
+dynlevy51                   # Levy Efficiency
+dynlevy51_0                 # 53.5% Realm Levy-Raising Efficiency
+dynlevy52                   # Levy Efficiency
+dynlevy52_0                 # 53.1% Realm Levy-Raising Efficiency
+dynlevy53                   # Levy Efficiency
+dynlevy53_0                 # 52.8% Realm Levy-Raising Efficiency
+dynlevy54                   # Levy Efficiency
+dynlevy54_0                 # 52.5% Realm Levy-Raising Efficiency
+dynlevy55                   # Levy Efficiency
+dynlevy55_0                 # 52.2% Realm Levy-Raising Efficiency
+dynlevy56                   # Levy Efficiency
+dynlevy56_0                 # 51.9% Realm Levy-Raising Efficiency
+dynlevy57                   # Levy Efficiency
+dynlevy57_0                 # 51.6% Realm Levy-Raising Efficiency
+dynlevy58                   # Levy Efficiency
+dynlevy58_0                 # 51.4% Realm Levy-Raising Efficiency
+dynlevy59                   # Levy Efficiency
+dynlevy59_0                 # 51.1% Realm Levy-Raising Efficiency
+dynlevy5_0                  # 88.7% Realm Levy-Raising Efficiency
+dynlevy6                    # Levy Efficiency
+dynlevy60                   # Levy Efficiency
+dynlevy60_0                 # 50.8% Realm Levy-Raising Efficiency
+dynlevy61                   # Levy Efficiency
+dynlevy61_0                 # 50.5% Realm Levy-Raising Efficiency
+dynlevy62                   # Levy Efficiency
+dynlevy62_0                 # 50.3% Realm Levy-Raising Efficiency
+dynlevy63                   # Levy Efficiency
+dynlevy63_0                 # 50% Realm Levy-Raising Efficiency
+dynlevy6_0                  # 86.9% Realm Levy-Raising Efficiency
+dynlevy7                    # Levy Efficiency
+dynlevy7_0                  # 85.2% Realm Levy-Raising Efficiency
+dynlevy8                    # Levy Efficiency
+dynlevy8_0                  # 83.5% Realm Levy-Raising Efficiency
+dynlevy9                    # Levy Efficiency
+dynlevy9_0                  # 82% Realm Levy-Raising Efficiency
+enatic_cognatic_succession  # Enatic-Cognatic
+enatic_succession           # Enatic
+execution_voting_power      # Execution
+execution_voting_power_0    # Ruler Execution Sovereignty
+execution_voting_power_1    # Execution Committee
+feudal_obligations          # Feudal Obligations
+feudal_obligations_0        # Minimal Feudal Obligations
+feudal_obligations_1        # Low Feudal Obligations
+feudal_obligations_2        # Medium Feudal Obligations
+feudal_obligations_3        # High Feudal Obligations
+feudal_obligations_4        # Harsh Feudal Obligations
+feudal_slider               # Feudal Focus
+feudal_slider_0             # Highly Levy Oriented Feudal Focus
+feudal_slider_1             # Moderately Levy Oriented Feudal Focus
+feudal_slider_2             # Balanced Feudal Focus
+feudal_slider_3             # Moderately Tax Oriented Feudal Focus
+feudal_slider_4             # Highly Tax Oriented Feudal Focus
+frat_priest_0               # Monastic Priesthood
+frat_priest_1               # Apostolic Priesthood
+frat_priest_2               # Bureaucratic Priesthood
+frat_priesthood             # [fraticelli.GetName] Priesthood
+grant_title_voting_power    # Grant Titles
+grant_title_voting_power_0  # Ruler Title Grant Sovereignty
+grant_title_voting_power_1  # Title Grant Committee
+horde_law                   # Horde
+horde_law_0                 # Horde Invader
+imperial_kingdom_creation   # De Jure Vassal Kingdom Creation
+imperial_kingdom_creation_0 # Imperial Kingdom Creation Disallowed
+imperial_kingdom_creation_1 # Imperial Kingdom Creation Allowed
+imperial_kingdom_creation_2 # Imperial Kingdom Creation Allowed Only for Emperor
+imprison_voting_power       # Imprisonment
+imprison_voting_power_0     # Ruler Imprisonment Sovereignty
+imprison_voting_power_1     # Imprisonment Committee
+infighting_0                # Court in Chaos
+infighting_1                # Order Restored
+inheritance                 # External Inheritance
+inheritance_0               # External Inheritance Allowed
+inheritance_1               # External Inheritance Disabled
+investiture_law             # Investiture
+investiture_law_0           # Religious Head Investiture
+investiture_law_1           # Free Investiture
+iqta_obligations            # Iqta Obligations
+iqta_obligations_0          # Minimal Iqta Obligations
+iqta_obligations_1          # Low Iqta Obligations
+iqta_obligations_2          # Medium Iqta Obligations
+iqta_obligations_3          # High Iqta Obligations
+iqta_obligations_4          # Harsh Iqta Obligations
+iqta_slider                 # Iqta Focus
+iqta_slider_0               # Highly Levy Oriented Iqta Focus
+iqta_slider_1               # Moderately Levy Oriented Iqta Focus
+iqta_slider_2               # Balanced Iqta Focus
+iqta_slider_3               # Moderately Tax Oriented Iqta Focus
+iqta_slider_4               # Highly Tax Oriented Iqta Focus
+king_peace                  # The King's Peace
+king_peace_0                # No King's Peace
+king_peace_1                # Internal King's Peace
+king_peace_2                # Complete King's Peace
+law_voting_power            # Council Power
+law_voting_power_0          # Absolute Rule
+law_voting_power_1          # Empowered Council
+maz_wealth_group            # Wealth Sharing
+mazdaki_wealth_0            # No Wealth Sharing
+mazdaki_wealth_1            # Minimal Wealth Sharing
+mazdaki_wealth_2            # Basic Wealth Sharing
+mazdaki_wealth_3            # High Wealth Sharing
+mazdaki_wealth_4            # Maximum Wealth Sharing
+protected_appointment       # Protected Council Appointments
+protected_appointment_0     # Unprotected Council Appointments
+protected_appointment_1     # Protected Council Appointments
+revokation                  # Title Revocation
+revokation_0                # No Title Revocation
+revokation_1                # Title Revocation Allowed
+revokation_2                # Free Infidel Revocation
+revoke_title_voting_power   # Revoke Titles
+revoke_title_voting_power_0 # Ruler Title Revocation Sovereignty
+revoke_title_voting_power_1 # Title Revocation Committee
+status_of_women             # Status of Women
+status_of_women_0           # Traditional Status of Women
+status_of_women_1           # Marginal Status of Women
+status_of_women_2           # Significant Status of Women
+status_of_women_3           # Notable Status of Women
+status_of_women_4           # Full Status of Women
+succ_appointment            # Appointment
+succ_byzantine_elective     # Imperial Elective
+succ_catholic_bishopric     # Bishopric
+succ_eldership              # Eldership
+succ_elective_gavelkind     # Elective Gavelkind
+succ_feudal_elective        # Elective Monarchy
+succ_gavelkind              # Gavelkind
+succ_hre_elective           # Princely Elective
+succ_nomad_succession       # Nomad Succession
+succ_offmap_succession      # Confucian Bureaucracy
+succ_open_elective          # Elective Republic
+succ_papal_succession       # Papal Succession
+succ_patrician_elective     # Patrician Elective
+succ_primogeniture          # Primogeniture
+succ_seniority              # Seniority
+succ_tanistry               # Tanistry
+succ_turkish_succession     # Open
+succ_ultimogeniture         # Ultimogeniture
+temple_obligations          # Clergy Obligations
+temple_obligations_0        # Minimal Clergy Obligations
+temple_obligations_1        # Low Clergy Obligations
+temple_obligations_2        # Medium Clergy Obligations
+temple_obligations_3        # High Clergy Obligations
+temple_obligations_4        # Harsh Clergy Obligations
+temple_slider               # Clergy Focus
+temple_slider_0             # Highly Levy Oriented Clergy Focus
+temple_slider_1             # Moderately Levy Oriented Clergy Focus
+temple_slider_2             # Balanced Clergy Focus
+temple_slider_3             # Moderately Tax Oriented Clergy Focus
+temple_slider_4             # Highly Tax Oriented Clergy Focus
+tribal_obligations          # Tribal Obligations
+tribal_obligations_0        # Minimal Tribal Obligations
+tribal_obligations_1        # Low Tribal Obligations
+tribal_obligations_2        # Medium Tribal Obligations
+tribal_obligations_3        # High Tribal Obligations
+tribal_obligations_4        # Harsh Tribal Obligations
+tribal_organization         # Tribal Organization
+tribal_organization_0       # Minimum Tribal Organization
+tribal_organization_1       # Low Tribal Organization
+tribal_organization_2       # Medium Tribal Organization
+tribal_organization_3       # High Tribal Organization
+tribal_organization_4       # Absolute Tribal Organization
+tribal_slider               # Tribal Focus
+tribal_slider_0             # Highly Levy Oriented Tribal Focus
+tribal_slider_1             # Moderately Levy Oriented Tribal Focus
+tribal_slider_2             # Balanced Tribal Focus
+tribal_slider_3             # Moderately Tax Oriented Tribal Focus
+tribal_slider_4             # Highly Tax Oriented Tribal Focus
+true_cognatic_succession    # Absolute Cognatic
+wald_charity_0              # Optional Charity
+wald_charity_1              # Enforced Charity
+waldensian_charity_law      # [waldensian.GetName] Charity
+war_voting_power            # War Declaration
+war_voting_power_0          # Ruler War Declaration Sovereignty
+war_voting_power_1          # War Declaration Committee
+ze_revokation               # Title Revocation
+ze_revokation_0             # No Title Revocation
+ze_revokation_1             # Title Revocation Allowed
+ze_revokation_2             # Free Infidel Revocation

@@ -13,6 +13,8 @@ add_spouse_matrilineal
 add_to_bloodline
 add_weak_claim
 add_weak_pressed_claim
+artifact
+artifact_can_be_gifted_to
 artifact_type_owned_by
 as_if_allied_to
 at_location
@@ -44,8 +46,11 @@ de_facto_liege_title
 de_jure_liege
 de_jure_liege_or_above
 de_jure_vassal_or_below
+destroy_fort
+destroy_hospital
 destroy_landed_title
 destroy_settlement
+destroy_tradepost
 dynasty
 embargo
 enemy
@@ -87,6 +92,7 @@ is_allied_with
 is_allowed_holding_type
 is_ancestor_of
 is_aunt_uncle_of
+is_bloodline_founder_of
 is_capital
 is_child_of
 is_close_relative
@@ -127,6 +133,8 @@ is_valid_viking_invasion_target
 is_vassal_or_below
 is_vassal_or_below_of
 is_within_diplo_range
+join_attacker_wars
+join_defender_wars
 killer
 leader
 lower_real_tier_than
@@ -186,6 +194,7 @@ set_crusader_king
 set_defacto_liege
 set_defacto_vassal
 set_father
+set_graphical_culture
 set_mother
 set_name
 set_official_crusade_recipient
@@ -201,6 +210,7 @@ sibling
 sub_realm
 target
 third_party_portrait # CB param
+thirdparty
 thirdparty_title
 tier
 title
@@ -209,6 +219,7 @@ true_religion
 true_religion_group
 unsafe_destroy_landed_title
 unsafe_impregnate
+unsafe_impregnate_cuckoo
 usurp_title
 usurp_title_only
 usurp_title_plus_barony_if_unlanded

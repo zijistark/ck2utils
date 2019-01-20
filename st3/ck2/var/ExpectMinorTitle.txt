@@ -1,0 +1,6 @@
+can_hold_title
+give_minor_title
+has_assigned_minor_title
+has_minor_title
+remove_title
+unsafe_give_minor_title

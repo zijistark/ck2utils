@@ -1,0 +1,2 @@
+cancel_plot
+has_plot

@@ -114,3 +114,4 @@ vassal_decisions
 weight_multiplier
 while
 {{vEventType}}
+{{vOnAction}}

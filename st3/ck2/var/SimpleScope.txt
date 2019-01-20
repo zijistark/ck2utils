@@ -43,11 +43,6 @@ highest_ranked_relative
 holder_scope
 host
 invasion_target
-job_chancellor
-job_marshal
-job_spiritual
-job_spymaster
-job_treasurer
 killer
 kingdom
 leader
@@ -111,3 +106,5 @@ true_father_even_if_dead
 true_religion_scope
 twin
 twin_even_if_dead
+{{vFaction}}
+{{vJobTitle}}

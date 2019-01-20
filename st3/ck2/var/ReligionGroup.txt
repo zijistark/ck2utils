@@ -1,0 +1,7 @@
+christian          # Christian
+hip_religion_group # Nu
+indian_group       # Eastern
+jewish_group       # Israelite
+muslim             # Muslim
+pagan_group        # Pagan
+zoroastrian_group  # Mazdan

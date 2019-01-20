@@ -1,0 +1,30 @@
+action_administer_realm       # Administer Realm
+action_advance_cul_tech       # Research Cultural Tech
+action_advance_eco_tech       # Research Economy Tech
+action_advance_mil_tech       # Research Military Tech
+action_assist_arrest          # Suppress Revolts
+action_build_legend           # Build Legend
+action_build_zeal             # Build Zeal
+action_charity                # Perform Charity
+action_clan_sentiment         # Improve Clan Sentiment
+action_collect_tribute        # Collect Tribute
+action_fabricate_claims       # Fabricate Claims
+action_hunt_heretics          # Hunt Apostates
+action_improve_rel_relations  # Improve Religious Relations
+action_improve_relations      # Improve Diplomatic Relations
+action_inquisition            # Proselytize
+action_organize_army          # Organize the Army
+action_organize_raid          # Organize Raid
+action_organize_spies         # Build Spy Network
+action_organize_spies_mystics # Build Spy Network
+action_oversee_construction   # Oversee Construction
+action_sabotage_province      # Sabotage Province
+action_settle_tribe           # Settle Province
+action_sow_dissent            # Sow Dissent
+action_squeeze_peasants       # Collect Taxes
+action_statecraft             # Perform Statecraft
+action_study_technology       # Study Technology
+action_train_troops           # Train Troops
+action_train_troops_nomadic   # Train Warriors
+action_uncover_plots          # Scheme
+action_uncover_plots_offmap   # Scheme

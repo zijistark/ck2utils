@@ -1,0 +1,8 @@
+add_law
+add_law_w_cooldown
+has_law
+is_law_allowed
+is_law_potential
+law
+pass_law
+revoke_law

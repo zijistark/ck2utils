@@ -4,3 +4,5 @@ is_offmap_governor
 is_offmap_tag
 offmap
 offmap_power
+portrait
+show_portrait

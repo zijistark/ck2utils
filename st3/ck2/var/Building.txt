@@ -1,0 +1,867 @@
+ca_barracks_1                               # Barracks
+ca_barracks_2                               # Barracks
+ca_barracks_3                               # Barracks
+ca_barracks_4                               # Barracks
+ca_barracks_5                               # Barracks
+ca_barracks_6                               # Barracks
+ca_con_wall_6                               # Theodosian Walls
+ca_culture_altaic_jurchen_0                 # Jurchen Cavalry Barracks
+ca_culture_altaic_jurchen_1                 # [jurchen.GetName] Cavalry Barracks
+ca_culture_altaic_jurchen_2                 # [jurchen.GetName] Cavalry Barracks
+ca_culture_altaic_jurchen_3                 # [jurchen.GetName] Cavalry Barracks
+ca_culture_altaic_jurchen_4                 # [jurchen.GetName] Cavalry Barracks
+ca_culture_altaic_jurchen_5                 # Jurchen Cavalry Barracks
+ca_culture_animal_0                         # Animal Farm
+ca_culture_animal_1                         # Animal Farm
+ca_culture_animal_2                         # Animal Farm
+ca_culture_animal_3                         # Animal Farm
+ca_culture_animal_4                         # Animal Farm
+ca_culture_animal_5                         # Animal Farm
+ca_culture_assyrian_0                       # Kashat Archery Range
+ca_culture_assyrian_1                       # Kashat Archery Range
+ca_culture_assyrian_2                       # Kashat Archery Range
+ca_culture_assyrian_3                       # Kashat Archery Range
+ca_culture_assyrian_4                       # Kashat Archery Range
+ca_culture_assyrian_5                       # Kashat Archery Range
+ca_culture_basque_0                         # Kuartela
+ca_culture_basque_1                         # Kuartela
+ca_culture_basque_2                         # Kuartela
+ca_culture_basque_3                         # Kuartela
+ca_culture_basque_4                         # Kuartela
+ca_culture_basque_5                         # Kuartela
+ca_culture_catalan_0                        # Almoghavars Conscription Camp
+ca_culture_catalan_1                        # Almoghavars Conscription Camp
+ca_culture_catalan_2                        # Almoghavars Conscription Camp
+ca_culture_catalan_3                        # Almoghavars Conscription Camp
+ca_culture_catalan_4                        # Almoghavars Conscription Camp
+ca_culture_catalan_5                        # Almoghavars Conscription Camp
+ca_culture_chinese_han_0                    # Crossbow Range
+ca_culture_chinese_han_1                    # Crossbow Range
+ca_culture_chinese_han_2                    # Crossbow Range
+ca_culture_chinese_han_3                    # Crossbow Range
+ca_culture_chinese_han_4                    # Crossbow Range
+ca_culture_chinese_han_5                    # Crossbow Range
+ca_culture_coptic_0                         # [coptic.GetName] Spearmen
+ca_culture_coptic_1                         # [coptic.GetName] Spearmen
+ca_culture_coptic_2                         # [coptic.GetName] Spearmen
+ca_culture_coptic_3                         # [coptic.GetName] Spearmen
+ca_culture_coptic_4                         # [coptic.GetName] Spearmen
+ca_culture_coptic_5                         # [coptic.GetName] Spearmen
+ca_culture_croatia_0                        # Infantry Training Ground
+ca_culture_croatia_1                        # Infantry Training Ground
+ca_culture_croatia_2                        # Infantry Training Ground
+ca_culture_croatia_3                        # Infantry Training Ground
+ca_culture_croatia_4                        # Infantry Training Ground
+ca_culture_croatia_5                        # Infantry Training Ground
+ca_culture_dutch_0                          # Goedendag Militia Quarters
+ca_culture_dutch_1                          # Goedendag Militia Quarters
+ca_culture_dutch_2                          # Goedendag Militia Quarters
+ca_culture_dutch_3                          # Goedendag Militia Quarters
+ca_culture_dutch_4                          # Goedendag Militia Quarters
+ca_culture_dutch_5                          # Goedendag Militia Quarters
+ca_culture_ethiopian_0                      # Ethiopian Drilling Grounds
+ca_culture_ethiopian_1                      # Ethiopian Drilling Grounds
+ca_culture_ethiopian_2                      # Ethiopian Drilling Grounds
+ca_culture_ethiopian_3                      # Ethiopian Drilling Grounds
+ca_culture_ethiopian_4                      # Ethiopian Drilling Grounds
+ca_culture_ethiopian_5                      # Ethiopian Drilling Grounds
+ca_culture_frank_norman_german_0            # Jousting Lists
+ca_culture_frank_norman_german_1            # Jousting Lists
+ca_culture_frank_norman_german_2            # Jousting Lists
+ca_culture_frank_norman_german_3            # Jousting Lists
+ca_culture_frank_norman_german_4            # Jousting Lists
+ca_culture_frank_norman_german_5            # Jousting Lists
+ca_culture_germanic_0                       # Germanic Infantry Barracks
+ca_culture_germanic_1                       # [GetGermanic] Infantry Barracks
+ca_culture_germanic_2                       # [GetGermanic] Infantry Barracks
+ca_culture_germanic_3                       # [GetGermanic] Infantry Barracks
+ca_culture_germanic_4                       # [GetGermanic] Infantry Barracks
+ca_culture_germanic_5                       # Germanic Infantry Barracks
+ca_culture_group_altaic_0                   # Riding Grounds
+ca_culture_group_altaic_1                   # Riding Grounds
+ca_culture_group_altaic_2                   # Riding Grounds
+ca_culture_group_altaic_3                   # Riding Grounds
+ca_culture_group_altaic_4                   # Riding Grounds
+ca_culture_group_altaic_5                   # Riding Grounds
+ca_culture_group_arabic_0                   # Camel Training Grounds
+ca_culture_group_arabic_1                   # Camel Training Grounds
+ca_culture_group_arabic_2                   # Camel Training Grounds
+ca_culture_group_arabic_3                   # Camel Training Grounds
+ca_culture_group_arabic_4                   # Camel Training Grounds
+ca_culture_group_arabic_5                   # Camel Training Grounds
+ca_culture_group_baltic_0                   # Warrior Gathering Ground
+ca_culture_group_baltic_1                   # Warrior Gathering Ground
+ca_culture_group_baltic_2                   # Warrior Gathering Ground
+ca_culture_group_baltic_3                   # Warrior Gathering Ground
+ca_culture_group_baltic_4                   # Warrior Gathering Ground
+ca_culture_group_baltic_5                   # Warrior Gathering Ground
+ca_culture_group_byzantine_0                # Cataphract Training Ground
+ca_culture_group_byzantine_1                # Cataphract Training Ground
+ca_culture_group_byzantine_2                # Cataphract Training Ground
+ca_culture_group_byzantine_3                # Cataphract Training Ground
+ca_culture_group_byzantine_4                # Cataphract Training Ground
+ca_culture_group_byzantine_5                # Cataphract Training Ground
+ca_culture_group_iberian_0                  # Caballero Training Ground
+ca_culture_group_iberian_1                  # Caballero Training Ground
+ca_culture_group_iberian_2                  # Caballero Training Ground
+ca_culture_group_iberian_3                  # Caballero Training Ground
+ca_culture_group_iberian_4                  # Caballero Training Ground
+ca_culture_group_iberian_5                  # Caballero Training Ground
+ca_culture_group_north_african_0            # Camel Riding Grounds
+ca_culture_group_north_african_1            # Camel Riding Grounds
+ca_culture_group_north_african_2            # Camel Riding Grounds
+ca_culture_group_north_african_3            # Camel Riding Grounds
+ca_culture_group_north_african_4            # Camel Riding Grounds
+ca_culture_group_north_african_5            # Camel Riding Grounds
+ca_culture_group_north_germanic_0           # Huscarl Training Ground
+ca_culture_group_north_germanic_1           # Húskarlar Training Ground
+ca_culture_group_north_germanic_2           # Húskarlar Training Ground
+ca_culture_group_north_germanic_3           # Húskarlar Training Ground
+ca_culture_group_north_germanic_4           # Húskarlar Training Ground
+ca_culture_group_north_germanic_5           # Huscarl Training Ground
+ca_culture_group_south_slavic_0             # Gusar Training Ground
+ca_culture_group_south_slavic_1             # Gusar Training Ground
+ca_culture_group_south_slavic_2             # Gusar Training Ground
+ca_culture_group_south_slavic_3             # Gusar Training Ground
+ca_culture_group_south_slavic_4             # Gusar Training Ground
+ca_culture_group_south_slavic_5             # Gusar Training Ground
+ca_culture_hungarian_0                      # Hussar Training Ground
+ca_culture_hungarian_1                      # Huszár Training Ground
+ca_culture_hungarian_2                      # Huszár Training Ground
+ca_culture_hungarian_3                      # Huszár Training Ground
+ca_culture_hungarian_4                      # Huszár Training Ground
+ca_culture_hungarian_5                      # Hussar Training Ground
+ca_culture_indian_0                         # War Elephant Pens
+ca_culture_indian_1                         # War Elephant Pens
+ca_culture_indian_2                         # War Elephant Pens
+ca_culture_indian_3                         # War Elephant Pens
+ca_culture_indian_4                         # War Elephant Pens
+ca_culture_indian_5                         # War Elephant Pens
+ca_culture_irish_0                          # Gallowglass Training Ground
+ca_culture_irish_1                          # Gallowglass Training Ground
+ca_culture_irish_2                          # Gallowglass Training Ground
+ca_culture_irish_3                          # Gallowglass Training Ground
+ca_culture_irish_4                          # Gallowglass Training Ground
+ca_culture_irish_5                          # Gallowglass Training Ground
+ca_culture_italian_0                        # Cavalleria Training Ground
+ca_culture_italian_1                        # Cavalleria Training Ground
+ca_culture_italian_2                        # Cavalleria Training Ground
+ca_culture_italian_3                        # Cavalleria Training Ground
+ca_culture_italian_4                        # Cavalleria Training Ground
+ca_culture_italian_5                        # Cavalleria Training Ground
+ca_culture_jewish_0                         # Jewish Heavy Infantry Barracks
+ca_culture_jewish_1                         # [israelite.GetGroupName] Heavy Infantry Barracks
+ca_culture_jewish_2                         # [israelite.GetGroupName] Heavy Infantry Barracks
+ca_culture_jewish_3                         # [israelite.GetGroupName] Heavy Infantry Barracks
+ca_culture_jewish_4                         # [israelite.GetGroupName] Heavy Infantry Barracks
+ca_culture_jewish_5                         # Jewish Heavy Infantry Barracks
+ca_culture_ligurian_0                       # Balestrieri Drilling Grounds
+ca_culture_ligurian_1                       # Balestrieri Drilling Grounds
+ca_culture_ligurian_2                       # Balestrieri Drilling Grounds
+ca_culture_ligurian_3                       # Balestrieri Drilling Grounds
+ca_culture_ligurian_4                       # Balestrieri Drilling Grounds
+ca_culture_ligurian_5                       # Balestrieri Drilling Grounds
+ca_culture_nahuatl_0                        # Jaguar Warrior Lodge
+ca_culture_nahuatl_1                        # Jaguar Warrior Lodge
+ca_culture_nahuatl_2                        # Jaguar Warrior Lodge
+ca_culture_nahuatl_3                        # Jaguar Warrior Lodge
+ca_culture_nahuatl_4                        # Jaguar Warrior Lodge
+ca_culture_nahuatl_5                        # Jaguar Warrior Lodge
+ca_culture_pictish_0                        # Hall of War
+ca_culture_pictish_1                        # Hall of War
+ca_culture_pictish_2                        # Hall of War
+ca_culture_pictish_3                        # Hall of War
+ca_culture_pictish_4                        # Hall of War
+ca_culture_pictish_5                        # Hall of War
+ca_culture_portuguese_galician_andalusian_0 # Jinete Riding Grounds
+ca_culture_portuguese_galician_andalusian_1 # Jinete Riding Grounds
+ca_culture_portuguese_galician_andalusian_2 # Jinete Riding Grounds
+ca_culture_portuguese_galician_andalusian_3 # Jinete Riding Grounds
+ca_culture_portuguese_galician_andalusian_4 # Jinete Riding Grounds
+ca_culture_portuguese_galician_andalusian_5 # Jinete Riding Grounds
+ca_culture_roman_0                          # Legionary Drilling Grounds
+ca_culture_roman_1                          # Legionary Drilling Grounds
+ca_culture_roman_2                          # Legionary Drilling Grounds
+ca_culture_roman_3                          # Legionary Drilling Grounds
+ca_culture_roman_4                          # Legionary Drilling Grounds
+ca_culture_roman_5                          # Legionary Drilling Grounds
+ca_culture_russian_0                        # Druzhina Training Ground
+ca_culture_russian_1                        # Druzhina Training Ground
+ca_culture_russian_2                        # Druzhina Training Ground
+ca_culture_russian_3                        # Druzhina Training Ground
+ca_culture_russian_4                        # Druzhina Training Ground
+ca_culture_russian_5                        # Druzhina Training Ground
+ca_culture_saxon_english_0                  # Longbow Range
+ca_culture_saxon_english_1                  # Longbow Range
+ca_culture_saxon_english_2                  # Longbow Range
+ca_culture_saxon_english_3                  # Longbow Range
+ca_culture_saxon_english_4                  # Longbow Range
+ca_culture_saxon_english_5                  # Longbow Range
+ca_culture_scottish_0                       # Schiltron Training Ground
+ca_culture_scottish_1                       # Schiltron Training Ground
+ca_culture_scottish_2                       # Schiltron Training Ground
+ca_culture_scottish_3                       # Schiltron Training Ground
+ca_culture_scottish_4                       # Schiltron Training Ground
+ca_culture_scottish_5                       # Schiltron Training Ground
+ca_culture_suebi_0                          # Free Warrior Camp
+ca_culture_suebi_1                          # Free Warrior Camp
+ca_culture_suebi_2                          # Free Warrior Camp
+ca_culture_suebi_3                          # Free Warrior Camp
+ca_culture_suebi_4                          # Free Warrior Camp
+ca_culture_suebi_5                          # Free Warrior Camp
+ca_culture_tibetan_0                        # Mountaineer Academy
+ca_culture_tibetan_1                        # Mountaineer Academy
+ca_culture_tibetan_2                        # Mountaineer Academy
+ca_culture_tibetan_3                        # Mountaineer Academy
+ca_culture_tibetan_4                        # Mountaineer Academy
+ca_culture_tibetan_5                        # Mountaineer Academy
+ca_culture_venetian_0                       # Marine Barracks
+ca_culture_venetian_1                       # Marine Barracks
+ca_culture_venetian_2                       # Marine Barracks
+ca_culture_venetian_3                       # Marine Barracks
+ca_culture_venetian_4                       # Marine Barracks
+ca_culture_venetian_5                       # Marine Barracks
+ca_culture_west_african_0                   # Horon Warrior Lodge
+ca_culture_west_african_1                   # Free Warrior Lodge
+ca_culture_west_african_2                   # Free Warrior Lodge
+ca_culture_west_african_3                   # Free Warrior Lodge
+ca_culture_west_african_4                   # Free Warrior Lodge
+ca_culture_west_african_5                   # Horon Warrior Lodge
+ca_desert_stable_1                          # Desert Cavalry
+ca_desert_stable_2                          # Desert Cavalry
+ca_desert_stable_3                          # Desert Cavalry
+ca_desert_stable_4                          # Desert Cavalry
+ca_desert_stable_5                          # Desert Cavalry
+ca_desert_stable_6                          # Desert Cavalry
+ca_keep_1                                   # Keep
+ca_keep_2                                   # Keep
+ca_keep_3                                   # Keep
+ca_keep_4                                   # Keep
+ca_keep_5                                   # Keep
+ca_keep_6                                   # Keep
+ca_militia_barracks_1                       # Militia Training Ground
+ca_militia_barracks_2                       # Militia Training Ground
+ca_militia_barracks_3                       # Militia Training Ground
+ca_militia_barracks_4                       # Militia Training Ground
+ca_oppressive_fortifications_1              # Gloomy Monument
+ca_oppressive_fortifications_2              # Connected Watchtowers
+ca_oppressive_fortifications_3              # Lonely Spire
+ca_oppressive_fortifications_4              # Palace of Justice
+ca_shipyard_1                               # Castle Shipyard
+ca_shipyard_2                               # Castle Shipyard
+ca_special_fortifications_1                 # Insulated Sections
+ca_special_fortifications_2                 # Killing Fields
+ca_special_fortifications_3                 # Extended Machicolations
+ca_special_fortifications_4                 # Reinforced Barbican
+ca_stable_1                                 # Stables
+ca_stable_2                                 # Stables
+ca_stable_3                                 # Stables
+ca_stable_4                                 # Stables
+ca_stable_5                                 # Stables
+ca_stable_6                                 # Stables
+ca_steppe_barracks_1                        # Steppe Warrior Lodge
+ca_steppe_barracks_2                        # Steppe Warrior Lodge
+ca_steppe_barracks_3                        # Steppe Warrior Lodge
+ca_steppe_barracks_4                        # Steppe Warrior Lodge
+ca_steppe_barracks_5                        # Steppe Warrior Lodge
+ca_steppe_barracks_6                        # Steppe Warrior Lodge
+ca_steppe_stable_1                          # Steppe Riding Grounds
+ca_steppe_stable_2                          # Steppe Riding Grounds
+ca_steppe_stable_3                          # Steppe Riding Grounds
+ca_steppe_stable_4                          # Steppe Riding Grounds
+ca_steppe_stable_5                          # Steppe Riding Grounds
+ca_steppe_stable_6                          # Steppe Riding Grounds
+ca_town_1                                   # Castle Town
+ca_town_2                                   # Castle Town
+ca_town_3                                   # Castle Town
+ca_town_4                                   # Castle Town
+ca_town_5                                   # Castle Town
+ca_training_grounds_1                       # Training Grounds
+ca_training_grounds_2                       # Training Grounds
+ca_training_grounds_3                       # Training Grounds
+ca_wall_1                                   # Castle Walls
+ca_wall_2                                   # Castle Walls
+ca_wall_3                                   # Castle Walls
+ca_wall_4                                   # Castle Walls
+ca_wall_5                                   # Castle Walls
+ca_wall_q_1                                 # Castle Fortifications
+ca_wall_q_2                                 # Castle Fortifications
+ca_wall_q_3                                 # Castle Fortifications
+ca_wall_q_4                                 # Castle Fortifications
+ca_wall_q_5                                 # Castle Fortifications
+chapel_1                                    # Chapel
+ct_barracks_1                               # Mustering Grounds
+ct_barracks_2                               # Mustering Grounds
+ct_barracks_3                               # Mustering Grounds
+ct_barracks_4                               # Mustering Grounds
+ct_barracks_5                               # Mustering Grounds
+ct_barracks_6                               # Mustering Grounds
+ct_guard_1                                  # City Guard
+ct_guard_2                                  # City Guard
+ct_guard_3                                  # City Guard
+ct_guard_4                                  # City Guard
+ct_guard_5                                  # City Guard
+ct_marketplace_1                            # Town Market
+ct_marketplace_2                            # City Guild Hall
+ct_marketplace_3                            # Toll Booth
+ct_marketplace_4                            # Court
+ct_marketplace_5                            # Assay Office
+ct_marketplace_6                            # Fair
+ct_planned_infrastructure_1                 # Garrisoned Roads
+ct_planned_infrastructure_2                 # Stone Roads
+ct_planned_infrastructure_3                 # Cleared Pathways
+ct_planned_infrastructure_4                 # Great Aqueduct
+ct_port_1                                   # Port
+ct_port_2                                   # Port
+ct_port_3                                   # Port
+ct_port_4                                   # Port
+ct_port_5                                   # Port
+ct_rep_arsenal_1                            # Arsenal
+ct_rep_arsenal_2                            # Arsenal
+ct_rep_arsenal_3                            # Arsenal
+ct_shipyard_1                               # City Shipyard
+ct_shipyard_2                               # City Shipyard
+ct_training_grounds_1                       # Militia Training Ground
+ct_training_grounds_2                       # Militia Training Ground
+ct_training_grounds_3                       # Militia Training Ground
+ct_training_grounds_4                       # Militia Training Ground
+ct_training_grounds_5                       # Militia Training Ground
+ct_training_grounds_6                       # Militia Training Ground
+ct_university_1                             # University
+ct_university_2                             # University
+ct_university_3                             # University
+ct_wall_1                                   # City Walls
+ct_wall_2                                   # City Walls
+ct_wall_3                                   # City Walls
+ct_wall_4                                   # City Walls
+ct_wall_5                                   # City Walls
+ct_wall_q_1                                 # City Fortifications
+ct_wall_q_2                                 # City Fortifications
+ct_wall_q_3                                 # City Fortifications
+ct_wall_q_4                                 # City Fortifications
+ct_wall_q_5                                 # City Fortifications
+fp_barracks_1                               # Guard Barracks
+fp_barracks_2                               # Swordsmith
+fp_barracks_3                               # Armory
+fp_bowyer_1                                 # Bowyer
+fp_bowyer_2                                 # Target Range
+fp_bowyer_3                                 # Crossbow Workshop
+fp_cellar_1                                 # Wine Cellar
+fp_cellar_2                                 # Catacombs
+fp_cellar_3                                 # Dungeon Complex
+fp_garden_1                                 # Palace Garden
+fp_garden_2                                 # Scenic Pond
+fp_garden_3                                 # Hedge Maze
+fp_mansion_1                                # Mansion
+fp_mansion_2                                # Great Mansion
+fp_mansion_3                                # Palace
+fp_mansion_4                                # Grand Palace
+fp_shipyard_1                               # Map Room
+fp_shipyard_2                               # Private Shipyard
+fp_shipyard_3                               # Naval Arsenal
+fp_shrine_1                                 # Secluded Shrine
+fp_shrine_2                                 # Private Art Collection
+fp_shrine_3                                 # Grand Library
+fp_stable_1                                 # Small Stable
+fp_stable_2                                 # Riding Grounds
+fp_stable_3                                 # Horse Breeder
+fp_vault_1                                  # Fortified Vault
+fp_vault_2                                  # Secret Passages
+fp_vault_3                                  # Hidden Chamber
+fp_warehouse_1                              # Military Warehouse
+fp_warehouse_2                              # Palace Archive
+fp_warehouse_3                              # Administrative Office
+hospital_building_1                         # Sick House
+hospital_building_2                         # Expanded Sick House
+hospital_building_3                         # Separated Wards
+hospital_building_4                         # Extended Wards
+hospital_building_5                         # Extensive Hospital Complex
+leper_colony_1                              # Leper Colony
+library_1                                   # Library
+medical_academy_1                           # Medical Academy
+mercenary_garrison_1                        # Small Mercenary Garrison
+mercenary_garrison_2                        # Medium Mercenary Garrison
+mercenary_garrison_3                        # Large Mercenary Garrison
+no_airag_producer_1                         # Airag Producer
+no_airag_producer_2                         # Airag Producer
+no_airag_producer_3                         # Airag Producer
+no_airag_producer_4                         # Airag Producer
+no_airag_producer_5                         # Airag Producer
+no_airag_producer_6                         # Airag Producer
+no_airag_producer_7                         # Airag Producer
+no_airag_producer_8                         # Airag Producer
+no_baghatur_council_1                       # Baghatur Council
+no_baghatur_council_2                       # Baghatur Council
+no_baghatur_council_3                       # Baghatur Council
+no_baghatur_council_4                       # Baghatur Council
+no_baghatur_council_5                       # Baghatur Council
+no_baghatur_council_6                       # Baghatur Council
+no_baghatur_council_7                       # Baghatur Council
+no_baghatur_council_8                       # Baghatur Council
+no_camel_breeder_1                          # Camel Breeder
+no_camel_breeder_2                          # Camel Breeder
+no_camel_breeder_3                          # Camel Breeder
+no_camel_breeder_4                          # Camel Breeder
+no_camel_breeder_5                          # Camel Breeder
+no_camel_breeder_6                          # Camel Breeder
+no_camel_breeder_7                          # Camel Breeder
+no_camel_breeder_8                          # Camel Breeder
+no_camp_fortifications_1                    # Camp Fortifications
+no_camp_fortifications_2                    # Camp Fortifications
+no_camp_fortifications_3                    # Camp Fortifications
+no_camp_fortifications_4                    # Camp Fortifications
+no_camp_fortifications_5                    # Camp Fortifications
+no_camp_fortifications_6                    # Camp Fortifications
+no_camp_fortifications_7                    # Camp Fortifications
+no_camp_fortifications_8                    # Camp Fortifications
+no_cattle_pens_1                            # Cattle Pens
+no_cattle_pens_2                            # Cattle Pens
+no_cattle_pens_3                            # Cattle Pens
+no_cattle_pens_4                            # Cattle Pens
+no_cattle_pens_5                            # Cattle Pens
+no_cattle_pens_6                            # Cattle Pens
+no_cattle_pens_7                            # Cattle Pens
+no_cattle_pens_8                            # Cattle Pens
+no_composite_bow_crafter_1                  # Composite Bow
+no_composite_bow_crafter_2                  # Composite Bow
+no_composite_bow_crafter_3                  # Composite Bow
+no_composite_bow_crafter_4                  # Composite Bow
+no_composite_bow_crafter_5                  # Composite Bow
+no_composite_bow_crafter_6                  # Composite Bow
+no_composite_bow_crafter_7                  # Composite Bow
+no_composite_bow_crafter_8                  # Composite Bow
+no_elephant_camp_1                          # Elephant Camp
+no_elephant_camp_2                          # Elephant Camp
+no_elephant_camp_3                          # Elephant Camp
+no_elephant_camp_4                          # Elephant Camp
+no_elephant_camp_5                          # Elephant Camp
+no_elephant_camp_6                          # Elephant Camp
+no_elephant_camp_7                          # Elephant Camp
+no_elephant_camp_8                          # Elephant Camp
+no_felt_crafter_1                           # Felt Crafter
+no_felt_crafter_2                           # Felt Crafter
+no_felt_crafter_3                           # Felt Crafter
+no_felt_crafter_4                           # Felt Crafter
+no_felt_crafter_5                           # Felt Crafter
+no_felt_crafter_6                           # Felt Crafter
+no_felt_crafter_7                           # Felt Crafter
+no_felt_crafter_8                           # Felt Crafter
+no_fishing_village_1                        # Fishing Village
+no_fishing_village_2                        # Fishing Village
+no_fishing_village_3                        # Fishing Village
+no_fishing_village_4                        # Fishing Village
+no_fishing_village_5                        # Fishing Village
+no_fishing_village_6                        # Fishing Village
+no_fishing_village_7                        # Fishing Village
+no_fishing_village_8                        # Fishing Village
+no_gathering_hall_1                         # Clan Gathering Hall
+no_gathering_hall_2                         # Clan Gathering Hall
+no_gathering_hall_3                         # Clan Gathering Hall
+no_gathering_hall_4                         # Clan Gathering Hall
+no_gathering_hall_5                         # Clan Gathering Hall
+no_gathering_hall_6                         # Clan Gathering Hall
+no_gathering_hall_7                         # Clan Gathering Hall
+no_gathering_hall_8                         # Clan Gathering Hall
+no_ger_crafter_1                            # Ger Crafter
+no_ger_crafter_2                            # Ger Crafter
+no_ger_crafter_3                            # Ger Crafter
+no_ger_crafter_4                            # Ger Crafter
+no_ger_crafter_5                            # Ger Crafter
+no_ger_crafter_6                            # Ger Crafter
+no_ger_crafter_7                            # Ger Crafter
+no_ger_crafter_8                            # Ger Crafter
+no_harbor_1                                 # Harbor
+no_harbor_2                                 # Harbor
+no_harbor_3                                 # Harbor
+no_harbor_4                                 # Harbor
+no_harbor_5                                 # Harbor
+no_harbor_6                                 # Harbor
+no_harbor_7                                 # Harbor
+no_harbor_8                                 # Harbor
+no_horse_breeder_1                          # Horse Breeder
+no_horse_breeder_2                          # Horse Breeder
+no_horse_breeder_3                          # Horse Breeder
+no_horse_breeder_4                          # Horse Breeder
+no_horse_breeder_5                          # Horse Breeder
+no_horse_breeder_6                          # Horse Breeder
+no_horse_breeder_7                          # Horse Breeder
+no_horse_breeder_8                          # Horse Breeder
+no_hunting_parties_1                        # Hunting Parties
+no_hunting_parties_2                        # Hunting Parties
+no_hunting_parties_3                        # Hunting Parties
+no_hunting_parties_4                        # Hunting Parties
+no_hunting_parties_5                        # Hunting Parties
+no_hunting_parties_6                        # Hunting Parties
+no_hunting_parties_7                        # Hunting Parties
+no_hunting_parties_8                        # Hunting Parties
+no_lamellar_armor_crafter_1                 # Lamellar Armor Crafter
+no_lamellar_armor_crafter_2                 # Lamellar Armor Crafter
+no_lamellar_armor_crafter_3                 # Lamellar Armor Crafter
+no_lamellar_armor_crafter_4                 # Lamellar Armor Crafter
+no_lamellar_armor_crafter_5                 # Lamellar Armor Crafter
+no_lamellar_armor_crafter_6                 # Lamellar Armor Crafter
+no_lamellar_armor_crafter_7                 # Lamellar Armor Crafter
+no_lamellar_armor_crafter_8                 # Lamellar Armor Crafter
+no_lucky_1                                  # Lucky Warhorse Stables
+no_meat_preserver_1                         # Meat Preserver
+no_meat_preserver_2                         # Meat Preserver
+no_meat_preserver_3                         # Meat Preserver
+no_meat_preserver_4                         # Meat Preserver
+no_meat_preserver_5                         # Meat Preserver
+no_meat_preserver_6                         # Meat Preserver
+no_meat_preserver_7                         # Meat Preserver
+no_meat_preserver_8                         # Meat Preserver
+no_minority_shrine_1                        # Minority Shrines
+no_minority_shrine_2                        # Minority Shrines
+no_minority_shrine_3                        # Minority Shrines
+no_minority_shrine_4                        # Minority Shrines
+no_minority_shrine_5                        # Minority Shrines
+no_minority_shrine_6                        # Minority Shrines
+no_minority_shrine_7                        # Minority Shrines
+no_minority_shrine_8                        # Minority Shrines
+no_minter_1                                 # Minter
+no_minter_2                                 # Minter
+no_minter_3                                 # Minter
+no_minter_4                                 # Minter
+no_minter_5                                 # Minter
+no_minter_6                                 # Minter
+no_minter_7                                 # Minter
+no_minter_8                                 # Minter
+no_ox_wagon_1                               # Ox & Wagon
+no_ox_wagon_2                               # Ox & Wagon
+no_ox_wagon_3                               # Ox & Wagon
+no_ox_wagon_4                               # Ox & Wagon
+no_ox_wagon_5                               # Ox & Wagon
+no_ox_wagon_6                               # Ox & Wagon
+no_ox_wagon_7                               # Ox & Wagon
+no_ox_wagon_8                               # Ox & Wagon
+no_riding_contests_1                        # Riding Contests
+no_riding_contests_2                        # Riding Contests
+no_riding_contests_3                        # Riding Contests
+no_riding_contests_4                        # Riding Contests
+no_riding_contests_5                        # Riding Contests
+no_riding_contests_6                        # Riding Contests
+no_riding_contests_7                        # Riding Contests
+no_riding_contests_8                        # Riding Contests
+no_sheep_1                                  # Sheep
+no_sheep_2                                  # Sheep
+no_sheep_3                                  # Sheep
+no_sheep_4                                  # Sheep
+no_sheep_5                                  # Sheep
+no_sheep_6                                  # Sheep
+no_sheep_7                                  # Sheep
+no_sheep_8                                  # Sheep
+no_shrine_1                                 # Shrine
+no_shrine_2                                 # Shrine
+no_shrine_3                                 # Shrine
+no_shrine_4                                 # Shrine
+no_shrine_5                                 # Shrine
+no_shrine_6                                 # Shrine
+no_shrine_7                                 # Shrine
+no_shrine_8                                 # Shrine
+no_wrestling_1                              # Wrestling
+no_wrestling_2                              # Wrestling
+no_wrestling_3                              # Wrestling
+no_wrestling_4                              # Wrestling
+no_wrestling_5                              # Wrestling
+no_wrestling_6                              # Wrestling
+no_wrestling_7                              # Wrestling
+no_wrestling_8                              # Wrestling
+no_yam_1                                    # Yam
+no_yam_2                                    # Yam
+no_yam_3                                    # Yam
+no_yam_4                                    # Yam
+no_yam_5                                    # Yam
+no_yam_6                                    # Yam
+no_yam_7                                    # Yam
+no_yam_8                                    # Yam
+observatory_1                               # Observatory
+pharmacology_laboratory_1                   # Pharmacology Laboratory
+pilgrims_inn_1                              # Pilgrim's Inn
+radhanite_quarter_1                         # Small Radhanite Compound
+radhanite_quarter_2                         # Radhanite Compound
+radhanite_quarter_3                         # Large Radhanite Compound
+soup_kitchen_1                              # Soup Kitchen
+tb_arsenal_1                                # Weaponsmith
+tb_arsenal_2                                # Weaponsmith
+tb_arsenal_3                                # Weaponsmith
+tb_arsenal_4                                # Weaponsmith
+tb_culture_altaic_jurchen_1                 # [jurchen.GetName] Cavalry Barracks
+tb_culture_altaic_jurchen_2                 # [jurchen.GetName] Cavalry Barracks
+tb_culture_altaic_jurchen_3                 # [jurchen.GetName] Cavalry Barracks
+tb_culture_altaic_jurchen_4                 # [jurchen.GetName] Cavalry Barracks
+tb_culture_animal_1                         # Animal Farm
+tb_culture_animal_2                         # Animal Farm
+tb_culture_animal_3                         # Animal Farm
+tb_culture_animal_4                         # Animal Farm
+tb_culture_assyrian_1                       # Kashat Archery Range
+tb_culture_assyrian_2                       # Kashat Archery Range
+tb_culture_assyrian_3                       # Kashat Archery Range
+tb_culture_assyrian_4                       # Kashat Archery Range
+tb_culture_basque_1                         # Kuartela
+tb_culture_basque_2                         # Kuartela
+tb_culture_basque_3                         # Kuartela
+tb_culture_basque_4                         # Kuartela
+tb_culture_catalan_1                        # Almoghavars Conscription Camp
+tb_culture_catalan_2                        # Almoghavars Conscription Camp
+tb_culture_catalan_3                        # Almoghavars Conscription Camp
+tb_culture_catalan_4                        # Almoghavars Conscription Camp
+tb_culture_chinese_han_1                    # Crossbow Range
+tb_culture_chinese_han_2                    # Crossbow Range
+tb_culture_chinese_han_3                    # Crossbow Range
+tb_culture_chinese_han_4                    # Crossbow Range
+tb_culture_coptic_1                         # [coptic.GetName] Spearmen
+tb_culture_coptic_2                         # [coptic.GetName] Spearmen
+tb_culture_coptic_3                         # [coptic.GetName] Spearmen
+tb_culture_coptic_4                         # [coptic.GetName] Spearmen
+tb_culture_croatia_1                        # Infantry Training Ground
+tb_culture_croatia_2                        # Infantry Training Ground
+tb_culture_croatia_3                        # Infantry Training Ground
+tb_culture_croatia_4                        # Infantry Training Ground
+tb_culture_dutch_1                          # Goedendag Militia Quarters
+tb_culture_dutch_2                          # Goedendag Militia Quarters
+tb_culture_dutch_3                          # Goedendag Militia Quarters
+tb_culture_dutch_4                          # Goedendag Militia Quarters
+tb_culture_ethiopian_1                      # [ethiopian.GetName] Drilling Grounds
+tb_culture_ethiopian_2                      # [ethiopian.GetName] Drilling Grounds
+tb_culture_ethiopian_3                      # [ethiopian.GetName] Drilling Grounds
+tb_culture_ethiopian_4                      # [ethiopian.GetName] Drilling Grounds
+tb_culture_frank_norman_german_1            # Jousting Lists
+tb_culture_frank_norman_german_2            # Jousting Lists
+tb_culture_frank_norman_german_3            # Jousting Lists
+tb_culture_frank_norman_german_4            # Jousting Lists
+tb_culture_germanic_1                       # [GetGermanic] Infantry Barracks
+tb_culture_germanic_2                       # [GetGermanic] Infantry Barracks
+tb_culture_germanic_3                       # [GetGermanic] Infantry Barracks
+tb_culture_germanic_4                       # [GetGermanic] Infantry Barracks
+tb_culture_group_altaic_1                   # Riding Grounds
+tb_culture_group_altaic_2                   # Riding Grounds
+tb_culture_group_altaic_3                   # Riding Grounds
+tb_culture_group_altaic_4                   # Riding Grounds
+tb_culture_group_arabic_1                   # Camel Training Grounds
+tb_culture_group_arabic_2                   # Camel Training Grounds
+tb_culture_group_arabic_3                   # Camel Training Grounds
+tb_culture_group_arabic_4                   # Camel Training Grounds
+tb_culture_group_baltic_1                   # Warrior Gathering Ground
+tb_culture_group_baltic_2                   # Warrior Gathering Ground
+tb_culture_group_baltic_3                   # Warrior Gathering Ground
+tb_culture_group_baltic_4                   # Warrior Gathering Ground
+tb_culture_group_byzantine_1                # [byzantine.GetGroupName] Riding Ground
+tb_culture_group_byzantine_2                # [byzantine.GetGroupName] Riding Ground
+tb_culture_group_byzantine_3                # [byzantine.GetGroupName] Riding Ground
+tb_culture_group_byzantine_4                # [byzantine.GetGroupName] Riding Ground
+tb_culture_group_iberian_1                  # Caballero Training Ground
+tb_culture_group_iberian_2                  # Caballero Training Ground
+tb_culture_group_iberian_3                  # Caballero Training Ground
+tb_culture_group_iberian_4                  # Caballero Training Ground
+tb_culture_group_north_african_1            # Camel Riding Grounds
+tb_culture_group_north_african_2            # Camel Riding Grounds
+tb_culture_group_north_african_3            # Camel Riding Grounds
+tb_culture_group_north_african_4            # Camel Riding Grounds
+tb_culture_group_north_germanic_1           # Housecarl Training Ground
+tb_culture_group_north_germanic_2           # Housecarl Training Ground
+tb_culture_group_north_germanic_3           # Housecarl Training Ground
+tb_culture_group_north_germanic_4           # Housecarl Training Ground
+tb_culture_group_south_slavic_1             # Gusar Training Ground
+tb_culture_group_south_slavic_2             # Gusar Training Ground
+tb_culture_group_south_slavic_3             # Gusar Training Ground
+tb_culture_group_south_slavic_4             # Gusar Training Ground
+tb_culture_hungarian_1                      # Hussar Training Ground
+tb_culture_hungarian_2                      # Hussar Training Ground
+tb_culture_hungarian_3                      # Hussar Training Ground
+tb_culture_hungarian_4                      # Hussar Training Ground
+tb_culture_indian_1                         # War Elephant Pens
+tb_culture_indian_2                         # War Elephant Pens
+tb_culture_indian_3                         # War Elephant Pens
+tb_culture_indian_4                         # War Elephant Pens
+tb_culture_irish_1                          # Gallowglass Training Ground
+tb_culture_irish_2                          # Gallowglass Training Ground
+tb_culture_irish_3                          # Gallowglass Training Ground
+tb_culture_irish_4                          # Gallowglass Training Ground
+tb_culture_italian_1                        # Cavalleria Training Ground
+tb_culture_italian_2                        # Cavalleria Training Ground
+tb_culture_italian_3                        # Cavalleria Training Ground
+tb_culture_italian_4                        # Cavalleria Training Ground
+tb_culture_jewish_1                         # [israelite.GetGroupName] Heavy Infantry Barracks
+tb_culture_jewish_2                         # [israelite.GetGroupName] Heavy Infantry Barracks
+tb_culture_jewish_3                         # [israelite.GetGroupName] Heavy Infantry Barracks
+tb_culture_jewish_4                         # [israelite.GetGroupName] Heavy Infantry Barracks
+tb_culture_ligurian_1
+tb_culture_ligurian_2
+tb_culture_ligurian_3
+tb_culture_ligurian_4
+tb_culture_nahuatl_1                        # Jaguar Warrior Lodge
+tb_culture_nahuatl_2                        # Jaguar Warrior Lodge
+tb_culture_nahuatl_3                        # Jaguar Warrior Lodge
+tb_culture_nahuatl_4                        # Jaguar Warrior Lodge
+tb_culture_pictish_1                        # Hall of War
+tb_culture_pictish_2                        # Hall of War
+tb_culture_pictish_3                        # Hall of War
+tb_culture_pictish_4                        # Hall of War
+tb_culture_portuguese_galician_andalusian_1 # Jinete Riding Grounds
+tb_culture_portuguese_galician_andalusian_2 # Jinete Riding Grounds
+tb_culture_portuguese_galician_andalusian_4 # Jinete Riding Grounds
+tb_culture_roman_1
+tb_culture_roman_2
+tb_culture_roman_3
+tb_culture_roman_4
+tb_culture_russian_1                        # Druzhina Training Ground
+tb_culture_russian_2                        # Druzhina Training Ground
+tb_culture_russian_3                        # Druzhina Training Ground
+tb_culture_russian_4                        # Druzhina Training Ground
+tb_culture_saxon_english_1                  # Longbow Range
+tb_culture_saxon_english_2                  # Longbow Range
+tb_culture_saxon_english_3                  # Longbow Range
+tb_culture_saxon_english_4                  # Longbow Range
+tb_culture_scottish_1                       # Schiltron Training Ground
+tb_culture_scottish_2                       # Schiltron Training Ground
+tb_culture_scottish_3                       # Schiltron Training Ground
+tb_culture_scottish_4                       # Schiltron Training Ground
+tb_culture_suebi_1                          # Free Warrior Camp
+tb_culture_suebi_2                          # Free Warrior Camp
+tb_culture_suebi_3                          # Free Warrior Camp
+tb_culture_suebi_4                          # Free Warrior Camp
+tb_culture_tibetan_1                        # Mountaineer Academy
+tb_culture_tibetan_2                        # Mountaineer Academy
+tb_culture_tibetan_3                        # Mountaineer Academy
+tb_culture_tibetan_4                        # Mountaineer Academy
+tb_culture_venetian_1
+tb_culture_venetian_2
+tb_culture_venetian_3
+tb_culture_venetian_4
+tb_culture_west_african_1                   # Free Warrior Lodge
+tb_culture_west_african_2                   # Free Warrior Lodge
+tb_culture_west_african_3                   # Free Warrior Lodge
+tb_culture_west_african_4                   # Free Warrior Lodge
+tb_defensive_fortifications_1               # Wall and Ditch
+tb_defensive_fortifications_2               # Camouflaged Outposts
+tb_defensive_fortifications_3               # Layered Palisades
+tb_defensive_fortifications_4               # Stone Watchtowers
+tb_desert_stable_1                          # Desert Riders
+tb_desert_stable_2                          # Desert Riders
+tb_desert_stable_3                          # Desert Riders
+tb_desert_stable_4                          # Desert Riders
+tb_emf_magyar_1                             # Magyar Divisions
+tb_great_pillar_aztec                       # Skull Totem
+tb_great_pillar_baltic                      # Great [baltic_pagan.GetName] Pillar
+tb_great_pillar_bon                         # Balancing Stone
+tb_great_pillar_east_african                # Great Totem
+tb_great_pillar_finnish                     # Hiisi Grove
+tb_great_pillar_hellenic                    # [GetZeusJupiterName] Column
+tb_great_pillar_norse                       # Irminsul Tree
+tb_great_pillar_slavic                      # Great [slavic_pagan.GetName] Pillar
+tb_great_pillar_tengri                      # Ovoo Shrine
+tb_great_pillar_west_african                # Great Totem
+tb_great_pillar_zun                         # Sun Column
+tb_hillfort_1                               # Earth Hillfort
+tb_hillfort_2                               # Wooden Hillfort
+tb_hillfort_3                               # Reinforced Hillfort
+tb_hillfort_4                               # Stone Hillfort
+tb_market_town_1                            # Market Village
+tb_market_town_2                            # Market Town
+tb_market_town_3                            # Market City
+tb_market_town_4                            # Large Market City
+tb_practice_range_1                         # Practice Range
+tb_practice_range_2                         # Practice Range
+tb_practice_range_3                         # Practice Range
+tb_practice_range_4                         # Practice Range
+tb_shipyard_1                               # Shipbuilder
+tb_shipyard_2                               # Shipbuilder
+tb_shipyard_3                               # Shipbuilder
+tb_shipyard_4                               # Shipbuilder
+tb_steppe_barracks_1                        # Barracks
+tb_steppe_barracks_2                        # Barracks
+tb_steppe_barracks_3                        # Barracks
+tb_steppe_barracks_4                        # Barracks
+tb_steppe_stable_1                          # Stable
+tb_steppe_stable_2                          # Stable
+tb_steppe_stable_3                          # Stable
+tb_steppe_stable_4                          # Stable
+tb_training_grounds_1                       # Training Grounds
+tb_training_grounds_2                       # Training Grounds
+tb_training_grounds_3                       # Training Grounds
+tb_training_grounds_4                       # Training Grounds
+tb_war_camp_1                               # War Camp
+tb_war_camp_2                               # War Camp
+tb_war_camp_3                               # War Camp
+tb_war_camp_4                               # War Camp
+tp_barracks_1                               # Militia Quarters
+tp_barracks_2                               # Militia Quarters
+tp_barracks_3                               # Militia Quarters
+tp_barracks_4                               # Militia Quarters
+tp_barracks_5                               # Militia Quarters
+tp_barracks_6                               # Militia Quarters
+tp_elite_barracks_1                         # Barracks
+tp_elite_barracks_2                         # Barracks
+tp_elite_barracks_3                         # Barracks
+tp_elite_barracks_4                         # Barracks
+tp_elite_barracks_5                         # Barracks
+tp_elite_barracks_6                         # Barracks
+tp_great_pillar_norse                       # Irminsul Tree
+tp_monastery_1                              # [Root.Holder.GetHouseOfWorshipCap]
+tp_monastery_2                              # [Root.Holder.GetHouseOfWorshipCap]
+tp_monastery_3                              # [Root.Holder.GetHouseOfWorshipCap]
+tp_monastery_4                              # Cathedral
+tp_monastery_5                              # Cathedral
+tp_monastery_6                              # Cathedral
+tp_monumental_shrines_1                     # Monumental Shrines
+tp_monumental_shrines_2                     # Monumental Shrines
+tp_monumental_shrines_3                     # Monumental Shrines
+tp_monumental_shrines_4                     # Monumental Shrines
+tp_saint_shrine                             # Local Saint Shrine
+tp_school_1                                 # Monastic School
+tp_school_2                                 # Cathedral School
+tp_shipyard_1                               # Temple Shipyard
+tp_shipyard_2                               # Temple Shipyard
+tp_shrine_aphrodite                         # Shrine to [GetAphroditeVenusName]
+tp_shrine_apollo                            # Shrine to Apollo
+tp_shrine_ares                              # Shrine to [GetAresMarsName]
+tp_shrine_arthemis                          # Shrine to [GetArtemisDianaName]
+tp_shrine_athena                            # Shrine to [GetAthenaMinervaName]
+tp_shrine_demeter                           # Shrine to [GetDemetraCeresName]
+tp_shrine_ephaestus                         # Shrine to [GetHephaestusVulcanName]
+tp_shrine_hades                             # Shrine to [GetHadesPlutoName]
+tp_shrine_hermes                            # Shrine to [GetHermesMercuryName]
+tp_shrine_hestia                            # Shrine to [GetHestiaVestaName]
+tp_shrine_poseidon                          # Shrine to [GetPoseidonNeptuneName]
+tp_shrine_zeus                              # Shrine to [GetZeusJupiterName]
+tp_town_1                                   # [Root.Holder.GetHouseOfWorshipCap] Town
+tp_town_2                                   # [Root.Holder.GetHouseOfWorshipCap] Town
+tp_town_3                                   # [Root.Holder.GetHouseOfWorshipCap] Town
+tp_town_4                                   # [Root.Holder.GetHouseOfWorshipCap] Town
+tp_town_5                                   # [Root.Holder.GetHouseOfWorshipCap] Town
+tp_town_6                                   # [Root.Holder.GetHouseOfWorshipCap] Town
+tp_wall_1                                   # [Root.Holder.GetHouseOfWorshipCap] Walls
+tp_wall_2                                   # [Root.Holder.GetHouseOfWorshipCap] Walls
+tp_wall_3                                   # [Root.Holder.GetHouseOfWorshipCap] Walls
+tp_wall_4                                   # [Root.Holder.GetHouseOfWorshipCap] Walls
+tp_wall_5                                   # [Root.Holder.GetHouseOfWorshipCap] Walls
+tp_wall_q_1                                 # [Root.Holder.GetHouseOfWorshipCap] Fortifications
+tp_wall_q_2                                 # [Root.Holder.GetHouseOfWorshipCap] Fortifications
+tp_wall_q_3                                 # [Root.Holder.GetHouseOfWorshipCap] Fortifications
+tp_wall_q_4                                 # [Root.Holder.GetHouseOfWorshipCap] Fortifications
+tp_wall_q_5                                 # [Root.Holder.GetHouseOfWorshipCap] Fortifications
+tr_cloth_production_1                       # Cloth Market
+tr_enclave_1                                # Merchant Enclave
+tr_enclave_2                                # Merchant Enclave
+tr_enclave_3                                # Merchant Enclave
+tr_garrison_1                               # Garrison
+tr_garrison_2                               # Garrison
+tr_garrison_3                               # Garrison
+tr_gold_mine_1                              # Gold Field
+tr_gold_mine_2                              # Gold Mine
+tr_gold_mine_3                              # Large Gold Mine
+tr_port_1                                   # Merchant Port
+tr_port_2                                   # Merchant Port
+tr_port_3                                   # Merchant Port
+tr_sahara_1                                 # Saharan Trade Post
+tr_sahara_2                                 # Saharan Trade Market
+tr_sahara_3                                 # Saharan Trade City
+tr_salt_mine_1                              # Salt Mine
+tr_silk_road_1                              # Silk Road Trade Post
+tr_silk_road_2                              # Silk Road Market
+tr_silk_road_3                              # Major Silk Road City
+trade_offices_1                             # Rudimentary Trade Offices
+trade_offices_2                             # Trade Offices
+trade_offices_3                             # Grand Trade Offices
+translation_house_1                         # Translation House

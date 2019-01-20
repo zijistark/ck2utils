@@ -18,6 +18,7 @@ build_holding
 builds_with_prestige
 buttons
 can_naval_path_to
+can_use_cb
 change_tech
 change_variable
 character_modifier
@@ -42,6 +43,7 @@ data # LT / coa param
 death
 defending_against_claimant
 disliked_by_offmap
+display_on_map
 distance
 distance_from_realm
 distribute_crusade_pot
@@ -118,8 +120,11 @@ reverse_war
 save_persistent_event_target
 scaled_wealth
 score_value
+secret_religious_cult
 set_character_modifier
 set_crusade_target
+set_job_action
+set_looter_hostility_days
 set_offmap_currency
 set_parent_religion
 set_title_adventurer
@@ -136,6 +141,7 @@ subtract_variable
 succession
 supply_limit
 their_opinion
+trade_route_control
 transfer_artifact
 transfer_scaled_wealth
 troops # spawn_unit / spawn_fleet param

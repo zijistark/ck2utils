@@ -1,4 +1,5 @@
 add_age
+add_holding_slot
 age
 age # spawn_unit param
 ai_ambition
@@ -19,37 +20,37 @@ count
 crusade_(?:gold|prestige|piety|artifact)_pot
 crusade_preparation_time_elapsed
 crusade_preparation_time_remaining
+culture_techpoints
 day_of_birth
 days
 days_at_current_society_rank
 days_in_society
-de_jure_liege
-decadence
 demesne_size
 duration
 dynasty
-emblem # LT param
+economy_techpoints
+emblem # LT
+female
 grant_limit # MT
 heresy_icon
-holder # title hist. effect
+holder # title history
 home # spawn_unit param
 hospital_level
 icon
 immortal_age
+immortal_age # title history
 killer
 leader_traits
 max_age # event pre-trigger
-max_amount
+max_amount # succession_voting
 max_consorts
 max_wives
+military_techpoints
 min_age # event pre-trigger
 month
 month_of_birth
-monthly_income
-monthly_income # LT param
 months
 multiplier
-naval_distance
 num_culture_provinces
 num_fitting_characters_for_title
 num_of_baron_titles
@@ -83,6 +84,7 @@ num_of_plot_backers
 num_of_prisoners
 num_of_rivals
 num_of_settlements
+num_of_society_members
 num_of_spouses
 num_of_subrealm_castles
 num_of_subrealm_cities
@@ -100,14 +102,11 @@ num_religion_provinces
 opinion_effect # MT
 over_max_demesne_size
 over_vassal_limit
-parent # set_parent_religion param
-piety
-population
+plot_months
 practical_age
-prestige
-province # spawn_unit param
+province # alt. to province_id in this case
+province # spawn_unit
 province_id
-random
 rank
 realm_diplomacy
 realm_intrigue
@@ -115,20 +114,15 @@ realm_learning
 realm_martial
 realm_size
 realm_stewardship
-religious_clothing_head
-religious_clothing_priest
+religious_clothing_head # religions
+religious_clothing_priest # religions
 ruled_years
-set_father
-set_mother
 society_rank
-sort_priority # CB param
-template # LT param
-texture # LT param
-texture_internal # LT param
+sort_priority # CB
+template # LT, CoA
+texture # LT, CoA
+texture_internal # LT, CoA
 total_years_played
-war_score
-wealth
 where
 year
-yearly_income
 years

@@ -1,5 +1,6 @@
 add_building # for use in tech definitions that insert culture name with <CULTURE>
 adjective
+background
 border
 crusade_name
 desc
@@ -49,3 +50,4 @@ title_prefix # LT param
 tooltip
 tooltip_info_custom
 which
+window
