@@ -75,6 +75,7 @@ has_alternate_start_setting
 has_elector_stance
 has_game_rule
 has_opinion_modifier
+holding_diff
 holy_site_distance
 ignore_in_vassal_limit_calculation
 interface_skin

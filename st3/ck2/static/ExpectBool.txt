@@ -111,6 +111,7 @@ failure
 female # create_character
 female_temple_holders
 feminist
+first_count_vassals
 flank_has_leader
 free_levies_in_offensive_war
 free_retract_vassalage

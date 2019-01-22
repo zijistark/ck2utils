@@ -58,6 +58,7 @@ percentage
 piety
 plot_power
 population
+population_and_manpower
 population_factor
 power
 prestige

@@ -594,6 +594,7 @@ variables:
     | has_elector_stance
     | has_game_rule
     | has_opinion_modifier
+    | holding_diff
     | holy_site_distance
     | ignore_in_vassal_limit_calculation
     | interface_skin
@@ -795,6 +796,7 @@ variables:
     | female
     | female_temple_holders
     | feminist
+    | first_count_vassals
     | flank_has_leader
     | free_levies_in_offensive_war
     | free_retract_vassalage
@@ -1534,7 +1536,9 @@ variables:
   vExpectNone: |-
     (?xi:
       dynasty
+    | first_type
     | portrait
+    | second_type
     | set_crusade_beneficiary
     | set_pentarch_title
     | set_religion_head
@@ -1601,6 +1605,7 @@ variables:
     | piety
     | plot_power
     | population
+    | population_and_manpower
     | population_factor
     | power
     | prestige
@@ -5034,7 +5039,7 @@ contexts:
       captures:
         1: support.function.ck2script
         2: constant.language.enum.ck2script
-    - match: '\b((?i:holding_type|convert_to))\s*=\s*({{vHoldingType}})\b'
+    - match: '\b((?i:holding_type|convert_to|first_type|second_type))\s*=\s*({{vHoldingType}})\b'
       captures:
         1: support.function.ck2script
         2: constant.language.enum.holding_type.ck2script
@@ -5324,6 +5329,7 @@ contexts:
     - match: \byes\b
       scope: constant.language.boolean.true.ck2script
     - match: \bno\b
+      scope: constant.language.boolean.false.ck2script
     - match: (?<!\w){{vDate}}\b
       scope: constant.other.date.ck2script
     - match: (?<!\w)\-?([0-9]+\.)?[0-9]+\b
