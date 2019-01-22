@@ -48,6 +48,7 @@ monthly_income # LT
 monthly_piety # MT
 monthly_prestige # MT
 monthly_salary # MT
+morale
 naval_distance
 participation_scaled_decadence
 participation_scaled_piety
@@ -55,6 +56,7 @@ participation_scaled_prestige
 peace_piety_gain
 percentage
 piety
+plot_power
 population
 population_factor
 power

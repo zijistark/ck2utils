@@ -6,7 +6,6 @@ import re
 import ck2parser
 from collections import defaultdict
 from pathlib import Path
-import pprint
 
 g_id_output_dir = ck2parser.rootpath / 'ck2utils/st3/ck2/var'
 g_emf_path = ck2parser.rootpath / 'EMF/EMF'
@@ -17,13 +16,32 @@ g_swmh_path = ck2parser.rootpath / 'SWMH-BETA/SWMH'
 
 
 class VarType:
-	def __init__(self, name, globs, nest=0, exclude=None, include=None, moddirs=(g_emf_path,)):
+	def __init__(self, name, globs, nest=0, exclude=None, include=None, content_filter=None, moddirs=(g_emf_path,)):
 		self.name = name
 		self.globs = list(globs)
 		self.nest = nest
 		self.include = [] if not include else list(include)
 		self.exclude = [] if not exclude else list(exclude)
+		self.content_filter = content_filter
 		self.moddirs = moddirs
+
+
+class HasPairFilter:
+	def __init__(self, lhs, rhs, regexp=False):
+		self.lhs = lhs
+		self.rhs = rhs
+		self.regexp = regexp
+
+	def __call__(self, tree):
+		for n, v in tree:
+			try:
+				if self.regexp and re.search(self.lhs, n.val) and re.search(self.rhs, v.val):
+					return True
+				elif self.lhs == n.val and self.rhs == v.val:
+					return True
+			except:
+				pass
+		return False
 
 
 def parse_var_type_recursive(tree, vt, nest):
@@ -35,7 +53,8 @@ def parse_var_type_recursive(tree, vt, nest):
 				if vt.exclude and any(re.search(p, n.val) for p in vt.exclude):
 					continue
 				if not vt.include or any(re.search(p, n.val) for p in vt.include):
-					id_set.add(n.val)
+					if not vt.content_filter or vt.content_filter(v):
+						id_set.add(n.val)
 			else:  # Recursive
 				id_set |= parse_var_type_recursive(v, vt, nest - 1)
 	return id_set
@@ -63,6 +82,7 @@ def print_ids(ids, loc, file=sys.stdout):
 			print(i, file=file)
 
 
+
 def main():
 	relcul_ignore = (r'color', r'color2', r'(fe)?male_names', r'interface_skin', r'alternate_start', r'(unit_)?graphical_cultures', r'(character|unit(_home_)?)modifier', r'trigger$')
 	scripted_trigger_ignore = (r'^impl_',)
@@ -78,16 +98,17 @@ def main():
 		VarType('MinorTitle', ['common/minor_titles/*.txt', 'common/religious_titles/*.txt']),
 		VarType('JobTitle', ['common/job_titles/*.txt']),
 		VarType('JobAction', ['common/job_actions/*.txt']),
-		VarType('Law', ['common/laws/*.txt'], nest=1),
+		VarType('Law', ['common/laws/*.txt'], nest=1, exclude=[r'^dynlevy']),
 		VarType('Building', ['common/buildings/*.txt'], nest=1, moddirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
 		VarType('Tech', ['common/technology.txt'], nest=1),
 		VarType('Trait', ['common/traits/*.txt']),
+		VarType('CachedTrait', ['common/traits/*.txt'], content_filter=HasPairFilter('cached', 'yes')),
 		VarType('Region', ['map/geographical_region.txt'], moddirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
 		VarType('Climate', ['map/climate.txt']),
 		VarType('Terrain', ['map/terrain.txt'], nest=1, exclude=['color'], moddirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
-		VarType('ScriptedTrigger', ['common/scripted_triggers/*.txt'], exclude=scripted_trigger_ignore, moddirs=(g_emf_path, g_emf_swmh_path)),
-		VarType('ScriptedEffect', ['common/scripted_effects/*.txt'], exclude=scripted_effect_ignore, moddirs=(g_emf_path, g_emf_swmh_path)),
-		VarType('ScriptedScore', ['common/scripted_score_values/*.txt'], moddirs=(g_emf_path, g_emf_swmh_path)),
+#		VarType('ScriptedTrigger', ['common/scripted_triggers/*.txt'], exclude=scripted_trigger_ignore, moddirs=(g_emf_path, g_emf_swmh_path)),
+#		VarType('ScriptedEffect', ['common/scripted_effects/*.txt'], exclude=scripted_effect_ignore, moddirs=(g_emf_path, g_emf_swmh_path)),
+#		VarType('ScriptedScore', ['common/scripted_score_values/*.txt'], moddirs=(g_emf_path, g_emf_swmh_path)),
 		VarType('Faction', ['common/objectives/*.txt'], include=[r'^faction_']),
 		VarType('Ambition', ['common/objectives/*.txt'], include=[r'^obj_']),
 		VarType('Plot', ['common/objectives/*.txt'], include=[r'^plot_']),

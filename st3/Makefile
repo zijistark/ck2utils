@@ -6,6 +6,7 @@ all:
 		--exclude=/*/ \
 		--exclude=/.*/ \
 		--exclude=/Makefile \
+		--exclude=/*.p{ly} \
 		$(SOURCE_DIR)/ $(INSTALL_DIR)/
 
 reverse:

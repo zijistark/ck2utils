@@ -8,3 +8,4 @@ hospital_has_building
 remove_building
 trade_post_has_any_building
 trade_post_has_building
+upgrades_from

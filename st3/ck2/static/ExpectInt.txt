@@ -11,6 +11,7 @@ ai_rationality
 ai_zeal
 among_most_powerful_vassals
 artifact_age
+authority
 capital
 capital_move_delay
 character

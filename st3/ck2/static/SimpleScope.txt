@@ -90,6 +90,7 @@ ruler
 sea_zone
 secret_religion_scope
 siege
+society
 society_plot
 spouse
 spouse_even_if_dead

@@ -1,4 +1,5 @@
 de_jure_liege
+parent
 set_father
 set_mother
 set_real_father

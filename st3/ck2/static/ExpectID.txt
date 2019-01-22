@@ -60,10 +60,8 @@ is_trade_post_decision_allowed
 is_trade_post_decision_potential
 join_society
 key
-mercenary_type
 mercenary_type # LT param
 modifier
-name
 on_trigger
 option
 phase

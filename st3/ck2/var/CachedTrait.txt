@@ -1,0 +1,14 @@
+emf_seljuk_invader   # Seljuk Invader
+imamah_claimant      # [ismaili.GetName] Claimant
+isis                 # Mother of the Universe
+koasasa_azrael       # Koasasa
+koasasa_dardael      # Koasasa
+koasasa_israfel      # Koasasa
+koasasa_mihael       # Koasasa
+koasasa_nurael       # Koasasa
+koasasa_samael       # Koasasa
+koasasa_taus         # Koasasa
+lucky_ruler          # Lucky Ruler
+on_hajj              # On Hajj
+on_indian_pilgrimage # On pilgrimage
+on_pilgrimage        # On pilgrimage

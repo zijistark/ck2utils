@@ -121,11 +121,13 @@ generate_tooltip
 gets_religion_opinion_penalties
 gives_religion_opinion_penalties
 hard_to_convert
+has_any_quest
 has_autocephaly
 has_called_crusade
 has_coa_on_barony_only
 has_concubinage
 has_dejure_empires
+has_disease
 has_empty_holding
 has_epidemic
 has_fort
@@ -246,6 +248,7 @@ is_primary_type_title
 is_primary_war_attacker
 is_primary_war_defender
 is_primary_war_participant
+is_quest_target
 is_recent_grant
 is_reformed_religion
 is_religion_crusade_target

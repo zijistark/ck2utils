@@ -27,6 +27,7 @@ break_betrothal
 can_land_path_to
 can_marry
 can_naval_path_to
+can_swap_job_title
 capital
 character
 claimed_by
@@ -158,6 +159,7 @@ province # spawn_unit param
 province_id
 real_tier
 religion
+religion_authority
 religion_group
 remove_bloodline_member
 remove_claim
@@ -208,6 +210,7 @@ shares_any_bloodline_with
 shares_realm_border_with
 show_portrait
 sibling
+society
 sub_realm
 target
 third_party_portrait # CB param
@@ -221,6 +224,7 @@ true_religion_group
 unsafe_destroy_landed_title
 unsafe_impregnate
 unsafe_impregnate_cuckoo
+unsafe_religion
 usurp_title
 usurp_title_only
 usurp_title_plus_barony_if_unlanded

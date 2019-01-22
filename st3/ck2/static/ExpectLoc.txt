@@ -39,6 +39,7 @@ set_name
 set_offmap_name
 set_picture
 set_special_character_title
+sound
 text
 title
 title # LT param
