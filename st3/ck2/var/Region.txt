@@ -46,7 +46,9 @@ emf_region_ir_tier_3                  # Imperial Reconquest Tier 3 (Italia, Leva
 emf_region_ir_tier_4                  # Imperial Reconquest Tier 4 (Lombardia, Northwestern Africa, and Iberia)
 emf_region_ir_tier_5                  # Imperial Reconquest Tier 5 (France)
 emf_region_ir_tier_6                  # Imperial Reconquest Tier 6 (England, Wales, and Germany)
+emf_region_lechczechrus               # Lech, Czech, and Rus
 emf_region_levy_boost                 # More Soldiers
+emf_region_livonia                    # Livonia
 emf_region_lower_carpathia            # Lower Carpathia
 emf_region_manifest_destiny           # Manifest Destiny (Seljuk/Timurid)
 emf_region_manifest_destiny_tier_1    # Manifest Destiny (Seljuk/Timurid): Tier I
@@ -61,6 +63,7 @@ emf_region_mongol_south               # Southern Mongol Region
 emf_region_mongol_west                # Western Mongol Region
 emf_region_norman_sicily              # Norman Sicily
 emf_region_north_seazone              # North Sea Zone
+emf_region_pomerania                  # Pomerania
 emf_region_sahara                     # Sahara
 emf_region_saoshyant                  # Persia and Mesopotamia
 emf_region_seljuk_invasion_tier_1     # Seljuk Conquest Zone - Tier I
@@ -75,7 +78,6 @@ world_africa_west                     # West Africa
 world_asia_minor                      # Asia Minor
 world_europe                          # Europe
 world_europe_east                     # Eastern Europe
-world_europe_east_russia              # Russia
 world_europe_north                    # Northern Europe
 world_europe_south                    # Southern Europe
 world_europe_south_east               # South-East Europe

@@ -1,4 +1,3 @@
-add_building # for use in tech definitions that insert culture name with <CULTURE>
 adjective
 background
 border
@@ -9,8 +8,8 @@ diplomacy_icon
 dlc
 entry
 foa
-foa # LT param
-foa # create_title param
+foa # LT
+foa # create_title
 foa_female
 frame_suffix
 group
@@ -19,7 +18,7 @@ has_offmap_name
 high_god_name
 key
 lacks_dlc
-liege # title hist. effect
+liege # title history
 localisation_key
 log
 name
@@ -30,8 +29,8 @@ piety_name
 portrait
 priest_title
 remove_special_character_title
-ruler # create_title param
-ruler_female # create_title param
+ruler # create_title
+ruler_female # create_title
 scripture_name
 set_description
 set_high_god_name
@@ -42,13 +41,14 @@ set_special_character_title
 sound
 text
 title
-title # LT param
+title # LT
 title # event property
 title_female
-title_female # LT param
+title_female # LT
 title_prefix
-title_prefix # LT param
+title_prefix # LT
 tooltip
 tooltip_info_custom
 which
 window
+{{vCulture}} # LT

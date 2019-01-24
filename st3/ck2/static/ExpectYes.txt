@@ -1,0 +1,60 @@
+abdicate
+activate_plot
+ambition_succeeds
+anti_nomad
+banish
+break # ideally this would be in bold/etc. like ControlBlock, but for now it's a simple ExpectYes
+cancel_ambition
+cancel_crusade
+cancel_pregnancy
+capable_only # event pre-trigger
+clear_banish_reasons
+clear_education_trait
+clear_execute_reasons
+clear_focus
+clear_intermarry
+clear_prison_reasons
+clear_revoke_reasons
+clear_secret_religion
+clear_wealth
+create_family_palace
+cut_mercenary_creator_relation
+death
+destroy_bloodline # not clear whether this actually does take only or even a boolean due to poor docs & lack of any base game usage currently (3.0)
+destroy_landed_title
+disallow_random_traits
+distribute_crusade_target_title
+easter_egg # title history
+hide_from # event property
+hide_new # event property
+hide_window # event property
+impregnate
+log_scopes
+make_capital_holding
+make_primary_title
+notification # event property
+only_capable # event pre-trigger
+only_independent # event pre-trigger
+only_men # event pre-trigger
+only_playable # event pre-trigger
+only_rulers # event pre-trigger
+only_women # event pre-trigger
+plot_succeeds
+recalc_succession
+refill_holding_levy
+remove_guardian
+remove_spouse
+reveal_plot
+reveal_plot_w_message
+revoke_capital_holding
+show_from_from # event property
+show_from_from_from # event property
+show_root # event property
+tooltip_info
+triggered_from_code # event property
+unsafe_destroy_artifact
+unsafe_destroy_landed_title
+unsafe_impregnate
+unsafe_impregnate_cuckoo
+{{vScriptedEffect}}
+{{vScriptedScore}}

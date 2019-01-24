@@ -1,5 +1,3 @@
-abdicate
-activate_plot
 active # title history
 adventurer
 adventurer # create_title
@@ -14,23 +12,19 @@ allow_title_revokation
 allow_viking_invasion
 allows_matrilineal_marriage
 always
-ambition_succeeds
-anti_nomad
 as_if_liege
 assimilate # LT
 attacking_same_religion_piety_loss
 autocephaly
-banish
 barons_need_dynasty
 borders_lake
 borders_major_river
-break # ideally this would be in bold/etc. like ControlBlock, but for now it's a simple ExpectBool
 bs_marriage
 caliphate # LT
-can_be_claimed
+can_be_claimed # LT
 can_be_given_away
 can_be_granted_kingdoms_and_empires_by_other_government
-can_be_usurped
+can_be_usurped # LT
 can_build_castle
 can_build_city
 can_build_forts
@@ -59,53 +53,32 @@ can_retire_to_monastery
 can_revoke_without_reason
 can_toggle_looting # spawn_unit
 can_usurp_kingdoms_and_empires
-cancel_ambition
-cancel_crusade
-cancel_pregnancy
 cannot_inherit # spawn_unit
-capable_only # event pre-trigger
 caste_opinions
 castes
 character
 clan
-clear_banish_reasons
-clear_education_trait
-clear_execute_reasons
-clear_focus
-clear_intermarry
-clear_prison_reasons
-clear_revoke_reasons
-clear_secret_religion
-clear_wealth
 controls_religion
 controls_religion # LT
 cooldown
 copy_title_laws # create_title
 costs_piety
 counts_as_purple_born # MT
-create_family_palace
 creation_requires_capital # LT
 crime
 crusade_war_has_started
 custom_created # create_title
 customizer
-cut_mercenary_creator_relation
-death
 default
 defensive_attrition
-destroy_bloodline # not clear whether this actually does take only or even a boolean due to poor docs & lack of any base game usage currently (3.0)
-destroy_landed_title
 diplomatic_immunity
 disable_non_aggression_pacts
-disallow_random_traits
 disband_on_peace # spawn_unit
 dislike_tribal_organization
-distribute_crusade_target_title
 divine_blood
 dukes_called_kings
 dynamic_cult
 dynasty_title_names # LT
-easter_egg # title history
 excommunicate
 failure
 female # create_character
@@ -162,18 +135,16 @@ has_settlement_construction
 has_siege
 has_top_de_jure_capital
 has_trade_post
+has_unsafe_religion
+has_unsafe_secret_religion
 have_gender_laws
 hidden
-hide_from # event property
-hide_new # event property
-hide_window # event property
 historical
 history
 holy_order
 hostile_within_group
 ignores_de_jure_laws
 immortal
-impregnate
 imprison
 in_command
 in_command # event pre-trigger
@@ -274,7 +245,6 @@ is_unique # MT
 is_vice_royalty
 is_virtous # yes, the trigger is misspelled in the API
 is_voter
-is_weak_trigger
 join_crusade_if_bordering_hostile
 land_gap
 landed_inheritance
@@ -283,10 +253,7 @@ landless # LT
 landless # create_title
 location_ruler_title # LT
 lock_crusade_target
-log_scopes
 major # event property
-make_capital_holding
-make_primary_title
 make_reformer_head_of_religion
 male_temple_holders
 marriage_ignore_religion
@@ -295,21 +262,14 @@ matrilineal_override
 mercenary
 mercenary # LT
 mercenary # create_title
-merchant_republic
+merchant_republic # gov
 merge # spawn_unit
 message # MT
-move
+move # abdicate
 multiplayer
 naval_distance
 nomad # create_title
-notification # event property
 offmap
-only_capable # event pre-trigger
-only_independent # event pre-trigger
-only_men # event pre-trigger
-only_playable # event pre-trigger
-only_rulers # event pre-trigger
-only_women # event pre-trigger
 opinion_effect
 pacifist
 pc_marriage
@@ -319,7 +279,6 @@ pirate # LT
 playable # religions
 pledge_crusade_defense
 pledge_crusade_participation
-plot_succeeds
 port
 portrait_in_command
 portrait_is_patrician
@@ -337,26 +296,18 @@ random_traits # create_character
 realm_in_name # MT
 rebel
 rebel # create_title
-recalc_succession
-refill_holding_levy
 reinforces # spawn_unit
 rel_head_defense # religions
 religion_allows_female_temple_holders
 religion_allows_male_temple_holders
-remove_guardian
-remove_spouse
 replace_captain_on_death # create_title
 replace_order # MT
-reveal_plot
-reveal_plot_w_message
 revoke_allowed # MT
-revoke_capital_holding
 risks_minor_clan_rising
 rivals # event pre-trigger
 same_religion
 sea_gap
 seafarer
-secret_religion
 set_allow_looting
 set_allow_rivermovement
 set_allows_matrilineal_marriage
@@ -400,9 +351,6 @@ set_uses_decadence
 set_women_can_take_consorts
 short_name # LT
 show_as_title # MT
-show_from_from # event property
-show_from_from_from # event property
-show_root # event property
 show_scope_change
 show_value
 society_can_rank_up
@@ -418,14 +366,8 @@ sub_realm
 technology_can_spread
 temporary
 temporary # create_title
-tooltip_info
 top_de_jure_capital # LT
 tribe # LT
-triggered_from_code # event property
-unsafe_destroy_artifact
-unsafe_destroy_landed_title
-unsafe_impregnate
-unsafe_impregnate_cuckoo
 use_first_valid # cloc
 use_new_crusade # religions
 used_for_dynasty_names
@@ -440,3 +382,4 @@ vassal_government_opinion_penalties
 war
 war # event pre-trigger
 women_can_take_consorts # religions
+{{vScriptedTrigger}}
