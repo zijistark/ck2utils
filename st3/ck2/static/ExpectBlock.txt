@@ -30,6 +30,7 @@ clear_delayed_event
 coat_of_arms # LT param
 color # LT param
 color2 # LT param
+combat_rating_diff
 command_modifier
 create_artifact
 create_bloodline
@@ -108,8 +109,10 @@ relative_power
 relative_power_including_allies_attacker
 relative_power_including_allies_defender
 relative_realm_size
+religion
 religion_authority
 religion_distance
+religion_group
 remove_opinion
 remove_{{vEventModifierType}}_modifiers
 repeat_event
@@ -122,6 +125,8 @@ reverse_war
 save_persistent_event_target
 scaled_wealth
 score_value
+secret_religion
+secret_religion_group
 secret_religious_cult
 set_character_modifier
 set_crusade_target
@@ -147,6 +152,8 @@ trade_route_control
 transfer_artifact
 transfer_scaled_wealth
 troops # spawn_unit / spawn_fleet param
+true_religion
+true_religion_group
 unit_home_modifier
 unit_modifier
 unsafe_war

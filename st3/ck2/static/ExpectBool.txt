@@ -118,6 +118,7 @@ has_job_title # event pre-trigger
 has_known_creation_date
 has_lover
 has_mercenary_band
+has_minor_title
 has_nickname
 has_owner
 has_pentarchy

@@ -17,6 +17,7 @@ clear_prison_reasons
 clear_revoke_reasons
 clear_secret_religion
 clear_wealth
+convert_to_secret_religion
 create_family_palace
 cut_mercenary_creator_relation
 death

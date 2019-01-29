@@ -35,6 +35,7 @@ clear_wealth
 completely_controls
 conquest_culture
 controlled_by
+convert_to_secret_religion
 copy_artifact_history
 copy_name
 copy_title_history
@@ -54,6 +55,7 @@ destroy_settlement
 destroy_tradepost
 dynasty
 embargo
+enable_prepared_invasion
 enemy
 excommunicated_for
 family
@@ -173,6 +175,7 @@ remove_rival
 remove_special_interest
 remove_spouse
 remove_tributary
+reset_coa
 reveal_plot
 reverse_add_favor
 reverse_banish

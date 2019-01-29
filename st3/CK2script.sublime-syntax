@@ -498,6 +498,7 @@ variables:
     | third_party_allow
     | third_party_potential
     | third_party_score
+    | title
     | title_decisions
     | tribal_governments
     | trigger
@@ -549,6 +550,7 @@ variables:
     | coat_of_arms
     | color
     | color2
+    | combat_rating_diff
     | command_modifier
     | create_artifact
     | create_bloodline
@@ -627,8 +629,10 @@ variables:
     | relative_power_including_allies_attacker
     | relative_power_including_allies_defender
     | relative_realm_size
+    | religion
     | religion_authority
     | religion_distance
+    | religion_group
     | remove_opinion
     | remove_{{vEventModifierType}}_modifiers
     | repeat_event
@@ -641,6 +645,8 @@ variables:
     | save_persistent_event_target
     | scaled_wealth
     | score_value
+    | secret_religion
+    | secret_religion_group
     | secret_religious_cult
     | set_character_modifier
     | set_crusade_target
@@ -666,6 +672,8 @@ variables:
     | transfer_artifact
     | transfer_scaled_wealth
     | troops
+    | true_religion
+    | true_religion_group
     | unit_home_modifier
     | unit_modifier
     | unsafe_war
@@ -803,6 +811,7 @@ variables:
     | has_known_creation_date
     | has_lover
     | has_mercenary_band
+    | has_minor_title
     | has_nickname
     | has_owner
     | has_pentarchy
@@ -1621,6 +1630,7 @@ variables:
     (?xi:
       banish_religion
     | controls_religion
+    | enable_prepared_invasion
     | icon_religion
     | intermarry
     | is_heresy_of
@@ -1698,6 +1708,7 @@ variables:
     | completely_controls
     | conquest_culture
     | controlled_by
+    | convert_to_secret_religion
     | copy_artifact_history
     | copy_name
     | copy_title_history
@@ -1717,6 +1728,7 @@ variables:
     | destroy_tradepost
     | dynasty
     | embargo
+    | enable_prepared_invasion
     | enemy
     | excommunicated_for
     | family
@@ -1836,6 +1848,7 @@ variables:
     | remove_special_interest
     | remove_spouse
     | remove_tributary
+    | reset_coa
     | reveal_plot
     | reverse_add_favor
     | reverse_banish
@@ -1951,6 +1964,7 @@ variables:
     | clear_revoke_reasons
     | clear_secret_religion
     | clear_wealth
+    | convert_to_secret_religion
     | create_family_palace
     | cut_mercenary_creator_relation
     | death
@@ -4544,7 +4558,6 @@ variables:
     | emf_grant_chagatai_titles
     | emf_grant_golden_horde_titles
     | emf_grant_il_khanate_titles
-    | emf_hre_on_startup
     | emf_imperial_decay_loss
     | emf_imperial_decay_major_loss
     | emf_imperial_decay_major_victory
@@ -4694,6 +4707,10 @@ variables:
     | emf_sr_set_grandmaster_if_none
     | emf_sr_set_prov_flip_char_flag_of_my_cult_on_ROOT
     | emf_sr_set_sr_and_clr_religion_char_flag
+    | emf_startup_handle_random_vassal_baron
+    | emf_startup_init_byz
+    | emf_startup_init_hre
+    | emf_startup_init_marriage
     | emf_stop_hiding
     | emf_switch_to_feudal_gov
     | emf_switch_to_imperial

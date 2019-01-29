@@ -1,5 +1,6 @@
 banish_religion
 controls_religion
+enable_prepared_invasion
 icon_religion
 intermarry
 is_heresy_of
