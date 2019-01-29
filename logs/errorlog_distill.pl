@@ -71,8 +71,9 @@ my %title_missing_loc_ignore = (
 	'---' => 1
 );
 my @title_redefined_ignored_file = (
-	qr/z_holy_sites\.txt/,
-	qr/zz_emf_heresy/,
+	qr/z_holy_sites/i,
+	qr/zz_emf_heresy/i,
+	qr/zz_emf_magyar/i,
 );
 my @assert_culture_ignored_file = (
 #	qr/00_customizable_localisation_/,
