@@ -1166,6 +1166,7 @@ variables:
     | add_evil_god_name
     | add_god_name
     | add_intermarry
+    | alt_start_default
     | army_template
     | artifact_type
     | border
@@ -1294,6 +1295,7 @@ variables:
     | days
     | days_at_current_society_rank
     | days_in_society
+    | delay
     | demesne_size
     | duration
     | dynasty
@@ -1372,6 +1374,7 @@ variables:
     | opinion_effect
     | over_max_demesne_size
     | over_vassal_limit
+    | personality_traits
     | plot_months
     | practical_age
     | province
@@ -1432,6 +1435,7 @@ variables:
     | desc
     | diplomacy_icon
     | dlc
+    | dna
     | entry
     | foa
     | foa
@@ -1454,6 +1458,7 @@ variables:
     | piety_name
     | portrait
     | priest_title
+    | properties
     | remove_special_character_title
     | ruler
     | ruler_female
@@ -1697,6 +1702,7 @@ variables:
     | bloodline_is_active_for
     | break_alliance
     | break_betrothal
+    | can_copy_personality_trait_from
     | can_land_path_to
     | can_marry
     | can_naval_path_to
@@ -1711,6 +1717,7 @@ variables:
     | convert_to_secret_religion
     | copy_artifact_history
     | copy_name
+    | copy_random_personality_trait
     | copy_title_history
     | copy_title_laws
     | could_be_parent_of
@@ -1947,6 +1954,7 @@ variables:
     (?xi:
       abdicate
     | activate_plot
+    | add_random_education_trait
     | ambition_succeeds
     | anti_nomad
     | banish
@@ -4470,6 +4478,7 @@ variables:
   vScriptedEffect: |-
     (?xi:
       emf_FROM_subjugate_ruler
+    | emf_PREV_inherit_genetics_from_THIS
     | emf_ROOT_subjugate_ruler
     | emf_abandon_adventure
     | emf_abdicate
@@ -4533,7 +4542,6 @@ variables:
     | emf_council_gain
     | emf_council_lose
     | emf_create_courtiers
-    | emf_create_daughter
     | emf_create_dj_empire_basic
     | emf_create_mongol_dynasty
     | emf_create_switzerland
@@ -4707,6 +4715,7 @@ variables:
     | emf_sr_set_grandmaster_if_none
     | emf_sr_set_prov_flip_char_flag_of_my_cult_on_ROOT
     | emf_sr_set_sr_and_clr_religion_char_flag
+    | emf_startup_create_daughter
     | emf_startup_handle_random_vassal_baron
     | emf_startup_init_byz
     | emf_startup_init_hre
@@ -4774,6 +4783,7 @@ variables:
     | best_de_jure_liege_title_under_target_ruler
     | does_HF_bug_still_execute_law_effects_on_title_creation
     | emf_ROOT_completely_controls_counties
+    | emf_accepts_shieldmaiden_trigger
     | emf_adventurer_can_approach
     | emf_adventurer_can_approach_vassal
     | emf_alternate_start
@@ -4967,7 +4977,6 @@ variables:
     | emf_mongol_invasion_valid_target
     | emf_mongol_invasion_valid_target_province
     | emf_needs_coronation
-    | emf_needs_extra_child
     | emf_nomadic_province
     | emf_not_bad_candidate
     | emf_not_close_to_adventurer
@@ -5018,6 +5027,7 @@ variables:
     | emf_sr_has_secret_community_of_ROOT
     | emf_sr_is_in_PREVs_interesting_society
     | emf_sr_old_religion_is_liege_sr
+    | emf_startup_ruler_needs_extra_daughter
     | emf_unreformed_pagan
     | emf_uses_byzantine_coronation
     | emf_uses_furry_coronation

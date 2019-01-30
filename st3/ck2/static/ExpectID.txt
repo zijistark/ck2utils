@@ -3,6 +3,7 @@ add_dynasty_modifier
 add_evil_god_name
 add_god_name
 add_intermarry
+alt_start_default
 army_template # create_title param
 artifact_type
 border

@@ -1,5 +1,6 @@
 abdicate
 activate_plot
+add_random_education_trait
 ambition_succeeds
 anti_nomad
 banish

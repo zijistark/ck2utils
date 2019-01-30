@@ -1,4 +1,5 @@
 emf_FROM_subjugate_ruler
+emf_PREV_inherit_genetics_from_THIS
 emf_ROOT_subjugate_ruler
 emf_abandon_adventure
 emf_abdicate
@@ -62,7 +63,6 @@ emf_copy_title_state_from_PREV
 emf_council_gain
 emf_council_lose
 emf_create_courtiers
-emf_create_daughter
 emf_create_dj_empire_basic
 emf_create_mongol_dynasty
 emf_create_switzerland                                                 # Create the Swiss Confederation
@@ -236,6 +236,7 @@ emf_sr_set_adopt_faith_flag_of_my_cult_on_ROOT
 emf_sr_set_grandmaster_if_none
 emf_sr_set_prov_flip_char_flag_of_my_cult_on_ROOT
 emf_sr_set_sr_and_clr_religion_char_flag
+emf_startup_create_daughter
 emf_startup_handle_random_vassal_baron
 emf_startup_init_byz
 emf_startup_init_hre

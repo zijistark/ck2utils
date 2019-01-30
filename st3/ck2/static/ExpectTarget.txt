@@ -24,6 +24,7 @@ bloodline
 bloodline_is_active_for
 break_alliance
 break_betrothal
+can_copy_personality_trait_from
 can_land_path_to
 can_marry
 can_naval_path_to
@@ -38,6 +39,7 @@ controlled_by
 convert_to_secret_religion
 copy_artifact_history
 copy_name
+copy_random_personality_trait
 copy_title_history
 copy_title_laws
 could_be_parent_of

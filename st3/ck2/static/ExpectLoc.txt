@@ -6,6 +6,7 @@ desc
 desc # event property
 diplomacy_icon
 dlc
+dna
 entry
 foa
 foa # LT
@@ -28,6 +29,7 @@ picture
 piety_name
 portrait
 priest_title
+properties
 remove_special_character_title
 ruler # create_title
 ruler_female # create_title

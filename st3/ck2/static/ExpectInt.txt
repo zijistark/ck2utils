@@ -27,6 +27,7 @@ day_of_birth
 days
 days_at_current_society_rank
 days_in_society
+delay
 demesne_size
 duration
 dynasty
@@ -105,6 +106,7 @@ num_religion_provinces
 opinion_effect # MT
 over_max_demesne_size
 over_vassal_limit
+personality_traits
 plot_months
 practical_age
 province # alt. to province_id in this case
