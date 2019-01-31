@@ -46,6 +46,25 @@ class HasPairFilter:
     return False
 
 
+class HasPairsFilter:
+  def __init__(self, pairs, regexp=False):
+    self.pairs = list(pairs)
+    self.regexp = regexp
+
+  def __call__(self, tree):
+    pairs_left = len(self.pairs)
+    for lhs, rhs in self.pairs:
+      for n, v in tree:
+        try:
+          if self.regexp and re.search(lhs, n.val) and re.search(rhs, v.val):
+            pairs_left -= 1
+          elif lhs == n.val and rhs == v.val:
+            pairs_left -= 1
+        except:
+          pass
+    return pairs_left == 0
+
+
 def parse_var_type_recursive(tree, vt, nest):
   assert nest >= 0
   id_set = set()
@@ -87,8 +106,8 @@ def print_ids(ids, loc, file=sys.stdout):
 
 def main():
   relcul_ignore = (r'color', r'color2', r'(fe)?male_names', r'interface_skin', r'alternate_start', r'(unit_)?graphical_cultures', r'(character|unit(_home_)?)modifier', r'trigger$')
-  scripted_trigger_ignore = (r'^impl_',)
-  scripted_effect_ignore = (r'^emf_notify_',)
+  strigger_globs = ['common/scripted_triggers/' + p for p in ('emf_*triggers*.txt', 'hip_*triggers*.txt', 'plus_*triggers*.txt')]
+  seffect_globs = ['common/scripted_effects/' + p for p in ('emf_*effects*.txt', 'hip_*effects*.txt', 'plus_*effects*.txt')]
   vtype_list = [
     VarType('Religion', ['common/religions/*.txt'], nest=1, exclude=relcul_ignore),
     VarType('ReligionGroup', ['common/religions/*.txt'], exclude=relcul_ignore),
@@ -107,8 +126,8 @@ def main():
     VarType('Region', ['map/geographical_region.txt'], moddirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
     VarType('Climate', ['map/climate.txt']),
     VarType('Terrain', ['map/terrain.txt'], nest=1, exclude=['color'], moddirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
-    VarType('ScriptedTrigger', ['common/scripted_triggers/emf_*triggers*.txt', 'common/scripted_triggers/hip_*triggers*.txt'], exclude=scripted_trigger_ignore),
-    VarType('ScriptedEffect', ['common/scripted_effects/emf_*effects*.txt', 'common/scripted_effects/hip_*effects*.txt'], exclude=scripted_effect_ignore),
+    VarType('ScriptedTrigger', strigger_globs, exclude=(r'^impl_',)),
+    VarType('ScriptedEffect', seffect_globs, exclude=(r'^emf_notify_',)),
     VarType('ScriptedScore', ['common/scripted_score_values/*.txt']),
     VarType('Faction', ['common/objectives/*.txt'], include=[r'^faction_']),
     VarType('Ambition', ['common/objectives/*.txt'], include=[r'^obj_']),
@@ -117,7 +136,9 @@ def main():
     VarType('OnAction', ['common/on_actions/*.txt'], moddirs=()),
     VarType('Government', ['common/governments/*.txt'], nest=1),
     VarType('Society', ['common/societies/*.txt']),
+    VarType('Nickname', ['common/nicknames/*.txt'], moddirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
     VarType('RelHeadTitle', ['common/landed_titles/*.txt'], content_filter=HasPairFilter(r'^controls_religion$', r'^"?[\w-]+"?$', regexp=True), hidden=True),
+    VarType('RelHeadTitleLandless', ['common/landed_titles/*.txt'], content_filter=HasPairsFilter([(r'^controls_religion$', r'^"?[\w-]+"?$'), (r'^landless$', r'^yes$')], regexp=True), hidden=True),
   ]
 
   vtype_by_name = {v.name: v for v in vtype_list}

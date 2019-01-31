@@ -108,6 +108,7 @@ true_father_even_if_dead
 true_religion_scope
 twin
 twin_even_if_dead
+{{vCachedTrait}}
 {{vFaction}}
 {{vJobTitle}}
 {{vSociety}}

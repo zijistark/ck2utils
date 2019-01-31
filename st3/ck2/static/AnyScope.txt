@@ -1,3 +1,4 @@
+any_allied_character
 any_army
 any_artifact
 any_artifact_owner
@@ -91,6 +92,7 @@ any_vassal
 any_voter
 any_war # lacks a random_ dual
 any_ward
+random_allied_character
 random_army
 random_artifact
 random_artifact_owner

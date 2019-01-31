@@ -23,7 +23,6 @@ elective_voting_rules
 expel_modifier
 flag
 flank_has_tactic
-give_nickname
 graphical_culture
 graphical_culture # LT param
 group
@@ -34,7 +33,6 @@ has_earmarked_regiments
 has_flag
 has_flag # event pre-trigger
 has_global_flag # event pre-trigger
-has_nickname
 has_offmap_name
 has_policy
 has_quest
@@ -65,10 +63,10 @@ option
 phase
 picture
 picture # event property
+random_default # alt-start option
 remove_evil_god_names
 remove_god_names
 remove_intermarry
-remove_nickname
 remove_special_character_title
 remove_{{vEventModifierType}}_modifier
 set_branch_tag

@@ -12,6 +12,7 @@ ai_rationality
 ai_zeal
 among_most_powerful_vassals
 amount
+any_religion_distance
 artifact_age
 authority
 capital
@@ -28,15 +29,23 @@ day_of_birth
 days
 days_at_current_society_rank
 days_in_society
+default # alt-start option
 delay
 demesne_size
+duke_ignore_rate # alt-start param
+duke_threshold # alt-start param
+duke_vassalization_rate # alt-start param
 duration
 dynasty
 dynasty # char history
 economy_techpoints
 emblem # LT
+emperor_ignore_rate # alt-start param
+emperor_threshold # alt-start param
+emperor_vassalization_rate # alt-start param
 father # char history
 female
+feudal_seeds # alt-start param
 grant_limit # MT
 heresy_icon
 holder # title history
@@ -46,23 +55,30 @@ icon
 immortal_age
 immortal_age # title history
 killer
+king_ignore_rate # alt-start param
+king_threshold # alt-start param
+king_vassalization_rate # alt-start param
 leader_traits
 level # society
 limit # society
 max_age # event pre-trigger
 max_amount # succession_voting
 max_consorts
+max_default # alt-start option
 max_settlements # prov history
 max_wives
 military_techpoints
 min_age # event pre-trigger
+min_default # alt-start option
 month
 month_of_birth
 months
 mother # char history
 multiplier
+nomadic_seeds # alt-start param
 num_culture_provinces
 num_fitting_characters_for_title
+num_holy_sites_generated # alternate_start
 num_of_baron_titles
 num_of_baron_titles_in_realm
 num_of_buildings
@@ -120,6 +136,7 @@ over_vassal_limit
 personality_traits
 plot_months
 practical_age
+priority # alt-start option
 province # alt. to province_id in this case
 province # spawn_unit
 province_id
@@ -141,6 +158,7 @@ template # LT, CoA
 texture # LT, CoA
 texture_internal # LT, CoA
 total_years_played
+tribal_seeds # alt-start param
 where
 year
 years

@@ -1,0 +1,506 @@
+beautiful_beard                     # Beautiful Beard
+nick_al_aftah                       # al-Aftah
+nick_al_askari                      # al-Askari
+nick_al_baqir                       # al-Baqir
+nick_al_hadi                        # al-Hadi
+nick_al_kazim                       # al-Kazim
+nick_al_mahdi                       # al-Mahdi
+nick_al_rida                        # al-Rida
+nick_al_sadiq                       # al-Sadiq
+nick_al_taqi                        # al-Taqi
+nick_all_seeing                     # All-Seeing
+nick_bloodaxe                       # Bloodaxe
+nick_bluetooth                      # Bluetooth
+nick_builder                        # Aghmashenebeli
+nick_butter_teeth                   # Butterteeth
+nick_caulker                        # Kalaphates
+nick_darc                           # d'Arc
+nick_deaf                           # the Deaf
+nick_fairhair                       # Fairhair
+nick_gille                          # Gille
+nick_gods_cannibal                  # the Eater of [saint_person.Religion.GetHighGodName]
+nick_gods_drunkard                  # Drunken Friend of [saint_person.Religion.GetHighGodName]
+nick_gods_hedonist                  # the Hedonist of [saint_person.Religion.GetHighGodName]
+nick_gods_seducer                   # the Lover of [saint_person.Religion.GetHighGodName]
+nick_gods_torturer                  # the Impaler of [saint_person.Religion.GetHighGodName]
+nick_haardraade                     # Hårdråde
+nick_half_hand                      # Half-Hand
+nick_hardeknud                      # Hardeknud
+nick_hildetand                      # Wartooth
+nick_iron_fist                      # Iron Fist
+nick_iron_hand                      # Iron Hand
+nick_ironarm                        # Iron-Arm
+nick_lodbrok                        # Loðbrok
+nick_longshanks                     # Longshanks
+nick_lord_lady_ground               # [Root.GetLordLady] [battlefield_location.GetGroundDescCap]
+nick_lord_lady_of_the_terrain       # [Root.GetLordLady] of the [battlefield_location.GetTerrainCap]
+nick_of_a_thousand_faces            # of a Thousand Faces
+nick_of_the_empty_pockets           # of the Empty Pockets
+nick_of_the_nine_hostages           # of the Nine Hostages
+nick_of_the_wilds                   # of the Wilds
+nick_one_eye                        # One-Eye
+nick_one_hand                       # One-Hand
+nick_one_leg                        # the Legless
+nick_papal_lover                    # the Papal Lover
+nick_peg_leg                        # Peg Leg
+nick_priest_hater                   # Priest-Hater
+nick_ring                           # Ring
+nick_rollo                          # Rollo
+nick_snake_in_the_eye               # Snake-in-the-eye
+nick_son_of_evilgod                 # [This.GetSonDaughterCap] of [This.Religion.GetRandomEvilGodName]
+nick_spear                          # Kesja
+nick_stone_fist                     # Stone Fist
+nick_swift                          # the Swift
+nick_the_able                       # the Able
+nick_the_abomination                # the Abomination
+nick_the_absolved                   # the Absolved
+nick_the_accursed                   # the Accursed
+nick_the_adjudicator                # the Adjudicator
+nick_the_affable                    # the Affable
+nick_the_affluent                   # the Affluent
+nick_the_alchemist                  # the Alchemist
+nick_the_ambitious                  # the Ambitious
+nick_the_angel                      # the Angel
+nick_the_angel_of_location          # the Angel of Jerusalem
+nick_the_apostate                   # the Apostate
+nick_the_apostle                    # the Apostle
+nick_the_architect                  # the Architect
+nick_the_armorsmith                 # the Armorsmith
+nick_the_artist_ruler               # the Artist-[Root.GetTitle]
+nick_the_astrologer                 # the Astrologer
+nick_the_avenger                    # the Avenger
+nick_the_awoken                     # the Awoken
+nick_the_bald                       # the Bald
+nick_the_ballless                   # the Apokopos
+nick_the_bane_of_realmname          # the Bane of [nickname_target.PrimaryTitle.GetName]
+nick_the_bard                       # the Bard
+nick_the_barefoot                   # Berrføtt
+nick_the_bastard                    # the Bastard
+nick_the_bastion_of_capital         # the Bastion of [Root.Capital.GetName]
+nick_the_beanstalk                  # the Beanstalk
+nick_the_bear                       # the Bear
+nick_the_beef_thrasher              # the Beef-Thrasher
+nick_the_beguiling                  # the Beguiling
+nick_the_beheader                   # the Beheader
+nick_the_belligerent                # the Belligerent
+nick_the_bellower                   # the Bellower
+nick_the_benevolent                 # the Benevolent
+nick_the_betrayer                   # the Betrayer
+nick_the_bewitched                  # the Bewitched
+nick_the_black                      # the Black
+nick_the_black_boar                 # the Black Boar
+nick_the_black_skull                # the Black Skull
+nick_the_black_widow                # the Black Widow
+nick_the_bleeder                    # the Bleeder
+nick_the_bleeding_eyes              # Bleeding-Eyes
+nick_the_blessed                    # the Blessed
+nick_the_blind                      # the Blind
+nick_the_blood_monger               # the Bloodmonger
+nick_the_bloodhound                 # the Bloodhound
+nick_the_bloodlime                  # Bloodlime
+nick_the_bloody                     # the Bloody
+nick_the_blushing                   # the Blushing
+nick_the_boar                       # the Boar
+nick_the_bold                       # the Bold
+nick_the_bone_gnasher               # the Bonegnasher
+nick_the_bone_squeezer              # the Bone-Squeezer
+nick_the_boneless                   # the Boneless
+nick_the_bottomless                 # the Bottomless
+nick_the_brave                      # the Brave
+nick_the_broken_lute                # Broken Lute
+nick_the_broken_nail                # Broken-Nail
+nick_the_brute                      # the Brute
+nick_the_bull                       # the Bull
+nick_the_bulwark                    # the Bulwark
+nick_the_butch                      # the Butch
+nick_the_butcher                    # the Butcher
+nick_the_cannibal                   # the Cannibal
+nick_the_careless                   # the Careless
+nick_the_carpenter                  # the Carpenter
+nick_the_castellan                  # the Castellan
+nick_the_celestial                  # the Celestial
+nick_the_champion_of_province       # the Champion of [Root.Location.GetName]
+nick_the_chaste                     # the Chaste
+nick_the_cheater                    # the Cheater
+nick_the_chest_buster               # the Chestbuster
+nick_the_chosen_of_gabriel          # the Chosen of Gabriel
+nick_the_civilized                  # the Civilized
+nick_the_cleansing_flame            # the Cleansing Flame
+nick_the_clueless                   # the Clueless
+nick_the_clumsy                     # the Clumsy
+nick_the_compassionate              # the Compassionate
+nick_the_confessor                  # the Confessor
+nick_the_conqueror                  # the Conqueror
+nick_the_cowardly                   # the Cowardly
+nick_the_crimson_flurry             # the Crimson Flurry
+nick_the_crimson_gorgon             # the Crimson Gorgon
+nick_the_crimson_reaper             # the Crimson Reaper
+nick_the_cruel                      # the Cruel
+nick_the_crusader                   # the Crusader
+nick_the_culture                    # the [Root.Culture.GetName]
+nick_the_culture_marauder           # the [nickname_receiver.Culture.GetName] Marauder
+nick_the_cunning                    # the Cunning
+nick_the_cyclops                    # the Cyclops
+nick_the_deaths_child               # the Reaper's Child
+nick_the_decadent                   # the Decadent
+nick_the_defender                   # the Defender
+nick_the_deliverer                  # the Deliverer
+nick_the_depraved                   # the Depraved
+nick_the_despoiler                  # the Despoiler
+nick_the_destroyer                  # the Destroyer
+nick_the_devil                      # the Devil
+nick_the_diplomat                   # the Diplomat
+nick_the_dove                       # the Dove
+nick_the_dragon                     # the Dragon
+nick_the_dragoness                  # the Dragoness
+nick_the_dreaded                    # the Dreaded
+nick_the_drunkard                   # the Drunkard
+nick_the_dry_throat                 # Dry-Throat
+nick_the_dust_biter                 # Dust-Biter
+nick_the_eastern_wind               # the Eastern Wind
+nick_the_educator                   # the Educator
+nick_the_eerie                      # the Eerie
+nick_the_effeminate                 # the Effeminate
+nick_the_elder                      # Elder
+nick_the_enlightened                # the Enlightened
+nick_the_eternally_remembered       # Emune
+nick_the_evil                       # the Evil
+nick_the_exalted                    # the Exalted
+nick_the_exalted_chosen_of_province # the Exalted Chosen of [Root.Location.GetName]
+nick_the_executioner                # the Executioner
+nick_the_explorer                   # the Explorer
+nick_the_faceless                   # the Faceless
+nick_the_fair                       # the Fair
+nick_the_fairest_of_location        # the Fairest of [Root.Location.GetName]
+nick_the_fat                        # the Fat
+nick_the_fearless                   # the Fearless
+nick_the_feeble                     # the Feeble
+nick_the_ferrante                   # Ferrante
+nick_the_flail_of                   # the Flail of [Root.Liege.PrimaryTitle.GetName]
+nick_the_flat_chested               # the Flat-Chested
+nick_the_flayer                     # the Flayer
+nick_the_floor_kisser               # the Floor-Kisser
+nick_the_flower                     # the Flower
+nick_the_fool_for_christ            # the Fool-for-[GetJesus]
+nick_the_forgetful                  # the Forgetful
+nick_the_founder                    # the Founder
+nick_the_fowler                     # the Fowler
+nick_the_fox                        # the Fox
+nick_the_frail                      # the Frail
+nick_the_frantic                    # the Frantic
+nick_the_frog                       # the Frog
+nick_the_fury                       # the Fury
+nick_the_generous                   # the Generous
+nick_the_gentle                     # Kyrre
+nick_the_german                     # the German
+nick_the_giant                      # the Giant
+nick_the_girls_arm                  # Girl-Arm
+nick_the_glorious                   # the Glorious
+nick_the_gnat                       # the Gnat
+nick_the_god_bearing                # the Godbearing
+nick_the_gods_arm                   # the Arm of [Root.Religion.GetRandomGodName]
+nick_the_gods_champion              # the Gods' Champion
+nick_the_goldsmith                  # the Goldsmith
+nick_the_goliath                    # the Goliath
+nick_the_good                       # the Good
+nick_the_gouty                      # the Gouty
+nick_the_graceful                   # the Graceful
+nick_the_gracious                   # the Gracious
+nick_the_grand_matriarch            # the Grand Matriarch
+nick_the_grand_patriarch            # the Grand Patriarch
+nick_the_grandiose                  # the Grandiose
+nick_the_great                      # the Great
+nick_the_great_beast                # the Great [Root.GetRegionalBigAnimalCap]
+nick_the_great_eagle                # the Great Eagle
+nick_the_green_faced                # the Green-Faced
+nick_the_green_warrior              # the Green Warrior
+nick_the_griffin                    # the Griffin
+nick_the_grim_mistress              # the Grim Mistress
+nick_the_grinner                    # the Grinner
+nick_the_ground_warrior             # the [battlefield_location.GetGroundDescCap]-Warrior
+nick_the_guardian                   # the Guardian
+nick_the_guide                      # the Guide
+nick_the_hammer                     # the Hammer
+nick_the_handsome                   # the Handsome
+nick_the_harth_of_location          # the Hart of [Root.Location.GetName]
+nick_the_hawk_of_quarysh            # the Hawk of Quarysh
+nick_the_headless                   # the Headless
+nick_the_healer                     # the Healer
+nick_the_heart_eater                # the Heart-eater
+nick_the_heathen                    # the Heathen
+nick_the_heavenly                   # the Heavenly
+nick_the_hermit                     # the Hermit
+nick_the_hideous                    # the Hideous
+nick_the_hollow                     # the Hollow
+nick_the_holy                       # the Holy
+nick_the_holy_mason                 # the Holy Mason
+nick_the_honorable                  # the Honorable
+nick_the_horse_gelder               # the Horse-Gelder
+nick_the_horse_shepherd             # the Horse Shepherd
+nick_the_hunchback                  # the Hunchback
+nick_the_hundred_flagons            # Hundred-Flagons
+nick_the_hunter                     # the Hunter
+nick_the_hyena                      # the Hyena
+nick_the_ill_ruler                  # the Ill-Ruler
+nick_the_ill_tempered               # the Ill-tempered
+nick_the_illuminated                # the Illuminated
+nick_the_illuminator                # the Illuminator
+nick_the_impaler                    # the Impaler
+nick_the_indolent                   # the Indolent
+nick_the_innocent                   # the Innocent
+nick_the_inquisitor                 # the Inquisitor
+nick_the_iron_grip                  # Irongrip
+nick_the_iron_heart                 # Ironheart
+nick_the_ironside                   # Ironside
+nick_the_jackal                     # the Jackal
+nick_the_jittery                    # the Jittery
+nick_the_jolly                      # the Jolly
+nick_the_jovial                     # the Jovial
+nick_the_just                       # the Just
+nick_the_kind                       # the Kind
+nick_the_kind_hearted               # the Kind-Hearted
+nick_the_kingslayer                 # the [Root.GetTitle]slayer
+nick_the_knight_of_turnips          # the Knight of Turnips
+nick_the_knuckle_slammer            # Knuckle-Slammer
+nick_the_ladder_legs                # Ladder Legs
+nick_the_lame                       # the Lame
+nick_the_lawgiver                   # the Lawgiver
+nick_the_learned                    # the Learned
+nick_the_lecher                     # the Lecher
+nick_the_leechlord                  # the [This.GetLeechRank]
+nick_the_legendary                  # the Legendary
+nick_the_leper                      # the Leper
+nick_the_lewd                       # the Lewd
+nick_the_liar                       # the Liar
+nick_the_liberator                  # the Liberator
+nick_the_lion                       # the Lion
+nick_the_lioness                    # the Lioness
+nick_the_lionheart                  # the Lionheart
+nick_the_lisp_and_lame              # the Lisp and Lame
+nick_the_little_crow                # the Little Crow
+nick_the_little_nightmare           # the Little Nightmare
+nick_the_little_spider              # the Little Spider
+nick_the_lord_of_realm              # the [Root.GetLordLady] of [Root.PrimaryTitle.GetName]
+nick_the_loyal                      # the Loyal
+nick_the_lucky                      # the Lucky
+nick_the_mad                        # the Mad
+nick_the_magnanimous                # the Magnanimous
+nick_the_magnificent                # the Magnificent
+nick_the_maid                       # the Maid
+nick_the_maid_of_virgin             # the Virgin's Maid
+nick_the_martyr                     # the Martyr
+nick_the_martyrophile               # the Martyrophile
+nick_the_master_of_hungary          # the Master of Hungary
+nick_the_mead_master                # the Mead Master
+nick_the_merciful                   # the Merciful
+nick_the_merciless                  # the Merciless
+nick_the_merry                      # the Merry
+nick_the_messenger_of_christ        # the Messenger of Christ
+nick_the_messy                      # the Messy
+nick_the_milkdrinker                # the Milkdrinker
+nick_the_miracle_worker             # the Miracle-Worker
+nick_the_missionary                 # the Missionary
+nick_the_moaner                     # the Moaner
+nick_the_monk                       # the Monk
+nick_the_monster                    # the Monster
+nick_the_mule                       # the Tenacious
+nick_the_munificent                 # the Munificent
+nick_the_mutilator                  # the Mutilator
+nick_the_myrrh_streaming            # the Myrrh-Streaming
+nick_the_mythological_creature      # the [GetRandomMythologicalCreature]
+nick_the_noble                      # the Noble
+nick_the_nun                        # the Nun
+nick_the_oakskin                    # Oakskin
+nick_the_old                        # the Old
+nick_the_oppressor                  # the Oppressor
+nick_the_page_of_lord               # the Page of Our Lord
+nick_the_pale_prince                # the Pale Prince
+nick_the_pale_spider                # the Pale Spider
+nick_the_patron_of_arts             # the Patron of Arts
+nick_the_peace_maker                # the Peace-Maker
+nick_the_peacock                    # the Peacock
+nick_the_persevering                # the Persevering
+nick_the_pest                       # the Pest
+nick_the_philosopher                # the Philosopher
+nick_the_piglet                     # the Piglet
+nick_the_pilgrim                    # the Pilgrim
+nick_the_pious                      # the Pious
+nick_the_plaguebearer               # the Plaguebearer
+nick_the_poison_tooth               # Poison-Tooth
+nick_the_prophet                    # the Prophet
+nick_the_proselytizer               # the Proselytizer
+nick_the_protector                  # the Protector
+nick_the_proud                      # the Proud
+nick_the_pups_gut                   # the Pups' Gut
+nick_the_pure                       # the Pure
+nick_the_purified                   # the Purified
+nick_the_purifier                   # the Purifier
+nick_the_quarreller                 # the Quarreller
+nick_the_quick_fingers              # Quick-Fingers
+nick_the_quick_foot                 # Quickfoot
+nick_the_quiet                      # the Quiet
+nick_the_radiant                    # the Radiant
+nick_the_rash                       # the Rash
+nick_the_recluse                    # the Recluse
+nick_the_red                        # the Red
+nick_the_red_cheeks                 # Red-cheeks
+nick_the_red_gladiator              # the Red Gladiator
+nick_the_red_gladiatrix             # the Red Gladiatrix
+nick_the_red_storm                  # the Red Storm
+nick_the_rel_group                  # the [Root.Religion.GetGroupName]
+nick_the_repulsive                  # the Repulsive
+nick_the_resilient                  # the Resilient
+nick_the_restorer                   # the Restorer
+nick_the_right_believing            # the Right-Believing
+nick_the_righteous                  # the Righteous
+nick_the_ripper                     # the Reaper
+nick_the_roaring_flame              # the Roaring Flame
+nick_the_rough_hair                 # Roughhair
+nick_the_ruthless                   # the Ruthless
+nick_the_saint                      # the Saint
+nick_the_salt_snake                 # the Salt-Snake
+nick_the_salt_viper                 # the Salt-Viper
+nick_the_saoshyant                  # the Saoshyant
+nick_the_scarlet_eagle              # the Scarlet Eagle
+nick_the_scarlet_hands              # Scarlet-Hands
+nick_the_scarlet_painter            # the Scarlet Painter
+nick_the_scarred                    # the Scarred
+nick_the_scholar                    # the Scholar
+nick_the_scourge                    # the Scourge
+nick_the_scourge_of                 # the Scourge of [Root.Liege.PrimaryTitle.GetName]
+nick_the_scourge_of_god             # the Scourge of [nickname_target.Religion.GetHighGodName]
+nick_the_sea_devil                  # the Sea-Devil
+nick_the_seducer                    # the Seducer
+nick_the_shadow                     # the Shadow
+nick_the_sharp_teeth                # Sharp-teeth
+nick_the_sharp_tongue               # Sharp Tongue
+nick_the_shield_of_capital          # Shield of [nick_target_the_shield_of_capital.Capital.GetName]
+nick_the_shieldmaiden               # the Shieldmaiden
+nick_the_short_tempered             # the Short-tempered
+nick_the_shrewd                     # the Shrewd
+nick_the_shrinking_violet           # the Shrinking Violet
+nick_the_silent                     # the Silent
+nick_the_silver_tongue              # Silvertongue
+nick_the_simple                     # the Simple
+nick_the_singing_crow               # the Singing Crow
+nick_the_siren                      # the Siren
+nick_the_skull_crusher              # the Skull-Crusher
+nick_the_sky_rider                  # the Sky Rider
+nick_the_slaughterer                # the Slaughterer
+nick_the_slayer_of_culture          # Slayer of the [nickname_target.Culture.GetName]
+nick_the_sleepy                     # the Sleepy
+nick_the_snakeling                  # the Snakeling
+nick_the_soul_flayer                # the Soulflayer
+nick_the_spare                      # the Spare
+nick_the_spark_of_god               # the Spark of [Root.Religion.GetHighGodName]
+nick_the_spider                     # the Spider
+nick_the_spirit_stalker             # the Spirit-stalker
+nick_the_splinter                   # the Splinter
+nick_the_squealer                   # the Squealer
+nick_the_squirmy                    # the Squirmy
+nick_the_stallion                   # the Stallion
+nick_the_stammerer                  # the Stammerer
+nick_the_star_weaver                # the Starweaver
+nick_the_stormforged                # the Stormforged
+nick_the_strange                    # the Strange
+nick_the_stranger                   # the Stranger
+nick_the_strong                     # the Strong
+nick_the_strongarm                  # Strongarm
+nick_the_strongest_of_location      # the Strongest of [Root.Location.GetName]
+nick_the_submissive                 # the Submissive
+nick_the_survivor                   # the Survivor
+nick_the_sword_of_god               # the Sword of [Root.Religion.GetRandomGodName]
+nick_the_tall                       # the Tall
+nick_the_tamer                      # the Tamer
+nick_the_tempest_of_capital         # the Tempest of [Root.Capital.GetName]
+nick_the_temptress                  # the Temptress
+nick_the_terrain_commander          # the [battlefield_location.GetTerrainCap] Commander
+nick_the_terrible                   # the Terrible
+nick_the_terrifying                 # the Terrifying
+nick_the_terror_of_provincename     # the Terror of [nickname_target.GetName]
+nick_the_theologian                 # the Theologian
+nick_the_thigh_biter                # the Thighbiter
+nick_the_thin_minded                # the Thin-Minded
+nick_the_tiger                      # the Tiger
+nick_the_toothless                  # the Toothless
+nick_the_toothless_wolf             # the Toothless Wolf
+nick_the_tormentor                  # the Tormentor
+nick_the_tower                      # the Tower
+nick_the_trader                     # the Trader
+nick_the_treacherous                # the Treacherous
+nick_the_trickster                  # the Trickster
+nick_the_troubadour                 # the Troubadour
+nick_the_twitchy                    # the Twitchy
+nick_the_tyrant                     # the Tyrant
+nick_the_unchaste                   # the Unchaste
+nick_the_undefeated                 # the Undefeated
+nick_the_underdog                   # the Underdog
+nick_the_understanding              # the Understanding
+nick_the_undying                    # the Undying
+nick_the_unfaithful                 # the Unfaithful
+nick_the_unlucky                    # the Unlucky
+nick_the_unmercenary_healer         # the Unmercenary Healer
+nick_the_unready                    # the Unready
+nick_the_usurper                    # the Usurper
+nick_the_vain                       # the Vain
+nick_the_valkyrie                   # the Valkyrie
+nick_the_vatican_prince             # the Vatican Prince
+nick_the_vatican_princess           # the Vatican Princess
+nick_the_venerable                  # the Venerable
+nick_the_vengeful                   # the Vengeful
+nick_the_victorious                 # the Victorious
+nick_the_viking                     # the Viking
+nick_the_virago                     # the Virago
+nick_the_vixen                      # the Vixen
+nick_the_waking_teacher             # the Waking-Teacher
+nick_the_wall_of_title              # the Wall of [Root.PrimaryTitle.GetName]
+nick_the_warrior_child              # the Warrior Child
+nick_the_warrior_philosopher        # the Warrior Philosopher
+nick_the_weak                       # the Weak
+nick_the_wealthy                    # the Wealthy
+nick_the_weaponsmith                # the Weaponsmith
+nick_the_whiner                     # the Whiner
+nick_the_whirling_spell             # Whirling-Spell
+nick_the_whisperer                  # the Whisperer
+nick_the_white_knight               # the White Knight
+nick_the_white_raven                # the White Raven
+nick_the_wicked                     # the Wicked
+nick_the_wily                       # the Wily
+nick_the_wise                       # the Wise
+nick_the_witch                      # the [Root.GetWarlockWitch]
+nick_the_witch_hunter               # the Witch Hunter
+nick_the_wolf                       # the Wolf
+nick_the_woolmaker                  # the Woolmaker
+nick_the_word_master                # the Word Master
+nick_the_word_slayer                # the Word-Slayer
+nick_the_word_thief                 # the Word-Thief
+nick_the_world_burner               # the World Burner
+nick_the_wyrm                       # the Wyrm
+nick_the_young                      # the Young
+nick_the_young_conqueror            # the Young Conqueror
+nick_the_young_eagle                # the Young Eagle
+nick_the_younger                    # the Younger
+nick_the_youthful                   # the Youthful
+nick_the_zealot                     # the Zealot
+nick_tiny                           # Tiny
+nick_twistedbeard                   # Twistedbeard
+nick_tzelepes                       # Tzelepes
+nick_tzimiskes                      # Tzimiskes
+nick_warrior_lodge_spirit           # [GetWarriorBattleNick]
+nick_whiteshirt                     # Whiteshirt
+nick_wrymouth                       # Wrymouth
+nick_zayn_al_abidin                 # Zayn al-'Abidin
+the_big_halberd                     # the Big Halberd
+the_black_whirlwind                 # the Black Whirlwind
+the_ferocious_giant                 # the Ferocious Giant
+the_jade_unicorn                    # the Jade Unicorn
+the_panther_head                    # the Panther Head
+the_prodigy                         # the Prodigy
+the_tattooed_monk                   # the Tattooed Monk
+the_thunderbolt                     # the Thunderbolt
+the_timely_rain                     # the Timely Rain
+the_turbulent_river_dragon          # the Turbulent River Dragon
+the_unrestrained                    # the Unrestrained
+the_whirlwind                       # the Whirlwind
+the_winged_tiger                    # the Winged Tiger
+the_wizard                          # the Wizard

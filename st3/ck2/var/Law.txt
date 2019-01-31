@@ -7,10 +7,10 @@ banish_voting_power         # Banishment
 banish_voting_power_0       # Ruler Banishment Sovereignty
 banish_voting_power_1       # Banishment Committee
 bogomilist_church_0         # No [bogomilist.GetName] Organization
-bogomilist_church_1         # Bogmilism Supported
+bogomilist_church_1         # [bogomilist.GetName] Faith Supported
 bogomilist_church_2         # [bogomilist.GetName] Faith Organized
 bogomilist_church_3         # [bogomilist.GetName] Faith Formalized
-bogomilist_church_4         # Pemanently Established
+bogomilist_church_4         # Permanently Established
 bogomilist_church_group     # Faith Organization
 bureaucratic_infighting     # Court Infighting
 centralization              # Demesne Centralization

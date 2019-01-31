@@ -13,6 +13,7 @@ allow_title_revokation
 allow_viking_invasion
 allows_matrilineal_marriage
 always
+apply_before_generation # alt-start option
 as_if_liege
 assimilate # LT
 attacking_same_religion_piety_loss
@@ -60,6 +61,7 @@ caste_opinions # rel
 castes # rel
 character
 clan
+consolidate_dukes # alt-start param
 controls_religion
 controls_religion # LT
 cooldown
@@ -95,6 +97,11 @@ free_retract_vassalage # gov
 friends # event pre-trigger
 from_ruler_dynasty
 full_hostility # CB
+generate_dukes # alt-start param
+generate_random_dukes # alt-start param
+generate_random_emperors # alt-start param
+generate_random_holdings # alt-start param
+generate_random_kings # alt-start param
 generate_tooltip
 gets_religion_opinion_penalties # gov
 gives_religion_opinion_penalties # gov
@@ -228,6 +235,7 @@ is_primary_war_attacker
 is_primary_war_defender
 is_primary_war_participant
 is_quest_target
+is_random_world
 is_recent_grant
 is_reformed_religion
 is_religion_crusade_target
@@ -318,6 +326,8 @@ rivals # event pre-trigger
 same_religion
 sea_gap
 seafarer # cul
+secret_religion # rel
+separator # alt-start option
 set_allow_looting
 set_allow_rivermovement
 set_allows_matrilineal_marriage

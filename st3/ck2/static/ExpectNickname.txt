@@ -1,0 +1,3 @@
+give_nickname
+has_nickname
+remove_nickname
