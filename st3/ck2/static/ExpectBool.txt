@@ -1,4 +1,5 @@
 active # title history
+add_number_to_name # buildings
 adventurer
 adventurer # create_title
 ai
@@ -15,47 +16,48 @@ always
 as_if_liege
 assimilate # LT
 attacking_same_religion_piety_loss
-autocephaly
-barons_need_dynasty
+autocephaly # rel
+barons_need_dynasty # gov
 borders_lake
 borders_major_river
-bs_marriage
+bs_marriage # rel
 caliphate # LT
 can_be_claimed # LT
 can_be_given_away
-can_be_granted_kingdoms_and_empires_by_other_government
+can_be_granted_kingdoms_and_empires_by_other_government # gov
 can_be_usurped # LT
-can_build_castle
-can_build_city
-can_build_forts
-can_build_holdings
-can_build_hospitals
-can_build_temple
-can_build_tribal
+can_build_castle # gov
+can_build_city # gov
+can_build_forts # gov
+can_build_holdings # gov
+can_build_hospitals # gov
+can_build_temple # gov
+can_build_tribal # gov
 can_call_crusade
 can_change_religion
-can_change_to_nomad_on_start
-can_create_empires
-can_create_kingdoms
-can_demand_religious_conversion
+can_change_to_nomad_on_start # gov
+can_create_empires # gov
+can_create_kingdoms # gov
+can_demand_religious_conversion # gov
 can_elect_head # RT/MT
-can_excommunicate
-can_grant_claim
-can_grant_divorce
-can_grant_kingdoms_and_empires_to_other_government
-can_grant_kingdoms_and_empires_to_other_government_group
-can_have_antipopes
+can_excommunicate # rel
+can_grant_claim # rel
+can_grant_divorce # rel
+can_grant_kingdoms_and_empires_to_other_government # gov
+can_grant_kingdoms_and_empires_to_other_government_group # gov
+can_have_antipopes # rel
 can_have_more_leadership_traits
-can_imprison_without_reason
-can_inherit
+can_imprison_without_reason # gov
+can_inherit # trait
 can_marry
-can_retire_to_monastery
-can_revoke_without_reason
+can_marry # trait
+can_retire_to_monastery # rel
+can_revoke_without_reason # gov
 can_toggle_looting # spawn_unit
-can_usurp_kingdoms_and_empires
+can_usurp_kingdoms_and_empires # gov
 cannot_inherit # spawn_unit
-caste_opinions
-castes
+caste_opinions # rel
+castes # rel
 character
 clan
 controls_religion
@@ -66,39 +68,42 @@ costs_piety
 counts_as_purple_born # MT
 creation_requires_capital # LT
 crime
+criminal # society
 crusade_war_has_started
 custom_created # create_title
-customizer
+customizer # trait
 default
 defensive_attrition
+devil_worshipper # society
 diplomatic_immunity
 disable_non_aggression_pacts
 disband_on_peace # spawn_unit
-dislike_tribal_organization
-divine_blood
-dukes_called_kings
-dynamic_cult
+dislike_tribal_organization # rel
+divine_blood # rel
+dukes_called_kings # gov, cul
+dynamic_cult # rel
 dynasty_title_names # LT
 excommunicate
 failure
 female # create_character
-female_temple_holders
-feminist
+female_temple_holders # rel
+feminist # rel
 first_count_vassals
 flank_has_leader
-free_levies_in_offensive_war
-free_retract_vassalage
+free_levies_in_offensive_war # gov
+free_retract_vassalage # gov
 friends # event pre-trigger
 from_ruler_dynasty
 full_hostility # CB
 generate_tooltip
-gets_religion_opinion_penalties
-gives_religion_opinion_penalties
+gets_religion_opinion_penalties # gov
+gives_religion_opinion_penalties # gov
 hard_to_convert
+hard_to_convert # rel
 has_any_quest
 has_autocephaly
 has_called_crusade
-has_coa_on_barony_only
+has_coa_on_barony_only # rel
 has_concubinage
 has_dejure_empires
 has_disease
@@ -134,17 +139,17 @@ has_religion_features
 has_secret_religion
 has_settlement_construction
 has_siege
-has_top_de_jure_capital
+has_top_de_jure_capital # LT
 has_trade_post
 has_unsafe_religion
 has_unsafe_secret_religion
-have_gender_laws
+have_gender_laws # gov
 hidden
 historical
 history
 holy_order
 hostile_within_group
-ignores_de_jure_laws
+ignores_de_jure_laws # gov
 immortal
 imprison
 in_command
@@ -153,9 +158,10 @@ in_revolt
 in_seclusion
 independent
 independent # LT
+indestructible # artifacts, society
 indirectly_owned
 inherit
-investiture
+investiture # rel
 is_adult
 is_alive
 is_allowed_to_loot
@@ -226,13 +232,16 @@ is_recent_grant
 is_reformed_religion
 is_religion_crusade_target
 is_religious
+is_religious # society
 is_republic
 is_ruler
 is_save_game
 is_seafarer
+is_secret # society
 is_senior_consort_party
 is_shattered_world
 is_sick # event pre-trigger
+is_society_discovered
 is_society_grandmaster
 is_sub_unit_leader
 is_theocracy
@@ -246,18 +255,18 @@ is_unique # MT
 is_vice_royalty
 is_virtous # yes, the trigger is misspelled in the API
 is_voter
-join_crusade_if_bordering_hostile
+join_crusade_if_bordering_hostile # rel
 land_gap
-landed_inheritance
-landed_kin_prestige_bonus
+landed_inheritance # gov
+landed_kin_prestige_bonus # rel
 landless # LT
 landless # create_title
 location_ruler_title # LT
 lock_crusade_target
 major # event property
-make_reformer_head_of_religion
-male_temple_holders
-marriage_ignore_religion
+make_reformer_head_of_religion # rel
+male_temple_holders # rel
+marriage_ignore_religion # gov
 matrilineal_marriages
 matrilineal_override
 mercenary
@@ -284,8 +293,8 @@ port
 portrait_in_command
 portrait_is_patrician
 preparing_invasion
-priests_can_inherit # religions
-priests_can_marry # religions
+priests_can_inherit # rel
+priests_can_marry # rel
 primary # LT
 prisoner
 prisoner # event pre-trigger
@@ -298,7 +307,7 @@ realm_in_name # MT
 rebel
 rebel # create_title
 reinforces # spawn_unit
-rel_head_defense # religions
+rel_head_defense # rel
 religion_allows_female_temple_holders
 religion_allows_male_temple_holders
 replace_captain_on_death # create_title
@@ -308,7 +317,7 @@ risks_minor_clan_rising
 rivals # event pre-trigger
 same_religion
 sea_gap
-seafarer
+seafarer # cul
 set_allow_looting
 set_allow_rivermovement
 set_allows_matrilineal_marriage
@@ -357,7 +366,10 @@ show_value
 society_can_rank_up
 society_has_active_progress
 society_has_members
+society_influence # society
 society_is_active
+society_is_criminal
+society_is_devil_worshiper
 spouse_context # MT
 stacking
 start_society_progress

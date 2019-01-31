@@ -143,7 +143,6 @@ dynasty_decadence_low          # Decadent Dynasty
 dynasty_decadence_med          # Very Decadent Dynasty
 dysentery                      # Dysentery
 eagle_warrior                  # Eagle Knight
-east_african_leader
 elusive_shadow                 # Elusive Shadow
 emf_cannot_inherit             # Cannot Inherit
 emf_crowned                    # Crowned

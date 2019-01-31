@@ -1,9 +1,12 @@
+associated_religion # society
 banish_religion
 controls_religion
 enable_prepared_invasion
+holy_site # LT
 icon_religion
 intermarry
 is_heresy_of
+is_holy_site
 is_parent_religion
 parent # set_parent_religion param
 pentarchy # LT

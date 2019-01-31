@@ -1,0 +1,8 @@
+can_join_society
+interested_in_society
+is_society
+join_society
+set_discovered_society
+set_interested_society
+society
+society_member_of

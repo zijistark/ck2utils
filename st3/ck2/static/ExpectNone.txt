@@ -3,5 +3,6 @@ first_type
 portrait
 second_type
 set_crusade_beneficiary
+set_interested_society
 set_pentarch_title
 set_religion_head

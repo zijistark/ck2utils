@@ -1,7 +1,11 @@
 adjective
 background
+birth # char history
 border
 crusade_name
+culture # char history
+custom_tooltip # society
+death # char history
 desc
 desc # event property
 diplomacy_icon
@@ -23,13 +27,17 @@ liege # title history
 localisation_key
 log
 name
+name # char history
 name # event property
 name_list
+non_interference_tooltip # society
+obedience_tooltip # society
 picture
 piety_name
 portrait
 priest_title
 properties
+religion # char history
 remove_special_character_title
 ruler # create_title
 ruler_female # create_title
@@ -40,6 +48,7 @@ set_name
 set_offmap_name
 set_picture
 set_special_character_title
+society_ranks_gfx # society
 sound
 text
 title
@@ -51,6 +60,7 @@ title_prefix
 title_prefix # LT
 tooltip
 tooltip_info_custom
+trait # char history
 which
 window
 {{vCulture}} # LT

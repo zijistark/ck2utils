@@ -116,6 +116,7 @@ def main():
     VarType('Focus', ['common/objectives/*.txt'], include=[r'^focus_']),
     VarType('OnAction', ['common/on_actions/*.txt'], moddirs=()),
     VarType('Government', ['common/governments/*.txt'], nest=1),
+    VarType('Society', ['common/societies/*.txt']),
     VarType('RelHeadTitle', ['common/landed_titles/*.txt'], content_filter=HasPairFilter(r'^controls_religion$', r'^"?[\w-]+"?$', regexp=True), hidden=True),
   ]
 

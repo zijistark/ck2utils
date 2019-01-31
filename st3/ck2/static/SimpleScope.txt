@@ -110,3 +110,5 @@ twin
 twin_even_if_dead
 {{vFaction}}
 {{vJobTitle}}
+{{vSociety}}
+{{vSociety}}_{{vReligion}}

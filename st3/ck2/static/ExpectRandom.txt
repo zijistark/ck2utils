@@ -1,0 +1,3 @@
+culture # create_character
+dynasty # create_character
+female # create_character

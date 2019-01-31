@@ -14,10 +14,13 @@ ai_will_revoke
 allow
 allow # LT param
 allow_join
+allowed_gift # artifacts
 allowed_to_grant
 allowed_to_hold
+artifacts # artifact_spawns
 attacker_ai_defeat_worth
 attacker_ai_victory_worth
+can_join_society # society
 can_use
 can_use_gui
 can_use_title
@@ -49,6 +52,7 @@ gain_effect
 gain_effect # LT param
 if
 immediate
+is_active_trigger # buildings
 is_valid
 is_valid_title
 is_visible
@@ -56,11 +60,15 @@ limit
 lose_effect
 major_trigger
 mean_time_to_happen
+member_score # society
 membership
 modifier
+monthly_currency_gain # society
 mult_modifier
 name
 nomadic_governments
+non_interference # society
+obedient # society
 on_add
 on_add_posttitle
 on_add_title
@@ -92,7 +100,11 @@ revoke_allowed
 revoke_trigger
 secret_religion_visibility_trigger
 settlement_decisions
+show_society # society
 society_decisions
+society_rank
+spawn_chance # artifact_spawns
+startup_populate # society
 success
 succession_laws
 target_potential
@@ -112,6 +124,7 @@ trigger_else_if
 trigger_if
 trigger_switch
 vassal_decisions
+weight # artifact_spawns
 weight_multiplier
 while
 {{vEventType}}

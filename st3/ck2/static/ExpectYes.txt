@@ -4,6 +4,7 @@ add_random_education_trait
 ambition_succeeds
 anti_nomad
 banish
+birth # char history
 break # ideally this would be in bold/etc. like ControlBlock, but for now it's a simple ExpectYes
 cancel_ambition
 cancel_crusade

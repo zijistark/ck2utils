@@ -750,7 +750,6 @@ tb_emf_magyar_1                             # Magyar Divisions
 tb_great_pillar_aztec                       # Skull Totem
 tb_great_pillar_baltic                      # Great [baltic_pagan.GetName] Pillar
 tb_great_pillar_bon                         # Balancing Stone
-tb_great_pillar_east_african                # Great Totem
 tb_great_pillar_finnish                     # Hiisi Grove
 tb_great_pillar_hellenic                    # [GetZeusJupiterName] Column
 tb_great_pillar_norse                       # Irminsul Tree

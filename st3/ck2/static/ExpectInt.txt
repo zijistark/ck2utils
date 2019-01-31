@@ -1,5 +1,6 @@
 add_age
 add_holding_slot
+add_spouse # char history
 age
 age # spawn_unit param
 ai_ambition
@@ -31,8 +32,10 @@ delay
 demesne_size
 duration
 dynasty
+dynasty # char history
 economy_techpoints
 emblem # LT
+father # char history
 female
 grant_limit # MT
 heresy_icon
@@ -44,15 +47,19 @@ immortal_age
 immortal_age # title history
 killer
 leader_traits
+level # society
+limit # society
 max_age # event pre-trigger
 max_amount # succession_voting
 max_consorts
+max_settlements # prov history
 max_wives
 military_techpoints
 min_age # event pre-trigger
 month
 month_of_birth
 months
+mother # char history
 multiplier
 num_culture_provinces
 num_fitting_characters_for_title
@@ -104,6 +111,10 @@ num_of_unique_dynasty_vassals
 num_of_vassals
 num_religion_provinces
 opinion_effect # MT
+opinion_per_rank_above # society
+opinion_to_other_members # society
+opinion_to_perceived_members # society
+opinion_to_pretenders # society
 over_max_demesne_size
 over_vassal_limit
 personality_traits
@@ -112,6 +123,7 @@ practical_age
 province # alt. to province_id in this case
 province # spawn_unit
 province_id
+quality # artifacts
 rank
 realm_diplomacy
 realm_intrigue
@@ -124,6 +136,7 @@ religious_clothing_priest # religions
 ruled_years
 society_rank
 sort_priority # CB
+startup_limit # society
 template # LT, CoA
 texture # LT, CoA
 texture_internal # LT, CoA

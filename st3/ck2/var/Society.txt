@@ -1,0 +1,28 @@
+hermetics                         # the Hermetic Society
+monastic_order_benedictine        # [GetBenedictineSocietyName]
+monastic_order_buddhist           # [GetSavakaSanghaSocietyName]
+monastic_order_dominican          # [GetDominicanSocietyName]
+monastic_order_hindu              # [GetAdvaitaMathaSocietyName]
+monastic_order_jain               # [GetSravakaSamghaSocietyName]
+monastic_order_monophysite        # [GetSaintAnthonySocietyName]
+monastic_order_nestorian          # [GetSaintAbrahamSocietyName]
+monastic_order_orthodox           # [GetSaintBasilSocietyName]
+monastic_order_stoics             # Stoic Intelligentsia
+secret_religious_society_template
+the_assassins                     # the Assassins
+the_bacchants                     # Bacchus' Mystery
+the_cold_ones                     # [GetColdOnesSocietyName]
+the_cult_of_kali                  # [GetKaliSocietyName]
+the_plaguebringers                # [GetPlaguebringersSocietyName]
+the_satanists                     # [GetLucifersOwnSocietyName]
+the_trollcrafters                 # [GetHelSocietyName]
+the_vodouns                       # The Soul Eaters
+warrior_lodge_baltic              # [GetBalticWarriorSocietyName]
+warrior_lodge_bon                 # [GetBonWarriorSocietyName]
+warrior_lodge_finnish             # [GetFinnishWarriorSocietyName]
+warrior_lodge_hellenic            # [GetHellenicWarriorSocietyName]
+warrior_lodge_norse               # [GetNorseWarriorSocietyName]
+warrior_lodge_slavic              # [GetSlavicWarriorSocietyName]
+warrior_lodge_tengri              # [GetTengriWarriorSocietyName]
+warrior_lodge_west_african        # [GetWestAfricanWarriorSocietyName]
+warrior_lodge_zun                 # [GetZunWarriorSocietyName]

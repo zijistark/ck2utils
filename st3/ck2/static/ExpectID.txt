@@ -8,7 +8,6 @@ army_template # create_title param
 artifact_type
 border
 border # event property
-can_join_society
 clear_flags_with_prefix
 clr_flag
 clr_offmap_tmp_flag
@@ -52,14 +51,12 @@ is_hospital_decision_allowed
 is_hospital_decision_potential
 is_settlement_decision_allowed
 is_settlement_decision_potential
-is_society
 is_targetted_decision_allowed
 is_targetted_decision_potential
 is_title_decision_allowed
 is_title_decision_potential
 is_trade_post_decision_allowed
 is_trade_post_decision_potential
-join_society
 key
 mercenary_type # LT param
 modifier
@@ -85,8 +82,7 @@ set_special_character_title
 set_status
 set_{{vFlagType}}_flag
 setting
-society
-society_member_of
+society_rank_up_decision # society
 sound_effect
 spawn_disease
 stance

@@ -42,6 +42,9 @@ match_max # spawn_unit
 match_min # spawn_unit
 match_mult # spawn_unit
 max
+member_score_per_attribute # society
+member_score_per_currency # society
+member_score_per_rank # society
 min
 monthly_income
 monthly_income # LT

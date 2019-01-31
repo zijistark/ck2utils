@@ -12,8 +12,6 @@ buddhist                    # Buddhist
 cathar                      # Cathar
 catholic                    # Catholic
 druze                       # Druze
-east_african_pagan          # East African
-east_african_pagan_reformed # East African
 finnish_pagan               # Muinaisusko
 finnish_pagan_reformed      # Muinaisusko
 fraticelli                  # Fraticelli
@@ -61,8 +59,8 @@ tengri_pagan_reformed       # Tengri
 tondrakian                  # Tondrakian
 waldensian                  # Waldensian
 waqifi                      # Waqifite
-west_african_pagan          # West African
-west_african_pagan_reformed # West African
+west_african_pagan          # African
+west_african_pagan_reformed # African
 yazidi                      # Yazidi
 zaydi                       # Zaydi
 zikri                       # Zikri
