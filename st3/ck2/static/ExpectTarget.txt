@@ -211,6 +211,7 @@ set_pentarch_title
 set_player_character
 set_preferred_capital
 set_real_father
+set_religion_head
 set_secret_religion
 shares_any_bloodline_with
 shares_realm_border_with

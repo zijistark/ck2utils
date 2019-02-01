@@ -744,6 +744,7 @@ variables:
     | borders_lake
     | borders_major_river
     | bs_marriage
+    | cached
     | caliphate
     | can_be_claimed
     | can_be_given_away
@@ -779,6 +780,7 @@ variables:
     | can_toggle_looting
     | can_usurp_kingdoms_and_empires
     | cannot_inherit
+    | cannot_marry
     | caste_opinions
     | castes
     | character
@@ -2015,6 +2017,7 @@ variables:
     | set_player_character
     | set_preferred_capital
     | set_real_father
+    | set_religion_head
     | set_secret_religion
     | shares_any_bloodline_with
     | shares_realm_border_with
@@ -6554,6 +6557,11 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.identifier.job_title.ck2script
+    - match: '\b({{vExpectLaw}})\s*=\s*("({{vLaw}})")'
+      captures:
+        1: support.function.ck2script
+        2: string.quoted.double.ck2script
+        3: variable.identifier.law.ck2script
     - match: '\b({{vExpectLaw}})\s*=\s*({{vLaw}})\b'
       captures:
         1: support.function.ck2script

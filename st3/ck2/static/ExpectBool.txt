@@ -22,6 +22,7 @@ barons_need_dynasty # gov
 borders_lake
 borders_major_river
 bs_marriage # rel
+cached # trait
 caliphate # LT
 can_be_claimed # LT
 can_be_given_away
@@ -57,6 +58,7 @@ can_revoke_without_reason # gov
 can_toggle_looting # spawn_unit
 can_usurp_kingdoms_and_empires # gov
 cannot_inherit # spawn_unit
+cannot_marry # trait
 caste_opinions # rel
 castes # rel
 character
