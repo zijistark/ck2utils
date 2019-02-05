@@ -162,6 +162,7 @@ triggered_gain # society
 troops # spawn_unit / spawn_fleet param
 true_religion
 true_religion_group
+unit_graphical_cultures # cul
 unit_home_modifier
 unit_modifier
 unsafe_war

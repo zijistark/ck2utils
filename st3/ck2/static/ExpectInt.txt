@@ -44,6 +44,7 @@ emperor_ignore_rate # alt-start param
 emperor_threshold # alt-start param
 emperor_vassalization_rate # alt-start param
 father # char history
+father_name_chance # cul
 female
 feudal_seeds # alt-start param
 grant_limit # MT
@@ -61,6 +62,8 @@ king_vassalization_rate # alt-start param
 leader_traits
 level # society
 limit # society
+mat_grf_name_chance # cul
+mat_grm_name_chance # cul
 max_age # event pre-trigger
 max_amount # succession_voting
 max_consorts
@@ -74,6 +77,7 @@ month
 month_of_birth
 months
 mother # char history
+mother_name_chance # cul
 multiplier
 nomadic_seeds # alt-start param
 num_culture_provinces
@@ -133,6 +137,8 @@ opinion_to_perceived_members # society
 opinion_to_pretenders # society
 over_max_demesne_size
 over_vassal_limit
+pat_grf_name_chance # cul
+pat_grm_name_chance # cul
 personality_traits
 plot_months
 practical_age

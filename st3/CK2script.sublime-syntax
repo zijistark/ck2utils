@@ -703,6 +703,7 @@ variables:
     | troops
     | true_religion
     | true_religion_group
+    | unit_graphical_cultures
     | unit_home_modifier
     | unit_modifier
     | unsafe_war
@@ -740,6 +741,7 @@ variables:
     | assimilate
     | attacking_same_religion_piety_loss
     | autocephaly
+    | baron_titles_hidden
     | barons_need_dynasty
     | borders_lake
     | borders_major_river
@@ -791,6 +793,7 @@ variables:
     | cooldown
     | copy_title_laws
     | costs_piety
+    | count_titles_hidden
     | counts_as_purple_born
     | creation_requires_capital
     | crime
@@ -804,10 +807,12 @@ variables:
     | diplomatic_immunity
     | disable_non_aggression_pacts
     | disband_on_peace
+    | disinherit_from_blinding
     | dislike_tribal_organization
     | divine_blood
     | dukes_called_kings
     | dynamic_cult
+    | dynasty_name_first
     | dynasty_title_names
     | excommunicate
     | failure
@@ -816,6 +821,7 @@ variables:
     | feminist
     | first_count_vassals
     | flank_has_leader
+    | founder_named_dynasties
     | free_levies_in_offensive_war
     | free_retract_vassalage
     | friends
@@ -880,6 +886,7 @@ variables:
     | historical
     | history
     | holy_order
+    | horde
     | hostile_within_group
     | ignores_de_jure_laws
     | immortal
@@ -1027,6 +1034,7 @@ variables:
     | port
     | portrait_in_command
     | portrait_is_patrician
+    | prefix
     | preparing_invasion
     | priests_can_inherit
     | priests_can_marry
@@ -1172,6 +1180,8 @@ variables:
     | culture
     | culture
     | culture
+    | parent
+    | secondary_event_pictures
     | set_graphical_culture
     )
   vExpectCultureGroup: |-
@@ -1252,6 +1262,7 @@ variables:
     | expel_modifier
     | flag
     | flank_has_tactic
+    | grammar_transform
     | graphical_culture
     | graphical_culture
     | group
@@ -1372,6 +1383,7 @@ variables:
     | emperor_threshold
     | emperor_vassalization_rate
     | father
+    | father_name_chance
     | female
     | feudal_seeds
     | grant_limit
@@ -1389,6 +1401,8 @@ variables:
     | leader_traits
     | level
     | limit
+    | mat_grf_name_chance
+    | mat_grm_name_chance
     | max_age
     | max_amount
     | max_consorts
@@ -1402,6 +1416,7 @@ variables:
     | month_of_birth
     | months
     | mother
+    | mother_name_chance
     | multiplier
     | nomadic_seeds
     | num_culture_provinces
@@ -1461,6 +1476,8 @@ variables:
     | opinion_to_pretenders
     | over_max_demesne_size
     | over_vassal_limit
+    | pat_grf_name_chance
+    | pat_grm_name_chance
     | personality_traits
     | plot_months
     | practical_age
@@ -1520,6 +1537,7 @@ variables:
     (?xi:
       adjective
     | background
+    | bastard_dynasty_prefix
     | birth
     | border
     | crusade_name
@@ -1531,11 +1549,14 @@ variables:
     | dlc
     | dna
     | entry
+    | female_patronym
     | foa
     | foa
     | foa
     | foa_female
     | frame_suffix
+    | from_dynasty_prefix
+    | from_dynasty_suffix
     | group
     | has_dlc
     | has_offmap_name
@@ -1545,6 +1566,7 @@ variables:
     | liege
     | localisation_key
     | log
+    | male_patronym
     | name
     | name
     | name
@@ -1578,6 +1600,7 @@ variables:
     | title_prefix
     | tooltip
     | tooltip_info_custom
+    | tribal_name
     | which
     | window
     | {{vCulture}}

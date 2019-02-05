@@ -1,5 +1,6 @@
 adjective
 background
+bastard_dynasty_prefix # cul
 birth # char history
 border
 crusade_name
@@ -11,11 +12,14 @@ diplomacy_icon
 dlc
 dna
 entry
+female_patronym # cul
 foa
 foa # LT
 foa # create_title
 foa_female
 frame_suffix
+from_dynasty_prefix # cul
+from_dynasty_suffix # cul
 group
 has_dlc
 has_offmap_name
@@ -25,6 +29,7 @@ lacks_dlc # event pre-trigger
 liege # title history
 localisation_key
 log
+male_patronym # cul
 name
 name # char history
 name # event option property
@@ -58,6 +63,7 @@ title_prefix
 title_prefix # LT
 tooltip
 tooltip_info_custom
+tribal_name # cul
 which
 window
 {{vCulture}} # LT

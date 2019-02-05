@@ -18,6 +18,7 @@ as_if_liege
 assimilate # LT
 attacking_same_religion_piety_loss
 autocephaly # rel
+baron_titles_hidden # cul
 barons_need_dynasty # gov
 borders_lake
 borders_major_river
@@ -69,6 +70,7 @@ controls_religion # LT
 cooldown
 copy_title_laws # create_title
 costs_piety
+count_titles_hidden # cul
 counts_as_purple_born # MT
 creation_requires_capital # LT
 crime
@@ -82,10 +84,12 @@ devil_worshipper # society
 diplomatic_immunity
 disable_non_aggression_pacts
 disband_on_peace # spawn_unit
+disinherit_from_blinding # cul
 dislike_tribal_organization # rel
 divine_blood # rel
 dukes_called_kings # gov, cul
 dynamic_cult # rel
+dynasty_name_first # cul
 dynasty_title_names # LT
 excommunicate
 failure
@@ -94,6 +98,7 @@ female_temple_holders # rel
 feminist # rel
 first_count_vassals
 flank_has_leader
+founder_named_dynasties # cul
 free_levies_in_offensive_war # gov
 free_retract_vassalage # gov
 friends # event pre-trigger
@@ -158,6 +163,7 @@ hidden
 historical
 history
 holy_order
+horde # cul
 hostile_within_group
 ignores_de_jure_laws # gov
 immortal
@@ -305,6 +311,7 @@ pledge_crusade_participation
 port
 portrait_in_command
 portrait_is_patrician
+prefix # cul
 preparing_invasion
 priests_can_inherit # rel
 priests_can_marry # rel

@@ -23,6 +23,7 @@ elective_voting_rules
 expel_modifier
 flag
 flank_has_tactic
+grammar_transform # cul
 graphical_culture
 graphical_culture # LT param
 group
