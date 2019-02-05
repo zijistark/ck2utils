@@ -127,6 +127,7 @@ has_holder
 has_horde_culture
 has_hospital
 has_inheritance_blocker
+has_job_action
 has_job_title
 has_job_title # event pre-trigger
 has_known_creation_date
@@ -171,6 +172,7 @@ indestructible # artifacts, society
 indirectly_owned
 inherit
 investiture # rel
+is_abroad
 is_adult
 is_alive
 is_allowed_to_loot
@@ -205,6 +207,7 @@ is_land
 is_landed
 is_landless_type_title
 is_looter # spawn_unit
+is_looting
 is_lowborn
 is_marriage_adult
 is_married

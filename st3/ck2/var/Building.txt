@@ -5,12 +5,12 @@ ca_barracks_4                               # Barracks
 ca_barracks_5                               # Barracks
 ca_barracks_6                               # Barracks
 ca_con_wall_6                               # Theodosian Walls
-ca_culture_altaic_jurchen_0                 # Jurchen Cavalry Barracks
+ca_culture_altaic_jurchen_0                 # [jurchen.GetName] Cavalry Barracks
 ca_culture_altaic_jurchen_1                 # [jurchen.GetName] Cavalry Barracks
 ca_culture_altaic_jurchen_2                 # [jurchen.GetName] Cavalry Barracks
 ca_culture_altaic_jurchen_3                 # [jurchen.GetName] Cavalry Barracks
 ca_culture_altaic_jurchen_4                 # [jurchen.GetName] Cavalry Barracks
-ca_culture_altaic_jurchen_5                 # Jurchen Cavalry Barracks
+ca_culture_altaic_jurchen_5                 # [jurchen.GetName] Cavalry Barracks
 ca_culture_animal_0                         # Animal Farm
 ca_culture_animal_1                         # Animal Farm
 ca_culture_animal_2                         # Animal Farm
@@ -59,36 +59,36 @@ ca_culture_dutch_2                          # Goedendag Militia Quarters
 ca_culture_dutch_3                          # Goedendag Militia Quarters
 ca_culture_dutch_4                          # Goedendag Militia Quarters
 ca_culture_dutch_5                          # Goedendag Militia Quarters
-ca_culture_ethiopian_0                      # Ethiopian Drilling Grounds
+ca_culture_ethiopian_0                      # [ethiopian.GetName] Drilling Grounds
 ca_culture_ethiopian_1                      # Ethiopian Drilling Grounds
 ca_culture_ethiopian_2                      # Ethiopian Drilling Grounds
 ca_culture_ethiopian_3                      # Ethiopian Drilling Grounds
 ca_culture_ethiopian_4                      # Ethiopian Drilling Grounds
-ca_culture_ethiopian_5                      # Ethiopian Drilling Grounds
+ca_culture_ethiopian_5                      # [ethiopian.GetName] Drilling Grounds
 ca_culture_frank_norman_german_0            # Jousting Lists
 ca_culture_frank_norman_german_1            # Jousting Lists
 ca_culture_frank_norman_german_2            # Jousting Lists
 ca_culture_frank_norman_german_3            # Jousting Lists
 ca_culture_frank_norman_german_4            # Jousting Lists
 ca_culture_frank_norman_german_5            # Jousting Lists
-ca_culture_germanic_0                       # Germanic Infantry Barracks
+ca_culture_germanic_0                       # [GetGermanic] Infantry Barracks
 ca_culture_germanic_1                       # [GetGermanic] Infantry Barracks
 ca_culture_germanic_2                       # [GetGermanic] Infantry Barracks
 ca_culture_germanic_3                       # [GetGermanic] Infantry Barracks
 ca_culture_germanic_4                       # [GetGermanic] Infantry Barracks
-ca_culture_germanic_5                       # Germanic Infantry Barracks
+ca_culture_germanic_5                       # [GetGermanic] Infantry Barracks
 ca_culture_group_altaic_0                   # Riding Grounds
 ca_culture_group_altaic_1                   # Riding Grounds
 ca_culture_group_altaic_2                   # Riding Grounds
 ca_culture_group_altaic_3                   # Riding Grounds
 ca_culture_group_altaic_4                   # Riding Grounds
 ca_culture_group_altaic_5                   # Riding Grounds
-ca_culture_group_arabic_0                   # Camel Training Grounds
-ca_culture_group_arabic_1                   # Camel Training Grounds
-ca_culture_group_arabic_2                   # Camel Training Grounds
-ca_culture_group_arabic_3                   # Camel Training Grounds
-ca_culture_group_arabic_4                   # Camel Training Grounds
-ca_culture_group_arabic_5                   # Camel Training Grounds
+ca_culture_group_arabic_0                   # Camel Riding Ground
+ca_culture_group_arabic_1                   # Camel Riding Ground
+ca_culture_group_arabic_2                   # Camel Riding Ground
+ca_culture_group_arabic_3                   # Camel Riding Ground
+ca_culture_group_arabic_4                   # Camel Riding Ground
+ca_culture_group_arabic_5                   # Camel Riding Ground
 ca_culture_group_baltic_0                   # Warrior Gathering Ground
 ca_culture_group_baltic_1                   # Warrior Gathering Ground
 ca_culture_group_baltic_2                   # Warrior Gathering Ground
@@ -107,18 +107,18 @@ ca_culture_group_iberian_2                  # Caballero Training Ground
 ca_culture_group_iberian_3                  # Caballero Training Ground
 ca_culture_group_iberian_4                  # Caballero Training Ground
 ca_culture_group_iberian_5                  # Caballero Training Ground
-ca_culture_group_north_african_0            # Camel Riding Grounds
-ca_culture_group_north_african_1            # Camel Riding Grounds
-ca_culture_group_north_african_2            # Camel Riding Grounds
-ca_culture_group_north_african_3            # Camel Riding Grounds
-ca_culture_group_north_african_4            # Camel Riding Grounds
-ca_culture_group_north_african_5            # Camel Riding Grounds
-ca_culture_group_north_germanic_0           # Huscarl Training Ground
+ca_culture_group_north_african_0            # Camel Riding Ground
+ca_culture_group_north_african_1            # Camel Riding Ground
+ca_culture_group_north_african_2            # Camel Riding Ground
+ca_culture_group_north_african_3            # Camel Riding Ground
+ca_culture_group_north_african_4            # Camel Riding Ground
+ca_culture_group_north_african_5            # Camel Riding Ground
+ca_culture_group_north_germanic_0           # Housecarl Training Ground
 ca_culture_group_north_germanic_1           # Húskarlar Training Ground
 ca_culture_group_north_germanic_2           # Húskarlar Training Ground
 ca_culture_group_north_germanic_3           # Húskarlar Training Ground
 ca_culture_group_north_germanic_4           # Húskarlar Training Ground
-ca_culture_group_north_germanic_5           # Huscarl Training Ground
+ca_culture_group_north_germanic_5           # Housecarl Training Ground
 ca_culture_group_south_slavic_0             # Gusar Training Ground
 ca_culture_group_south_slavic_1             # Gusar Training Ground
 ca_culture_group_south_slavic_2             # Gusar Training Ground
@@ -149,12 +149,12 @@ ca_culture_italian_2                        # Cavalleria Training Ground
 ca_culture_italian_3                        # Cavalleria Training Ground
 ca_culture_italian_4                        # Cavalleria Training Ground
 ca_culture_italian_5                        # Cavalleria Training Ground
-ca_culture_jewish_0                         # Jewish Heavy Infantry Barracks
+ca_culture_jewish_0                         # [israelite.GetGroupName] Heavy Infantry Barracks
 ca_culture_jewish_1                         # [israelite.GetGroupName] Heavy Infantry Barracks
 ca_culture_jewish_2                         # [israelite.GetGroupName] Heavy Infantry Barracks
 ca_culture_jewish_3                         # [israelite.GetGroupName] Heavy Infantry Barracks
 ca_culture_jewish_4                         # [israelite.GetGroupName] Heavy Infantry Barracks
-ca_culture_jewish_5                         # Jewish Heavy Infantry Barracks
+ca_culture_jewish_5                         # [israelite.GetGroupName] Heavy Infantry Barracks
 ca_culture_ligurian_0                       # Balestrieri Drilling Grounds
 ca_culture_ligurian_1                       # Balestrieri Drilling Grounds
 ca_culture_ligurian_2                       # Balestrieri Drilling Grounds
@@ -221,12 +221,12 @@ ca_culture_venetian_2                       # Marine Barracks
 ca_culture_venetian_3                       # Marine Barracks
 ca_culture_venetian_4                       # Marine Barracks
 ca_culture_venetian_5                       # Marine Barracks
-ca_culture_west_african_0                   # Horon Warrior Lodge
+ca_culture_west_african_0                   # Free Warrior Lodge
 ca_culture_west_african_1                   # Free Warrior Lodge
 ca_culture_west_african_2                   # Free Warrior Lodge
 ca_culture_west_african_3                   # Free Warrior Lodge
 ca_culture_west_african_4                   # Free Warrior Lodge
-ca_culture_west_african_5                   # Horon Warrior Lodge
+ca_culture_west_african_5                   # Free Warrior Lodge
 ca_dannevirke_wall_2                        # Danæwirchi
 ca_dannevirke_wall_3                        # Danæwirchi
 ca_dannevirke_wall_4                        # Danæwirchi
@@ -631,10 +631,10 @@ tb_culture_ethiopian_1                      # [ethiopian.GetName] Drilling Groun
 tb_culture_ethiopian_2                      # [ethiopian.GetName] Drilling Grounds
 tb_culture_ethiopian_3                      # [ethiopian.GetName] Drilling Grounds
 tb_culture_ethiopian_4                      # [ethiopian.GetName] Drilling Grounds
-tb_culture_frank_norman_german_1            # Jousting Lists
-tb_culture_frank_norman_german_2            # Jousting Lists
-tb_culture_frank_norman_german_3            # Jousting Lists
-tb_culture_frank_norman_german_4            # Jousting Lists
+tb_culture_frank_norman_german_1            # [GetGermanic] Warrior Lodge
+tb_culture_frank_norman_german_2            # [GetGermanic] Warrior Lodge
+tb_culture_frank_norman_german_3            # [GetGermanic] Warrior Lodge
+tb_culture_frank_norman_german_4            # [GetGermanic] Warrior Lodge
 tb_culture_germanic_1                       # [GetGermanic] Infantry Barracks
 tb_culture_germanic_2                       # [GetGermanic] Infantry Barracks
 tb_culture_germanic_3                       # [GetGermanic] Infantry Barracks
@@ -643,10 +643,10 @@ tb_culture_group_altaic_1                   # Riding Grounds
 tb_culture_group_altaic_2                   # Riding Grounds
 tb_culture_group_altaic_3                   # Riding Grounds
 tb_culture_group_altaic_4                   # Riding Grounds
-tb_culture_group_arabic_1                   # Camel Training Grounds
-tb_culture_group_arabic_2                   # Camel Training Grounds
-tb_culture_group_arabic_3                   # Camel Training Grounds
-tb_culture_group_arabic_4                   # Camel Training Grounds
+tb_culture_group_arabic_1                   # Camel Riding Ground
+tb_culture_group_arabic_2                   # Camel Riding Ground
+tb_culture_group_arabic_3                   # Camel Riding Ground
+tb_culture_group_arabic_4                   # Camel Riding Ground
 tb_culture_group_baltic_1                   # Warrior Gathering Ground
 tb_culture_group_baltic_2                   # Warrior Gathering Ground
 tb_culture_group_baltic_3                   # Warrior Gathering Ground
@@ -659,10 +659,10 @@ tb_culture_group_iberian_1                  # Caballero Training Ground
 tb_culture_group_iberian_2                  # Caballero Training Ground
 tb_culture_group_iberian_3                  # Caballero Training Ground
 tb_culture_group_iberian_4                  # Caballero Training Ground
-tb_culture_group_north_african_1            # Camel Riding Grounds
-tb_culture_group_north_african_2            # Camel Riding Grounds
-tb_culture_group_north_african_3            # Camel Riding Grounds
-tb_culture_group_north_african_4            # Camel Riding Grounds
+tb_culture_group_north_african_1            # Camel Riding Ground
+tb_culture_group_north_african_2            # Camel Riding Ground
+tb_culture_group_north_african_3            # Camel Riding Ground
+tb_culture_group_north_african_4            # Camel Riding Ground
 tb_culture_group_north_germanic_1           # Housecarl Training Ground
 tb_culture_group_north_germanic_2           # Housecarl Training Ground
 tb_culture_group_north_germanic_3           # Housecarl Training Ground
@@ -705,6 +705,7 @@ tb_culture_pictish_3                        # Hall of War
 tb_culture_pictish_4                        # Hall of War
 tb_culture_portuguese_galician_andalusian_1 # Jinete Riding Grounds
 tb_culture_portuguese_galician_andalusian_2 # Jinete Riding Grounds
+tb_culture_portuguese_galician_andalusian_3 # Jinete Riding Grounds
 tb_culture_portuguese_galician_andalusian_4 # Jinete Riding Grounds
 tb_culture_roman_1                          # Field of Mars
 tb_culture_roman_2                          # Field of Mars

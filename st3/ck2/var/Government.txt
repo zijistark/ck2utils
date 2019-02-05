@@ -1,5 +1,5 @@
-bogomilist_government          # [bogomilist.GetName]
-bogomilist_imperial_government # Bogomilist Imperial
+bogomilist_government          # Patareni
+bogomilist_imperial_government # Patareni Imperial
 chinese_imperial_government    # Chinese Imperial
 confucian_bureaucracy          # Confucian Bureaucracy
 feudal_government              # Feudal

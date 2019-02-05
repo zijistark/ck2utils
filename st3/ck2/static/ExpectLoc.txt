@@ -3,7 +3,6 @@ background
 birth # char history
 border
 crusade_name
-culture # char history
 custom_tooltip # society
 death # char history
 desc
@@ -20,15 +19,15 @@ frame_suffix
 group
 has_dlc
 has_offmap_name
-high_god_name
+high_god_name # rel
 key
-lacks_dlc
+lacks_dlc # event pre-trigger
 liege # title history
 localisation_key
 log
 name
 name # char history
-name # event property
+name # event option property
 name_list
 non_interference_tooltip # society
 obedience_tooltip # society
@@ -37,7 +36,6 @@ piety_name
 portrait
 priest_title
 properties
-religion # char history
 remove_special_character_title
 ruler # create_title
 ruler_female # create_title
@@ -60,7 +58,6 @@ title_prefix
 title_prefix # LT
 tooltip
 tooltip_info_custom
-trait # char history
 which
 window
 {{vCulture}} # LT

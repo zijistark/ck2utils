@@ -849,6 +849,7 @@ variables:
     | has_horde_culture
     | has_hospital
     | has_inheritance_blocker
+    | has_job_action
     | has_job_title
     | has_job_title
     | has_known_creation_date
@@ -893,6 +894,7 @@ variables:
     | indirectly_owned
     | inherit
     | investiture
+    | is_abroad
     | is_adult
     | is_alive
     | is_allowed_to_loot
@@ -927,6 +929,7 @@ variables:
     | is_landed
     | is_landless_type_title
     | is_looter
+    | is_looting
     | is_lowborn
     | is_marriage_adult
     | is_married
@@ -1520,7 +1523,6 @@ variables:
     | birth
     | border
     | crusade_name
-    | culture
     | custom_tooltip
     | death
     | desc
@@ -1554,7 +1556,6 @@ variables:
     | portrait
     | priest_title
     | properties
-    | religion
     | remove_special_character_title
     | ruler
     | ruler_female
@@ -1577,7 +1578,6 @@ variables:
     | title_prefix
     | tooltip
     | tooltip_info_custom
-    | trait
     | which
     | window
     | {{vCulture}}
@@ -1923,6 +1923,7 @@ variables:
     | is_liege_of
     | is_liege_or_above
     | is_liege_or_above_of
+    | is_looting_in
     | is_lover
     | is_married
     | is_mother
@@ -3121,6 +3122,7 @@ variables:
     | tb_culture_pictish_4
     | tb_culture_portuguese_galician_andalusian_1
     | tb_culture_portuguese_galician_andalusian_2
+    | tb_culture_portuguese_galician_andalusian_3
     | tb_culture_portuguese_galician_andalusian_4
     | tb_culture_roman_1
     | tb_culture_roman_2
@@ -5122,10 +5124,13 @@ variables:
     | emf_ROOT_subjugate_ruler
     | emf_abandon_adventure
     | emf_abdicate
+    | emf_activate_randomized_relhead_title
+    | emf_activate_randomized_relhead_titles
     | emf_add_decay_modifier
     | emf_add_extra_counties_to_amalfi
     | emf_add_extra_dejure_vassal_titles_of_austria
     | emf_add_extra_dejure_vassal_titles_to_bosnia
+    | emf_add_random_generic_leader_trait
     | emf_adventurer_buy_troops
     | emf_adventurer_recruits_demesne
     | emf_adventurer_scale_commander
@@ -5282,6 +5287,7 @@ variables:
     | emf_nwo_create_male_ruler
     | emf_promote_education_trait
     | emf_province_become_heretic
+    | emf_randomize_relhead_title_names
     | emf_reduce_fertility
     | emf_relsub_add_unrest
     | emf_relsub_ask_vassals_to_convert
