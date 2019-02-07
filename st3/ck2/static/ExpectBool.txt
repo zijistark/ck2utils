@@ -91,6 +91,7 @@ dukes_called_kings # gov, cul
 dynamic_cult # rel
 dynasty_name_first # cul
 dynasty_title_names # LT
+exclusive # faction
 excommunicate
 failure
 female # create_character
@@ -114,6 +115,7 @@ gets_religion_opinion_penalties # gov
 gives_religion_opinion_penalties # gov
 hard_to_convert
 hard_to_convert # rel
+has_any_building
 has_any_quest
 has_autocephaly
 has_called_crusade
@@ -136,6 +138,7 @@ has_job_action
 has_job_title
 has_job_title # event pre-trigger
 has_known_creation_date
+has_liege_enforced_peace
 has_lover
 has_mercenary_band
 has_minor_title
@@ -416,5 +419,6 @@ uses_prestige_for_law_change
 vassal_government_opinion_penalties
 war
 war # event pre-trigger
+will_liege_enforce_peace
 women_can_take_consorts # religions
 {{vScriptedTrigger}}

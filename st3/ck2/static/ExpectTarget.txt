@@ -53,6 +53,7 @@ de_jure_vassal_or_below
 destroy_fort
 destroy_hospital
 destroy_landed_title
+destroy_random_building
 destroy_settlement
 destroy_tradepost
 dynasty

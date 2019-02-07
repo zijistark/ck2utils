@@ -814,6 +814,7 @@ variables:
     | dynamic_cult
     | dynasty_name_first
     | dynasty_title_names
+    | exclusive
     | excommunicate
     | failure
     | female
@@ -837,6 +838,7 @@ variables:
     | gives_religion_opinion_penalties
     | hard_to_convert
     | hard_to_convert
+    | has_any_building
     | has_any_quest
     | has_autocephaly
     | has_called_crusade
@@ -859,6 +861,7 @@ variables:
     | has_job_title
     | has_job_title
     | has_known_creation_date
+    | has_liege_enforced_peace
     | has_lover
     | has_mercenary_band
     | has_minor_title
@@ -1139,6 +1142,7 @@ variables:
     | vassal_government_opinion_penalties
     | war
     | war
+    | will_liege_enforce_peace
     | women_can_take_consorts
     | {{vScriptedTrigger}}
     )
@@ -1882,6 +1886,7 @@ variables:
     | destroy_fort
     | destroy_hospital
     | destroy_landed_title
+    | destroy_random_building
     | destroy_settlement
     | destroy_tradepost
     | dynasty
@@ -5368,6 +5373,10 @@ variables:
     | emf_set_bloodline_founder_religion_flag
     | emf_set_eastern_marches_capital
     | emf_set_viceroy_exemption
+    | emf_spawn_hre_elector_title
+    | emf_spawn_hre_from_county
+    | emf_spawn_hre_theocracy
+    | emf_spawn_hre_theocracy_cleanup
     | emf_spawn_religious_revolt_leader
     | emf_sr_add_random_society_influence_if_small
     | emf_sr_add_religion_char_flag
@@ -5752,6 +5761,7 @@ variables:
     | emf_sr_old_religion_is_liege_sr
     | emf_startup_ruler_needs_extra_daughter
     | emf_unreformed_pagan
+    | emf_unsafe_religion_if_not_nomad
     | emf_uses_byzantine_coronation
     | emf_uses_furry_coronation
     | emf_uses_hre_coronation
