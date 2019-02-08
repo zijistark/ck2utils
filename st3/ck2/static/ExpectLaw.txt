@@ -1,5 +1,6 @@
 add_law
 add_law_w_cooldown
+approve_law
 has_law
 is_law_allowed
 is_law_potential

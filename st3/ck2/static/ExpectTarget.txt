@@ -13,11 +13,13 @@ add_spouse_matrilineal
 add_to_bloodline
 add_weak_claim
 add_weak_pressed_claim
+approve_law
 artifact
 artifact_can_be_gifted_to
 artifact_type_owned_by
 as_if_allied_to
 at_location
+back_plot
 banish
 base_title # create_title param
 bloodline
@@ -183,8 +185,10 @@ reset_coa
 reveal_plot
 reverse_add_favor
 reverse_banish
+reverse_culture
 reverse_has_truce
 reverse_imprison
+reverse_religion
 reverse_remove_favor
 rightful_religious_head
 same_liege

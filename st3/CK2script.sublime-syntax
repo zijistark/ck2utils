@@ -547,6 +547,7 @@ variables:
     | add_law
     | add_offmap_currency
     | add_special_interest
+    | add_to_extra_holding
     | add_{{vEventModifierType}}_modifier
     | age_diff
     | allowed_holdings
@@ -1530,6 +1531,7 @@ variables:
     (?xi:
       add_law
     | add_law_w_cooldown
+    | approve_law
     | has_law
     | is_law_allowed
     | is_law_potential
@@ -1642,6 +1644,7 @@ variables:
     | add_to_crusade_gold_pot
     | add_to_crusade_piety_pot
     | add_to_crusade_prestige_pot
+    | adjust_siphon_factor
     | aggression
     | ai_creation_factor
     | ai_feudal_modifier
@@ -1846,11 +1849,13 @@ variables:
     | add_to_bloodline
     | add_weak_claim
     | add_weak_pressed_claim
+    | approve_law
     | artifact
     | artifact_can_be_gifted_to
     | artifact_type_owned_by
     | as_if_allied_to
     | at_location
+    | back_plot
     | banish
     | base_title
     | bloodline
@@ -2016,8 +2021,10 @@ variables:
     | reveal_plot
     | reverse_add_favor
     | reverse_banish
+    | reverse_culture
     | reverse_has_truce
     | reverse_imprison
+    | reverse_religion
     | reverse_remove_favor
     | rightful_religious_head
     | same_liege
@@ -2117,6 +2124,7 @@ variables:
     | ambition_succeeds
     | anti_nomad
     | banish
+    | become_heretic
     | birth
     | break
     | cancel_ambition
@@ -5649,6 +5657,7 @@ variables:
     | emf_is_english_melt_province
     | emf_is_english_source_culture
     | emf_is_english_source_province
+    | emf_is_far_from_alternate_hre
     | emf_is_formidable_woman
     | emf_is_good_fit_for_hre
     | emf_is_hre
@@ -5760,6 +5769,8 @@ variables:
     | emf_sr_is_in_PREVs_interesting_society
     | emf_sr_old_religion_is_liege_sr
     | emf_startup_ruler_needs_extra_daughter
+    | emf_title_has_nomadic_dejure_vassal
+    | emf_title_has_nomadic_or_tribal_dejure_vassal
     | emf_unreformed_pagan
     | emf_unsafe_religion_if_not_nomad
     | emf_uses_byzantine_coronation
@@ -5778,11 +5789,13 @@ variables:
     | emf_western_christian_religion
     | has_dejure_empires
     | has_random_culture_names
+    | has_random_cultures
     | has_random_dejure
     | has_random_dejure_or_title_names
     | has_random_religion_features
     | has_random_religion_names
     | has_random_religion_or_culture_names
+    | has_random_religions
     | has_random_title_names
     | is_de_jure_title
     | is_primary_war_participant

@@ -6,6 +6,7 @@ activate_title
 add_law
 add_offmap_currency
 add_special_interest
+add_to_extra_holding
 add_{{vEventModifierType}}_modifier
 age_diff
 allowed_holdings

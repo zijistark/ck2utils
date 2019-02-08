@@ -3,6 +3,7 @@ add_to_crusade_artifact_pot
 add_to_crusade_gold_pot
 add_to_crusade_piety_pot
 add_to_crusade_prestige_pot
+adjust_siphon_factor
 aggression
 ai_creation_factor # buildings
 ai_feudal_modifier # buildings
