@@ -5170,6 +5170,8 @@ variables:
     | emf_adventurer_buy_troops
     | emf_adventurer_recruits_demesne
     | emf_adventurer_scale_commander
+    | emf_ai_wrong_religion_liege_decision_effect
+    | emf_altstart_convert_tribal_or_nomadic_to_feudal
     | emf_ask_for_potential_knights_hospitaler_cb_title
     | emf_become_heretic
     | emf_become_sterile
@@ -5231,6 +5233,7 @@ variables:
     | emf_decadence_become_decadent
     | emf_demote_education_trait
     | emf_destroy_title
+    | emf_distribute_barony
     | emf_do_not_disturb
     | emf_donate_to_adventurer
     | emf_dynlevy_remove
@@ -5244,6 +5247,7 @@ variables:
     | emf_find_friendly_court
     | emf_find_tournament_opponent_for_ROOT
     | emf_finish_eastern_marches_creation
+    | emf_fix_wrong_religion_lieges_in_realm
     | emf_grant_chagatai_titles
     | emf_grant_golden_horde_titles
     | emf_grant_il_khanate_titles
@@ -5381,6 +5385,7 @@ variables:
     | emf_set_bloodline_founder_religion_flag
     | emf_set_eastern_marches_capital
     | emf_set_viceroy_exemption
+    | emf_spawn_byz
     | emf_spawn_hre_elector_title
     | emf_spawn_hre_from_county
     | emf_spawn_hre_theocracy
@@ -5530,6 +5535,7 @@ variables:
     | emf_amalfi_extra_counties_allow
     | emf_are_karling_usurpers_enabled
     | emf_autolander_is_fit_for_grant
+    | emf_can_add_holding_slot
     | emf_can_autodestroy_title
     | emf_can_be_karling_usurper
     | emf_can_convert_province_culture
@@ -5796,6 +5802,7 @@ variables:
     | has_random_religion_names
     | has_random_religion_or_culture_names
     | has_random_religions
+    | has_random_religions_or_cultures
     | has_random_title_names
     | is_de_jure_title
     | is_primary_war_participant

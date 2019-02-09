@@ -106,8 +106,8 @@ def print_ids(ids, loc, file=sys.stdout):
 
 def main():
   relcul_ignore = (r'color', r'color2', r'(fe)?male_names', r'interface_skin', r'alternate_start', r'(unit_)?graphical_cultures', r'(character|unit(_home_)?)modifier', r'trigger$')
-  strigger_globs = ['common/scripted_triggers/' + p for p in ('emf_*triggers*.txt', 'hip_*triggers*.txt', 'plus_*triggers*.txt')]
-  seffect_globs = ['common/scripted_effects/' + p for p in ('emf_*effects*.txt', 'hip_*effects*.txt', 'plus_*effects*.txt')]
+  strigger_globs = ['common/scripted_triggers/' + p for p in ('emf_*trigger*.txt', 'hip_*trigger*.txt', 'plus_*trigger*.txt')]
+  seffect_globs = ['common/scripted_effects/' + p for p in ('emf_*effect*.txt', 'hip_*effect*.txt', 'plus_*effect*.txt')]
   vtype_list = [
     VarType('Religion', ['common/religions/*.txt'], nest=1, exclude=relcul_ignore),
     VarType('ReligionGroup', ['common/religions/*.txt'], exclude=relcul_ignore),

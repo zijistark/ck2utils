@@ -13,6 +13,7 @@ emf_alternate_start
 emf_amalfi_extra_counties_allow
 emf_are_karling_usurpers_enabled
 emf_autolander_is_fit_for_grant
+emf_can_add_holding_slot
 emf_can_autodestroy_title
 emf_can_be_karling_usurper
 emf_can_convert_province_culture
@@ -279,6 +280,7 @@ has_random_religion_features
 has_random_religion_names
 has_random_religion_or_culture_names
 has_random_religions
+has_random_religions_or_cultures
 has_random_title_names
 is_de_jure_title
 is_primary_war_participant
