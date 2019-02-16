@@ -30,6 +30,7 @@ liege # title history
 localisation_key
 log
 male_patronym # cul
+modifier_name # focus
 name
 name # char history
 name # event option property

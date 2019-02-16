@@ -180,10 +180,10 @@ ca_culture_portuguese_galician_andalusian_3 # Jinete Riding Grounds
 ca_culture_portuguese_galician_andalusian_4 # Jinete Riding Grounds
 ca_culture_portuguese_galician_andalusian_5 # Jinete Riding Grounds
 ca_culture_roman_0                          # Field of Mars
-ca_culture_roman_1                          # Legionary Drilling Grounds
-ca_culture_roman_2                          # Legionary Drilling Grounds
-ca_culture_roman_3                          # Legionary Drilling Grounds
-ca_culture_roman_4                          # Legionary Drilling Grounds
+ca_culture_roman_1                          # Field of Mars
+ca_culture_roman_2                          # Field of Mars
+ca_culture_roman_3                          # Field of Mars
+ca_culture_roman_4                          # Field of Mars
 ca_culture_roman_5                          # Field of Mars
 ca_culture_russian_0                        # Druzhina Training Ground
 ca_culture_russian_1                        # Druzhina Training Ground
@@ -707,10 +707,10 @@ tb_culture_portuguese_galician_andalusian_1 # Jinete Riding Grounds
 tb_culture_portuguese_galician_andalusian_2 # Jinete Riding Grounds
 tb_culture_portuguese_galician_andalusian_3 # Jinete Riding Grounds
 tb_culture_portuguese_galician_andalusian_4 # Jinete Riding Grounds
-tb_culture_roman_1                          # Field of Mars
-tb_culture_roman_2                          # Field of Mars
-tb_culture_roman_3                          # Field of Mars
-tb_culture_roman_4                          # Field of Mars
+tb_culture_roman_1
+tb_culture_roman_2
+tb_culture_roman_3
+tb_culture_roman_4
 tb_culture_russian_1                        # Druzhina Training Ground
 tb_culture_russian_2                        # Druzhina Training Ground
 tb_culture_russian_3                        # Druzhina Training Ground

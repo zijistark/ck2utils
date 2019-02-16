@@ -67,6 +67,7 @@ emf_norman_border_war
 emf_norman_county_conquest
 emf_other_dejure_county_claim_king
 emf_pagan_county_conquest_nonholy
+emf_pagan_subjugation_religious
 emf_reclaim_byz
 emf_reclaim_byz_capital
 emf_religious_reconquest

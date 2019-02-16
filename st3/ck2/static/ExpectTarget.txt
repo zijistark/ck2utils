@@ -225,6 +225,7 @@ show_portrait
 sibling
 society
 sub_realm
+suzerain # is_tributary param
 target
 third_party_portrait # CB param
 thirdparty

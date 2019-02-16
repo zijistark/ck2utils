@@ -143,6 +143,7 @@ has_lover
 has_mercenary_band
 has_minor_title
 has_nickname
+has_overseas_holdings
 has_owner
 has_pentarchy
 has_pledged_crusade_defense

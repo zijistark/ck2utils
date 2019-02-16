@@ -30,7 +30,6 @@ title_courtesan                     # Concubine
 title_cupbearer                     # Cupbearer
 title_darkhan                       # Darkhan
 title_despot                        # Despot
-title_despot_noconclave
 title_drottseti                     # Dróttseti
 title_eran_ambaragbed               # Eran Ambaragbed
 title_food_taster                   # Food Taster

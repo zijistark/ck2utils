@@ -21,6 +21,7 @@ emf_become_sterile
 emf_calculate_tournament_score
 emf_catholic_conversion
 emf_cb_ROOT_ensure_feudal
+emf_cb_byzantine_defensive_victory_check
 emf_cb_defeat
 emf_cb_defeat_other
 emf_cb_dynlevy_begin
@@ -49,6 +50,10 @@ emf_cb_obj_win_war_reverse
 emf_cb_offmap_submission_failure_cleanup
 emf_cb_on_add
 emf_cb_on_success_posttitle
+emf_cb_pagan_subjugation_on_add
+emf_cb_pagan_subjugation_on_fail
+emf_cb_pagan_subjugation_on_reverse_demand
+emf_cb_pagan_subjugation_on_success
 emf_cb_religious_on_success_title
 emf_cb_reset_peace_years
 emf_cb_restore_hre_apply_cooldown
@@ -264,6 +269,7 @@ emf_transfer_claims_from_PREV
 emf_transfer_crown_on_abdication
 emf_transfer_nomad_buildings
 emf_travel_to_ruler
+emf_tribal_settlement_spawn_unit
 emf_try_to_make_primary_title
 emf_unsafe_destroy_title
 emf_usurp_revolter_titles

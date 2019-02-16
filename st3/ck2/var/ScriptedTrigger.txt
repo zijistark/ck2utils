@@ -49,10 +49,13 @@ emf_cb_faction_can_use
 emf_cb_faction_is_valid
 emf_cb_is_title_in_sahara
 emf_cb_is_valid_religious
-emf_cb_is_war_blocked_by_laws
+emf_cb_is_war_legal
 emf_cb_is_weak_claim_pressable
 emf_cb_lacks_main_war_block
 emf_cb_other_claimant_will_be_attacker_vassal
+emf_cb_pagan_subjugation_basic_can_use
+emf_cb_pagan_subjugation_can_use_gui
+emf_cb_pagan_subjugation_is_valid
 emf_cb_prefer_border_dispute
 emf_cb_religious_basic_can_use_title
 emf_cb_religious_reconquest_basic_can_use_title
@@ -73,6 +76,7 @@ emf_child_or_heir_grandchild_of_ROOT
 emf_close_to_adventurer
 emf_closest_to_adventurer
 emf_common_cause
+emf_common_coronation_requirements
 emf_controls_all_eastern_marches_duchies
 emf_controls_extra_bosnia_duchies
 emf_create_switzerland_basic_allow
@@ -136,6 +140,7 @@ emf_il_khanate_province
 emf_imperial_close_viceroy
 emf_imperial_government
 emf_imperial_valid_viceroy
+emf_is_bishop_nominee
 emf_is_crowned
 emf_is_english_liege_source_culture
 emf_is_english_melt_province
@@ -174,6 +179,7 @@ emf_is_sicilian_melt_province
 emf_is_sicilian_source_culture
 emf_is_sicilian_source_province
 emf_is_skilled_adventurer
+emf_is_title_type_special
 emf_is_uncrowned
 emf_is_valid_karling_usurper
 emf_is_vassal_of_hre
@@ -215,7 +221,9 @@ emf_province_same_sea_zone_as_ROOT
 emf_province_same_sea_zone_as_home
 emf_religion_head_divorce
 emf_religion_same_as_bloodline_founder
+emf_religion_unsafe_for_player_if_not_nomad
 emf_relsub_can_submit
+emf_relsub_can_submit_tier_check
 emf_relsub_has_heavy_unrest
 emf_relsub_has_light_unrest
 emf_relsub_has_normal_unrest
@@ -256,7 +264,6 @@ emf_startup_ruler_needs_extra_daughter
 emf_title_has_nomadic_dejure_vassal
 emf_title_has_nomadic_or_tribal_dejure_vassal
 emf_unreformed_pagan
-emf_unsafe_religion_if_not_nomad
 emf_uses_byzantine_coronation
 emf_uses_furry_coronation
 emf_uses_hre_coronation
@@ -288,6 +295,7 @@ is_titular_title
 owner_under_FROM
 owner_under_FROMFROM
 owner_under_FROMFROMFROM
+owner_under_FROMFROMFROMFROM
 owner_under_PREV
 owner_under_PREVPREV
 owner_under_PREVPREVPREV
@@ -318,6 +326,7 @@ title_king_basic_allow
 under_FROM
 under_FROMFROM
 under_FROMFROMFROM
+under_FROMFROMFROMFROM
 under_PREV
 under_PREVPREV
 under_PREVPREVPREV

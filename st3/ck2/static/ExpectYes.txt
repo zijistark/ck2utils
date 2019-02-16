@@ -26,6 +26,7 @@ cut_mercenary_creator_relation
 death
 destroy_bloodline # not clear whether this actually does take only or even a boolean due to poor docs & lack of any base game usage currently (3.0)
 destroy_landed_title
+destroy_random_building
 disallow_random_traits
 distribute_crusade_target_title
 easter_egg # title history
@@ -33,6 +34,7 @@ hide_from # event property
 hide_new # event property
 hide_window # event property
 impregnate
+impregnate_cuckoo
 log_scopes
 make_capital_holding
 make_primary_title
