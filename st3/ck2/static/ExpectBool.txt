@@ -344,8 +344,10 @@ sea_gap
 seafarer # cul
 secret_religion # rel
 separator # alt-start option
+set_allow_free_infidel_revokation
 set_allow_looting
 set_allow_rivermovement
+set_allow_title_revokation
 set_allows_matrilineal_marriage
 set_autocephaly
 set_bs_marriage
@@ -383,6 +385,8 @@ set_raised_vassal_opinion_loss
 set_seafaring
 set_short_name
 set_society_grandmaster
+set_tribal_vassal_levy_control
+set_tribal_vassal_tax_income
 set_uses_decadence
 set_women_can_take_consorts
 short_name # LT

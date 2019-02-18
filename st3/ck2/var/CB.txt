@@ -33,7 +33,6 @@ dismantle_pretender_china_cb
 ducal_county_conquest
 duchy_adventure
 embargo_cb
-emf_border_dispute
 emf_decadence_revolt
 emf_dejure_duchy_claim
 emf_dejure_kingdom_claim

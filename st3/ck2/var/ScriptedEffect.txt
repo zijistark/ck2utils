@@ -158,6 +158,7 @@ emf_make_court_family_sicilian_arabic
 emf_make_eastern_marches_dejure
 emf_make_location_ROOT_capital
 emf_make_powys_dejure
+emf_make_primary_title
 emf_make_province_english
 emf_make_province_neapolitan
 emf_make_province_sicilian
@@ -270,7 +271,6 @@ emf_transfer_crown_on_abdication
 emf_transfer_nomad_buildings
 emf_travel_to_ruler
 emf_tribal_settlement_spawn_unit
-emf_try_to_make_primary_title
 emf_unsafe_destroy_title
 emf_usurp_revolter_titles
 emf_vanish_character

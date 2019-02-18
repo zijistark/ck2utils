@@ -3,9 +3,6 @@ administration_0            # Feudal Administration
 administration_1            # Late Feudal Administration
 administration_2            # Imperial Administration
 agnatic_succession          # Agnatic
-banish_voting_power         # Banishment
-banish_voting_power_0       # Ruler Banishment Sovereignty
-banish_voting_power_1       # Banishment Committee
 bogomilist_church_0         # No [bogomilist.GetName] Organization
 bogomilist_church_1         # [bogomilist.GetName] Faith Supported
 bogomilist_church_2         # [bogomilist.GetName] Faith Organized
@@ -40,9 +37,6 @@ crown_authority_3           # High Crown Authority
 crown_authority_4           # Absolute Crown Authority
 enatic_cognatic_succession  # Enatic-Cognatic
 enatic_succession           # Enatic
-execution_voting_power      # Execution
-execution_voting_power_0    # Ruler Execution Sovereignty
-execution_voting_power_1    # Execution Committee
 feudal_obligations          # Feudal Obligations
 feudal_obligations_0        # Minimal Feudal Obligations
 feudal_obligations_1        # Low Feudal Obligations
@@ -59,18 +53,12 @@ frat_priest_0               # Monastic Priesthood
 frat_priest_1               # Apostolic Priesthood
 frat_priest_2               # Bureaucratic Priesthood
 frat_priesthood             # [fraticelli.GetName] Priesthood
-grant_title_voting_power    # Grant Titles
-grant_title_voting_power_0  # Ruler Title Grant Sovereignty
-grant_title_voting_power_1  # Title Grant Committee
 horde_law                   # Horde
 horde_law_0                 # Horde Invader
 imperial_kingdom_creation   # De Jure Vassal Kingdom Creation
 imperial_kingdom_creation_0 # Imperial Kingdom Creation Disallowed
 imperial_kingdom_creation_1 # Imperial Kingdom Creation Allowed
 imperial_kingdom_creation_2 # Imperial Kingdom Creation Allowed Only for Emperor
-imprison_voting_power       # Imprisonment
-imprison_voting_power_0     # Ruler Imprisonment Sovereignty
-imprison_voting_power_1     # Imprisonment Committee
 infighting_0                # Court in Chaos
 infighting_1                # Order Restored
 inheritance                 # External Inheritance
@@ -91,6 +79,9 @@ iqta_slider_1               # Moderately Levy Oriented Iqta Focus
 iqta_slider_2               # Balanced Iqta Focus
 iqta_slider_3               # Moderately Tax Oriented Iqta Focus
 iqta_slider_4               # Highly Tax Oriented Iqta Focus
+justice_voting_power        # Justice
+justice_voting_power_0      # Ruler Justice Sovereignty
+justice_voting_power_1      # Justice Committee
 king_peace                  # The King's Peace
 king_peace_0                # No King's Peace
 king_peace_1                # Internal King's Peace
@@ -111,9 +102,6 @@ revokation                  # Title Revocation
 revokation_0                # No Title Revocation
 revokation_1                # Title Revocation Allowed
 revokation_2                # Free Infidel Revocation
-revoke_title_voting_power   # Revoke Titles
-revoke_title_voting_power_0 # Ruler Title Revocation Sovereignty
-revoke_title_voting_power_1 # Title Revocation Committee
 status_of_women             # Status of Women
 status_of_women_0           # Traditional Status of Women
 status_of_women_1           # Marginal Status of Women
@@ -150,6 +138,9 @@ temple_slider_1             # Moderately Levy Oriented Clergy Focus
 temple_slider_2             # Balanced Clergy Focus
 temple_slider_3             # Moderately Tax Oriented Clergy Focus
 temple_slider_4             # Highly Tax Oriented Clergy Focus
+titles_voting_power         # Titles & Offices
+titles_voting_power_0       # Ruler Titles Sovereignty
+titles_voting_power_1       # Titles and Offices Committee
 tribal_obligations          # Tribal Obligations
 tribal_obligations_0        # Minimal Tribal Obligations
 tribal_obligations_1        # Low Tribal Obligations
@@ -172,9 +163,9 @@ true_cognatic_succession    # Absolute Cognatic
 wald_charity_0              # Optional Charity
 wald_charity_1              # Enforced Charity
 waldensian_charity_law      # [waldensian.GetName] Charity
-war_voting_power            # War Declaration
-war_voting_power_0          # Ruler War Declaration Sovereignty
-war_voting_power_1          # War Declaration Committee
+war_voting_power            # Diplomacy
+war_voting_power_0          # Ruler Diplomatic Sovereignty
+war_voting_power_1          # Diplomacy Committee
 ze_revokation               # Title Revocation
 ze_revokation_0             # No Title Revocation
 ze_revokation_1             # Title Revocation Allowed

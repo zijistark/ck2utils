@@ -1068,8 +1068,10 @@ variables:
     | seafarer
     | secret_religion
     | separator
+    | set_allow_free_infidel_revokation
     | set_allow_looting
     | set_allow_rivermovement
+    | set_allow_title_revokation
     | set_allows_matrilineal_marriage
     | set_autocephaly
     | set_bs_marriage
@@ -1107,6 +1109,8 @@ variables:
     | set_seafaring
     | set_short_name
     | set_society_grandmaster
+    | set_tribal_vassal_levy_control
+    | set_tribal_vassal_tax_income
     | set_uses_decadence
     | set_women_can_take_consorts
     | short_name
@@ -1261,10 +1265,12 @@ variables:
     | convert_to_castle
     | convert_to_city
     | death_reason
+    | disable_council_voting_on_issue
     | disband_event_forces
     | disease
     | earmark
     | elective_voting_rules
+    | enable_council_voting_on_issue
     | expel_modifier
     | flag
     | flank_has_tactic
@@ -3366,7 +3372,6 @@ variables:
     | ducal_county_conquest
     | duchy_adventure
     | embargo_cb
-    | emf_border_dispute
     | emf_decadence_revolt
     | emf_dejure_duchy_claim
     | emf_dejure_kingdom_claim
@@ -3855,9 +3860,6 @@ variables:
     | administration_1
     | administration_2
     | agnatic_succession
-    | banish_voting_power
-    | banish_voting_power_0
-    | banish_voting_power_1
     | bogomilist_church_0
     | bogomilist_church_1
     | bogomilist_church_2
@@ -3892,9 +3894,6 @@ variables:
     | crown_authority_4
     | enatic_cognatic_succession
     | enatic_succession
-    | execution_voting_power
-    | execution_voting_power_0
-    | execution_voting_power_1
     | feudal_obligations
     | feudal_obligations_0
     | feudal_obligations_1
@@ -3911,18 +3910,12 @@ variables:
     | frat_priest_1
     | frat_priest_2
     | frat_priesthood
-    | grant_title_voting_power
-    | grant_title_voting_power_0
-    | grant_title_voting_power_1
     | horde_law
     | horde_law_0
     | imperial_kingdom_creation
     | imperial_kingdom_creation_0
     | imperial_kingdom_creation_1
     | imperial_kingdom_creation_2
-    | imprison_voting_power
-    | imprison_voting_power_0
-    | imprison_voting_power_1
     | infighting_0
     | infighting_1
     | inheritance
@@ -3943,6 +3936,9 @@ variables:
     | iqta_slider_2
     | iqta_slider_3
     | iqta_slider_4
+    | justice_voting_power
+    | justice_voting_power_0
+    | justice_voting_power_1
     | king_peace
     | king_peace_0
     | king_peace_1
@@ -3963,9 +3959,6 @@ variables:
     | revokation_0
     | revokation_1
     | revokation_2
-    | revoke_title_voting_power
-    | revoke_title_voting_power_0
-    | revoke_title_voting_power_1
     | status_of_women
     | status_of_women_0
     | status_of_women_1
@@ -4002,6 +3995,9 @@ variables:
     | temple_slider_2
     | temple_slider_3
     | temple_slider_4
+    | titles_voting_power
+    | titles_voting_power_0
+    | titles_voting_power_1
     | tribal_obligations
     | tribal_obligations_0
     | tribal_obligations_1
@@ -5320,6 +5316,7 @@ variables:
     | emf_make_eastern_marches_dejure
     | emf_make_location_ROOT_capital
     | emf_make_powys_dejure
+    | emf_make_primary_title
     | emf_make_province_english
     | emf_make_province_neapolitan
     | emf_make_province_sicilian
@@ -5432,7 +5429,6 @@ variables:
     | emf_transfer_nomad_buildings
     | emf_travel_to_ruler
     | emf_tribal_settlement_spawn_unit
-    | emf_try_to_make_primary_title
     | emf_unsafe_destroy_title
     | emf_usurp_revolter_titles
     | emf_vanish_character
@@ -5544,6 +5540,7 @@ variables:
     | emf_adventurer_can_approach_vassal
     | emf_alternate_start
     | emf_amalfi_extra_counties_allow
+    | emf_antifeminist_religion
     | emf_are_karling_usurpers_enabled
     | emf_autolander_is_fit_for_grant
     | emf_can_add_holding_slot
@@ -5565,7 +5562,6 @@ variables:
     | emf_can_ruler_convert_to_sicilian
     | emf_can_ruler_convert_to_sicilian_arabic
     | emf_can_safely_autodestroy_title
-    | emf_cb_border_dispute_basic_can_use_title
     | emf_cb_can_press_claim
     | emf_cb_can_use
     | emf_cb_can_use_de_jure_title
@@ -5589,7 +5585,6 @@ variables:
     | emf_cb_pagan_subjugation_basic_can_use
     | emf_cb_pagan_subjugation_can_use_gui
     | emf_cb_pagan_subjugation_is_valid
-    | emf_cb_prefer_border_dispute
     | emf_cb_religious_basic_can_use_title
     | emf_cb_religious_reconquest_basic_can_use_title
     | emf_cb_restore_hre_basic_can_use
@@ -5633,6 +5628,7 @@ variables:
     | emf_formation_byz_restorer_culrel_allow
     | emf_formation_byz_restorer_potential
     | emf_furthest_from_adventurer
+    | emf_gender_equal_religion
     | emf_golden_horde_province
     | emf_has_any_gender_succ_law
     | emf_has_any_succ_law
@@ -5648,6 +5644,7 @@ variables:
     | emf_has_powys_counties_allow
     | emf_has_powys_counties_potential
     | emf_has_primary_peace
+    | emf_has_succ_law_unfit_for_feudal
     | emf_has_swmh
     | emf_has_valid_temple_being_built
     | emf_hidden
@@ -5725,11 +5722,16 @@ variables:
     | emf_laws_crownlaw_title_high_ca_plus
     | emf_laws_crownlaw_title_limited_ca_plus
     | emf_laws_crownlaw_title_medium_ca_plus
+    | emf_laws_has_high_TO_plus
     | emf_laws_has_high_ca_plus
+    | emf_laws_has_limited_TO_plus
     | emf_laws_has_limited_ca_plus
+    | emf_laws_has_medium_TO_plus
     | emf_laws_has_medium_ca_plus
+    | emf_laws_has_no_TO
     | emf_laws_holder_has_late_adminstration_plus
     | emf_laws_infidel_revocation
+    | emf_laws_is_exempt_from_TO_prestige_cost
     | emf_laws_no_crown_law_title
     | emf_laws_penalty
     | emf_laws_potential_not_for_byzantium

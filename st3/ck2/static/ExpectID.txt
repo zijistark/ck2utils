@@ -16,10 +16,12 @@ continent
 convert_to_castle # buildings
 convert_to_city # buildings
 death_reason
+disable_council_voting_on_issue
 disband_event_forces
 disease
 earmark
 elective_voting_rules
+enable_council_voting_on_issue
 expel_modifier
 flag
 flank_has_tactic
