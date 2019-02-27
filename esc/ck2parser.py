@@ -23,7 +23,7 @@ try:
 except ImportError:
     git_present = False
 
-VERSION = 3
+VERSION = 4
 
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
                      quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
@@ -393,7 +393,7 @@ class Pair(Stringifiable):
         super().__init__()
         if len(args) == 3:
             self.key = args[0]
-            self.op = args[1]
+            self.op = args[1] or Op('=')
             self.value = args[2]
         elif len(args) == 2:
             if isinstance(args[0], Stringifiable):
@@ -767,10 +767,11 @@ class SimpleParser:
         pair = forward_decl()
         if self.strict:
             obj = kel + many(pair | string | key) + ker >> unarg(Obj)
+            pair.define(key + op + (obj | string | key) >> unarg(Pair))
         else:
-            obj = (kel + many(pair | string | key) +
+            obj = (kel + many(string | key | pair) +
                    (ker | skip(finished)) >> unarg(Obj))
-        pair.define(key + op + (obj | string | key) >> unarg(Pair))
+            pair.define(key + maybe(op) + (obj | string | key) >> unarg(Pair))
         self.toplevel = many(pair) + skip(finished) >> TopLevel
 
     def flush(self, path=None):
@@ -962,11 +963,12 @@ class FullParser(SimpleParser):
         date = commented(toktype('date')) >> unarg(Date)
         key = unquoted_string | date | number
         value = forward_decl()
-        pair = key + op + value >> unarg(Pair)
         if self.strict:
+            pair = key + op + value >> unarg(Pair)
             obj = kel + many(pair | value) + ker >> unarg(Obj)
         else:
-            obj = kel + many(pair | value) + (ker | end) >> unarg(Obj)
+            pair = key + maybe(op) + value >> unarg(Pair)
+            obj = kel + many(value | pair) + (ker | end) >> unarg(Obj)
         value.define(obj | key | quoted_string)
         self.toplevel = (many(pair) + many(nl + comment) + end >>
                          unarg(TopLevel))
