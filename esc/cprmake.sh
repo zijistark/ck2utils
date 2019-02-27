@@ -1,7 +1,7 @@
 #!/bin/sh
 
 BUILD=${HOME}/cpr-build
-cd ${REPO_ROOT}/CPRplus
+cd ${REPO_ROOT}/CPRplus2019
 mkdir -p $BUILD
 rsync -a --del --exclude='*.rar' CPRplus* $BUILD && \
 unrar x -idq -phip -y "CPRplus\gfx.rar" "`cygpath -w $BUILD/CPRplus`" && \

@@ -14,9 +14,13 @@ def main():
     # '/cygdrive/c/Program Files (x86)/Steam/SteamApps/common/CK2-previous-versions/2.6.3')
     simple_parser = ck2parser.SimpleParser()
     full_parser = ck2parser.FullParser()
-    modpath = ck2parser.rootpath / 'SWMH-BETA/SWMH'
+    # modpath = ck2parser.rootpath / 'SWMH-BETA/SWMH'
+    # modpath = ck2parser.rootpath / 'ck2-vanilla-2.8'
+    # modpath = ck2parser.rootpath / 'ck2-vanilla'
+    modpath = ck2parser.rootpath / 'EMF/EMF+Vanilla'
     simple_parser.moddirs = [modpath]
     full_parser.moddirs = [modpath]
+    full_parser.crlf = False
     out = modpath / 'common/landed_titles'
     # simple_parser.diskcache_default = False
     # full_parser.diskcache_default = False
@@ -28,11 +32,15 @@ def main():
         for n, v in tree:
             if ck2parser.is_codename(n.val):
                 for child in v.contents:
-                    if child.key.val == 'allow':
-                        if v.contents[-1] != child:
-                            v.contents.remove(child)
-                            v.contents.append(child)
-                        break
+                    try:
+                        if child.key.val == 'allow':
+                            if v.contents[-1] != child:
+                                v.contents.remove(child)
+                                v.contents.append(child)
+                            break
+                    except:
+                        print(child.val)
+                        raise
                 update_tree(v)
 
     with tempfile.TemporaryDirectory() as td:
