@@ -92,6 +92,7 @@ emf_faction_has_council_blocker
 emf_faction_has_relation_blocker
 emf_faction_has_special_chance_blocker
 emf_far_from_adventurer
+emf_female_valid_duel_candidate
 emf_feminist_religion
 emf_feudal_can_hold_temples
 emf_feudal_can_hold_temples_potential
@@ -115,6 +116,7 @@ emf_has_karling_title
 emf_has_powys_counties_allow
 emf_has_powys_counties_potential
 emf_has_primary_peace
+emf_has_roman_empire
 emf_has_succ_law_unfit_for_feudal
 emf_has_swmh
 emf_has_valid_temple_being_built
@@ -202,7 +204,7 @@ emf_laws_has_medium_ca_plus
 emf_laws_has_no_TO
 emf_laws_holder_has_late_adminstration_plus
 emf_laws_infidel_revocation
-emf_laws_is_exempt_from_TO_prestige_cost
+emf_laws_is_exempt_from_TO_penalties
 emf_laws_no_crown_law_title
 emf_laws_penalty
 emf_laws_potential_not_for_byzantium

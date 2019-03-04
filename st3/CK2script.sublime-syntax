@@ -1587,6 +1587,7 @@ variables:
     | name_list
     | non_interference_tooltip
     | obedience_tooltip
+    | origin_description
     | picture
     | piety_name
     | portrait
@@ -3860,6 +3861,9 @@ variables:
     | administration_1
     | administration_2
     | agnatic_succession
+    | banish_voting_power
+    | banish_voting_power_0
+    | banish_voting_power_1
     | bogomilist_church_0
     | bogomilist_church_1
     | bogomilist_church_2
@@ -3894,6 +3898,9 @@ variables:
     | crown_authority_4
     | enatic_cognatic_succession
     | enatic_succession
+    | execution_voting_power
+    | execution_voting_power_0
+    | execution_voting_power_1
     | feudal_obligations
     | feudal_obligations_0
     | feudal_obligations_1
@@ -3910,12 +3917,18 @@ variables:
     | frat_priest_1
     | frat_priest_2
     | frat_priesthood
+    | grant_title_voting_power
+    | grant_title_voting_power_0
+    | grant_title_voting_power_1
     | horde_law
     | horde_law_0
     | imperial_kingdom_creation
     | imperial_kingdom_creation_0
     | imperial_kingdom_creation_1
     | imperial_kingdom_creation_2
+    | imprison_voting_power
+    | imprison_voting_power_0
+    | imprison_voting_power_1
     | infighting_0
     | infighting_1
     | inheritance
@@ -3959,6 +3972,9 @@ variables:
     | revokation_0
     | revokation_1
     | revokation_2
+    | revoke_title_voting_power
+    | revoke_title_voting_power_0
+    | revoke_title_voting_power_1
     | status_of_women
     | status_of_women_0
     | status_of_women_1
@@ -5621,6 +5637,7 @@ variables:
     | emf_faction_has_relation_blocker
     | emf_faction_has_special_chance_blocker
     | emf_far_from_adventurer
+    | emf_female_valid_duel_candidate
     | emf_feminist_religion
     | emf_feudal_can_hold_temples
     | emf_feudal_can_hold_temples_potential
@@ -5644,6 +5661,7 @@ variables:
     | emf_has_powys_counties_allow
     | emf_has_powys_counties_potential
     | emf_has_primary_peace
+    | emf_has_roman_empire
     | emf_has_succ_law_unfit_for_feudal
     | emf_has_swmh
     | emf_has_valid_temple_being_built
@@ -5731,7 +5749,7 @@ variables:
     | emf_laws_has_no_TO
     | emf_laws_holder_has_late_adminstration_plus
     | emf_laws_infidel_revocation
-    | emf_laws_is_exempt_from_TO_prestige_cost
+    | emf_laws_is_exempt_from_TO_penalties
     | emf_laws_no_crown_law_title
     | emf_laws_penalty
     | emf_laws_potential_not_for_byzantium

@@ -37,6 +37,7 @@ name # event option property
 name_list
 non_interference_tooltip # society
 obedience_tooltip # society
+origin_description
 picture
 piety_name
 portrait
