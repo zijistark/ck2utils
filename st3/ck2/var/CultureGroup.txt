@@ -30,6 +30,7 @@ magyar            # Magyar
 mesoamerican      # Mesoamerican
 north_african     # Berber
 north_germanic    # North Germanic
+panda_group       # Ailuridae
 south_slavic      # South Slavic
 tibetan_group     # Tibeto-Burman
 west_african      # West African

@@ -31,6 +31,7 @@ obj_build_a_war_chest
 obj_civilize_province
 obj_convert_a_province
 obj_create_treasury
+obj_create_wonder
 obj_cta_0
 obj_cta_1
 obj_cta_2

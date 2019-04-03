@@ -630,6 +630,7 @@ variables:
     | is_variable_equal
     | layer
     | liked_by_offmap
+    | likes_better_than
     | make_tributary
     | male_names
     | modulo_variable
@@ -1008,6 +1009,7 @@ variables:
     | landed_kin_prestige_bonus
     | landless
     | landless
+    | law_set_allow_matrilineal_marriage
     | location_ruler_title
     | lock_crusade_target
     | major
@@ -1502,6 +1504,7 @@ variables:
     | realm_diplomacy
     | realm_intrigue
     | realm_learning
+    | realm_levies
     | realm_martial
     | realm_size
     | realm_stewardship
@@ -2072,6 +2075,7 @@ variables:
     | sub_realm
     | suzerain
     | target
+    | than
     | third_party_portrait
     | thirdparty
     | thirdparty_title
@@ -2403,6 +2407,7 @@ variables:
     | obj_civilize_province
     | obj_convert_a_province
     | obj_create_treasury
+    | obj_create_wonder
     | obj_cta_0
     | obj_cta_1
     | obj_cta_2
@@ -3658,6 +3663,7 @@ variables:
     | prussian
     | qufs
     | rajput
+    | red_panda
     | roman
     | romanian
     | russian
@@ -3743,6 +3749,7 @@ variables:
     | mesoamerican
     | north_african
     | north_germanic
+    | panda_group
     | south_slavic
     | tibetan_group
     | west_african
@@ -4055,6 +4062,7 @@ variables:
     | title_caesar
     | title_canjun
     | title_cardinal
+    | title_castellan
     | title_cathar_deacon
     | title_champion
     | title_cherbi
@@ -4076,6 +4084,8 @@ variables:
     | title_court_skald
     | title_courtesan
     | title_cupbearer
+    | title_custodian_of_the_mosque
+    | title_custodian_of_the_temple
     | title_darkhan
     | title_despot
     | title_drottseti
@@ -4083,6 +4093,8 @@ variables:
     | title_food_taster
     | title_fraticelli_cardinal
     | title_genghis
+    | title_guardian_of_knowledge
+    | title_guardian_of_the_deep
     | title_guru
     | title_hermetics_apprentice
     | title_high_admiral
@@ -4094,20 +4106,26 @@ variables:
     | title_ishad
     | title_kardarigan
     | title_keeper_of_swans
+    | title_keeper_of_the_dead
+    | title_keeper_of_tomes
     | title_kouropalates
     | title_kundur
     | title_lawspeaker
+    | title_lighthouse_custodian
     | title_male_consort
     | title_manichean_apostle
     | title_marksman
     | title_master_engineer
+    | title_master_of_games
     | title_master_of_the_blade
     | title_master_of_the_bow
     | title_master_of_the_eagle
     | title_master_of_the_horse
     | title_master_of_the_hunt
     | title_master_of_the_royal_elephants
+    | title_master_of_tides
     | title_noyan
+    | title_overseer_of_rites
     | title_paramount_knight
     | title_patrician_heir
     | title_prince
@@ -4115,6 +4133,7 @@ variables:
     | title_queen_mother
     | title_regent
     | title_royal_builder
+    | title_royal_custodian
     | title_ruler_consort
     | title_sebastokrator
     | title_seneschal
@@ -4122,10 +4141,13 @@ variables:
     | title_shahrwaraz
     | title_spahbod
     | title_state_inquisitor
+    | title_stone_custodian
     | title_tanist
     | title_teacher
     | title_venerable_elder
     | title_volva
+    | title_wall_walker
+    | title_watcher_of_giants
     | title_yabgu
     | title_yuhou
     | title_zhangshi
@@ -4916,6 +4938,19 @@ variables:
     | on_war_ended_whitepeace
     | on_war_started
     | on_warleader_death
+    | on_wonder_construction_start
+    | on_wonder_destroyed
+    | on_wonder_loot_start
+    | on_wonder_owner_change
+    | on_wonder_renamed
+    | on_wonder_restore_finish
+    | on_wonder_restore_start
+    | on_wonder_stage_finish
+    | on_wonder_stage_loot_finish
+    | on_wonder_stage_loot_start
+    | on_wonder_upgrade_destroyed
+    | on_wonder_upgrade_finish
+    | on_wonder_upgrade_start
     | on_yearly_childhood_pulse
     | on_yearly_pulse
     )
@@ -5135,6 +5170,7 @@ variables:
     | religion_feature_finnish
     | religion_feature_hellenic
     | religion_feature_norse
+    | religion_feature_pyramids
     | religion_feature_slavic
     | religion_feature_tengri
     | religion_feature_west_african
@@ -5256,6 +5292,7 @@ variables:
     | emf_demote_education_trait
     | emf_destroy_title
     | emf_distribute_barony
+    | emf_do_gender_succ_family_palace_workaround
     | emf_do_not_disturb
     | emf_donate_to_adventurer
     | emf_dynlevy_remove
@@ -5519,10 +5556,13 @@ variables:
     | at_war_reduction_score
     | bad_soldier_outcome_enemy_commander_score
     | bad_soldier_outcome_score
+    | bad_steward_outcome_score
     | beloved_target_selection_score
     | dishonorable_ai_chance_increase_score
     | disliked_target_selection_score
+    | fancy_upgrade_selection_score
     | good_soldier_outcome_score
+    | good_steward_outcome_score
     | is_bad_intrigue_character_score
     | is_good_intrigue_character_score
     | likes_other_combatant_score
@@ -6147,6 +6187,7 @@ variables:
     | gardener
     | genius
     | giant
+    | gladiator
     | gluttonous
     | gondi_shahansha
     | gout

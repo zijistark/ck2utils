@@ -13,6 +13,7 @@ religion_feature_bon          # Harmonious
 religion_feature_finnish      # Survivors of Ukko
 religion_feature_hellenic     # Civilized
 religion_feature_norse        # Sons of Ragnarok
+religion_feature_pyramids     # Pyramid Creation
 religion_feature_slavic       # Children of Perun
 religion_feature_tengri       # Eternal Riders
 religion_feature_west_african # Totem-Guardians

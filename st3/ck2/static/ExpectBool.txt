@@ -284,6 +284,7 @@ landed_inheritance # gov
 landed_kin_prestige_bonus # rel
 landless # LT
 landless # create_title
+law_set_allow_matrilineal_marriage
 location_ruler_title # LT
 lock_crusade_target
 major # event property

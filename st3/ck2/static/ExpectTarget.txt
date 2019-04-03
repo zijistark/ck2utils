@@ -227,6 +227,7 @@ society
 sub_realm
 suzerain # is_tributary param
 target
+than
 third_party_portrait # CB param
 thirdparty
 thirdparty_title

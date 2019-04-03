@@ -89,6 +89,7 @@ is_tributary
 is_variable_equal
 layer # LT param
 liked_by_offmap
+likes_better_than
 make_tributary
 male_names # LT param
 modulo_variable

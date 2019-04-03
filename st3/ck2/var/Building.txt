@@ -631,10 +631,10 @@ tb_culture_ethiopian_1                      # [ethiopian.GetName] Drilling Groun
 tb_culture_ethiopian_2                      # [ethiopian.GetName] Drilling Grounds
 tb_culture_ethiopian_3                      # [ethiopian.GetName] Drilling Grounds
 tb_culture_ethiopian_4                      # [ethiopian.GetName] Drilling Grounds
-tb_culture_frank_norman_german_1            # [GetGermanic] Warrior Lodge
-tb_culture_frank_norman_german_2            # [GetGermanic] Warrior Lodge
-tb_culture_frank_norman_german_3            # [GetGermanic] Warrior Lodge
-tb_culture_frank_norman_german_4            # [GetGermanic] Warrior Lodge
+tb_culture_frank_norman_german_1            # Jousting Lodge
+tb_culture_frank_norman_german_2            # Jousting Lodge
+tb_culture_frank_norman_german_3            # Jousting Lodge
+tb_culture_frank_norman_german_4            # Jousting Lodge
 tb_culture_germanic_1                       # [GetGermanic] Infantry Barracks
 tb_culture_germanic_2                       # [GetGermanic] Infantry Barracks
 tb_culture_germanic_3                       # [GetGermanic] Infantry Barracks
@@ -707,10 +707,10 @@ tb_culture_portuguese_galician_andalusian_1 # Jinete Riding Grounds
 tb_culture_portuguese_galician_andalusian_2 # Jinete Riding Grounds
 tb_culture_portuguese_galician_andalusian_3 # Jinete Riding Grounds
 tb_culture_portuguese_galician_andalusian_4 # Jinete Riding Grounds
-tb_culture_roman_1
-tb_culture_roman_2
-tb_culture_roman_3
-tb_culture_roman_4
+tb_culture_roman_1                          # Field of Mars
+tb_culture_roman_2                          # Field of Mars
+tb_culture_roman_3                          # Field of Mars
+tb_culture_roman_4                          # Field of Mars
 tb_culture_russian_1                        # Druzhina Training Ground
 tb_culture_russian_2                        # Druzhina Training Ground
 tb_culture_russian_3                        # Druzhina Training Ground

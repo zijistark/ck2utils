@@ -7,6 +7,7 @@ title_bogomilist_advisor            # Stroinik
 title_caesar                        # Caesar
 title_canjun                        # Canjun
 title_cardinal                      # Cardinal
+title_castellan                     # Castellan
 title_cathar_deacon                 # Deacon
 title_champion                      # Champion
 title_cherbi                        # Cherbi
@@ -28,6 +29,8 @@ title_court_poet_india              # Court Poet
 title_court_skald                   # Court Skald
 title_courtesan                     # Concubine
 title_cupbearer                     # Cupbearer
+title_custodian_of_the_mosque       # Custodian of the Mosque
+title_custodian_of_the_temple       # Custodian of the Temple
 title_darkhan                       # Darkhan
 title_despot                        # Despot
 title_drottseti                     # Dróttseti
@@ -35,6 +38,8 @@ title_eran_ambaragbed               # Eran Ambaragbed
 title_food_taster                   # Food Taster
 title_fraticelli_cardinal           # Cardinal
 title_genghis
+title_guardian_of_knowledge         # Guardian of Knowledge
+title_guardian_of_the_deep          # Guardian of the Deep
 title_guru                          # Court Guru
 title_hermetics_apprentice          # Apprentice
 title_high_admiral                  # High Admiral
@@ -46,20 +51,26 @@ title_imperial_eunuch               # Parakoimomenos
 title_ishad                         # Ishad
 title_kardarigan                    # Kardarigan
 title_keeper_of_swans               # Keeper of the Swans
+title_keeper_of_the_dead            # Keeper of the Dead
+title_keeper_of_tomes               # Keeper of the Tomes
 title_kouropalates                  # Kouropalates
 title_kundur                        # Kündür
 title_lawspeaker                    # Lawspeaker
+title_lighthouse_custodian          # Lighthouse Custodian
 title_male_consort                  # Consort
 title_manichean_apostle             # Apostle
 title_marksman                      # Merkismaðr
 title_master_engineer               # Master Engineer
+title_master_of_games               # Master of the Games
 title_master_of_the_blade           # Master of the Blade
 title_master_of_the_bow             # Master of the Bow
 title_master_of_the_eagle           # Master of the Eagle
 title_master_of_the_horse           # Master of the Horse
 title_master_of_the_hunt            # Master of the Hunt
 title_master_of_the_royal_elephants # Master of the Royal Elephants
+title_master_of_tides               # Master of the Tides
 title_noyan                         # Noyan
+title_overseer_of_rites             # Overseer of the Rites
 title_paramount_knight              # Paramount Knight
 title_patrician_heir                # Designated Heir
 title_prince                        # Prince
@@ -67,6 +78,7 @@ title_pushtigban_salar              # Pushtigban-salar
 title_queen_mother                  # Queen Mother
 title_regent                        # Regent
 title_royal_builder                 # Royal Builder
+title_royal_custodian               # Royal Custodian
 title_ruler_consort
 title_sebastokrator                 # Sebastokrator
 title_seneschal                     # Seneschal
@@ -74,10 +86,13 @@ title_shahin                        # Shahin
 title_shahrwaraz                    # Shahrwarãz
 title_spahbod                       # Spahbod
 title_state_inquisitor              # State Inquisitor
+title_stone_custodian               # Custodian of the Stone
 title_tanist                        # Tanist
 title_teacher                       # Court Tutor
 title_venerable_elder               # Venerable Elder
 title_volva                         # Court Völva
+title_wall_walker                   # Walker of the Wall
+title_watcher_of_giants             # Watcher of Giants
 title_yabgu                         # Yabgu
 title_yuhou                         # Yuhou
 title_zhangshi                      # Zhangshi

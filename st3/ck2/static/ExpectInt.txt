@@ -151,6 +151,7 @@ rank
 realm_diplomacy
 realm_intrigue
 realm_learning
+realm_levies
 realm_martial
 realm_size
 realm_stewardship

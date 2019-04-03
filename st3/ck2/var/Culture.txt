@@ -137,6 +137,7 @@ portuguese        # Português
 prussian          # Prusiskan
 qufs              # Kufichi
 rajput            # Rajput
+red_panda         # Red Panda
 roman             # Roman
 romanian          # Rumân
 russian           # Rusisku

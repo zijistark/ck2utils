@@ -82,6 +82,7 @@ emf_decadence_become_decadent
 emf_demote_education_trait
 emf_destroy_title
 emf_distribute_barony
+emf_do_gender_succ_family_palace_workaround
 emf_do_not_disturb
 emf_donate_to_adventurer
 emf_dynlevy_remove

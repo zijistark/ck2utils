@@ -186,6 +186,7 @@ gamer                          # Game Master
 gardener                       # Gardener
 genius                         # Genius
 giant                          # Giant
+gladiator                      # Gladiator
 gluttonous                     # Gluttonous
 gondi_shahansha                # Gond-i Shahanshah
 gout                           # Gout
