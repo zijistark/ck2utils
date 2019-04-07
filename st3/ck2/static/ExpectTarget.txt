@@ -2,6 +2,7 @@ abdicate_to
 abdicate_to_most_liked_by
 add_bloodline_member
 add_claim
+add_consort
 add_favor
 add_friend
 add_intermarry
@@ -175,6 +176,8 @@ remove_consort
 remove_favor
 remove_friend
 remove_from_bloodline
+remove_holy_site
+remove_holy_site_with_heresies
 remove_intermarry
 remove_lover
 remove_rival
@@ -209,6 +212,8 @@ set_defacto_vassal
 set_father
 set_graphical_culture
 set_guardian
+set_holy_site
+set_holy_site_with_heresies
 set_mother
 set_name
 set_official_crusade_recipient

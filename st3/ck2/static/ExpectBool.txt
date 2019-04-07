@@ -204,6 +204,7 @@ is_female
 is_feudal
 is_flanking
 is_friendly # event property
+is_hard_to_convert
 is_heir
 is_heretic
 is_hostile # event property

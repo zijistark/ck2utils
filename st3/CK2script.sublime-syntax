@@ -929,6 +929,7 @@ variables:
     | is_feudal
     | is_flanking
     | is_friendly
+    | is_hard_to_convert
     | is_heir
     | is_heretic
     | is_hostile
@@ -1601,6 +1602,7 @@ variables:
     | ruler_female
     | scripture_name
     | set_description
+    | set_dynasty_name
     | set_high_god_name
     | set_name
     | set_offmap_name
@@ -1850,6 +1852,7 @@ variables:
     | abdicate_to_most_liked_by
     | add_bloodline_member
     | add_claim
+    | add_consort
     | add_favor
     | add_friend
     | add_intermarry
@@ -2023,6 +2026,8 @@ variables:
     | remove_favor
     | remove_friend
     | remove_from_bloodline
+    | remove_holy_site
+    | remove_holy_site_with_heresies
     | remove_intermarry
     | remove_lover
     | remove_rival
@@ -2057,6 +2062,8 @@ variables:
     | set_father
     | set_graphical_culture
     | set_guardian
+    | set_holy_site
+    | set_holy_site_with_heresies
     | set_mother
     | set_name
     | set_official_crusade_recipient
@@ -5677,7 +5684,6 @@ variables:
     | emf_faction_has_relation_blocker
     | emf_faction_has_special_chance_blocker
     | emf_far_from_adventurer
-    | emf_female_valid_duel_candidate
     | emf_feminist_religion
     | emf_feudal_can_hold_temples
     | emf_feudal_can_hold_temples_potential

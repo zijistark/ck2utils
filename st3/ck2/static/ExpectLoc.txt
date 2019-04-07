@@ -48,6 +48,7 @@ ruler # create_title
 ruler_female # create_title
 scripture_name
 set_description
+set_dynasty_name
 set_high_god_name
 set_name
 set_offmap_name
