@@ -52,6 +52,7 @@ can_have_antipopes # rel
 can_have_more_leadership_traits
 can_imprison_without_reason # gov
 can_inherit # trait
+can_join_existing
 can_marry
 can_marry # trait
 can_retire_to_monastery # rel
@@ -169,6 +170,7 @@ history
 holy_order
 horde # cul
 hostile_within_group
+ignore_requirements
 ignores_de_jure_laws # gov
 immortal
 imprison

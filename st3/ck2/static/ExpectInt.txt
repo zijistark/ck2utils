@@ -48,6 +48,7 @@ father_name_chance # cul
 female
 feudal_seeds # alt-start param
 grant_limit # MT
+health_traits
 heresy_icon
 holder # title history
 home # spawn_unit param
@@ -61,6 +62,7 @@ king_threshold # alt-start param
 king_vassalization_rate # alt-start param
 leader_traits
 level # society
+lifestyle_traits
 limit # society
 mat_grf_name_chance # cul
 mat_grm_name_chance # cul

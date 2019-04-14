@@ -87,6 +87,7 @@ is_connected_to
 is_society_rank_full
 is_tributary
 is_variable_equal
+join_faction
 layer # LT param
 liked_by_offmap
 likes_better_than
@@ -152,6 +153,7 @@ set_variable
 society_rank # society
 spawn_fleet
 spawn_unit
+start_faction
 subjugate_or_take_under_title
 subtract_variable
 succession

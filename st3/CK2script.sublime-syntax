@@ -628,6 +628,7 @@ variables:
     | is_society_rank_full
     | is_tributary
     | is_variable_equal
+    | join_faction
     | layer
     | liked_by_offmap
     | likes_better_than
@@ -693,6 +694,7 @@ variables:
     | society_rank
     | spawn_fleet
     | spawn_unit
+    | start_faction
     | subjugate_or_take_under_title
     | subtract_variable
     | succession
@@ -777,6 +779,7 @@ variables:
     | can_have_more_leadership_traits
     | can_imprison_without_reason
     | can_inherit
+    | can_join_existing
     | can_marry
     | can_marry
     | can_retire_to_monastery
@@ -894,6 +897,7 @@ variables:
     | holy_order
     | horde
     | hostile_within_group
+    | ignore_requirements
     | ignores_de_jure_laws
     | immortal
     | imprison
@@ -1402,6 +1406,7 @@ variables:
     | female
     | feudal_seeds
     | grant_limit
+    | health_traits
     | heresy_icon
     | holder
     | home
@@ -1415,6 +1420,7 @@ variables:
     | king_vassalization_rate
     | leader_traits
     | level
+    | lifestyle_traits
     | limit
     | mat_grf_name_chance
     | mat_grm_name_chance
@@ -1914,6 +1920,7 @@ variables:
     | enable_prepared_invasion
     | enemy
     | excommunicated_for
+    | faction_leader
     | family
     | first
     | for
@@ -2176,6 +2183,7 @@ variables:
     | hide_window
     | impregnate
     | impregnate_cuckoo
+    | leave_society
     | log_scopes
     | make_capital_holding
     | make_primary_title
@@ -2190,6 +2198,7 @@ variables:
     | recalc_succession
     | refill_holding_levy
     | remove_guardian
+    | remove_nickname
     | remove_spouse
     | reveal_plot
     | reveal_plot_w_message
@@ -5485,8 +5494,13 @@ variables:
     | emf_teardown_crusade_adventurer
     | emf_teardown_karling_usurper
     | emf_transfer_claims_from_PREV
+    | emf_transfer_claims_from_PREV_and_weaken_old_claims_on_PREV
+    | emf_transfer_claims_from_PREV_and_weaken_old_claims_on_PREV_visible
+    | emf_transfer_claims_from_PREV_visible
     | emf_transfer_crown_on_abdication
     | emf_transfer_nomad_buildings
+    | emf_transfer_weakened_claims_from_PREV
+    | emf_transfer_weakened_claims_from_PREV_visible
     | emf_travel_to_ruler
     | emf_tribal_settlement_spawn_unit
     | emf_unsafe_destroy_title

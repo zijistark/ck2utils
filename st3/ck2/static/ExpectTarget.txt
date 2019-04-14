@@ -64,6 +64,7 @@ embargo
 enable_prepared_invasion
 enemy
 excommunicated_for
+faction_leader
 family
 first
 for

@@ -35,6 +35,7 @@ hide_new # event property
 hide_window # event property
 impregnate
 impregnate_cuckoo
+leave_society
 log_scopes
 make_capital_holding
 make_primary_title
@@ -49,6 +50,7 @@ plot_succeeds
 recalc_succession
 refill_holding_levy
 remove_guardian
+remove_nickname
 remove_spouse
 reveal_plot
 reveal_plot_w_message
