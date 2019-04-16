@@ -1,3 +1,4 @@
 faction
 in_faction
 leads_faction
+leave_faction

@@ -1,8 +1,10 @@
+activate_disease
 add_artifact
 add_dynasty_modifier
 add_evil_god_name
 add_god_name
 add_intermarry
+add_wonder_upgrade
 alt_start_default
 army_template # create_title param
 artifact_type
@@ -16,6 +18,7 @@ continent
 convert_to_castle # buildings
 convert_to_city # buildings
 death_reason
+destroy_wonder_upgrade
 disable_council_voting_on_issue
 disband_event_forces
 disease
@@ -76,6 +79,7 @@ set_branch_tag
 set_flag
 set_flank_tactic
 set_graphical_culture
+set_mercenary_maintenance_modifier
 set_offmap_tmp_flag
 set_policy
 set_religious_branch

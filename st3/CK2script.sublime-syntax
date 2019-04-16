@@ -81,6 +81,8 @@ variables:
     | dynasty
     | offmap
     | offmap_tmp
+    | wonder
+    | wonder_upgrade
     )
   vEventModifierType: |-
     (?xi:
@@ -530,7 +532,8 @@ variables:
     )
   vExpectAmbition: |-
     (?xi:
-      has_ambition
+      add_ambition
+    | has_ambition
     )
   vExpectBarony: |-
     (?xi:
@@ -563,6 +566,8 @@ variables:
     | buttons
     | can_naval_path_to
     | can_use_cb
+    | change_infamy
+    | change_mercenary_composition
     | change_tech
     | change_variable
     | character_modifier
@@ -584,6 +589,7 @@ variables:
     | create_random_soldier
     | create_random_steward
     | create_title
+    | damage_unit
     | data
     | death
     | defending_against_claimant
@@ -620,6 +626,7 @@ variables:
     | has_game_rule
     | has_opinion_modifier
     | has_trait
+    | heavy_troops
     | holding_diff
     | holy_site_distance
     | ignore_in_vassal_limit_calculation
@@ -630,6 +637,7 @@ variables:
     | is_variable_equal
     | join_faction
     | layer
+    | light_troops
     | liked_by_offmap
     | likes_better_than
     | make_tributary
@@ -663,6 +671,7 @@ variables:
     | religion_authority
     | religion_distance
     | religion_group
+    | remove_holding_modifiers
     | remove_opinion
     | remove_{{vEventModifierType}}_modifiers
     | repeat_event
@@ -684,6 +693,7 @@ variables:
     | set_looter_hostility_days
     | set_offmap_currency
     | set_parent_religion
+    | set_secret_religion
     | set_title_adventurer
     | set_title_landless
     | set_title_nomad
@@ -727,6 +737,7 @@ variables:
     (?xi:
       active
     | add_number_to_name
+    | add_wonder_upgrade
     | adventurer
     | adventurer
     | ai
@@ -804,8 +815,10 @@ variables:
     | crime
     | criminal
     | crusade_war_has_started
+    | cure_illness
     | custom_created
     | customizer
+    | cut_mercenary_creator_relation
     | default
     | defensive_attrition
     | devil_worshipper
@@ -1228,6 +1241,7 @@ variables:
       faction
     | in_faction
     | leads_faction
+    | leave_faction
     )
   vExpectFocus: |-
     (?xi:
@@ -1254,11 +1268,13 @@ variables:
     )
   vExpectID: |-
     (?xi:
-      add_artifact
+      activate_disease
+    | add_artifact
     | add_dynasty_modifier
     | add_evil_god_name
     | add_god_name
     | add_intermarry
+    | add_wonder_upgrade
     | alt_start_default
     | army_template
     | artifact_type
@@ -1272,6 +1288,7 @@ variables:
     | convert_to_castle
     | convert_to_city
     | death_reason
+    | destroy_wonder_upgrade
     | disable_council_voting_on_issue
     | disband_event_forces
     | disease
@@ -1332,6 +1349,7 @@ variables:
     | set_flag
     | set_flank_tactic
     | set_graphical_culture
+    | set_mercenary_maintenance_modifier
     | set_offmap_tmp_flag
     | set_policy
     | set_religious_branch
@@ -1359,6 +1377,8 @@ variables:
       add_age
     | add_holding_slot
     | add_spouse
+    | add_wonder_stage
+    | add_wonder_upgrade_slots
     | age
     | age
     | ai_ambition
@@ -1379,6 +1399,8 @@ variables:
     | color
     | combat_rating
     | count
+    | create_hospital
+    | create_tradepost
     | crusade_(?:gold|prestige|piety|artifact)_pot
     | crusade_preparation_time_elapsed
     | crusade_preparation_time_remaining
@@ -1517,6 +1539,7 @@ variables:
     | realm_stewardship
     | religious_clothing_head
     | religious_clothing_priest
+    | remove_wonder_upgrade_slots
     | ruled_years
     | society_rank
     | sort_priority
@@ -1673,6 +1696,7 @@ variables:
     | base_health
     | chance
     | change_society_currency
+    | change_title_army_size
     | change_{{vCharAttr}}
     | crusade_defense_strength
     | crusade_preparation_strength
@@ -1697,6 +1721,7 @@ variables:
     | holding_total_levy_percent
     | independence_war_score_bonus
     | infamy
+    | loot
     | maintenance_multiplier
     | maintenance_multiplier
     | manpower
@@ -1728,6 +1753,7 @@ variables:
     | power
     | prestige
     | random
+    | reduce_disease
     | reinforce_rate_multiplier
     | relative_income_to_liege
     | relative_power
@@ -1760,12 +1786,14 @@ variables:
     | society_progress
     | strength_growth_per_century
     | treasury
+    | troops
     | value
     | war_score
     | warning_level
     | wealth
     | yearly_income
     | {{vTech}}
+    | {{vTroopType}}
     )
   vExpectOffmapID: |-
     (?xi:
@@ -1800,6 +1828,7 @@ variables:
       associated_religion
     | banish_religion
     | controls_religion
+    | disable_prepared_invasion
     | enable_prepared_invasion
     | holy_site
     | icon_religion
@@ -1891,6 +1920,10 @@ variables:
     | capital
     | character
     | claimed_by
+    | clear_banish_reasons
+    | clear_execute_reasons
+    | clear_prison_reasons
+    | clear_revoke_reasons
     | clear_wealth
     | completely_controls
     | conquest_culture
@@ -1902,6 +1935,8 @@ variables:
     | copy_title_history
     | copy_title_laws
     | could_be_parent_of
+    | create_hospital
+    | create_tradepost
     | culture
     | culture_group
     | de_facto_liege
@@ -1930,6 +1965,7 @@ variables:
     | genetic_father
     | genetic_mother
     | government
+    | grant_kingdom_w_adjudication
     | grant_title
     | grant_title_no_opinion
     | has_blood_oath_with
@@ -2075,6 +2111,7 @@ variables:
     | set_name
     | set_official_crusade_recipient
     | set_offmap_holder
+    | set_original_owner
     | set_pentarch_title
     | set_player_character
     | set_preferred_capital
@@ -2144,6 +2181,12 @@ variables:
     | tooltip_info
     | trait
     )
+  vExpectTroopType: |-
+    (?xi:
+      from
+    | type
+    | who
+    )
   vExpectYes: |-
     (?xi:
       abdicate
@@ -2153,6 +2196,7 @@ variables:
     | anti_nomad
     | banish
     | become_heretic
+    | become_secret_heretic
     | birth
     | break
     | cancel_ambition
@@ -2168,19 +2212,26 @@ variables:
     | clear_revoke_reasons
     | clear_secret_religion
     | clear_wealth
+    | clr_discovered_society
+    | clr_revolt
     | convert_to_secret_religion
     | create_family_palace
     | cut_mercenary_creator_relation
     | death
     | destroy_bloodline
+    | destroy_bloodline
+    | destroy_fort
+    | destroy_hospital
     | destroy_landed_title
     | destroy_random_building
+    | destroy_wonder_upgrade
     | disallow_random_traits
     | distribute_crusade_target_title
     | easter_egg
     | hide_from
     | hide_new
     | hide_window
+    | hold_election
     | impregnate
     | impregnate_cuckoo
     | leave_society
@@ -2195,6 +2246,7 @@ variables:
     | only_rulers
     | only_women
     | plot_succeeds
+    | rebel_defection
     | recalc_succession
     | refill_holding_levy
     | remove_guardian
@@ -2381,11 +2433,14 @@ variables:
     | camel_cavalry
     | galleys
     | heavy_infantry
+    | heavy_troops
     | horse_archers
     | knights
     | light_cavalry
     | light_infantry
+    | light_troops
     | pikemen
+    | special_troops
     | war_elephants
     )
   vAmbition: |-
@@ -6803,6 +6858,10 @@ contexts:
       captures:
         1: support.function.ck2script
         2: variable.identifier.trait.ck2script
+    - match: '\b({{vExpectTroopType}})\s*=\s*({{vTroopType}})\b'
+      captures:
+        1: support.function.ck2script
+        2: variable.identifier.troop_type.ck2script
     # end of dynamically-populated identifiers
     - match: '\b({{vExpectRandom}})\s*=\s*((?i:random))\b'
       captures:

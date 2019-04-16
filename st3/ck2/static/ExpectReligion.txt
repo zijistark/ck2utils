@@ -1,6 +1,7 @@
 associated_religion # society
 banish_religion
 controls_religion
+disable_prepared_invasion
 enable_prepared_invasion
 holy_site # LT
 icon_religion

@@ -22,6 +22,8 @@ builds_with_prestige
 buttons
 can_naval_path_to
 can_use_cb
+change_infamy
+change_mercenary_composition
 change_tech
 change_variable
 character_modifier
@@ -43,6 +45,7 @@ create_random_priest
 create_random_soldier
 create_random_steward
 create_title
+damage_unit
 data # LT / coa param
 death
 defending_against_claimant
@@ -79,6 +82,7 @@ has_elector_stance
 has_game_rule
 has_opinion_modifier
 has_trait # society
+heavy_troops
 holding_diff
 holy_site_distance
 ignore_in_vassal_limit_calculation
@@ -89,6 +93,7 @@ is_tributary
 is_variable_equal
 join_faction
 layer # LT param
+light_troops
 liked_by_offmap
 likes_better_than
 make_tributary
@@ -122,6 +127,7 @@ religion
 religion_authority
 religion_distance
 religion_group
+remove_holding_modifiers
 remove_opinion
 remove_{{vEventModifierType}}_modifiers
 repeat_event
@@ -143,6 +149,7 @@ set_job_action
 set_looter_hostility_days
 set_offmap_currency
 set_parent_religion
+set_secret_religion
 set_title_adventurer
 set_title_landless
 set_title_nomad

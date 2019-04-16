@@ -1,6 +1,8 @@
 add_age
 add_holding_slot
 add_spouse # char history
+add_wonder_stage
+add_wonder_upgrade_slots
 age
 age # spawn_unit param
 ai_ambition
@@ -21,6 +23,8 @@ character
 color # LT param
 combat_rating
 count
+create_hospital
+create_tradepost
 crusade_(?:gold|prestige|piety|artifact)_pot
 crusade_preparation_time_elapsed
 crusade_preparation_time_remaining
@@ -159,6 +163,7 @@ realm_size
 realm_stewardship
 religious_clothing_head # religions
 religious_clothing_priest # religions
+remove_wonder_upgrade_slots
 ruled_years
 society_rank
 sort_priority # CB

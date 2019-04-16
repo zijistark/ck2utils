@@ -35,6 +35,10 @@ can_swap_job_title
 capital
 character
 claimed_by
+clear_banish_reasons
+clear_execute_reasons
+clear_prison_reasons
+clear_revoke_reasons
 clear_wealth
 completely_controls
 conquest_culture
@@ -46,6 +50,8 @@ copy_random_personality_trait
 copy_title_history
 copy_title_laws
 could_be_parent_of
+create_hospital
+create_tradepost
 culture
 culture_group
 de_facto_liege
@@ -74,6 +80,7 @@ gain_title
 genetic_father # create_character param
 genetic_mother # create_character param
 government
+grant_kingdom_w_adjudication
 grant_title
 grant_title_no_opinion
 has_blood_oath_with
@@ -219,6 +226,7 @@ set_mother
 set_name
 set_official_crusade_recipient
 set_offmap_holder
+set_original_owner
 set_pentarch_title
 set_player_character
 set_preferred_capital

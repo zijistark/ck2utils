@@ -12,6 +12,7 @@ attrition # spawn_unit
 base_health
 chance
 change_society_currency
+change_title_army_size
 change_{{vCharAttr}}
 crusade_defense_strength
 crusade_preparation_strength
@@ -36,6 +37,7 @@ holding_raisable_levy_percent
 holding_total_levy_percent
 independence_war_score_bonus
 infamy
+loot
 maintenance_multiplier
 maintenance_multiplier # spawn_unit
 manpower
@@ -67,6 +69,7 @@ population_factor
 power
 prestige
 random
+reduce_disease
 reinforce_rate_multiplier
 relative_income_to_liege
 relative_power
@@ -99,9 +102,11 @@ society_currency
 society_progress
 strength_growth_per_century
 treasury
+troops
 value
 war_score
 warning_level
 wealth
 yearly_income
 {{vTech}}
+{{vTroopType}}

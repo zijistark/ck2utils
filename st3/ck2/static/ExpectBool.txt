@@ -1,5 +1,6 @@
 active # title history
 add_number_to_name # buildings
+add_wonder_upgrade
 adventurer
 adventurer # create_title
 ai
@@ -77,8 +78,10 @@ creation_requires_capital # LT
 crime
 criminal # society
 crusade_war_has_started
+cure_illness
 custom_created # create_title
 customizer # trait
+cut_mercenary_creator_relation
 default
 defensive_attrition
 devil_worshipper # society

@@ -5,6 +5,7 @@ ambition_succeeds
 anti_nomad
 banish
 become_heretic
+become_secret_heretic
 birth # char history
 break # ideally this would be in bold/etc. like ControlBlock, but for now it's a simple ExpectYes
 cancel_ambition
@@ -20,19 +21,26 @@ clear_prison_reasons
 clear_revoke_reasons
 clear_secret_religion
 clear_wealth
+clr_discovered_society
+clr_revolt
 convert_to_secret_religion
 create_family_palace
 cut_mercenary_creator_relation
 death
+destroy_bloodline
 destroy_bloodline # not clear whether this actually does take only or even a boolean due to poor docs & lack of any base game usage currently (3.0)
+destroy_fort
+destroy_hospital
 destroy_landed_title
 destroy_random_building
+destroy_wonder_upgrade
 disallow_random_traits
 distribute_crusade_target_title
 easter_egg # title history
 hide_from # event property
 hide_new # event property
 hide_window # event property
+hold_election
 impregnate
 impregnate_cuckoo
 leave_society
@@ -47,6 +55,7 @@ only_playable # event pre-trigger
 only_rulers # event pre-trigger
 only_women # event pre-trigger
 plot_succeeds
+rebel_defection
 recalc_succession
 refill_holding_levy
 remove_guardian

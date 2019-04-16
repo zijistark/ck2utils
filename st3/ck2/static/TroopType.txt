@@ -2,9 +2,12 @@ archers
 camel_cavalry
 galleys
 heavy_infantry
+heavy_troops
 horse_archers
 knights
 light_cavalry
 light_infantry
+light_troops
 pikemen
+special_troops
 war_elephants
