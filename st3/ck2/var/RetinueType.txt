@@ -1,0 +1,95 @@
+HORDE_RETTYPE_CAV1        # Light Rider
+HORDE_RETTYPE_CAV2        # Marauder
+HORDE_RETTYPE_CAV3        # Skirmish Cavalry
+HORDE_RETTYPE_CAV4        # Light Horse Archer
+HORDE_RETTYPE_CAV5        # Light Vanguard
+HORDE_RETTYPE_CAV6        # Heavy Vanguard
+HORDE_RETTYPE_CAV7        # Horse Archer
+HORDE_RETTYPE_CHRISTIAN   # Keraite Auxiliaries
+HORDE_RETTYPE_DESERT      # Camel Cavalry
+HORDE_RETTYPE_EASTERN     # Khitan Auxiliaries
+HORDE_RETTYPE_EUROPE      # Lancer
+HORDE_RETTYPE_INDIAN      # Elephant Cavalry
+HORDE_RETTYPE_JEWISH      # Khazarian Auxiliaries
+HORDE_RETTYPE_MUSLIM      # Bolghar Auxiliaries
+HORDE_RETTYPE_PAGAN       # Riders of the Open Sky
+HORDE_RETTYPE_ZOROASTRIAN # Parthian Auxiliaries
+RETTYPE_CAV1              # Cavalry
+RETTYPE_CUL_ALBANIAN      # Stratiotes
+RETTYPE_CUL_ALTAIC        # Kheshig
+RETTYPE_CUL_ANDALUSIAN    # Zenata
+RETTYPE_CUL_ARAB          # Al-Faris
+RETTYPE_CUL_ARMENIAN      # Naxarar
+RETTYPE_CUL_BALT          # Karavirs Perkons
+RETTYPE_CUL_BASQUE        # Zaldun
+RETTYPE_CUL_BEAR          # Bear
+RETTYPE_CUL_BOHEMIAN      # Rytír
+RETTYPE_CUL_BULGARIAN     # Bolqr
+RETTYPE_CUL_BYZ           # Kataphraktos
+RETTYPE_CUL_CARANTANIAN   # Vitez
+RETTYPE_CUL_CASTILLIAN    # Caballero
+RETTYPE_CUL_CAT           # Fearless Feline
+RETTYPE_CUL_CATALAN       # Almughavar
+RETTYPE_CUL_COPTIC        # [coptic.GetName] Matoei
+RETTYPE_CUL_CROATIAN      # Uskok
+RETTYPE_CUL_DOG           # Good Boy
+RETTYPE_CUL_DRAGON        # Dragon
+RETTYPE_CUL_DUCK          # Warduck
+RETTYPE_CUL_DUTCH         # Goedendag Burgerwacht
+RETTYPE_CUL_ELEPHANT      # Elephant
+RETTYPE_CUL_ENG           # Longbowman
+RETTYPE_CUL_ESTONIAN      # Malev
+RETTYPE_CUL_E_AFR         # Zãbãnnya
+RETTYPE_CUL_FINNO_UGRIC   # Soturi Lempo
+RETTYPE_CUL_FRA           # [old_frankish.GetName] Heavy Infantry
+RETTYPE_CUL_FRANKISH      # Chevalier
+RETTYPE_CUL_GEORGIAN      # Mona'spa
+RETTYPE_CUL_GERMAN        # Ritter
+RETTYPE_CUL_HAN           # Nubing
+RETTYPE_CUL_HEDGEHOG      # Quillguard
+RETTYPE_CUL_HORSE         # Horse
+RETTYPE_CUL_HUNG          # Bandérium
+RETTYPE_CUL_INDIAN        # Steel Bow Infantry
+RETTYPE_CUL_IRANIAN       # Khwarezmiyya
+RETTYPE_CUL_IRISH         # Gallóglach
+RETTYPE_CUL_ITA           # Cavaliere
+RETTYPE_CUL_JEWISH        # Bar Kochba Guards
+RETTYPE_CUL_JURCHEN       # Tie-Futu
+RETTYPE_CUL_LIGURIAN      # Balestriero Genoveso
+RETTYPE_CUL_LITHUANIAN    # Perkuno Karys
+RETTYPE_CUL_LOM           # [lombard.GetName] Heavy Infantry
+RETTYPE_CUL_NAHUA         # Jaguar Warrior
+RETTYPE_CUL_NORMAN        # Chevalier
+RETTYPE_CUL_NORSE         # Heimþegi
+RETTYPE_CUL_NORSEGAELIC   # Huscarl
+RETTYPE_CUL_NORTHAFR      # a-Mazigh
+RETTYPE_CUL_NORWEGIAN     # Heiðþegi
+RETTYPE_CUL_NUBIAN        # [nubian.GetName] Archers
+RETTYPE_CUL_OUTREMER      # Outremer Knight
+RETTYPE_CUL_PICTISH       # [pictish.GetName] Raiders
+RETTYPE_CUL_POLISH        # Druzyna
+RETTYPE_CUL_POMMERANIAN   # Druzyna
+RETTYPE_CUL_PORTUGESE     # Cavaleiro
+RETTYPE_CUL_ROMAN         # Praetorianus
+RETTYPE_CUL_ROMANIAN      # Calarasi
+RETTYPE_CUL_RUS           # Druzhýna
+RETTYPE_CUL_SAXON         # Þingalið
+RETTYPE_CUL_SCOT          # Schiltron
+RETTYPE_CUL_SERBIAN       # Vlastela
+RETTYPE_CUL_SUEBI         # [suebi.GetName] Longspearmen
+RETTYPE_CUL_SYR           # Kashat
+RETTYPE_CUL_TIBET         # Himalayan Mountaineer
+RETTYPE_CUL_TURKISH       # Sipahi
+RETTYPE_CUL_VENETIAN      # Fanti da Mar
+RETTYPE_CUL_VISIGOTHIC    # Vesi
+RETTYPE_CUL_W_AFR         # Free Warrior
+RETTYPE_INF1              # Shock
+RETTYPE_INF2              # Defence
+RETTYPE_SKIR1             # Skirmish
+TRIBAL_PIETY_RET_1        # Ardent Guardians
+TRIBAL_PIETY_RET_2        # Sworn Defenders
+TRIBAL_RET_1              # Tribal Warrior
+TRIBAL_RET_2              # Trapper
+TRIBAL_RET_3              # Hunting Party
+TRIBAL_RET_4              # Veteran Warrior
+TRIBAL_RET_5              # Steppe Riders

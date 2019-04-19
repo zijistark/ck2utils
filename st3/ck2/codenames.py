@@ -136,6 +136,7 @@ def main():
     VarType('OnAction', ['common/on_actions/*.txt'], moddirs=()),
     VarType('Government', ['common/governments/*.txt'], nest=1),
     VarType('Society', ['common/societies/*.txt']),
+    VarType('RetinueType', ['common/retinue_subunits/*.txt'], moddirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
     VarType('Nickname', ['common/nicknames/*.txt'], moddirs=(g_swmh_path, g_emf_path, g_emf_swmh_path)),
     VarType('RelHeadTitle', ['common/landed_titles/*.txt'], content_filter=HasPairFilter(r'^controls_religion$', r'^"?[\w-]+"?$', regexp=True), hidden=True),
     VarType('RelHeadTitleLandless', ['common/landed_titles/*.txt'], content_filter=HasPairsFilter([(r'^controls_religion$', r'^"?[\w-]+"?$'), (r'^landless$', r'^yes$')], regexp=True), hidden=True),
