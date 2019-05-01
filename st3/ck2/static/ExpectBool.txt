@@ -166,6 +166,7 @@ has_top_de_jure_capital # LT
 has_trade_post
 has_unsafe_religion
 has_unsafe_secret_religion
+has_wonder
 have_gender_laws # gov
 hidden
 historical

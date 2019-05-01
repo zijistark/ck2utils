@@ -263,6 +263,7 @@ variables:
     | any_dejure_liege
     | any_demesne_province
     | any_demesne_title
+    | any_demesne_wonder
     | any_direct_de_jure_vassal_title
     | any_disconnected_province
     | any_dynasty_member
@@ -307,6 +308,7 @@ variables:
     | any_realm_lord
     | any_realm_province
     | any_realm_title
+    | any_realm_wonder
     | any_rival
     | any_sibling
     | any_sibling_even_if_dead
@@ -349,6 +351,7 @@ variables:
     | random_current_enemy
     | random_demesne_province
     | random_demesne_title
+    | random_demesne_wonder
     | random_direct_de_jure_vassal_title
     | random_disconnected_province
     | random_dynasty_member
@@ -381,6 +384,7 @@ variables:
     | random_realm_lord
     | random_realm_province
     | random_realm_title
+    | random_realm_wonder
     | random_rival
     | random_sibling
     | random_sibling_even_if_dead
@@ -903,6 +907,7 @@ variables:
     | has_trade_post
     | has_unsafe_religion
     | has_unsafe_secret_religion
+    | has_wonder
     | have_gender_laws
     | hidden
     | historical
@@ -1313,6 +1318,8 @@ variables:
     | has_policy
     | has_quest
     | has_status
+    | has_wonder
+    | has_wonder_upgrade
     | has_{{vEventModifierType}}_modifier
     | has_{{vFlagType}}_flag
     | id
@@ -1511,6 +1518,7 @@ variables:
     | num_of_traits
     | num_of_unique_dynasty_vassals
     | num_of_vassals
+    | num_of_wonder_upgrades
     | num_religion_provinces
     | opinion_effect
     | opinion_per_rank_above
@@ -1550,6 +1558,7 @@ variables:
     | total_years_played
     | tribal_seeds
     | where
+    | wonder_age
     | year
     | years
     | {{vReligionGroup}}
@@ -2399,6 +2408,7 @@ variables:
     | true_religion_scope
     | twin
     | twin_even_if_dead
+    | wonder_owner
     | {{vCachedTrait}}
     | {{vFaction}}
     | {{vJobTitle}}

@@ -43,6 +43,8 @@ has_offmap_name
 has_policy
 has_quest
 has_status
+has_wonder
+has_wonder_upgrade
 has_{{vEventModifierType}}_modifier
 has_{{vFlagType}}_flag
 id

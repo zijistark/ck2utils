@@ -135,6 +135,7 @@ num_of_trade_posts
 num_of_traits
 num_of_unique_dynasty_vassals
 num_of_vassals
+num_of_wonder_upgrades
 num_religion_provinces
 opinion_effect # MT
 opinion_per_rank_above # society
@@ -174,6 +175,7 @@ texture_internal # LT, CoA
 total_years_played
 tribal_seeds # alt-start param
 where
+wonder_age
 year
 years
 {{vReligionGroup}} # LT

@@ -28,6 +28,7 @@ any_defender # lacks a random_ dual
 any_dejure_liege
 any_demesne_province
 any_demesne_title
+any_demesne_wonder
 any_direct_de_jure_vassal_title
 any_disconnected_province
 any_dynasty_member
@@ -72,6 +73,7 @@ any_realm_character
 any_realm_lord
 any_realm_province
 any_realm_title
+any_realm_wonder
 any_rival
 any_sibling
 any_sibling_even_if_dead
@@ -114,6 +116,7 @@ random_crusade_participant
 random_current_enemy
 random_demesne_province
 random_demesne_title
+random_demesne_wonder
 random_direct_de_jure_vassal_title
 random_disconnected_province
 random_dynasty_member
@@ -146,6 +149,7 @@ random_realm_character
 random_realm_lord
 random_realm_province
 random_realm_title
+random_realm_wonder
 random_rival
 random_sibling
 random_sibling_even_if_dead
