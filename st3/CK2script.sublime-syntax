@@ -2783,6 +2783,12 @@ variables:
     | ca_desert_stable_4
     | ca_desert_stable_5
     | ca_desert_stable_6
+    | ca_government_monastery_1
+    | ca_government_monastery_2
+    | ca_government_monastery_3
+    | ca_government_monastery_4
+    | ca_government_monastery_5
+    | ca_government_monastery_6
     | ca_keep_1
     | ca_keep_2
     | ca_keep_3
@@ -6240,8 +6246,10 @@ variables:
     | born_in_the_purple
     | brahmin
     | brave
+    | bright
     | brilliant_strategist
     | brooding
+    | burly
     | calm_voice
     | cancer
     | cannibal_trait
@@ -6256,6 +6264,7 @@ variables:
     | child_of_consort
     | child_of_consort_male
     | clubfooted
+    | comely
     | commander1
     | commander2
     | commander3
@@ -6298,6 +6307,7 @@ variables:
     | decadent
     | deceitful
     | defensive_leader
+    | delicate
     | depressed
     | desert_father
     | desert_mother
@@ -6306,6 +6316,7 @@ variables:
     | diarrhea
     | digambara_jain
     | diligent
+    | dim
     | disfigured
     | disinherited
     | doctores
@@ -6392,6 +6403,7 @@ variables:
     | hellenic_leader
     | heresiarch
     | holy_warrior
+    | homely
     | homosexual
     | honest
     | horse
@@ -6575,6 +6587,7 @@ variables:
     | shaivist_hindu
     | shaktist_hindu
     | shieldmaiden
+    | short
     | shrewd
     | shy
     | sick_incapable
@@ -6620,6 +6633,7 @@ variables:
     | theravada_buddhist
     | thrifty_clerk
     | timid
+    | tiny
     | tough_soldier
     | trained_diplomat
     | trained_warrior

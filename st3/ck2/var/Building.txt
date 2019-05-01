@@ -238,6 +238,12 @@ ca_desert_stable_3                          # Desert Cavalry
 ca_desert_stable_4                          # Desert Cavalry
 ca_desert_stable_5                          # Desert Cavalry
 ca_desert_stable_6                          # Desert Cavalry
+ca_government_monastery_1                   # Gompa Monastery
+ca_government_monastery_2                   # Gompa Monastery
+ca_government_monastery_3                   # Gompa Monastery
+ca_government_monastery_4                   # Gompa Monastery
+ca_government_monastery_5                   # Gompa Monastery
+ca_government_monastery_6                   # Gompa Monastery
 ca_keep_1                                   # Keep
 ca_keep_2                                   # Keep
 ca_keep_3                                   # Keep

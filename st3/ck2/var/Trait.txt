@@ -61,8 +61,10 @@ bon_leader                     # Mountain Guardian
 born_in_the_purple             # Born in the Purple
 brahmin                        # Brahmin
 brave                          # Brave
+bright                         # Bright
 brilliant_strategist           # Brilliant Strategist
 brooding                       # Brooding
+burly                          # Burly
 calm_voice                     # Calm Voice
 cancer                         # Cancer
 cannibal_trait                 # Cannibal
@@ -77,6 +79,7 @@ chest_pain                     # Chest Pains
 child_of_consort               # Child of Concubine
 child_of_consort_male          # Child of Consort
 clubfooted                     # Clubfooted
+comely                         # Comely
 commander1                     # Respected Commander
 commander2                     # Distinguished Commander
 commander3                     # Renowned Commander
@@ -119,6 +122,7 @@ deaf                           # Deaf
 decadent                       # Decadent
 deceitful                      # Deceitful
 defensive_leader               # Defender
+delicate                       # Delicate
 depressed                      # Depressed
 desert_father                  # Desert Father
 desert_mother                  # Desert Mother
@@ -127,6 +131,7 @@ detached_priest                # Detached Priest
 diarrhea                       # Diarrhea
 digambara_jain                 # Digambara [jain.GetName]
 diligent                       # Diligent
+dim                            # Dim
 disfigured                     # Disfigured
 disinherited
 doctores                       # Doctores
@@ -213,6 +218,7 @@ hedonist                       # Hedonist
 hellenic_leader                # Aeneator
 heresiarch                     # Heresiarch
 holy_warrior                   # Holy Warrior
+homely                         # Homely
 homosexual                     # Homosexual
 honest                         # Honest
 horse                          # Horse
@@ -396,6 +402,7 @@ shaddai                        # Kanai
 shaivist_hindu                 # Shaivist
 shaktist_hindu                 # Shaktist
 shieldmaiden                   # Shieldmaiden
+short                          # Short
 shrewd                         # Shrewd
 shy                            # Shy
 sick_incapable
@@ -441,6 +448,7 @@ theologian                     # Theologian
 theravada_buddhist             # Theravada [buddhist.GetName]
 thrifty_clerk                  # Thrifty Clerk
 timid                          # Timid
+tiny                           # Tiny
 tough_soldier                  # Tough Soldier
 trained_diplomat               # Trained Diplomat
 trained_warrior                # Trained Fighter
