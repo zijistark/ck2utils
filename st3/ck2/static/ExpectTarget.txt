@@ -85,6 +85,7 @@ grant_title
 grant_title_no_opinion
 has_blood_oath_with
 has_claim
+has_de_jure_pretension
 has_embargo
 has_feud_with
 has_landed_title

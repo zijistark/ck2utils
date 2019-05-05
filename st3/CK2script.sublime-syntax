@@ -1983,6 +1983,7 @@ variables:
     | grant_title_no_opinion
     | has_blood_oath_with
     | has_claim
+    | has_de_jure_pretension
     | has_embargo
     | has_feud_with
     | has_landed_title
@@ -2815,6 +2816,8 @@ variables:
     | ca_oppressive_fortifications_4
     | ca_shipyard_1
     | ca_shipyard_2
+    | ca_shipyard_3
+    | ca_shipyard_4
     | ca_special_fortifications_1
     | ca_special_fortifications_2
     | ca_special_fortifications_3
@@ -2887,6 +2890,8 @@ variables:
     | ct_rep_arsenal_3
     | ct_shipyard_1
     | ct_shipyard_2
+    | ct_shipyard_3
+    | ct_shipyard_4
     | ct_training_grounds_1
     | ct_training_grounds_2
     | ct_training_grounds_3
@@ -3379,6 +3384,8 @@ variables:
     | tp_school_2
     | tp_shipyard_1
     | tp_shipyard_2
+    | tp_shipyard_3
+    | tp_shipyard_4
     | tp_shrine_aphrodite
     | tp_shrine_apollo
     | tp_shrine_ares
@@ -5482,6 +5489,55 @@ variables:
     | emf_demote_education_trait
     | emf_destroy_title
     | emf_distribute_barony
+    | emf_dna_clear_flags_for_attr
+    | emf_dna_clear_flags_for_clubfooted
+    | emf_dna_clear_flags_for_deaf
+    | emf_dna_clear_flags_for_dwarf
+    | emf_dna_clear_flags_for_harelip
+    | emf_dna_clear_flags_for_hgt
+    | emf_dna_clear_flags_for_hunchback
+    | emf_dna_clear_flags_for_int
+    | emf_dna_clear_flags_for_lisp
+    | emf_dna_clear_flags_for_perc
+    | emf_dna_clear_flags_for_str
+    | emf_dna_clear_flags_for_stutter
+    | emf_dna_clear_flags_for_wrymouth
+    | emf_dna_set_flags_for_absentminded
+    | emf_dna_set_flags_for_bright
+    | emf_dna_set_flags_for_burly
+    | emf_dna_set_flags_for_clubfooted
+    | emf_dna_set_flags_for_clubfooted_if_no_trait
+    | emf_dna_set_flags_for_comely
+    | emf_dna_set_flags_for_deaf
+    | emf_dna_set_flags_for_deaf_if_no_trait
+    | emf_dna_set_flags_for_delicate
+    | emf_dna_set_flags_for_dim
+    | emf_dna_set_flags_for_dwarf
+    | emf_dna_set_flags_for_dwarf_if_no_trait
+    | emf_dna_set_flags_for_fair
+    | emf_dna_set_flags_for_genius
+    | emf_dna_set_flags_for_giant
+    | emf_dna_set_flags_for_harelip
+    | emf_dna_set_flags_for_harelip_if_no_trait
+    | emf_dna_set_flags_for_homely
+    | emf_dna_set_flags_for_hunchback
+    | emf_dna_set_flags_for_hunchback_if_no_trait
+    | emf_dna_set_flags_for_imbecile
+    | emf_dna_set_flags_for_lisp
+    | emf_dna_set_flags_for_lisp_if_no_trait
+    | emf_dna_set_flags_for_perceptive
+    | emf_dna_set_flags_for_quick
+    | emf_dna_set_flags_for_short
+    | emf_dna_set_flags_for_slow
+    | emf_dna_set_flags_for_strong
+    | emf_dna_set_flags_for_stutter
+    | emf_dna_set_flags_for_stutter_if_no_trait
+    | emf_dna_set_flags_for_tall
+    | emf_dna_set_flags_for_tiny
+    | emf_dna_set_flags_for_ugly
+    | emf_dna_set_flags_for_weak
+    | emf_dna_set_flags_for_wrymouth
+    | emf_dna_set_flags_for_wrymouth_if_no_trait
     | emf_do_gender_succ_family_palace_workaround
     | emf_do_not_disturb
     | emf_donate_to_adventurer
