@@ -218,6 +218,8 @@ emf_mongol_spawn_unit
 emf_muslim_conversion
 emf_new_character
 emf_new_character_noble
+emf_new_character_priest
+emf_new_character_steward
 emf_nomad_antinomad_temple
 emf_nomad_antinomad_tribal
 emf_nomad_settlement_spawn_unit
@@ -225,7 +227,9 @@ emf_normalize_decay
 emf_normalize_decay_change_on_new_holder
 emf_nwo_create_female_ruler
 emf_nwo_create_male_ruler
+emf_promote_diplomat_trait
 emf_promote_education_trait
+emf_promote_warrior_trait
 emf_province_become_heretic
 emf_randomize_relhead_title_names
 emf_reduce_fertility

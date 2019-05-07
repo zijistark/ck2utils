@@ -189,6 +189,7 @@ indirectly_owned
 inherit
 investiture # rel
 is_abroad
+is_active
 is_adult
 is_alive
 is_allowed_to_loot

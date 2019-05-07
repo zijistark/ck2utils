@@ -562,6 +562,7 @@ variables:
     | alternate_start
     | ambitions
     | any_quester_targeting_this
+    | any_realm_wonder_upgrade
     | artifact_owner
     | attribute_diff
     | attributes
@@ -656,6 +657,7 @@ variables:
     | opinion
     | opinion_diff
     | original_artifact_owner
+    | original_wonder_owner
     | pagan_coa
     | per_attribute
     | personal_opinion
@@ -735,6 +737,7 @@ variables:
     | vassalize_or_take_under_title_destroy_duchies
     | war
     | war_participation
+    | wonder
     | {{vTroopType}}
     )
   vExpectBool: |-
@@ -930,6 +933,7 @@ variables:
     | inherit
     | investiture
     | is_abroad
+    | is_active
     | is_adult
     | is_alive
     | is_allowed_to_loot
@@ -2058,6 +2062,7 @@ variables:
     | lower_tier_than
     | match_character
     | move_character
+    | obedient
     | occupy_minors_of_occupied_settlements
     | overlord_of
     | owes_favor_to
@@ -5624,6 +5629,8 @@ variables:
     | emf_muslim_conversion
     | emf_new_character
     | emf_new_character_noble
+    | emf_new_character_priest
+    | emf_new_character_steward
     | emf_nomad_antinomad_temple
     | emf_nomad_antinomad_tribal
     | emf_nomad_settlement_spawn_unit
@@ -5631,7 +5638,9 @@ variables:
     | emf_normalize_decay_change_on_new_holder
     | emf_nwo_create_female_ruler
     | emf_nwo_create_male_ruler
+    | emf_promote_diplomat_trait
     | emf_promote_education_trait
+    | emf_promote_warrior_trait
     | emf_province_become_heretic
     | emf_randomize_relhead_title_names
     | emf_reduce_fertility
@@ -5948,12 +5957,14 @@ variables:
     | emf_has_hre_religion
     | emf_has_interesting_trait_for_founding_realm
     | emf_has_karling_title
+    | emf_has_no_temporary_title
     | emf_has_powys_counties_allow
     | emf_has_powys_counties_potential
     | emf_has_primary_peace
     | emf_has_roman_empire
     | emf_has_succ_law_unfit_for_feudal
     | emf_has_swmh
+    | emf_has_temporary_title
     | emf_has_valid_temple_being_built
     | emf_hidden
     | emf_hidden_from_others
@@ -5981,6 +5992,7 @@ variables:
     | emf_is_bishop_nominee
     | emf_is_crowned
     | emf_is_english_liege_source_culture
+    | emf_is_english_melt_active
     | emf_is_english_melt_province
     | emf_is_english_source_culture
     | emf_is_english_source_province
@@ -5994,6 +6006,7 @@ variables:
     | emf_is_karling_title
     | emf_is_lechczechrus_kingdom
     | emf_is_neapolitan_liege_source_culture
+    | emf_is_neapolitan_melt_active
     | emf_is_neapolitan_melt_province
     | emf_is_neapolitan_source_culture
     | emf_is_neapolitan_source_province
@@ -6009,10 +6022,12 @@ variables:
     | emf_is_ruler_protected_by_sicilian_arabic_melt
     | emf_is_ruler_protected_by_sicilian_melt
     | emf_is_sicilian_arabic_liege_source_culture
+    | emf_is_sicilian_arabic_melt_active
     | emf_is_sicilian_arabic_melt_province
     | emf_is_sicilian_arabic_source_culture
     | emf_is_sicilian_arabic_source_province
     | emf_is_sicilian_liege_source_culture
+    | emf_is_sicilian_melt_active
     | emf_is_sicilian_melt_province
     | emf_is_sicilian_source_culture
     | emf_is_sicilian_source_province

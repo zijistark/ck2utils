@@ -14,6 +14,7 @@ allowed_holdings_culture
 alternate_start
 ambitions # society
 any_quester_targeting_this
+any_realm_wonder_upgrade
 artifact_owner
 attribute_diff
 attributes # create_character param
@@ -108,6 +109,7 @@ num_of_trade_post_diff
 opinion
 opinion_diff
 original_artifact_owner
+original_wonder_owner
 pagan_coa # LT param
 per_attribute # society
 personal_opinion
@@ -187,4 +189,5 @@ vassalize_or_take_under_title
 vassalize_or_take_under_title_destroy_duchies
 war
 war_participation
+wonder
 {{vTroopType}}

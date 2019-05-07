@@ -160,6 +160,7 @@ lower_real_tier_than
 lower_tier_than
 match_character # spawn_unit param
 move_character
+obedient
 occupy_minors_of_occupied_settlements
 overlord_of
 owes_favor_to

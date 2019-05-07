@@ -427,7 +427,7 @@ sterile_secret                 # Sterile
 strategist                     # Strategist
 stressed                       # Stressed
 strong                         # Strong
-strong_basileus                # Strong Basileus
+strong_basileus                # Strong [Root.GetTitle]
 stubborn                       # Stubborn
 sturdy                         # Sturdy
 stutter                        # Stutter
@@ -474,7 +474,7 @@ viking                         # Viking
 vomiting                       # Vomiting
 war_elephant_leader            # War Elephant Leader
 weak                           # Weak
-weak_basileus                  # Coronated Basileus
+weak_basileus                  # Coronated [Root.GetTitle]
 west_african_leader            # Spirit Warrior
 willful                        # Willful
 winter_soldier                 # Winter Soldier
