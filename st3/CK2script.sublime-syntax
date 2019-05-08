@@ -5862,6 +5862,7 @@ variables:
     | emf_can_add_holding_slot
     | emf_can_autodestroy_title
     | emf_can_be_karling_usurper
+    | emf_can_convert_culture
     | emf_can_convert_province_culture
     | emf_can_convert_religion
     | emf_can_disturb
