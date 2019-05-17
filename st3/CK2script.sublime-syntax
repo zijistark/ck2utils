@@ -654,6 +654,7 @@ variables:
     | num_of_government_vassals
     | num_of_realm_counties
     | num_of_trade_post_diff
+    | num_title_realm_provs
     | opinion
     | opinion_diff
     | original_artifact_owner
@@ -924,6 +925,7 @@ variables:
     | imprison
     | in_command
     | in_command
+    | in_faction
     | in_revolt
     | in_seclusion
     | independent
@@ -1142,6 +1144,7 @@ variables:
     | set_tribal_vassal_tax_income
     | set_uses_decadence
     | set_women_can_take_consorts
+    | set_wonder_damaged
     | short_name
     | show_as_title
     | show_scope_change
@@ -1292,6 +1295,7 @@ variables:
     | clear_flags_with_prefix
     | clr_flag
     | clr_offmap_tmp_flag
+    | clr_quest
     | clr_{{vFlagType}}_flag
     | continent
     | convert_to_castle
@@ -1438,6 +1442,7 @@ variables:
     | father_name_chance
     | female
     | feudal_seeds
+    | free_court_slots
     | grant_limit
     | health_traits
     | heresy_icon
@@ -1600,6 +1605,7 @@ variables:
     | birth
     | border
     | crusade_name
+    | custom_modifier_text
     | custom_tooltip
     | death
     | desc
@@ -1990,6 +1996,7 @@ variables:
     | has_de_jure_pretension
     | has_embargo
     | has_feud_with
+    | has_higher_tech_than
     | has_landed_title
     | has_non_aggression_pact_with
     | has_offmap_news_enabled
@@ -2078,6 +2085,7 @@ variables:
     | province
     | province
     | province_id
+    | quest_target
     | real_tier
     | religion
     | religion_authority
@@ -4371,6 +4379,7 @@ variables:
     | nick_the_brute
     | nick_the_bull
     | nick_the_bulwark
+    | nick_the_burden
     | nick_the_butch
     | nick_the_butcher
     | nick_the_cannibal
@@ -4435,6 +4444,7 @@ variables:
     | nick_the_fearless
     | nick_the_feeble
     | nick_the_ferrante
+    | nick_the_festive
     | nick_the_flail_of
     | nick_the_flat_chested
     | nick_the_flayer
@@ -4648,6 +4658,7 @@ variables:
     | nick_the_slaughterer
     | nick_the_slayer_of_culture
     | nick_the_sleepy
+    | nick_the_snake
     | nick_the_snakeling
     | nick_the_soul_flayer
     | nick_the_spare
@@ -4673,6 +4684,7 @@ variables:
     | nick_the_tamer
     | nick_the_tempest_of_capital
     | nick_the_temptress
+    | nick_the_tenacious
     | nick_the_terrain_commander
     | nick_the_terrible
     | nick_the_terrifying
@@ -4986,6 +4998,7 @@ variables:
     | on_pledge_crusade_defense
     | on_pledge_crusade_participation
     | on_post_birth
+    | on_post_birth_stillbirth
     | on_pregnancy
     | on_prepared_invasion_aborts
     | on_prepared_invasion_expires
@@ -5823,14 +5836,28 @@ variables:
     | fancy_upgrade_selection_score
     | good_soldier_outcome_score
     | good_steward_outcome_score
+    | interesting_courtier_outcome_score
+    | interesting_courtier_selection_score
     | is_bad_intrigue_character_score
     | is_good_intrigue_character_score
+    | job_event_mtth_modifier_diplomacy_score
+    | job_event_mtth_modifier_intrigue_score
+    | job_event_mtth_modifier_inverted_diplomacy_score
+    | job_event_mtth_modifier_inverted_intrigue_score
+    | job_event_mtth_modifier_inverted_learning_score
+    | job_event_mtth_modifier_inverted_martial_score
+    | job_event_mtth_modifier_inverted_stewardship_score
+    | job_event_mtth_modifier_learning_score
+    | job_event_mtth_modifier_martial_score
+    | job_event_mtth_modifier_stewardship_score
     | likes_other_combatant_score
     | matching_soldier_score
     | nomad_reduction_score
     | nominate_bishop_chance
     | post_reformation_ruler_conversion_score
     | potential_rival_score
+    | prev_dislikes_this_score
+    | prev_likes_this_score
     | same_gender_preference_score
     | testing_fate_variable_character_score
     | title_tier_increase_score
@@ -5994,6 +6021,7 @@ variables:
     | emf_is_crowned
     | emf_is_english_liege_source_culture
     | emf_is_english_melt_active
+    | emf_is_english_melt_protection_active
     | emf_is_english_melt_province
     | emf_is_english_source_culture
     | emf_is_english_source_province
@@ -6008,6 +6036,7 @@ variables:
     | emf_is_lechczechrus_kingdom
     | emf_is_neapolitan_liege_source_culture
     | emf_is_neapolitan_melt_active
+    | emf_is_neapolitan_melt_protection_active
     | emf_is_neapolitan_melt_province
     | emf_is_neapolitan_source_culture
     | emf_is_neapolitan_source_province
@@ -6024,11 +6053,13 @@ variables:
     | emf_is_ruler_protected_by_sicilian_melt
     | emf_is_sicilian_arabic_liege_source_culture
     | emf_is_sicilian_arabic_melt_active
+    | emf_is_sicilian_arabic_melt_protection_active
     | emf_is_sicilian_arabic_melt_province
     | emf_is_sicilian_arabic_source_culture
     | emf_is_sicilian_arabic_source_province
     | emf_is_sicilian_liege_source_culture
     | emf_is_sicilian_melt_active
+    | emf_is_sicilian_melt_protection_active
     | emf_is_sicilian_melt_province
     | emf_is_sicilian_source_culture
     | emf_is_sicilian_source_province
@@ -6231,17 +6262,17 @@ variables:
     | TECH_CONSTRUCTION
     | TECH_CULTURE_FLEX
     | TECH_FORTIFICATIONS_CONSTRUCTION
-    | TECH_HEAVY_INFANTRY
+    | TECH_INFANTRY
     | TECH_LEGALISM
-    | TECH_LIGHT_INFANTRY
     | TECH_MAJESTY
+    | TECH_MELEE
     | TECH_NAVAL
     | TECH_NOBLE_CUSTOMS
     | TECH_POPULAR_CUSTOMS
     | TECH_RECRUITMENT
     | TECH_RELIGIOUS_CUSTOMS
     | TECH_SIEGE_EQUIPMENT
-    | TECH_TEMPLE_CONSTRUCTION
+    | TECH_SKIRMISH
     | TECH_TRADE_PRACTICES
     )
   vTerrain: |-

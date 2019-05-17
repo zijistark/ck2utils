@@ -1,18 +1,18 @@
 TECH_CASTLE_CONSTRUCTION         # Castle Infrastructure
 TECH_CAVALRY                     # Cavalry
-TECH_CITY_CONSTRUCTION           # Town Infrastructure
+TECH_CITY_CONSTRUCTION           # Cities and Temples
 TECH_CONSTRUCTION                # Construction
 TECH_CULTURE_FLEX                # Tolerance
 TECH_FORTIFICATIONS_CONSTRUCTION # Improved Keeps
-TECH_HEAVY_INFANTRY              # Heavy Infantry
+TECH_INFANTRY                    # Infantry
 TECH_LEGALISM                    # Legalism
-TECH_LIGHT_INFANTRY              # Light Infantry
 TECH_MAJESTY                     # Majesty
+TECH_MELEE                       # Melee Techniques
 TECH_NAVAL                       # Shipbuilding
 TECH_NOBLE_CUSTOMS               # Noble Customs
 TECH_POPULAR_CUSTOMS             # Popular Customs
 TECH_RECRUITMENT                 # Military Organization
 TECH_RELIGIOUS_CUSTOMS           # Religious Customs
 TECH_SIEGE_EQUIPMENT             # Siege Equipment
-TECH_TEMPLE_CONSTRUCTION         # Church Infrastructure
+TECH_SKIRMISH                    # Skirmish Techniques
 TECH_TRADE_PRACTICES             # Trade Practices

@@ -218,6 +218,7 @@ on_player_mercenary_income
 on_pledge_crusade_defense
 on_pledge_crusade_participation
 on_post_birth
+on_post_birth_stillbirth
 on_pregnancy
 on_prepared_invasion_aborts
 on_prepared_invasion_expires

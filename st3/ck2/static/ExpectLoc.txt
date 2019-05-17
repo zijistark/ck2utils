@@ -4,6 +4,7 @@ bastard_dynasty_prefix # cul
 birth # char history
 border
 crusade_name
+custom_modifier_text
 custom_tooltip # society
 death # char history
 desc

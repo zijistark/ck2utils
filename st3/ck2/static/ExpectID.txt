@@ -13,6 +13,7 @@ border # event property
 clear_flags_with_prefix
 clr_flag
 clr_offmap_tmp_flag
+clr_quest
 clr_{{vFlagType}}_flag
 continent
 convert_to_castle # buildings

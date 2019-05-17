@@ -112,6 +112,7 @@ nick_the_broken_nail                # Broken-Nail
 nick_the_brute                      # the Brute
 nick_the_bull                       # the Bull
 nick_the_bulwark                    # the Bulwark
+nick_the_burden                     # the Burden
 nick_the_butch                      # the Butch
 nick_the_butcher                    # the Butcher
 nick_the_cannibal                   # the Cannibal
@@ -176,6 +177,7 @@ nick_the_fat                        # the Fat
 nick_the_fearless                   # the Fearless
 nick_the_feeble                     # the Feeble
 nick_the_ferrante                   # Ferrante
+nick_the_festive                    # the Festive
 nick_the_flail_of                   # the Flail of [Root.Liege.PrimaryTitle.GetName]
 nick_the_flat_chested               # the Flat-Chested
 nick_the_flayer                     # the Flayer
@@ -303,7 +305,7 @@ nick_the_missionary                 # the Missionary
 nick_the_moaner                     # the Moaner
 nick_the_monk                       # the Monk
 nick_the_monster                    # the Monster
-nick_the_mule                       # the Tenacious
+nick_the_mule                       # the Mule
 nick_the_munificent                 # the Munificent
 nick_the_mutilator                  # the Mutilator
 nick_the_myrrh_streaming            # the Myrrh-Streaming
@@ -389,6 +391,7 @@ nick_the_sky_rider                  # the Sky Rider
 nick_the_slaughterer                # the Slaughterer
 nick_the_slayer_of_culture          # Slayer of the [nickname_target.Culture.GetName]
 nick_the_sleepy                     # the Sleepy
+nick_the_snake                      # the Snake
 nick_the_snakeling                  # the Snakeling
 nick_the_soul_flayer                # the Soulflayer
 nick_the_spare                      # the Spare
@@ -414,6 +417,7 @@ nick_the_tall                       # the Tall
 nick_the_tamer                      # the Tamer
 nick_the_tempest_of_capital         # the Tempest of [Root.Capital.GetName]
 nick_the_temptress                  # the Temptress
+nick_the_tenacious                  # the Tenacious
 nick_the_terrain_commander          # the [battlefield_location.GetTerrainCap] Commander
 nick_the_terrible                   # the Terrible
 nick_the_terrifying                 # the Terrifying

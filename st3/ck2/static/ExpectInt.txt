@@ -51,6 +51,7 @@ father # char history
 father_name_chance # cul
 female
 feudal_seeds # alt-start param
+free_court_slots
 grant_limit # MT
 health_traits
 heresy_icon

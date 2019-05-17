@@ -106,6 +106,7 @@ no_vassal_tax
 num_of_government_vassals
 num_of_realm_counties
 num_of_trade_post_diff
+num_title_realm_provs
 opinion
 opinion_diff
 original_artifact_owner
