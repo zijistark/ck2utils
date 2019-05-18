@@ -3,5 +3,6 @@ culture
 culture # LT param
 culture # event pre-trigger
 parent # cul
+race
 secondary_event_pictures # cul
 set_graphical_culture
