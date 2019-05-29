@@ -191,6 +191,12 @@ ca_culture_russian_2                        # Druzhina Training Ground
 ca_culture_russian_3                        # Druzhina Training Ground
 ca_culture_russian_4                        # Druzhina Training Ground
 ca_culture_russian_5                        # Druzhina Training Ground
+ca_culture_sardinian_0                      # [sardinian.GetName] Garrison
+ca_culture_sardinian_1                      # [sardinian.GetName] Garrison
+ca_culture_sardinian_2                      # [sardinian.GetName] Garrison
+ca_culture_sardinian_3                      # [sardinian.GetName] Garrison
+ca_culture_sardinian_4                      # [sardinian.GetName] Garrison
+ca_culture_sardinian_5                      # [sardinian.GetName] Garrison
 ca_culture_saxon_english_0                  # Longbow Range
 ca_culture_saxon_english_1                  # Longbow Range
 ca_culture_saxon_english_2                  # Longbow Range
@@ -725,6 +731,10 @@ tb_culture_russian_1                        # Druzhina Training Ground
 tb_culture_russian_2                        # Druzhina Training Ground
 tb_culture_russian_3                        # Druzhina Training Ground
 tb_culture_russian_4                        # Druzhina Training Ground
+tb_culture_sardinian_1                      # [sardinian.GetName] Garrison
+tb_culture_sardinian_2                      # [sardinian.GetName] Garrison
+tb_culture_sardinian_3                      # [sardinian.GetName] Garrison
+tb_culture_sardinian_4                      # [sardinian.GetName] Garrison
 tb_culture_saxon_english_1                  # Longbow Range
 tb_culture_saxon_english_2                  # Longbow Range
 tb_culture_saxon_english_3                  # Longbow Range

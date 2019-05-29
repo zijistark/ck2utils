@@ -209,6 +209,7 @@ reverse_remove_favor
 rightful_religious_head
 same_liege
 same_realm
+same_regnal_name
 same_sex
 same_society_as
 scaled_with_population_of # spawn_unit param

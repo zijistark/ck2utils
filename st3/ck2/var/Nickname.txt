@@ -32,6 +32,7 @@ nick_iron_hand                      # Iron Hand
 nick_ironarm                        # Iron-Arm
 nick_lodbrok                        # Loðbrok
 nick_longshanks                     # Longshanks
+nick_longsword                      # Longsword
 nick_lord_lady_ground               # [Root.GetLordLady] [battlefield_location.GetGroundDescCap]
 nick_lord_lady_of_the_terrain       # [Root.GetLordLady] of the [battlefield_location.GetTerrainCap]
 nick_of_a_thousand_faces            # of a Thousand Faces
@@ -142,6 +143,7 @@ nick_the_culture                    # the [Root.Culture.GetName]
 nick_the_culture_marauder           # the [nickname_receiver.Culture.GetName] Marauder
 nick_the_cunning                    # the Cunning
 nick_the_cyclops                    # the Cyclops
+nick_the_dane                       # the Dane
 nick_the_deaths_child               # the Reaper's Child
 nick_the_decadent                   # the Decadent
 nick_the_defender                   # the Defender

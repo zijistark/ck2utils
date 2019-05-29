@@ -73,6 +73,7 @@ RETTYPE_CUL_PORTUGESE     # Cavaleiro
 RETTYPE_CUL_ROMAN         # Praetorianus
 RETTYPE_CUL_ROMANIAN      # Calarasi
 RETTYPE_CUL_RUS           # Druzhýna
+RETTYPE_CUL_SAR           # [sardinian.GetName] Birrudo
 RETTYPE_CUL_SAXON         # Þingalið
 RETTYPE_CUL_SCOT          # Schiltron
 RETTYPE_CUL_SERBIAN       # Vlastela

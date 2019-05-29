@@ -1,6 +1,7 @@
 title_administrator                 # Scholar-Bureaucrat
 title_anthypatos                    # Anthypatos
 title_appointed_regent              # Designated Regent
+title_augusta                       # Augusta
 title_baghatur                      # Baghatur
 title_behi                          # Behi
 title_bogomilist_advisor            # Stroinik
@@ -47,6 +48,7 @@ title_high_almoner                  # High Almoner
 title_high_judge                    # High Judge
 title_hirdman                       # Hirdman
 title_historiographer               # Historiographer
+title_hypatos                       # Hypatos
 title_imperial_eunuch               # Parakoimomenos
 title_ishad                         # Ishad
 title_kardarigan                    # Kardarigan
@@ -73,6 +75,7 @@ title_noyan                         # Noyan
 title_overseer_of_rites             # Overseer of the Rites
 title_paramount_knight              # Paramount Knight
 title_patrician_heir                # Designated Heir
+title_patrikios                     # Patrikios
 title_prince                        # Prince
 title_pushtigban_salar              # Pushtigban-salar
 title_queen_mother                  # Queen Mother
@@ -81,6 +84,7 @@ title_royal_builder                 # Royal Builder
 title_royal_custodian               # Royal Custodian
 title_ruler_consort
 title_sebastokrator                 # Sebastokrator
+title_sebastos                      # Sebastos
 title_seneschal                     # Seneschal
 title_shahin                        # Shahin
 title_shahrwaraz                    # Shahrwarãz

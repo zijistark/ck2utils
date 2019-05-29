@@ -131,6 +131,7 @@ succ_elective_gavelkind     # Elective Gavelkind
 succ_feudal_elective        # Elective Monarchy
 succ_gavelkind              # Gavelkind
 succ_hre_elective           # Princely Elective
+succ_mirath                 # Mirath
 succ_nomad_succession       # Nomad Succession
 succ_offmap_succession      # Confucian Bureaucracy
 succ_open_elective          # Elective Republic

@@ -110,7 +110,6 @@ mari              # Mejralainen
 masmuda           # Imesmuden
 meshchera         # Meshchera
 mongol            # Mongolchuud
-moravian          # Moravský
 mordvin           # Mokshet
 nahuatl           # Nahua
 neapolitan        # Neapolitano
@@ -154,6 +153,7 @@ sicilian          # Sicilianu
 sicilian_arabic   # Siqilli
 sindhi            # Sindhi
 sinhala           # Sinhala
+slovieni          # Moravský
 sogdian           # Soghdian
 somali            # Soomaali
 songhay           # Songhai

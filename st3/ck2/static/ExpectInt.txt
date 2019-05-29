@@ -177,6 +177,7 @@ total_years_played
 tribal_seeds # alt-start param
 where
 wonder_age
+wonder_stage
 year
 years
 {{vReligionGroup}} # LT

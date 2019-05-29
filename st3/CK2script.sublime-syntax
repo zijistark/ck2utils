@@ -280,6 +280,7 @@ variables:
     | any_hospital
     | any_host_courtier
     | any_independent_ruler
+    | any_kill_list_character
     | any_known_enemy_plotter
     | any_known_plotter
     | any_landed_title
@@ -944,6 +945,7 @@ variables:
     | is_attacker
     | is_betrothed
     | is_bloodline_active
+    | is_building_wonder_upgrade
     | is_capital
     | is_conquered
     | is_consort
@@ -1569,6 +1571,7 @@ variables:
     | tribal_seeds
     | where
     | wonder_age
+    | wonder_stage
     | year
     | years
     | {{vReligionGroup}}
@@ -2118,6 +2121,7 @@ variables:
     | rightful_religious_head
     | same_liege
     | same_realm
+    | same_regnal_name
     | same_sex
     | same_society_as
     | scaled_with_population_of
@@ -2762,6 +2766,12 @@ variables:
     | ca_culture_russian_3
     | ca_culture_russian_4
     | ca_culture_russian_5
+    | ca_culture_sardinian_0
+    | ca_culture_sardinian_1
+    | ca_culture_sardinian_2
+    | ca_culture_sardinian_3
+    | ca_culture_sardinian_4
+    | ca_culture_sardinian_5
     | ca_culture_saxon_english_0
     | ca_culture_saxon_english_1
     | ca_culture_saxon_english_2
@@ -3296,6 +3306,10 @@ variables:
     | tb_culture_russian_2
     | tb_culture_russian_3
     | tb_culture_russian_4
+    | tb_culture_sardinian_1
+    | tb_culture_sardinian_2
+    | tb_culture_sardinian_3
+    | tb_culture_sardinian_4
     | tb_culture_saxon_english_1
     | tb_culture_saxon_english_2
     | tb_culture_saxon_english_3
@@ -3504,9 +3518,13 @@ variables:
     | emf_faction_overthrow_CA
     | emf_faction_overthrow_TO
     | emf_faction_overthrow_obligations
+    | emf_faction_succ_byzantine_elective
+    | emf_faction_succ_eldership
     | emf_faction_succ_elective_gavelkind
     | emf_faction_succ_feudal_elective
     | emf_faction_succ_gavelkind
+    | emf_faction_succ_hre_elective
+    | emf_faction_succ_mirath
     | emf_faction_succ_primogeniture
     | emf_faction_succ_seniority
     | emf_faction_succ_tanistry
@@ -3602,6 +3620,7 @@ variables:
     | shia_caliphate_rising
     | subjugation
     | subjugation_duke
+    | thankmars_rebellion
     | tribal_invasion
     | tributary_cb
     | tributary_nomad_cb
@@ -3749,7 +3768,6 @@ variables:
     | masmuda
     | meshchera
     | mongol
-    | moravian
     | mordvin
     | nahuatl
     | neapolitan
@@ -3793,6 +3811,7 @@ variables:
     | sicilian_arabic
     | sindhi
     | sinhala
+    | slovieni
     | sogdian
     | somali
     | songhay
@@ -4109,6 +4128,7 @@ variables:
     | succ_feudal_elective
     | succ_gavelkind
     | succ_hre_elective
+    | succ_mirath
     | succ_nomad_succession
     | succ_offmap_succession
     | succ_open_elective
@@ -4169,6 +4189,7 @@ variables:
       title_administrator
     | title_anthypatos
     | title_appointed_regent
+    | title_augusta
     | title_baghatur
     | title_behi
     | title_bogomilist_advisor
@@ -4215,6 +4236,7 @@ variables:
     | title_high_judge
     | title_hirdman
     | title_historiographer
+    | title_hypatos
     | title_imperial_eunuch
     | title_ishad
     | title_kardarigan
@@ -4241,6 +4263,7 @@ variables:
     | title_overseer_of_rites
     | title_paramount_knight
     | title_patrician_heir
+    | title_patrikios
     | title_prince
     | title_pushtigban_salar
     | title_queen_mother
@@ -4249,6 +4272,7 @@ variables:
     | title_royal_custodian
     | title_ruler_consort
     | title_sebastokrator
+    | title_sebastos
     | title_seneschal
     | title_shahin
     | title_shahrwaraz
@@ -4301,6 +4325,7 @@ variables:
     | nick_ironarm
     | nick_lodbrok
     | nick_longshanks
+    | nick_longsword
     | nick_lord_lady_ground
     | nick_lord_lady_of_the_terrain
     | nick_of_a_thousand_faces
@@ -4411,6 +4436,7 @@ variables:
     | nick_the_culture_marauder
     | nick_the_cunning
     | nick_the_cyclops
+    | nick_the_dane
     | nick_the_deaths_child
     | nick_the_decadent
     | nick_the_defender
@@ -5401,6 +5427,7 @@ variables:
     | RETTYPE_CUL_ROMAN
     | RETTYPE_CUL_ROMANIAN
     | RETTYPE_CUL_RUS
+    | RETTYPE_CUL_SAR
     | RETTYPE_CUL_SAXON
     | RETTYPE_CUL_SCOT
     | RETTYPE_CUL_SERBIAN
@@ -5900,6 +5927,9 @@ variables:
     | emf_can_hold_temples
     | emf_can_hold_temples_potential
     | emf_can_inherit
+    | emf_can_inherit_if_not_bastard
+    | emf_can_inherit_if_not_bastard_or_bishop_nominee
+    | emf_can_inherit_if_not_bishop_nominee
     | emf_can_province_join_religious_revolt
     | emf_can_religion_excommunicate
     | emf_can_restore_hre_someday
@@ -6043,6 +6073,7 @@ variables:
     | emf_is_neapolitan_source_culture
     | emf_is_neapolitan_source_province
     | emf_is_powys_max_dejure_potential
+    | emf_is_preferred_gender_for_laws_of_PREV
     | emf_is_province_protected_by_english_melt
     | emf_is_province_protected_by_neapolitan_melt
     | emf_is_province_protected_by_sicilian_arabic_melt

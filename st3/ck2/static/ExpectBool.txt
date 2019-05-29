@@ -199,6 +199,7 @@ is_artifact_equipped
 is_attacker
 is_betrothed
 is_bloodline_active
+is_building_wonder_upgrade
 is_capital
 is_conquered
 is_consort

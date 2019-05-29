@@ -45,6 +45,7 @@ any_heir_title # lacks a random_ dual
 any_hospital
 any_host_courtier
 any_independent_ruler
+any_kill_list_character
 any_known_enemy_plotter
 any_known_plotter # lacks a random_ dual
 any_landed_title
