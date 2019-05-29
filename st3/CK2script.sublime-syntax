@@ -658,6 +658,7 @@ variables:
     | num_title_realm_provs
     | opinion
     | opinion_diff
+    | opinion_levy_raised_days
     | original_artifact_owner
     | original_wonder_owner
     | pagan_coa
@@ -700,6 +701,7 @@ variables:
     | set_job_action
     | set_looter_hostility_days
     | set_offmap_currency
+    | set_opinion_levy_raised_days
     | set_parent_religion
     | set_secret_religion
     | set_title_adventurer
