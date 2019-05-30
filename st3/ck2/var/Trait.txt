@@ -149,10 +149,20 @@ dynasty_decadence_med          # Very Decadent Dynasty
 dysentery                      # Dysentery
 eagle_warrior                  # Eagle Knight
 elusive_shadow                 # Elusive Shadow
+emf_boost_ambition             # Boost AI Ambition
+emf_boost_greed                # Boost AI Greed
+emf_boost_honor                # Boost AI Honor
+emf_boost_rationality          # Boost AI Rationality
+emf_boost_zeal                 # Boost AI Zeal
 emf_cannot_inherit             # Cannot Inherit
 emf_crowned                    # Crowned
 emf_crowned_by_pope            # Crowned By The Pope
 emf_customize_ruler            # Customize Ruler Dynasty
+emf_reduce_ambition            # Reduce AI Ambition
+emf_reduce_greed               # Reduce AI Greed
+emf_reduce_honor               # Reduce AI Honor
+emf_reduce_rationality         # Reduce AI Rationality
+emf_reduce_zeal                # Reduce AI Zeal
 emf_saint                      # Saint
 emf_saint_converted            # HIDDEN (Saint Brought New Faith to Their Realm)
 emf_saint_converter            # HIDDEN (Saint Converted an Important Ruler)
@@ -161,6 +171,7 @@ emf_saint_schism               # HIDDEN (Saint Mended a Schism)
 emf_saint_true_knight          # HIDDEN (Saint Was a True Christian Knight)
 emf_saint_voice_jesus          # HIDDEN (Saint Could Hear the Voice of God)
 emf_seljuk_invader             # Seljuk Invader
+emf_temporary                  # Temporary
 envious                        # Envious
 erudite                        # Erudite
 eunuch                         # Eunuch

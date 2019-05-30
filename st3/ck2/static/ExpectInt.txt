@@ -13,7 +13,6 @@ ai_honor
 ai_rationality
 ai_zeal
 among_most_powerful_vassals
-amount
 any_religion_distance
 artifact_age
 authority

@@ -1409,7 +1409,6 @@ variables:
     | ai_rationality
     | ai_zeal
     | among_most_powerful_vassals
-    | amount
     | any_religion_distance
     | artifact_age
     | authority
@@ -1717,6 +1716,7 @@ variables:
     | ai_creation_factor
     | ai_feudal_modifier
     | ai_republic_modifier
+    | amount
     | attrition
     | base_health
     | chance
@@ -4002,9 +4002,6 @@ variables:
     | administration_1
     | administration_2
     | agnatic_succession
-    | banish_voting_power
-    | banish_voting_power_0
-    | banish_voting_power_1
     | bogomilist_church_0
     | bogomilist_church_1
     | bogomilist_church_2
@@ -4039,9 +4036,6 @@ variables:
     | crown_authority_4
     | enatic_cognatic_succession
     | enatic_succession
-    | execution_voting_power
-    | execution_voting_power_0
-    | execution_voting_power_1
     | feudal_obligations
     | feudal_obligations_0
     | feudal_obligations_1
@@ -4058,18 +4052,12 @@ variables:
     | frat_priest_1
     | frat_priest_2
     | frat_priesthood
-    | grant_title_voting_power
-    | grant_title_voting_power_0
-    | grant_title_voting_power_1
     | horde_law
     | horde_law_0
     | imperial_kingdom_creation
     | imperial_kingdom_creation_0
     | imperial_kingdom_creation_1
     | imperial_kingdom_creation_2
-    | imprison_voting_power
-    | imprison_voting_power_0
-    | imprison_voting_power_1
     | infighting_0
     | infighting_1
     | inheritance
@@ -4113,9 +4101,6 @@ variables:
     | revokation_0
     | revokation_1
     | revokation_2
-    | revoke_title_voting_power
-    | revoke_title_voting_power_0
-    | revoke_title_voting_power_1
     | status_of_women
     | status_of_women_0
     | status_of_women_1
@@ -4130,7 +4115,6 @@ variables:
     | succ_feudal_elective
     | succ_gavelkind
     | succ_hre_elective
-    | succ_mirath
     | succ_nomad_succession
     | succ_offmap_succession
     | succ_open_elective
@@ -5693,6 +5677,7 @@ variables:
     | emf_relsub_basic_submission_decision
     | emf_relsub_complete
     | emf_relsub_convert_court
+    | emf_relsub_disinherit_from_religion_group
     | emf_relsub_pretend_to_convert_court
     | emf_relsub_reset_statistics
     | emf_relsub_reset_unrest
@@ -6482,10 +6467,20 @@ variables:
     | dysentery
     | eagle_warrior
     | elusive_shadow
+    | emf_boost_ambition
+    | emf_boost_greed
+    | emf_boost_honor
+    | emf_boost_rationality
+    | emf_boost_zeal
     | emf_cannot_inherit
     | emf_crowned
     | emf_crowned_by_pope
     | emf_customize_ruler
+    | emf_reduce_ambition
+    | emf_reduce_greed
+    | emf_reduce_honor
+    | emf_reduce_rationality
+    | emf_reduce_zeal
     | emf_saint
     | emf_saint_converted
     | emf_saint_converter
@@ -6494,6 +6489,7 @@ variables:
     | emf_saint_true_knight
     | emf_saint_voice_jesus
     | emf_seljuk_invader
+    | emf_temporary
     | envious
     | erudite
     | eunuch

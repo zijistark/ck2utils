@@ -8,6 +8,7 @@ aggression
 ai_creation_factor # buildings
 ai_feudal_modifier # buildings
 ai_republic_modifier # buildings
+amount
 attrition # spawn_unit
 base_health
 chance

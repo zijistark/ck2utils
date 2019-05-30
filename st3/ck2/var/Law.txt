@@ -3,9 +3,6 @@ administration_0            # Feudal Administration
 administration_1            # Late Feudal Administration
 administration_2            # Imperial Administration
 agnatic_succession          # Agnatic
-banish_voting_power         # Banishment
-banish_voting_power_0       # Ruler Banishment Sovereignty
-banish_voting_power_1       # Banishment Committee
 bogomilist_church_0         # No [bogomilist.GetName] Organization
 bogomilist_church_1         # [bogomilist.GetName] Faith Supported
 bogomilist_church_2         # [bogomilist.GetName] Faith Organized
@@ -40,9 +37,6 @@ crown_authority_3           # High Crown Authority
 crown_authority_4           # Absolute Crown Authority
 enatic_cognatic_succession  # Enatic-Cognatic
 enatic_succession           # Enatic
-execution_voting_power      # Execution
-execution_voting_power_0    # Ruler Execution Sovereignty
-execution_voting_power_1    # Execution Committee
 feudal_obligations          # Feudal Obligations
 feudal_obligations_0        # Minimal Feudal Obligations
 feudal_obligations_1        # Low Feudal Obligations
@@ -59,18 +53,12 @@ frat_priest_0               # Monastic Priesthood
 frat_priest_1               # Apostolic Priesthood
 frat_priest_2               # Bureaucratic Priesthood
 frat_priesthood             # [fraticelli.GetName] Priesthood
-grant_title_voting_power    # Grant Titles
-grant_title_voting_power_0  # Ruler Title Grant Sovereignty
-grant_title_voting_power_1  # Title Grant Committee
 horde_law                   # Horde
 horde_law_0                 # Horde Invader
 imperial_kingdom_creation   # De Jure Vassal Kingdom Creation
 imperial_kingdom_creation_0 # Imperial Kingdom Creation Disallowed
 imperial_kingdom_creation_1 # Imperial Kingdom Creation Allowed
 imperial_kingdom_creation_2 # Imperial Kingdom Creation Allowed Only for Emperor
-imprison_voting_power       # Imprisonment
-imprison_voting_power_0     # Ruler Imprisonment Sovereignty
-imprison_voting_power_1     # Imprisonment Committee
 infighting_0                # Court in Chaos
 infighting_1                # Order Restored
 inheritance                 # External Inheritance
@@ -114,9 +102,6 @@ revokation                  # Title Revocation
 revokation_0                # No Title Revocation
 revokation_1                # Title Revocation Allowed
 revokation_2                # Free Infidel Revocation
-revoke_title_voting_power   # Revoke Titles
-revoke_title_voting_power_0 # Ruler Title Revocation Sovereignty
-revoke_title_voting_power_1 # Title Revocation Committee
 status_of_women             # Status of Women
 status_of_women_0           # Traditional Status of Women
 status_of_women_1           # Marginal Status of Women
@@ -131,7 +116,6 @@ succ_elective_gavelkind     # Elective Gavelkind
 succ_feudal_elective        # Elective Monarchy
 succ_gavelkind              # Gavelkind
 succ_hre_elective           # Princely Elective
-succ_mirath                 # Mirath
 succ_nomad_succession       # Nomad Succession
 succ_offmap_succession      # Confucian Bureaucracy
 succ_open_elective          # Elective Republic
