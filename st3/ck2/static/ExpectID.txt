@@ -19,6 +19,7 @@ continent
 convert_to_castle # buildings
 convert_to_city # buildings
 death_reason
+destroy_artifact
 destroy_wonder_upgrade
 disable_council_voting_on_issue
 disband_event_forces

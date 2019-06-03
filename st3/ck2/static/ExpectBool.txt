@@ -51,6 +51,7 @@ can_grant_kingdoms_and_empires_to_other_government # gov
 can_grant_kingdoms_and_empires_to_other_government_group # gov
 can_have_antipopes # rel
 can_have_more_leadership_traits
+can_hold_titles # traits
 can_imprison_without_reason # gov
 can_inherit # trait
 can_join_existing

@@ -154,6 +154,8 @@ emf_boost_greed                # Boost AI Greed
 emf_boost_honor                # Boost AI Honor
 emf_boost_rationality          # Boost AI Rationality
 emf_boost_zeal                 # Boost AI Zeal
+emf_cadet_dynasty_founder
+emf_cadet_immortal
 emf_cannot_inherit             # Cannot Inherit
 emf_crowned                    # Crowned
 emf_crowned_by_pope            # Crowned By The Pope

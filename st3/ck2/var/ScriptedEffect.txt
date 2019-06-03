@@ -18,6 +18,7 @@ emf_altstart_convert_tribal_or_nomadic_to_feudal
 emf_ask_for_potential_knights_hospitaler_cb_title
 emf_become_heretic
 emf_become_sterile
+emf_boost_cadet_wellness
 emf_calc_realm_province_religion_breakdown_of_THIS_for_ROOT
 emf_calculate_tournament_score
 emf_catholic_conversion
@@ -73,11 +74,14 @@ emf_clear_tournament_opinions
 emf_copy_title_state_from_PREV
 emf_council_gain
 emf_council_lose
+emf_count_dynasty_members
+emf_count_this_dynasty_member
 emf_create_courtiers
 emf_create_dj_empire_basic
 emf_create_mongol_dynasty
 emf_create_switzerland                                                 # Create the Swiss Confederation
 emf_customize_spawned_religious_revolt_leader
+emf_debug_log_title_info
 emf_debug_spawn_troops                                                 # DEV: Spawn Army
 emf_decadence_become_decadent
 emf_demote_education_trait
@@ -96,6 +100,9 @@ emf_dna_clear_flags_for_perc
 emf_dna_clear_flags_for_str
 emf_dna_clear_flags_for_stutter
 emf_dna_clear_flags_for_wrymouth
+emf_dna_remove_negative_mendelian_traits
+emf_dna_reset_flags_positively
+emf_dna_reverse_homozygous_recessive
 emf_dna_set_flags_for_absentminded
 emf_dna_set_flags_for_bright
 emf_dna_set_flags_for_burly
@@ -199,6 +206,8 @@ emf_laws_succ_turkish_succession_reactions
 emf_laws_succ_ultimogeniture_reactions
 emf_laws_true_cognatic_succession_reactions
 emf_liege_change
+emf_log_cadet_info
+emf_log_potential_title_for_cadet_dynasty_name
 emf_log_siege_completion_destroys_building
 emf_log_siege_destroys_building
 emf_make_ROOT_preferred_holding_county_capital
@@ -248,11 +257,17 @@ emf_remove_all_traits
 emf_remove_childhood_traits
 emf_remove_decay_modifier
 emf_remove_education_traits
+emf_remove_epidemic_traits
+emf_remove_illness_traits
+emf_remove_incapacitating_traits
+emf_remove_leader_traits
 emf_remove_leadership_traits
 emf_remove_lifestyle_traits
+emf_remove_personality_traits
 emf_remove_plot_assisted_spying
 emf_remove_suzerain_under_FROM
 emf_remove_suzerain_under_ROOT
+emf_remove_symptom_traits
 emf_return_home
 emf_revolt_clear_religion_title_flags
 emf_revolt_clear_source_province_targets
@@ -275,6 +290,8 @@ emf_revolt_spawn_unit_LI10_LC4_A6_scale100
 emf_revolt_spawn_unit_LI12_LC2_A6_scale100
 emf_revolt_spawn_unit_LI14_A6_scale100
 emf_see_god
+emf_select_cadet_dynasty_name
+emf_select_title_for_cadet_dynasty_name
 emf_seljuk_adventure_cb_cleanup
 emf_seljuk_become_invader
 emf_seljuk_cleanup_potential_invader
@@ -332,6 +349,7 @@ emf_transfer_weakened_claims_from_PREV
 emf_transfer_weakened_claims_from_PREV_visible
 emf_travel_to_ruler
 emf_tribal_settlement_spawn_unit
+emf_try_to_select_cadet_dynasty_name
 emf_unsafe_destroy_title
 emf_usurp_revolter_titles
 emf_vanish_character
