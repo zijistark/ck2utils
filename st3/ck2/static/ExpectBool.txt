@@ -124,6 +124,7 @@ has_any_building
 has_any_quest
 has_autocephaly
 has_called_crusade
+has_children
 has_coa_on_barony_only # rel
 has_concubinage
 has_dejure_empires

@@ -131,6 +131,7 @@ variables:
     | religious_head
     | rivals
     | society(?:_including_me)?
+    | close_relatives
     | all(?:_including_me)?
     | none
     | vassal_wars
@@ -872,6 +873,7 @@ variables:
     | has_any_quest
     | has_autocephaly
     | has_called_crusade
+    | has_children
     | has_coa_on_barony_only
     | has_concubinage
     | has_dejure_empires
