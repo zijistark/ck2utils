@@ -127,6 +127,7 @@ is_grandparent_of
 is_guardian
 is_heresy_of
 is_holy_site
+is_important_character_to
 is_in_same_unit_as
 is_landed_title_allowed
 is_liege_of

@@ -132,6 +132,7 @@ has_disease
 has_empty_holding
 has_epidemic
 has_fort
+has_full_court
 has_game_started
 has_guardian
 has_heir_designation
