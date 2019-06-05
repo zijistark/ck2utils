@@ -202,6 +202,7 @@ emf_is_uncrowned
 emf_is_valid_karling_usurper
 emf_is_vassal_of_hre
 emf_is_voter
+emf_isolated_character
 emf_knights_hospitaler_has_an_island
 emf_laws_allow_switch_away_from_hre_elective
 emf_laws_change_succ_affected_vassal
