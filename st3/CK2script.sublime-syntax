@@ -671,6 +671,7 @@ variables:
     | preferred_holdings
     | prompt_name
     | random
+    | random_events
     | random_list
     | realm_levy_diff
     | relative_power
@@ -956,6 +957,7 @@ variables:
     | is_conquered
     | is_consort
     | is_contested
+    | is_council_content
     | is_councillor
     | is_crusade
     | is_crusade_target
@@ -2087,6 +2089,7 @@ variables:
     | overlord_of
     | owes_favor_to
     | owner
+    | owns
     | parent
     | pays_tribute_to
     | player
@@ -2230,7 +2233,8 @@ variables:
     )
   vExpectYes: |-
     (?xi:
-      abdicate
+      abandon_heresy
+    | abdicate
     | activate_plot
     | add_random_education_trait
     | ambition_succeeds
@@ -5751,6 +5755,8 @@ variables:
     | emf_seljuk_target_initial_invasion
     | emf_set_bloodline_founder_religion_flag
     | emf_set_eastern_marches_capital
+    | emf_set_gender_female
+    | emf_set_gender_male
     | emf_set_viceroy_exemption
     | emf_spawn_byz
     | emf_spawn_hre_elector_title
@@ -5949,6 +5955,9 @@ variables:
     | emf_can_ruler_convert_to_sicilian
     | emf_can_ruler_convert_to_sicilian_arabic
     | emf_can_safely_autodestroy_title
+    | emf_cannot_inherit
+    | emf_cannot_inherit_if_not_bastard
+    | emf_cannot_inherit_if_not_bishop_nominee
     | emf_cb_can_press_claim
     | emf_cb_can_use
     | emf_cb_can_use_de_jure_title
@@ -5999,6 +6008,7 @@ variables:
     | emf_currently_at_war
     | emf_divine_blood_religion
     | emf_dj_empire_creation_basic
+    | emf_dna_is_subject_to_startup_randomization
     | emf_duchy_target
     | emf_empires_aed_valid_title
     | emf_faction_basic_allow_join
@@ -6063,6 +6073,7 @@ variables:
     | emf_is_bishop_nominee
     | emf_is_cadet_disqualified
     | emf_is_crowned
+    | emf_is_disinherited_from_blinding
     | emf_is_english_liege_source_culture
     | emf_is_english_melt_active
     | emf_is_english_melt_protection_active
@@ -6084,6 +6095,9 @@ variables:
     | emf_is_neapolitan_melt_province
     | emf_is_neapolitan_source_culture
     | emf_is_neapolitan_source_province
+    | emf_is_not_bishop_nominee
+    | emf_is_not_disinherited_from_blinding
+    | emf_is_not_voter
     | emf_is_powys_max_dejure_potential
     | emf_is_preferred_gender_for_laws_of_PREV
     | emf_is_province_protected_by_english_melt
@@ -6148,6 +6162,7 @@ variables:
     | emf_not_bad_candidate
     | emf_not_close_to_adventurer
     | emf_not_has_swmh
+    | emf_not_isolated_character
     | emf_not_unreformed_pagan
     | emf_polytheist_religion
     | emf_province_is_desert_culture

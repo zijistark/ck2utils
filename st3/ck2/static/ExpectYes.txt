@@ -1,3 +1,4 @@
+abandon_heresy
 abdicate
 activate_plot
 add_random_education_trait

@@ -37,6 +37,9 @@ emf_can_ruler_convert_to_neapolitan
 emf_can_ruler_convert_to_sicilian
 emf_can_ruler_convert_to_sicilian_arabic
 emf_can_safely_autodestroy_title
+emf_cannot_inherit                                      # Cannot Inherit
+emf_cannot_inherit_if_not_bastard
+emf_cannot_inherit_if_not_bishop_nominee
 emf_cb_can_press_claim
 emf_cb_can_use
 emf_cb_can_use_de_jure_title
@@ -87,6 +90,7 @@ emf_create_switzerland_basic_potential
 emf_currently_at_war
 emf_divine_blood_religion
 emf_dj_empire_creation_basic
+emf_dna_is_subject_to_startup_randomization
 emf_duchy_target
 emf_empires_aed_valid_title
 emf_faction_basic_allow_join
@@ -151,6 +155,7 @@ emf_imperial_valid_viceroy
 emf_is_bishop_nominee
 emf_is_cadet_disqualified
 emf_is_crowned
+emf_is_disinherited_from_blinding
 emf_is_english_liege_source_culture
 emf_is_english_melt_active
 emf_is_english_melt_protection_active
@@ -172,6 +177,9 @@ emf_is_neapolitan_melt_protection_active
 emf_is_neapolitan_melt_province
 emf_is_neapolitan_source_culture
 emf_is_neapolitan_source_province
+emf_is_not_bishop_nominee
+emf_is_not_disinherited_from_blinding
+emf_is_not_voter
 emf_is_powys_max_dejure_potential
 emf_is_preferred_gender_for_laws_of_PREV
 emf_is_province_protected_by_english_melt
@@ -236,6 +244,7 @@ emf_nomadic_province
 emf_not_bad_candidate
 emf_not_close_to_adventurer
 emf_not_has_swmh
+emf_not_isolated_character
 emf_not_unreformed_pagan
 emf_polytheist_religion
 emf_province_is_desert_culture

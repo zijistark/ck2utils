@@ -168,6 +168,7 @@ occupy_minors_of_occupied_settlements
 overlord_of
 owes_favor_to
 owner # spawn_unit param
+owns
 parent
 pays_tribute_to
 player

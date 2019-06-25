@@ -306,6 +306,8 @@ emf_seljuk_spawn_retinue_unit
 emf_seljuk_target_initial_invasion
 emf_set_bloodline_founder_religion_flag
 emf_set_eastern_marches_capital
+emf_set_gender_female
+emf_set_gender_male
 emf_set_viceroy_exemption
 emf_spawn_byz
 emf_spawn_hre_elector_title

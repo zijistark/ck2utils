@@ -207,6 +207,7 @@ is_capital
 is_conquered
 is_consort
 is_contested
+is_council_content
 is_councillor
 is_crusade
 is_crusade_target

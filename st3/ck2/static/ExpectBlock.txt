@@ -19,7 +19,7 @@ artifact_owner
 attribute_diff
 attributes # create_character param
 build_holding
-builds_with_prestige
+builds_with_prestige # bldg
 buttons
 can_naval_path_to
 can_use_cb
@@ -121,6 +121,7 @@ powers # society
 preferred_holdings
 prompt_name
 random
+random_events # on_actions
 random_list
 realm_levy_diff
 relative_power
