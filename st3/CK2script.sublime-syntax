@@ -631,6 +631,7 @@ variables:
     | has_alternate_start_setting
     | has_elector_stance
     | has_game_rule
+    | has_offmap_currency
     | has_opinion_modifier
     | has_trait
     | heavy_troops
@@ -674,6 +675,7 @@ variables:
     | random_events
     | random_list
     | realm_levy_diff
+    | regional_percentage
     | relative_power
     | relative_power_including_allies_attacker
     | relative_power_including_allies_defender
@@ -4223,6 +4225,10 @@ variables:
     | title_food_taster
     | title_fraticelli_cardinal
     | title_genghis
+    | title_great_councillor_1
+    | title_great_councillor_2
+    | title_great_councillor_3
+    | title_great_councillor_4
     | title_guardian_of_knowledge
     | title_guardian_of_the_deep
     | title_guru
@@ -5599,6 +5605,7 @@ variables:
     | emf_find_adventurer_origin
     | emf_find_adventurer_target
     | emf_find_adventurer_target_title
+    | emf_find_dynasty_founder
     | emf_find_friendly_court
     | emf_find_tournament_opponent_for_ROOT
     | emf_finish_eastern_marches_creation
@@ -5924,7 +5931,7 @@ variables:
     | best_de_jure_liege_title_under_target_ruler
     | does_HF_bug_still_execute_law_effects_on_title_creation
     | emf_ROOT_completely_controls_counties
-    | emf_accepts_shieldmaiden_trigger
+    | emf_accepts_shieldmaidens
     | emf_adventurer_can_approach
     | emf_adventurer_can_approach_vassal
     | emf_alternate_start
@@ -5948,7 +5955,6 @@ variables:
     | emf_can_inherit_if_not_bastard_or_bishop_nominee
     | emf_can_inherit_if_not_bishop_nominee
     | emf_can_province_join_religious_revolt
-    | emf_can_religion_excommunicate
     | emf_can_restore_hre_someday
     | emf_can_ruler_convert_to_english
     | emf_can_ruler_convert_to_neapolitan
@@ -6009,6 +6015,7 @@ variables:
     | emf_divine_blood_religion
     | emf_dj_empire_creation_basic
     | emf_dna_is_subject_to_startup_randomization
+    | emf_does_not_accept_shieldmaidens
     | emf_duchy_target
     | emf_empires_aed_valid_title
     | emf_faction_basic_allow_join
@@ -6072,6 +6079,13 @@ variables:
     | emf_imperial_valid_viceroy
     | emf_is_bishop_nominee
     | emf_is_cadet_disqualified
+    | emf_is_cadet_dynasty_of_LIEGE
+    | emf_is_cadet_dynasty_of_PREV
+    | emf_is_cadet_dynasty_of_ROOT
+    | emf_is_cadet_dynasty_of_ROOT_FROM
+    | emf_is_cadet_dynasty_of_ROOT_FROMFROM
+    | emf_is_cadet_dynasty_of_ROOT_FROMFROMFROM
+    | emf_is_cadet_dynasty_of_ROOT_FROMFROMFROMFROM
     | emf_is_crowned
     | emf_is_disinherited_from_blinding
     | emf_is_english_liege_source_culture
@@ -6097,7 +6111,15 @@ variables:
     | emf_is_neapolitan_source_province
     | emf_is_not_bishop_nominee
     | emf_is_not_disinherited_from_blinding
+    | emf_is_not_preferred_gender_for_laws_of_PREV
     | emf_is_not_voter
+    | emf_is_parent_dynasty_of_LIEGE
+    | emf_is_parent_dynasty_of_PREV
+    | emf_is_parent_dynasty_of_ROOT
+    | emf_is_parent_dynasty_of_ROOT_FROM
+    | emf_is_parent_dynasty_of_ROOT_FROMFROM
+    | emf_is_parent_dynasty_of_ROOT_FROMFROMFROM
+    | emf_is_parent_dynasty_of_ROOT_FROMFROMFROMFROM
     | emf_is_powys_max_dejure_potential
     | emf_is_preferred_gender_for_laws_of_PREV
     | emf_is_province_protected_by_english_melt
@@ -6147,6 +6169,7 @@ variables:
     | emf_laws_holder_has_late_adminstration_plus
     | emf_laws_infidel_revocation
     | emf_laws_is_exempt_from_TO_penalties
+    | emf_laws_is_title_subject_to_default_CA_reduction
     | emf_laws_no_crown_law_title
     | emf_laws_penalty
     | emf_laws_potential_not_for_byzantium
@@ -6159,18 +6182,32 @@ variables:
     | emf_mongol_invasion_valid_target_province
     | emf_needs_coronation
     | emf_nomadic_province
+    | emf_not_alternate_start
+    | emf_not_antifeminist_religion
     | emf_not_bad_candidate
     | emf_not_close_to_adventurer
+    | emf_not_divine_blood_religion
+    | emf_not_feminist_religion
+    | emf_not_gender_equal_religion
     | emf_not_has_swmh
     | emf_not_isolated_character
+    | emf_not_polytheist_religion
+    | emf_not_same_basic_religion_as_PREV
+    | emf_not_same_basic_religion_as_ROOT
+    | emf_not_shattered_world
     | emf_not_unreformed_pagan
+    | emf_not_western_christian_religion
     | emf_polytheist_religion
     | emf_province_is_desert_culture
     | emf_province_is_steppe_culture
     | emf_province_same_region_as_home
     | emf_province_same_sea_zone_as_ROOT
     | emf_province_same_sea_zone_as_home
-    | emf_religion_head_divorce
+    | emf_religion_can_excommunicate
+    | emf_religion_cannot_excommunicate
+    | emf_religion_head_can_divorce
+    | emf_religion_head_cannot_divorce
+    | emf_religion_safe_for_player_if_not_nomad
     | emf_religion_same_as_bloodline_founder
     | emf_religion_unsafe_for_player_if_not_nomad
     | emf_relsub_can_submit

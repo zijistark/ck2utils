@@ -150,6 +150,7 @@ emf_find_adventurer_location
 emf_find_adventurer_origin
 emf_find_adventurer_target
 emf_find_adventurer_target_title
+emf_find_dynasty_founder
 emf_find_friendly_court
 emf_find_tournament_opponent_for_ROOT
 emf_finish_eastern_marches_creation

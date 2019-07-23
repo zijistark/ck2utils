@@ -81,6 +81,7 @@ has_alternate_start_parameter
 has_alternate_start_setting
 has_elector_stance
 has_game_rule
+has_offmap_currency
 has_opinion_modifier
 has_trait # society
 heavy_troops
@@ -124,6 +125,7 @@ random
 random_events # on_actions
 random_list
 realm_levy_diff
+regional_percentage
 relative_power
 relative_power_including_allies_attacker
 relative_power_including_allies_defender
