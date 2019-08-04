@@ -12,8 +12,8 @@ my $WIDTH = 120;
 
 # these turn on extra filters for ignoring certain file patterns for certain error/warning types, but they're not required:
 my $EMF_V = 0;
-my $EMF_S = 1;
-my $SWMH = 0;
+my $EMF_S = 0;
+my $SWMH = 1;
 croak "only one of \$EMF_V, \$EMF_S, and \$SWMH may be enabled" if ($EMF_V && $EMF_S || $EMF_V && $SWMH || $EMF_S && $SWMH);
 
 my $log_leaf = (@ARGV) ? shift @ARGV : 'error.log';

@@ -3533,6 +3533,7 @@ variables:
     | emf_faction_overthrow_TO
     | emf_faction_overthrow_obligations
     | emf_faction_succ_byzantine_elective
+    | emf_faction_succ_dynastic_elective
     | emf_faction_succ_eldership
     | emf_faction_succ_elective_gavelkind
     | emf_faction_succ_feudal_elective
@@ -4122,6 +4123,7 @@ variables:
     | succ_appointment
     | succ_byzantine_elective
     | succ_catholic_bishopric
+    | succ_dynastic_elective
     | succ_eldership
     | succ_elective_gavelkind
     | succ_feudal_elective

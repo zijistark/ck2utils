@@ -111,6 +111,7 @@ status_of_women_4           # Full Status of Women
 succ_appointment            # Appointment
 succ_byzantine_elective     # Imperial Elective
 succ_catholic_bishopric     # Bishopric
+succ_dynastic_elective      # Dynastic Elective
 succ_eldership              # Eldership
 succ_elective_gavelkind     # Elective Gavelkind
 succ_feudal_elective        # Elective Monarchy
