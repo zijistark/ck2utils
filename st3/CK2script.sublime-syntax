@@ -3960,6 +3960,7 @@ variables:
     | merchant_republic_government
     | muslim_government
     | muslim_imperial_government
+    | muslim_merchant_republic_government
     | nomadic_government
     | order_government
     | republic_government
@@ -5666,6 +5667,8 @@ variables:
     | emf_laws_true_cognatic_succession_reactions
     | emf_liege_change
     | emf_log_cadet_info
+    | emf_log_hre_elector_title
+    | emf_log_hre_elector_titles
     | emf_log_potential_title_for_cadet_dynasty_name
     | emf_log_siege_completion_destroys_building
     | emf_log_siege_destroys_building
@@ -5727,6 +5730,7 @@ variables:
     | emf_remove_suzerain_under_FROM
     | emf_remove_suzerain_under_ROOT
     | emf_remove_symptom_traits
+    | emf_replace_invalid_prince_elector_title
     | emf_return_home
     | emf_revolt_clear_religion_title_flags
     | emf_revolt_clear_source_province_targets
@@ -5798,6 +5802,7 @@ variables:
     | emf_stop_hiding
     | emf_switch_to_feudal_gov
     | emf_switch_to_imperial
+    | emf_switch_to_merchant_republic_gov
     | emf_teardown_crusade_adventurer
     | emf_teardown_karling_usurper
     | emf_transfer_claims_from_PREV
@@ -5981,6 +5986,7 @@ variables:
     | emf_cb_dejure_kingdom_claim_basic_can_use_title
     | emf_cb_faction_can_use
     | emf_cb_faction_is_valid
+    | emf_cb_is_defending_against_major_revolt
     | emf_cb_is_title_in_sahara
     | emf_cb_is_valid_religious
     | emf_cb_is_war_legal
@@ -6075,6 +6081,8 @@ variables:
     | emf_hostile_religion_to_PREV
     | emf_hostile_religion_to_ROOT
     | emf_hostile_religion_to_target_ruler
+    | emf_hre_has_at_least_3_theocracy_electors
+    | emf_hre_has_free_prince_elector_slot
     | emf_hre_has_holder
     | emf_il_khanate_province
     | emf_imperial_close_viceroy
@@ -6125,6 +6133,7 @@ variables:
     | emf_is_parent_dynasty_of_ROOT_FROMFROMFROMFROM
     | emf_is_powys_max_dejure_potential
     | emf_is_preferred_gender_for_laws_of_PREV
+    | emf_is_prince_elector
     | emf_is_province_protected_by_english_melt
     | emf_is_province_protected_by_neapolitan_melt
     | emf_is_province_protected_by_sicilian_arabic_melt
@@ -6151,6 +6160,7 @@ variables:
     | emf_is_title_type_special
     | emf_is_uncrowned
     | emf_is_valid_karling_usurper
+    | emf_is_valid_prince_elector_title
     | emf_is_vassal_of_hre
     | emf_is_voter
     | emf_isolated_character
@@ -6169,7 +6179,7 @@ variables:
     | emf_laws_has_medium_TO_plus
     | emf_laws_has_medium_ca_plus
     | emf_laws_has_no_TO
-    | emf_laws_holder_has_late_adminstration_plus
+    | emf_laws_holder_has_late_administration_plus
     | emf_laws_infidel_revocation
     | emf_laws_is_exempt_from_TO_penalties
     | emf_laws_is_title_subject_to_default_CA_reduction

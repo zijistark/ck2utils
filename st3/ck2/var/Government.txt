@@ -1,15 +1,16 @@
-bogomilist_government          # Patareni
-bogomilist_imperial_government # Patareni Imperial
-chinese_imperial_government    # Chinese Imperial
-confucian_bureaucracy          # Confucian Bureaucracy
-feudal_government              # Feudal
-imperial_government            # Imperial
-merchant_republic_government   # Merchant Republic
-muslim_government              # Iqta
-muslim_imperial_government     # al-Mulk
-nomadic_government             # Nomadic
-order_government               # Holy Order
-republic_government            # Republic
-theocracy_government           # Theocracy
-theocratic_feudal_government   # Monastic Feudal
-tribal_government              # Tribal
+bogomilist_government               # Patareni
+bogomilist_imperial_government      # Patareni Imperial
+chinese_imperial_government         # Chinese Imperial
+confucian_bureaucracy               # Confucian Bureaucracy
+feudal_government                   # Feudal
+imperial_government                 # Imperial
+merchant_republic_government        # Merchant Republic
+muslim_government                   # Iqta
+muslim_imperial_government          # al-Mulk
+muslim_merchant_republic_government # Muslim Merchant Republic
+nomadic_government                  # Nomadic
+order_government                    # Holy Order
+republic_government                 # Republic
+theocracy_government                # Theocracy
+theocratic_feudal_government        # Monastic Feudal
+tribal_government                   # Tribal
