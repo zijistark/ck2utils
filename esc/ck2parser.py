@@ -54,6 +54,7 @@ def get_cultures(parser, groups=True):
             culture_groups.append(n.val)
             cultures.extend(n2.val for n2, v2 in v
                             if n2.val not in ['graphical_cultures',
+                                              'unit_graphical_cultures',
                                               'alternate_start'])
     return (cultures, culture_groups) if groups else cultures
 
@@ -748,9 +749,10 @@ class SimpleParser:
         self.setup_parser()
 
     def __del__(self):
-        print('{}: {} hits, {} misses'.format(
-              self.__class__.__name__, self.cache_hits, self.cache_misses),
-              file=sys.stderr)
+        if not self.ignore_cache:
+            print('{}: {} hits, {} misses'.format(
+                  self.__class__.__name__, self.cache_hits, self.cache_misses),
+                  file=sys.stderr)
 
     def setup_parser(self):
         unarg = lambda f: lambda x: f(*x)
