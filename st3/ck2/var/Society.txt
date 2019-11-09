@@ -1,3 +1,4 @@
+followers_of_ahuiateteo           # [GetFollowersAhuiateteoSocietyName]
 hermetics                         # the Hermetic Society
 monastic_order_benedictine        # [GetBenedictineSocietyName]
 monastic_order_buddhist           # [GetSavakaSanghaSocietyName]
@@ -17,6 +18,7 @@ the_plaguebringers                # [GetPlaguebringersSocietyName]
 the_satanists                     # [GetLucifersOwnSocietyName]
 the_trollcrafters                 # [GetHelSocietyName]
 the_vodouns                       # The Soul Eaters
+warrior_lodge_aztec               # [GetAztecWarriorSocietyName]
 warrior_lodge_baltic              # [GetBalticWarriorSocietyName]
 warrior_lodge_bon                 # [GetBonWarriorSocietyName]
 warrior_lodge_finnish             # [GetFinnishWarriorSocietyName]

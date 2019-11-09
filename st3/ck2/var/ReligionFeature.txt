@@ -1,40 +1,45 @@
-religion_adventuring          # Daring
-religion_animistic            # Animistic
-religion_astrology            # Astrology
-religion_autocephaly          # Autocephalous
-religion_beatification        # Ancestor Veneration
-religion_cosmopolitan         # Cosmopolitan
-religion_defensive            # Unyielding
-religion_dogmatic             # Dogmatic
-religion_equal                # Equality
-religion_feature_aztec        # Invaders
-religion_feature_baltic       # Defenders of Dievas
-religion_feature_bon          # Harmonious
-religion_feature_finnish      # Survivors of Ukko
-religion_feature_hellenic     # Civilized
-religion_feature_norse        # Sons of Ragnarok
-religion_feature_pyramids     # Pyramid Creation
-religion_feature_slavic       # Children of Perun
-religion_feature_tengri       # Eternal Riders
-religion_feature_west_african # Totem-Guardians
-religion_feature_zun          # Dawnbreakers
-religion_harems               # Polygamy
-religion_haruspicy            # Haruspicy
-religion_holy_family          # Divine Marriage
-religion_jizya                # Religious Tax
-religion_leader_unchanged     # Unchanged
-religion_matriarchal          # Enatic Clans
-religion_meritocratic         # Meritocracy
-religion_monastic             # Monasticism
-religion_no_leader            # Autonomous
-religion_patriarchal          # Agnatic Clans
-religion_peaceful             # Peaceful
-religion_proselytizing        # Proselytizing
-religion_relentless           # Unrelenting
-religion_ritual_sacrifice     # Bloodthirsty Gods
-religion_seafaring            # Sea-bound
-religion_stable               # Stability
-religion_syncretic            # Syncretism
-religion_temporal_head        # Temporal
-religion_theocratic_head      # Hierocratic
-religion_warlike              # Warmongering
+religion_adventuring           # Daring
+religion_animistic             # Animistic
+religion_astrology             # Astrology
+religion_autocephaly           # Autocephalous
+religion_beatification         # Ancestor Veneration
+religion_commercial            # Mercantile
+religion_cosmopolitan          # Cosmopolitan
+religion_defensive             # Unyielding
+religion_dogmatic              # Dogmatic
+religion_equal                 # Equality
+religion_feature_aztec         # Invaders
+religion_feature_baltic        # Defenders of Dievas
+religion_feature_bon           # Harmonious
+religion_feature_finnish       # Survivors of Ukko
+religion_feature_hellenic      # Civilized
+religion_feature_norse         # Sons of Ragnarok
+religion_feature_pyramids      # Pyramid Creation
+religion_feature_slavic        # Children of Perun
+religion_feature_tengri        # Eternal Riders
+religion_feature_west_african  # Totem-Guardians
+religion_feature_zun           # Dawnbreakers
+religion_harems                # Polygamy
+religion_haruspicy             # Haruspicy
+religion_holy_family           # Divine Marriage
+religion_jizya                 # Religious Tax
+religion_leader_unchanged      # Unchanged
+religion_matriarchal           # Enatic Clans
+religion_meritocratic          # Meritocracy
+religion_monastic              # Monasticism
+religion_no_leader             # Autonomous
+religion_patriarchal           # Agnatic Clans
+religion_peaceful              # Peaceful
+religion_proselytizing         # Proselytizing
+religion_relentless            # Unrelenting
+religion_ritual_sacrifice      # Bloodthirsty Gods
+religion_seafaring             # Sea-bound
+religion_stable                # Stability
+religion_syncretic             # Syncretism
+religion_syncretic_christian   # Christian Syncretism
+religion_syncretic_indian      # Eastern Syncretism
+religion_syncretic_muslim      # Muslim Syncretism
+religion_syncretic_zoroastrian # Mazdan Syncretism
+religion_temporal_head         # Temporal
+religion_theocratic_head       # Hierocratic
+religion_warlike               # Warmongering

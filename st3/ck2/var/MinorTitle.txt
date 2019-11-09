@@ -39,10 +39,10 @@ title_eran_ambaragbed               # Eran Ambaragbed
 title_food_taster                   # Food Taster
 title_fraticelli_cardinal           # Cardinal
 title_genghis
-title_great_councillor_1            # Great Councillor
-title_great_councillor_2            # Great Councillor
-title_great_councillor_3            # Great Councillor
-title_great_councillor_4            # Great Councillor
+title_great_councillor_1            # Great Councilor
+title_great_councillor_2            # Great Councilor
+title_great_councillor_3            # Great Councilor
+title_great_councillor_4            # Great Councilor
 title_guardian_of_knowledge         # Guardian of Knowledge
 title_guardian_of_the_deep          # Guardian of the Deep
 title_guru                          # Court Guru

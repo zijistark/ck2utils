@@ -5,6 +5,12 @@ ca_barracks_4                               # Barracks
 ca_barracks_5                               # Barracks
 ca_barracks_6                               # Barracks
 ca_con_wall_6                               # Theodosian Walls
+ca_culture_afghan_0                         # Highland Militia Quarters
+ca_culture_afghan_1                         # Highland Militia Quarters
+ca_culture_afghan_2                         # Highland Militia Quarters
+ca_culture_afghan_3                         # Highland Militia Quarters
+ca_culture_afghan_4                         # Highland Militia Quarters
+ca_culture_afghan_5                         # Highland Militia Quarters
 ca_culture_altaic_jurchen_0                 # [jurchen.GetName] Cavalry Barracks
 ca_culture_altaic_jurchen_1                 # [jurchen.GetName] Cavalry Barracks
 ca_culture_altaic_jurchen_2                 # [jurchen.GetName] Cavalry Barracks
@@ -29,6 +35,12 @@ ca_culture_basque_2                         # Kuartela
 ca_culture_basque_3                         # Kuartela
 ca_culture_basque_4                         # Kuartela
 ca_culture_basque_5                         # Kuartela
+ca_culture_bedouin_0                        # Camel Riding Ground
+ca_culture_bedouin_1                        # Camel Riding Ground
+ca_culture_bedouin_2                        # Camel Riding Ground
+ca_culture_bedouin_3                        # Camel Riding Ground
+ca_culture_bedouin_4                        # Camel Riding Ground
+ca_culture_bedouin_5                        # Camel Riding Ground
 ca_culture_catalan_0                        # Almoghavars Conscription Camp
 ca_culture_catalan_1                        # Almoghavars Conscription Camp
 ca_culture_catalan_2                        # Almoghavars Conscription Camp
@@ -53,6 +65,12 @@ ca_culture_croatia_2                        # Infantry Training Ground
 ca_culture_croatia_3                        # Infantry Training Ground
 ca_culture_croatia_4                        # Infantry Training Ground
 ca_culture_croatia_5                        # Infantry Training Ground
+ca_culture_daylamite_0                      # [daylamite.GetName] Infantry Barracks
+ca_culture_daylamite_1                      # [daylamite.GetName] Infantry Barracks
+ca_culture_daylamite_2                      # [daylamite.GetName] Infantry Barracks
+ca_culture_daylamite_3                      # [daylamite.GetName] Infantry Barracks
+ca_culture_daylamite_4                      # [daylamite.GetName] Infantry Barracks
+ca_culture_daylamite_5                      # [daylamite.GetName] Infantry Barracks
 ca_culture_dutch_0                          # Goedendag Militia Quarters
 ca_culture_dutch_1                          # Goedendag Militia Quarters
 ca_culture_dutch_2                          # Goedendag Militia Quarters
@@ -83,12 +101,12 @@ ca_culture_group_altaic_2                   # Riding Grounds
 ca_culture_group_altaic_3                   # Riding Grounds
 ca_culture_group_altaic_4                   # Riding Grounds
 ca_culture_group_altaic_5                   # Riding Grounds
-ca_culture_group_arabic_0                   # Camel Riding Ground
-ca_culture_group_arabic_1                   # Camel Riding Ground
-ca_culture_group_arabic_2                   # Camel Riding Ground
-ca_culture_group_arabic_3                   # Camel Riding Ground
-ca_culture_group_arabic_4                   # Camel Riding Ground
-ca_culture_group_arabic_5                   # Camel Riding Ground
+ca_culture_group_arabic_0                   # Al-Faris Training Ground
+ca_culture_group_arabic_1                   # Al-Faris Training Ground
+ca_culture_group_arabic_2                   # Al-Faris Training Ground
+ca_culture_group_arabic_3                   # Al-Faris Training Ground
+ca_culture_group_arabic_4                   # Al-Faris Training Ground
+ca_culture_group_arabic_5                   # Al-Faris Training Ground
 ca_culture_group_baltic_0                   # Warrior Gathering Ground
 ca_culture_group_baltic_1                   # Warrior Gathering Ground
 ca_culture_group_baltic_2                   # Warrior Gathering Ground
@@ -107,12 +125,12 @@ ca_culture_group_iberian_2                  # Caballero Training Ground
 ca_culture_group_iberian_3                  # Caballero Training Ground
 ca_culture_group_iberian_4                  # Caballero Training Ground
 ca_culture_group_iberian_5                  # Caballero Training Ground
-ca_culture_group_north_african_0            # Camel Riding Ground
-ca_culture_group_north_african_1            # Camel Riding Ground
-ca_culture_group_north_african_2            # Camel Riding Ground
-ca_culture_group_north_african_3            # Camel Riding Ground
-ca_culture_group_north_african_4            # Camel Riding Ground
-ca_culture_group_north_african_5            # Camel Riding Ground
+ca_culture_group_north_african_0            # Desert Cavalry Training Ground
+ca_culture_group_north_african_1            # Desert Cavalry Training Ground
+ca_culture_group_north_african_2            # Desert Cavalry Training Ground
+ca_culture_group_north_african_3            # Desert Cavalry Training Ground
+ca_culture_group_north_african_4            # Desert Cavalry Training Ground
+ca_culture_group_north_african_5            # Desert Cavalry Training Ground
 ca_culture_group_north_germanic_0           # Housecarl Training Ground
 ca_culture_group_north_germanic_1           # Húskarlar Training Ground
 ca_culture_group_north_germanic_2           # Húskarlar Training Ground
@@ -419,14 +437,6 @@ no_baghatur_council_5                       # Baghatur Council
 no_baghatur_council_6                       # Baghatur Council
 no_baghatur_council_7                       # Baghatur Council
 no_baghatur_council_8                       # Baghatur Council
-no_camel_breeder_1                          # Camel Breeder
-no_camel_breeder_2                          # Camel Breeder
-no_camel_breeder_3                          # Camel Breeder
-no_camel_breeder_4                          # Camel Breeder
-no_camel_breeder_5                          # Camel Breeder
-no_camel_breeder_6                          # Camel Breeder
-no_camel_breeder_7                          # Camel Breeder
-no_camel_breeder_8                          # Camel Breeder
 no_camp_fortifications_1                    # Camp Fortifications
 no_camp_fortifications_2                    # Camp Fortifications
 no_camp_fortifications_3                    # Camp Fortifications
@@ -451,14 +461,6 @@ no_composite_bow_crafter_5                  # Composite Bow
 no_composite_bow_crafter_6                  # Composite Bow
 no_composite_bow_crafter_7                  # Composite Bow
 no_composite_bow_crafter_8                  # Composite Bow
-no_elephant_camp_1                          # Elephant Camp
-no_elephant_camp_2                          # Elephant Camp
-no_elephant_camp_3                          # Elephant Camp
-no_elephant_camp_4                          # Elephant Camp
-no_elephant_camp_5                          # Elephant Camp
-no_elephant_camp_6                          # Elephant Camp
-no_elephant_camp_7                          # Elephant Camp
-no_elephant_camp_8                          # Elephant Camp
 no_felt_crafter_1                           # Felt Crafter
 no_felt_crafter_2                           # Felt Crafter
 no_felt_crafter_3                           # Felt Crafter
@@ -499,14 +501,14 @@ no_harbor_5                                 # Harbor
 no_harbor_6                                 # Harbor
 no_harbor_7                                 # Harbor
 no_harbor_8                                 # Harbor
-no_horse_breeder_1                          # Horse Breeder
-no_horse_breeder_2                          # Horse Breeder
-no_horse_breeder_3                          # Horse Breeder
-no_horse_breeder_4                          # Horse Breeder
-no_horse_breeder_5                          # Horse Breeder
-no_horse_breeder_6                          # Horse Breeder
-no_horse_breeder_7                          # Horse Breeder
-no_horse_breeder_8                          # Horse Breeder
+no_horse_breeder_1                          # War Mount Breeder
+no_horse_breeder_2                          # War Mount Breeder
+no_horse_breeder_3                          # War Mount Breeder
+no_horse_breeder_4                          # War Mount Breeder
+no_horse_breeder_5                          # War Mount Breeder
+no_horse_breeder_6                          # War Mount Breeder
+no_horse_breeder_7                          # War Mount Breeder
+no_horse_breeder_8                          # War Mount Breeder
 no_hunting_parties_1                        # Hunting Parties
 no_hunting_parties_2                        # Hunting Parties
 no_hunting_parties_3                        # Hunting Parties
@@ -607,6 +609,10 @@ tb_arsenal_1                                # Weaponsmith
 tb_arsenal_2                                # Weaponsmith
 tb_arsenal_3                                # Weaponsmith
 tb_arsenal_4                                # Weaponsmith
+tb_culture_afghan_1                         # Highland Militia Quarters
+tb_culture_afghan_2                         # Highland Militia Quarters
+tb_culture_afghan_3                         # Highland Militia Quarters
+tb_culture_afghan_4                         # Highland Militia Quarters
 tb_culture_altaic_jurchen_1                 # [jurchen.GetName] Cavalry Barracks
 tb_culture_altaic_jurchen_2                 # [jurchen.GetName] Cavalry Barracks
 tb_culture_altaic_jurchen_3                 # [jurchen.GetName] Cavalry Barracks
@@ -623,6 +629,10 @@ tb_culture_basque_1                         # Kuartela
 tb_culture_basque_2                         # Kuartela
 tb_culture_basque_3                         # Kuartela
 tb_culture_basque_4                         # Kuartela
+tb_culture_bedouin_1                        # Camel Riding Ground
+tb_culture_bedouin_2                        # Camel Riding Ground
+tb_culture_bedouin_3                        # Camel Riding Ground
+tb_culture_bedouin_4                        # Camel Riding Ground
 tb_culture_catalan_1                        # Almoghavars Conscription Camp
 tb_culture_catalan_2                        # Almoghavars Conscription Camp
 tb_culture_catalan_3                        # Almoghavars Conscription Camp
@@ -639,6 +649,10 @@ tb_culture_croatia_1                        # Infantry Training Ground
 tb_culture_croatia_2                        # Infantry Training Ground
 tb_culture_croatia_3                        # Infantry Training Ground
 tb_culture_croatia_4                        # Infantry Training Ground
+tb_culture_daylamite_1                      # [daylamite.GetName] Infantry Barracks
+tb_culture_daylamite_2                      # [daylamite.GetName] Infantry Barracks
+tb_culture_daylamite_3                      # [daylamite.GetName] Infantry Barracks
+tb_culture_daylamite_4                      # [daylamite.GetName] Infantry Barracks
 tb_culture_dutch_1                          # Goedendag Militia Quarters
 tb_culture_dutch_2                          # Goedendag Militia Quarters
 tb_culture_dutch_3                          # Goedendag Militia Quarters
@@ -659,10 +673,10 @@ tb_culture_group_altaic_1                   # Riding Grounds
 tb_culture_group_altaic_2                   # Riding Grounds
 tb_culture_group_altaic_3                   # Riding Grounds
 tb_culture_group_altaic_4                   # Riding Grounds
-tb_culture_group_arabic_1                   # Camel Riding Ground
-tb_culture_group_arabic_2                   # Camel Riding Ground
-tb_culture_group_arabic_3                   # Camel Riding Ground
-tb_culture_group_arabic_4                   # Camel Riding Ground
+tb_culture_group_arabic_1                   # Al-Faris Training Ground
+tb_culture_group_arabic_2                   # Al-Faris Training Ground
+tb_culture_group_arabic_3                   # Al-Faris Training Ground
+tb_culture_group_arabic_4                   # Al-Faris Training Ground
 tb_culture_group_baltic_1                   # Warrior Gathering Ground
 tb_culture_group_baltic_2                   # Warrior Gathering Ground
 tb_culture_group_baltic_3                   # Warrior Gathering Ground
@@ -675,10 +689,10 @@ tb_culture_group_iberian_1                  # Caballero Training Ground
 tb_culture_group_iberian_2                  # Caballero Training Ground
 tb_culture_group_iberian_3                  # Caballero Training Ground
 tb_culture_group_iberian_4                  # Caballero Training Ground
-tb_culture_group_north_african_1            # Camel Riding Ground
-tb_culture_group_north_african_2            # Camel Riding Ground
-tb_culture_group_north_african_3            # Camel Riding Ground
-tb_culture_group_north_african_4            # Camel Riding Ground
+tb_culture_group_north_african_1            # Desert Cavalry Training Ground
+tb_culture_group_north_african_2            # Desert Cavalry Training Ground
+tb_culture_group_north_african_3            # Desert Cavalry Training Ground
+tb_culture_group_north_african_4            # Desert Cavalry Training Ground
 tb_culture_group_north_germanic_1           # Housecarl Training Ground
 tb_culture_group_north_germanic_2           # Housecarl Training Ground
 tb_culture_group_north_germanic_3           # Housecarl Training Ground
