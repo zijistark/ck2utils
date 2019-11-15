@@ -6,15 +6,24 @@ use strict;
 use warnings;
 use Carp;
 use List::Util qw(max reduce sum);
+use Getopt::Long qw(:config gnu_getopt);
+
 
 my $LOG_DIR = "/cygdrive/c/Users/$ENV{USER}/Documents/Paradox Interactive/Crusader Kings II/logs";
 my $WIDTH = 120;
 
+my $opt_emf = 0;
+my $opt_swmh = 0;
+
+GetOptions(
+	'emf' => \$opt_emf,
+	'swmh' => \$opt_swmh,
+) or croak;
+
 # these turn on extra filters for ignoring certain file patterns for certain error/warning types, but they're not required:
-my $EMF_V = 0;
-my $EMF_S = 0;
-my $SWMH = 1;
-croak "only one of \$EMF_V, \$EMF_S, and \$SWMH may be enabled" if ($EMF_V && $EMF_S || $EMF_V && $SWMH || $EMF_S && $SWMH);
+my $EMF_V = ($opt_emf && !$opt_swmh);
+my $EMF_S = ($opt_emf && $opt_swmh);
+my $SWMH = (!$opt_emf && $opt_swmh);
 
 my $log_leaf = (@ARGV) ? shift @ARGV : 'error.log';
 my $log_file = "$LOG_DIR/$log_leaf";
@@ -25,6 +34,7 @@ my @title_unlanded_char;
 my @title_holder_unborn;
 my @title_redefined;
 my @title_missing_tech_seed;
+my @title_missing_flag;
 my @char_dup_id;
 my @char_bad_birthdeath_dates;
 my @char_invalid_in_title_history;
@@ -61,11 +71,16 @@ my @assert_culture;
 my @assert_culture_group;
 my @assert_title;
 my @assert_undefined_event;
+my @assert_bad_rm_modifier;
+my @assert_bad_add_modifier;
 my @bad_token;
 my @bad_trigger;
 my @bad_effect;
+my @bad_modifier;
 
 my @unrecognized_lines = (); # that weren't filtered due to being uninteresting
+
+my %title_missing_flag = (); # deduplication
 
 my %title_missing_loc_ignore = (
 	'---' => 1
@@ -152,6 +167,11 @@ while (<$f>) {
 		my $fn = $1;
 		next if grep { $fn =~ $_ } @title_redefined_ignored_file;
 		push @title_redefined, [$title, $fn, $2];
+	}
+	elsif (m{Missing flag for ([\w\-]+)$}i) {
+		next if exists $title_missing_flag{$1};
+		$title_missing_flag{$1} = 1;
+		push @title_missing_flag, [$1,];
 	}
 	elsif (m{Invalid character (\d+) in history/titles/([\w\-]+)\.txt$}i) {
 		push @char_invalid_in_title_history, [$1, $2];
@@ -265,6 +285,15 @@ while (<$f>) {
 	elsif (m{Undefined event!, assert: "_pEvent", type: "\w+", location: " file: (.+) line: (\d+)"$}i) {
 		push @assert_undefined_event, [$1, $2];
 	}
+	elsif (m{Unknown modifier type!, assert: "_pModifier", type: "remove_(?:character|province|holding|dynasty)_modifier", location: " file: (.+) line: (\d+)"$}i) {
+		push @assert_bad_rm_modifier, [$1, $2];
+	}
+	elsif (m{Unknown modifier-type '([\w-]+), assert: "_pModifier", type: "add_(?:character|province|holding|dynasty)_modifier", location: " file: (.+) line: (\d+)"$}i) {
+		push @assert_bad_add_modifier, [$1, $2, $3];
+	}
+	elsif (m{Error: "Undefined modifier type! token: (.+), near line: (\d+)" in file: "([^"]+)"$}i) {
+		push @bad_modifier, [$1, $3, $2];
+	}
 	elsif (m{Error: "Unexpected token: (.+), near line: (\d+)" in file: "([^"]+)"$}i) {
 		push @bad_token, [$3, $2, $1];
 	}
@@ -356,6 +385,17 @@ print_data_tables({
 		{
 			title => "Title",
 			left_align => 1,
+		},
+	],
+},
+{
+	title => "title missing flag",
+	data => \@title_missing_flag,
+	suppress_header => 1,
+	severity => 2,
+	cols => [
+		{
+			title => "Title",
 		},
 	],
 },
@@ -811,6 +851,52 @@ print_data_tables({
 	data => \@assert_undefined_event,
 	severity => 1,
 	cols => [
+		{
+			title => "Filename",
+		},
+		{
+			title => "Line",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "attempt to remove undefined modifier",
+	data => \@assert_bad_rm_modifier,
+	cols => [
+		{
+			title => "Filename",
+		},
+		{
+			title => "Line",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "attempt to add undefined modifier",
+	data => \@assert_bad_add_modifier,
+	cols => [
+		{
+			title => "Modifier",
+		},
+		{
+			title => "Filename",
+		},
+		{
+			title => "Line",
+			left_align => 1,
+		},
+	],
+},
+{
+	title => "unknown modifier type",
+	data => \@bad_modifier,
+	severity => 1,
+	cols => [
+		{
+			title => "Modifier Type",
+		},
 		{
 			title => "Filename",
 		},
