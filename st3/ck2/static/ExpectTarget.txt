@@ -125,6 +125,7 @@ is_friend
 is_grandchild_of
 is_grandparent_of
 is_guardian
+is_heir
 is_heresy_of
 is_holy_site
 is_important_character_to
@@ -171,6 +172,7 @@ owner # spawn_unit param
 owns
 parent
 pays_tribute_to
+perspective
 player
 plot_is_known_by
 plotter

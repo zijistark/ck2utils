@@ -60,6 +60,7 @@ hospital_level
 icon
 immortal_age
 immortal_age # title history
+index
 killer
 king_ignore_rate # alt-start param
 king_threshold # alt-start param
@@ -166,6 +167,7 @@ religious_clothing_head # religions
 religious_clothing_priest # religions
 remove_wonder_upgrade_slots
 ruled_years
+set_wonder_stage
 society_rank
 sort_priority # CB
 startup_limit # society

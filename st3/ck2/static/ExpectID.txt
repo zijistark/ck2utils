@@ -10,6 +10,7 @@ army_template # create_title param
 artifact_type
 border
 border # event property
+build_wonder
 clear_flags_with_prefix
 clr_flag
 clr_offmap_tmp_flag

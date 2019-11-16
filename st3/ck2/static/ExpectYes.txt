@@ -35,6 +35,11 @@ destroy_hospital
 destroy_landed_title
 destroy_random_building
 destroy_wonder_upgrade
+detract_society_currency_major_effect
+detract_society_currency_medium_effect
+detract_society_currency_minor_effect
+detract_society_currency_tiny_effect
+detract_society_currency_trival_effect
 disallow_random_traits
 distribute_crusade_target_title
 easter_egg # title history

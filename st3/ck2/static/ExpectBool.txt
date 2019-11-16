@@ -18,17 +18,29 @@ apply_before_generation # alt-start option
 as_if_liege
 assimilate # LT
 attacking_same_religion_piety_loss
+attacted_to_from_trigger
+attacted_to_prev_trigger
+attacted_to_prevprev_trigger
+attacted_to_root_trigger
 autocephaly # rel
 baron_titles_hidden # cul
 barons_need_dynasty # gov
+block_general_event_trigger
 borders_lake
 borders_major_river
 bs_marriage # rel
 cached # trait
 caliphate # LT
+can_be_chancellor_trigger
 can_be_claimed # LT
 can_be_given_away
 can_be_granted_kingdoms_and_empires_by_other_government # gov
+can_be_maimed_trigger
+can_be_marshal_even_if_independent_trigger
+can_be_marshal_trigger
+can_be_spiritual_trigger
+can_be_spymaster_trigger
+can_be_treasurer_trigger
 can_be_usurped # LT
 can_build_castle # gov
 can_build_city # gov
@@ -66,6 +78,12 @@ cannot_marry # trait
 caste_opinions # rel
 castes # rel
 character
+character_disease_trigger
+child_personality_diplomacy_trigger
+child_personality_intrigue_trigger
+child_personality_learning_trigger
+child_personality_martial_trigger
+child_personality_stewardship_trigger
 clan
 consolidate_dukes # alt-start param
 controls_religion
@@ -99,7 +117,11 @@ dynasty_title_names # LT
 exclusive # faction
 excommunicate
 failure
+family_of_root_trigger
 female # create_character
+female_allowed_to_lead_army
+female_can_hold_minor_commander_title_trigger
+female_can_hold_minor_title_trigger
 female_temple_holders # rel
 feminist # rel
 first_count_vassals
@@ -108,8 +130,11 @@ founder_named_dynasties # cul
 free_levies_in_offensive_war # gov
 free_retract_vassalage # gov
 friends # event pre-trigger
+from_attraction_trigger
+from_mutual_attraction_trigger
 from_ruler_dynasty
 full_hostility # CB
+gender_equality_trigger
 generate_dukes # alt-start param
 generate_random_dukes # alt-start param
 generate_random_emperors # alt-start param
@@ -120,17 +145,36 @@ gets_religion_opinion_penalties # gov
 gives_religion_opinion_penalties # gov
 hard_to_convert
 hard_to_convert # rel
+has_any_astrology_trait_trigger
 has_any_building
+has_any_leadership_trait_trigger
+has_any_lifestyle_trait
 has_any_quest
+has_any_sympathy_trait_trigger
+has_attractive_trait_trigger
 has_autocephaly
+has_bad_priest_trait_trigger
+has_benevolent_trait_trigger
 has_called_crusade
 has_children
 has_coa_on_barony_only # rel
 has_concubinage
+has_crusade_trait_trigger
 has_dejure_empires
+has_diplomat_skill_trigger
+has_disability_trigger
 has_disease
+has_disease_trigger
+has_education_diplomacy_trigger
+has_education_intrigue_trigger
+has_education_learning_trigger
+has_education_martial_trigger
+has_education_stewardship_trigger
 has_empty_holding
 has_epidemic
+has_evil_trait_trigger
+has_fair_trait_trigger
+has_fertile_trait_trigger
 has_fort
 has_full_court
 has_game_started
@@ -140,35 +184,68 @@ has_heresies
 has_holder
 has_horde_culture
 has_hospital
+has_impious_trait_trigger
+has_infertile_trait_trigger
 has_inheritance_blocker
+has_injury_trigger
 has_job_action
 has_job_title
 has_job_title # event pre-trigger
 has_known_creation_date
 has_liege_enforced_peace
+has_lifestyle_diplomacy_trigger
+has_lifestyle_intrigue_trigger
+has_lifestyle_learning_trigger
+has_lifestyle_martial_trigger
+has_lifestyle_stewardship_trigger
 has_lover
+has_medium_disability_trigger
+has_mental_disorder_trigger
 has_mercenary_band
+has_minor_disability_trigger
+has_minor_disease_trigger
 has_minor_title
+has_negative_congenital_trigger
 has_nickname
 has_overseas_holdings
 has_owner
 has_pentarchy
+has_pious_trait_trigger
+has_pleasant_personality_trigger
+has_pleasant_trait_trigger
 has_pledged_crusade_defense
 has_pledged_crusade_participation
 has_plot
 has_polygamy
+has_positive_congenital_trigger
+has_prev_education_trigger
 has_quest_target # event pre-trigger
 has_raised_standing_troops
 has_regent
 has_regiments
 has_religion_features
+has_scarred_trait_trigger
 has_secret_religion
 has_settlement_construction
+has_severe_disability_trigger
 has_siege
+has_society_currency_major_trigger
+has_society_currency_medium_trigger
+has_society_currency_minor_trigger
+has_society_currency_tiny_trigger
+has_society_currency_trivial_trigger
+has_symptom_trigger
 has_top_de_jure_capital # LT
 has_trade_post
+has_ugly_trait_trigger
+has_unattractive_trait_trigger
+has_unpleasant_personality_trigger
+has_unpleasant_trait_trigger
 has_unsafe_religion
 has_unsafe_secret_religion
+has_vice_trigger
+has_virtue_trigger
+has_warrior_skill_trigger
 has_wonder
 have_gender_laws # gov
 hidden
@@ -191,6 +268,7 @@ independent # LT
 indestructible # artifacts, society
 indirectly_owned
 inherit
+interesting_face_trigger
 investiture # rel
 is_abroad
 is_active
@@ -198,12 +276,17 @@ is_adult
 is_alive
 is_allowed_to_loot
 is_alternate_start
+is_any_kinslayer_trigger
 is_artifact_equipped
+is_ascetic_trigger
 is_attacker
+is_attractive_trigger
+is_benevolent_trigger
 is_betrothed
 is_bloodline_active
 is_building_wonder_upgrade
 is_capital
+is_christian_monastic_member_trigger
 is_conquered
 is_consort
 is_contested
@@ -211,9 +294,14 @@ is_council_content
 is_councillor
 is_crusade
 is_crusade_target
+is_devil_worshiper_trigger
+is_dharmic_monastic_member_trigger
+is_dumb_trigger
 is_dying
+is_evil_trigger
 is_father_real_father
 is_female
+is_fertile_trigger
 is_feudal
 is_flanking
 is_friendly # event property
@@ -222,23 +310,33 @@ is_heir
 is_heretic
 is_hostile # event property
 is_ill
+is_ill_trigger
 is_immune_to_pruning
+is_impious_trigger
 is_in_society
 is_in_society # event pre-trigger
+is_inaccessible_or_incapable_trigger
+is_inaccessible_trigger
 is_incapable
+is_infertile_trigger
 is_island
 is_land
 is_landed
 is_landless_type_title
+is_learned_trigger
 is_looter # spawn_unit
 is_looting
 is_lowborn
+is_maimed_trigger
 is_marriage_adult
 is_married
 is_married # event pre-trigger
 is_married_matrilineally
 is_merchant_republic
+is_monastic_member_trigger
 is_multiplayer_host_character
+is_murder_quest_target_of_prev_trigger
+is_murder_quest_target_of_root_trigger
 is_name_randomized
 is_nomadic
 is_occupied
@@ -248,6 +346,7 @@ is_or_was_offmap_power_ruler
 is_part_of_plot # event pre-trigger
 is_patrician
 is_patrician # event pre-trigger
+is_pious_trigger
 is_playable
 is_plot_active
 is_powerful_vassal
@@ -278,8 +377,11 @@ is_secret # society
 is_senior_consort_party
 is_shattered_world
 is_sick # event pre-trigger
+is_sick_or_injured_trigger
+is_smart_trigger
 is_society_discovered
 is_society_grandmaster
+is_strong_trigger
 is_sub_unit_leader
 is_theocracy
 is_titular
@@ -288,10 +390,15 @@ is_tribal
 is_tribal_type_title
 is_tributary
 is_triggered_only # event property
+is_unattractive_trigger
+is_unimportant_trigger
 is_unique # MT
 is_vice_royalty
+is_virgin_trigger
 is_virtous # yes, the trigger is misspelled in the API
 is_voter
+is_weak_trigger
+is_widow_or_widower_trigger
 join_crusade_if_bordering_hostile # rel
 land_gap
 landed_inheritance # gov
@@ -303,6 +410,7 @@ location_ruler_title # LT
 lock_crusade_target
 major # event property
 make_reformer_head_of_religion # rel
+male_can_hold_minor_title_trigger
 male_temple_holders # rel
 marriage_ignore_religion # gov
 matrilineal_marriages
@@ -327,11 +435,18 @@ pirate # LT
 playable # religions
 pledge_crusade_defense
 pledge_crusade_participation
+poorly_treated_for_disease_trigger
 port
 portrait_in_command
 portrait_is_patrician
+preferred_gender_based_on_laws_trigger
+prefers_men_trigger
 prefix # cul
 preparing_invasion
+prev_attraction_trigger
+prev_mutual_attraction_trigger
+prevprev_attraction_trigger
+prevprev_mutual_attraction_trigger
 priests_can_inherit # rel
 priests_can_marry # rel
 primary # LT
@@ -347,6 +462,8 @@ rebel
 rebel # create_title
 reinforces # spawn_unit
 rel_head_defense # rel
+relationship_with_root_trigger
+relative_in_law_of_root_trigger
 religion_allows_female_temple_holders
 religion_allows_male_temple_holders
 replace_captain_on_death # create_title
@@ -354,6 +471,8 @@ replace_order # MT
 revoke_allowed # MT
 risks_minor_clan_rising
 rivals # event pre-trigger
+root_attraction_trigger
+root_mutual_attraction_trigger
 same_religion
 sea_gap
 seafarer # cul
@@ -406,9 +525,11 @@ set_uses_decadence
 set_women_can_take_consorts
 set_wonder_damaged
 short_name # LT
+should_evolve_cultures_trigger
 show_as_title # MT
 show_scope_change
 show_value
+sibling_in_law_of_root_trigger
 society_can_rank_up
 society_has_active_progress
 society_has_members
@@ -425,12 +546,17 @@ sub_realm
 technology_can_spread
 temporary
 temporary # create_title
+this_is_diplomatic_culture_trigger
+this_is_sea_raider_trigger
+this_is_spiritual_culture_trigger
+this_is_warrior_culture_trigger
 top_de_jure_capital # LT
 tribe # LT
 use_first_valid # cloc
 use_new_crusade # religions
 used_for_dynasty_names
 used_for_random
+useless_character_trigger
 uses_bride_price
 uses_decadence
 uses_jizya_tax
@@ -440,6 +566,7 @@ uses_prestige_for_law_change
 vassal_government_opinion_penalties
 war
 war # event pre-trigger
+well_treated_for_disease_trigger
 will_liege_enforce_peace
 women_can_take_consorts # religions
 {{vScriptedTrigger}}

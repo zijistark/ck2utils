@@ -7,6 +7,7 @@ all:
 		--exclude=/.*/ \
 		--exclude=/Makefile \
 		--exclude=/*.p{l,y} \
+		--exclude=/Vic2.* \
 		$(SOURCE_DIR)/ $(INSTALL_DIR)/
 
 reverse:

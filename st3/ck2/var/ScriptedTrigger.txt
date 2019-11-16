@@ -5,6 +5,9 @@ best_de_jure_liege_title_under_FROM
 best_de_jure_liege_title_under_ROOT
 best_de_jure_liege_title_under_target_ruler
 does_HF_bug_still_execute_law_effects_on_title_creation
+duelist_with_ranged_skill_is_high_group_trigger
+duelist_with_ranged_skill_is_low_group_trigger
+duelist_with_ranged_skill_is_medium_group_trigger
 emf_FROM_is_syncretized_with_religion
 emf_PREVPREV_is_syncretized_with_religion
 emf_PREV_is_syncretized_with_religion
@@ -25,6 +28,7 @@ emf_amalfi_extra_counties_allow
 emf_ambush_volley_tactic_culture
 emf_animistic_religion
 emf_antifeminist_religion
+emf_archery_culture
 emf_are_karling_usurpers_enabled
 emf_astrology_religion
 emf_attriting_raid_tactic_culture
@@ -57,6 +61,7 @@ emf_can_safely_autodestroy_title
 emf_cannot_inherit                                              # Cannot Inherit
 emf_cannot_inherit_if_not_bastard
 emf_cannot_inherit_if_not_bishop_nominee
+emf_cavalry_culture
 emf_cb_can_press_claim
 emf_cb_can_use
 emf_cb_can_use_de_jure_title
@@ -115,6 +120,7 @@ emf_controls_all_eastern_marches_duchies
 emf_controls_extra_bosnia_duchies
 emf_create_switzerland_basic_allow
 emf_create_switzerland_basic_potential
+emf_crossbow_culture
 emf_crushing_charge_tactic_culture
 emf_crushing_closing_charge_tactic_culture
 emf_currently_at_war
@@ -159,6 +165,7 @@ emf_has_hre_precursor_kingdom
 emf_has_hre_religion
 emf_has_interesting_trait_for_founding_realm
 emf_has_karling_title
+emf_has_marriage_blocker_trait
 emf_has_no_temporary_title
 emf_has_powys_counties_allow
 emf_has_powys_counties_potential
@@ -224,6 +231,7 @@ emf_is_english_source_culture
 emf_is_english_source_province
 emf_is_far_from_alternate_hre
 emf_is_formidable_person
+emf_is_freckles_graphical_culture
 emf_is_good_fit_for_hre
 emf_is_hre
 emf_is_hre_being_restored
@@ -312,6 +320,8 @@ emf_laws_potential_not_for_byzantium
 emf_laws_succ_basic_potential
 emf_likes_adventurer_target
 emf_longbow_volley_tactic_culture
+emf_mameluke_charge_tactic_culture
+emf_mameluke_closing_charge_tactic_culture
 emf_mameluke_raid_tactic_culture
 emf_may_build_temple
 emf_melee_charge_tactic_troop_requirements
@@ -368,6 +378,7 @@ emf_pacifist_true_religion
 emf_pike_assault_tactic_culture
 emf_pike_square_tactic_troop_requirements
 emf_polytheist_religion
+emf_prefers_axe_over_mace
 emf_province_feminist_religion
 emf_province_is_afghan_building_culture
 emf_province_is_altaic_building_culture
@@ -446,10 +457,12 @@ emf_roman_triple_line_tactic_culture
 emf_same_basic_religion_as_PREV
 emf_same_basic_religion_as_ROOT
 emf_schiltron_tactic_culture
+emf_scimitar_culture
 emf_seafaring_religion
 emf_seljuk_can_become_invader
 emf_seljuk_can_become_invader_base
 emf_seljuk_dynasty
+emf_seljuk_dynasty_member_has_enough_kids
 emf_seljuk_invader_is_valid
 emf_seljuk_invasion_mission
 emf_seljuk_invasion_mission_done
@@ -527,8 +540,17 @@ has_random_religion_or_culture_names
 has_random_religions
 has_random_religions_or_cultures
 has_random_title_names
+is_bad_duelist_with_ranged_trigger
 is_de_jure_title
+is_decent_duelist_with_ranged_trigger
+is_fantastic_duelist_with_ranged_trigger
+is_good_duelist_with_ranged_trigger
+is_great_duelist_with_ranged_trigger
+is_ok_duelist_with_ranged_trigger
 is_primary_war_participant
+is_terrible_duelist_with_ranged_trigger
+is_the_best_duelist_with_ranged_trigger
+is_the_worst_duelist_with_ranged_trigger
 is_titular_title
 owner_under_FROM
 owner_under_FROMFROM
