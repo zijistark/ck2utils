@@ -8,9 +8,8 @@ from print_time import print_time
 
 def get_modpath():
     if len(sys.argv) <= 1:
-        # return rootpath / 'SWMH-BETA/SWMH'
         return []
-    return [pathlib.Path(sys.argv[1])]
+    return [pathlib.Path(arg) for arg in sys.argv[1:]]
 
 def output(provinces):
     print(*provinces, sep='\n')
