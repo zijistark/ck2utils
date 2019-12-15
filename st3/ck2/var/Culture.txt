@@ -83,6 +83,7 @@ karluk            # Qarluq
 kasogi            # Adyghe
 khalaj            # Khaláj
 khanty            # Mansi
+khavar            # Qavar
 khazar            # Qasar
 khitan            # Qidun
 khorasani         # Khorásání

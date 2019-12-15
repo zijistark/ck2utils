@@ -2906,18 +2906,24 @@ variables:
     | ca_culture_ligurian_3
     | ca_culture_ligurian_4
     | ca_culture_ligurian_5
+    | ca_culture_mongol_0
+    | ca_culture_mongol_1
+    | ca_culture_mongol_2
+    | ca_culture_mongol_3
+    | ca_culture_mongol_4
+    | ca_culture_mongol_5
     | ca_culture_nahuatl_0
     | ca_culture_nahuatl_1
     | ca_culture_nahuatl_2
     | ca_culture_nahuatl_3
     | ca_culture_nahuatl_4
     | ca_culture_nahuatl_5
-    | ca_culture_pictish_0
-    | ca_culture_pictish_1
-    | ca_culture_pictish_2
-    | ca_culture_pictish_3
-    | ca_culture_pictish_4
-    | ca_culture_pictish_5
+    | ca_culture_persian_0
+    | ca_culture_persian_1
+    | ca_culture_persian_2
+    | ca_culture_persian_3
+    | ca_culture_persian_4
+    | ca_culture_persian_5
     | ca_culture_portuguese_galician_andalusian_0
     | ca_culture_portuguese_galician_andalusian_1
     | ca_culture_portuguese_galician_andalusian_2
@@ -2966,6 +2972,12 @@ variables:
     | ca_culture_tibetan_3
     | ca_culture_tibetan_4
     | ca_culture_tibetan_5
+    | ca_culture_turkish_0
+    | ca_culture_turkish_1
+    | ca_culture_turkish_2
+    | ca_culture_turkish_3
+    | ca_culture_turkish_4
+    | ca_culture_turkish_5
     | ca_culture_venetian_0
     | ca_culture_venetian_1
     | ca_culture_venetian_2
@@ -3148,22 +3160,6 @@ variables:
     | mercenary_garrison_1
     | mercenary_garrison_2
     | mercenary_garrison_3
-    | no_airag_producer_1
-    | no_airag_producer_2
-    | no_airag_producer_3
-    | no_airag_producer_4
-    | no_airag_producer_5
-    | no_airag_producer_6
-    | no_airag_producer_7
-    | no_airag_producer_8
-    | no_baghatur_council_1
-    | no_baghatur_council_2
-    | no_baghatur_council_3
-    | no_baghatur_council_4
-    | no_baghatur_council_5
-    | no_baghatur_council_6
-    | no_baghatur_council_7
-    | no_baghatur_council_8
     | no_camp_fortifications_1
     | no_camp_fortifications_2
     | no_camp_fortifications_3
@@ -3172,38 +3168,6 @@ variables:
     | no_camp_fortifications_6
     | no_camp_fortifications_7
     | no_camp_fortifications_8
-    | no_cattle_pens_1
-    | no_cattle_pens_2
-    | no_cattle_pens_3
-    | no_cattle_pens_4
-    | no_cattle_pens_5
-    | no_cattle_pens_6
-    | no_cattle_pens_7
-    | no_cattle_pens_8
-    | no_composite_bow_crafter_1
-    | no_composite_bow_crafter_2
-    | no_composite_bow_crafter_3
-    | no_composite_bow_crafter_4
-    | no_composite_bow_crafter_5
-    | no_composite_bow_crafter_6
-    | no_composite_bow_crafter_7
-    | no_composite_bow_crafter_8
-    | no_felt_crafter_1
-    | no_felt_crafter_2
-    | no_felt_crafter_3
-    | no_felt_crafter_4
-    | no_felt_crafter_5
-    | no_felt_crafter_6
-    | no_felt_crafter_7
-    | no_felt_crafter_8
-    | no_fishing_village_1
-    | no_fishing_village_2
-    | no_fishing_village_3
-    | no_fishing_village_4
-    | no_fishing_village_5
-    | no_fishing_village_6
-    | no_fishing_village_7
-    | no_fishing_village_8
     | no_gathering_hall_1
     | no_gathering_hall_2
     | no_gathering_hall_3
@@ -3212,14 +3176,6 @@ variables:
     | no_gathering_hall_6
     | no_gathering_hall_7
     | no_gathering_hall_8
-    | no_ger_crafter_1
-    | no_ger_crafter_2
-    | no_ger_crafter_3
-    | no_ger_crafter_4
-    | no_ger_crafter_5
-    | no_ger_crafter_6
-    | no_ger_crafter_7
-    | no_ger_crafter_8
     | no_harbor_1
     | no_harbor_2
     | no_harbor_3
@@ -3236,55 +3192,15 @@ variables:
     | no_horse_breeder_6
     | no_horse_breeder_7
     | no_horse_breeder_8
-    | no_hunting_parties_1
-    | no_hunting_parties_2
-    | no_hunting_parties_3
-    | no_hunting_parties_4
-    | no_hunting_parties_5
-    | no_hunting_parties_6
-    | no_hunting_parties_7
-    | no_hunting_parties_8
-    | no_lamellar_armor_crafter_1
-    | no_lamellar_armor_crafter_2
-    | no_lamellar_armor_crafter_3
-    | no_lamellar_armor_crafter_4
-    | no_lamellar_armor_crafter_5
-    | no_lamellar_armor_crafter_6
-    | no_lamellar_armor_crafter_7
-    | no_lamellar_armor_crafter_8
     | no_lucky_1
-    | no_meat_preserver_1
-    | no_meat_preserver_2
-    | no_meat_preserver_3
-    | no_meat_preserver_4
-    | no_meat_preserver_5
-    | no_meat_preserver_6
-    | no_meat_preserver_7
-    | no_meat_preserver_8
-    | no_minority_shrine_1
-    | no_minority_shrine_2
-    | no_minority_shrine_3
-    | no_minority_shrine_4
-    | no_minority_shrine_5
-    | no_minority_shrine_6
-    | no_minority_shrine_7
-    | no_minority_shrine_8
-    | no_minter_1
-    | no_minter_2
-    | no_minter_3
-    | no_minter_4
-    | no_minter_5
-    | no_minter_6
-    | no_minter_7
-    | no_minter_8
-    | no_ox_wagon_1
-    | no_ox_wagon_2
-    | no_ox_wagon_3
-    | no_ox_wagon_4
-    | no_ox_wagon_5
-    | no_ox_wagon_6
-    | no_ox_wagon_7
-    | no_ox_wagon_8
+    | no_messenger_system_1
+    | no_messenger_system_2
+    | no_messenger_system_3
+    | no_messenger_system_4
+    | no_messenger_system_5
+    | no_messenger_system_6
+    | no_messenger_system_7
+    | no_messenger_system_8
     | no_riding_contests_1
     | no_riding_contests_2
     | no_riding_contests_3
@@ -3293,38 +3209,30 @@ variables:
     | no_riding_contests_6
     | no_riding_contests_7
     | no_riding_contests_8
-    | no_sheep_1
-    | no_sheep_2
-    | no_sheep_3
-    | no_sheep_4
-    | no_sheep_5
-    | no_sheep_6
-    | no_sheep_7
-    | no_sheep_8
-    | no_shrine_1
-    | no_shrine_2
-    | no_shrine_3
-    | no_shrine_4
-    | no_shrine_5
-    | no_shrine_6
-    | no_shrine_7
-    | no_shrine_8
-    | no_wrestling_1
-    | no_wrestling_2
-    | no_wrestling_3
-    | no_wrestling_4
-    | no_wrestling_5
-    | no_wrestling_6
-    | no_wrestling_7
-    | no_wrestling_8
-    | no_yam_1
-    | no_yam_2
-    | no_yam_3
-    | no_yam_4
-    | no_yam_5
-    | no_yam_6
-    | no_yam_7
-    | no_yam_8
+    | no_specialized_craftsmen_1
+    | no_specialized_craftsmen_2
+    | no_specialized_craftsmen_3
+    | no_specialized_craftsmen_4
+    | no_specialized_craftsmen_5
+    | no_specialized_craftsmen_6
+    | no_specialized_craftsmen_7
+    | no_specialized_craftsmen_8
+    | no_training_grounds_1
+    | no_training_grounds_2
+    | no_training_grounds_3
+    | no_training_grounds_4
+    | no_training_grounds_5
+    | no_training_grounds_6
+    | no_training_grounds_7
+    | no_training_grounds_8
+    | no_wagon_train_1
+    | no_wagon_train_2
+    | no_wagon_train_3
+    | no_wagon_train_4
+    | no_wagon_train_5
+    | no_wagon_train_6
+    | no_wagon_train_7
+    | no_wagon_train_8
     | observatory_1
     | pharmacology_laboratory_1
     | pilgrims_inn_1
@@ -3452,14 +3360,18 @@ variables:
     | tb_culture_ligurian_2
     | tb_culture_ligurian_3
     | tb_culture_ligurian_4
+    | tb_culture_mongol_1
+    | tb_culture_mongol_2
+    | tb_culture_mongol_3
+    | tb_culture_mongol_4
     | tb_culture_nahuatl_1
     | tb_culture_nahuatl_2
     | tb_culture_nahuatl_3
     | tb_culture_nahuatl_4
-    | tb_culture_pictish_1
-    | tb_culture_pictish_2
-    | tb_culture_pictish_3
-    | tb_culture_pictish_4
+    | tb_culture_persian_1
+    | tb_culture_persian_2
+    | tb_culture_persian_3
+    | tb_culture_persian_4
     | tb_culture_portuguese_galician_andalusian_1
     | tb_culture_portuguese_galician_andalusian_2
     | tb_culture_portuguese_galician_andalusian_3
@@ -3492,6 +3404,10 @@ variables:
     | tb_culture_tibetan_2
     | tb_culture_tibetan_3
     | tb_culture_tibetan_4
+    | tb_culture_turkish_1
+    | tb_culture_turkish_2
+    | tb_culture_turkish_3
+    | tb_culture_turkish_4
     | tb_culture_venetian_1
     | tb_culture_venetian_2
     | tb_culture_venetian_3
@@ -3910,6 +3826,7 @@ variables:
     | kasogi
     | khalaj
     | khanty
+    | khavar
     | khazar
     | khitan
     | khorasani
@@ -5522,15 +5439,9 @@ variables:
     | HORDE_RETTYPE_CAV5
     | HORDE_RETTYPE_CAV6
     | HORDE_RETTYPE_CAV7
-    | HORDE_RETTYPE_CHRISTIAN
     | HORDE_RETTYPE_DESERT
-    | HORDE_RETTYPE_EASTERN
-    | HORDE_RETTYPE_EUROPE
     | HORDE_RETTYPE_INDIAN
-    | HORDE_RETTYPE_JEWISH
-    | HORDE_RETTYPE_MUSLIM
-    | HORDE_RETTYPE_PAGAN
-    | HORDE_RETTYPE_ZOROASTRIAN
+    | HORDE_RETTYPE_TEMUJIN
     | RETTYPE_CAV1
     | RETTYPE_CUL_AFGHAN
     | RETTYPE_CUL_ALBANIAN
@@ -5578,6 +5489,7 @@ variables:
     | RETTYPE_CUL_LIGURIAN
     | RETTYPE_CUL_LITHUANIAN
     | RETTYPE_CUL_LOM
+    | RETTYPE_CUL_MONGOL
     | RETTYPE_CUL_NAHUA
     | RETTYPE_CUL_NORMAN
     | RETTYPE_CUL_NORSE
@@ -5586,7 +5498,7 @@ variables:
     | RETTYPE_CUL_NORWEGIAN
     | RETTYPE_CUL_NUBIAN
     | RETTYPE_CUL_OUTREMER
-    | RETTYPE_CUL_PICTISH
+    | RETTYPE_CUL_PERSIAN
     | RETTYPE_CUL_POLISH
     | RETTYPE_CUL_POMMERANIAN
     | RETTYPE_CUL_PORTUGESE
@@ -5925,8 +5837,6 @@ variables:
     | emf_log_hre_elector_title
     | emf_log_hre_elector_titles
     | emf_log_potential_title_for_cadet_dynasty_name
-    | emf_log_siege_completion_destroys_building
-    | emf_log_siege_destroys_building
     | emf_make_ROOT_preferred_holding_county_capital
     | emf_make_court_family_english
     | emf_make_court_family_neapolitan
@@ -6011,6 +5921,9 @@ variables:
     | emf_revolt_spawn_unit_LI14_A6_scale100
     | emf_see_god
     | emf_select_cadet_dynasty_name
+    | emf_select_hre_elector_demesne_title
+    | emf_select_secular_hre_elector_demesne_title
+    | emf_select_theocratic_hre_elector_demesne_title
     | emf_select_title_for_cadet_dynasty_name
     | emf_seljuk_adventure_cb_cleanup
     | emf_seljuk_become_invader
@@ -6030,6 +5943,7 @@ variables:
     | emf_set_eastern_marches_capital
     | emf_set_gender_female
     | emf_set_gender_male
+    | emf_set_government_to_match_PREV
     | emf_set_viceroy_exemption
     | emf_spawn_byz
     | emf_spawn_hre_elector_title
@@ -6163,6 +6077,8 @@ variables:
     | emf_bad_tactic_tech_skirmish_score
     | emf_cultural_tactic_tech_melee_score
     | emf_cultural_tactic_tech_skirmish_score
+    | emf_deceitful_tactic_custom_score
+    | emf_flexible_tactic_custom_score
     | emf_good_tactic_leader_score
     | emf_good_tactic_tech_melee_score
     | emf_good_tactic_tech_skirmish_score
@@ -6246,7 +6162,6 @@ variables:
     | emf_autolander_is_fit_for_grant
     | emf_awesome_charge_tactic_culture
     | emf_awesome_closing_charge_tactic_culture
-    | emf_aztec_combined_tactic_culture
     | emf_can_add_holding_slot
     | emf_can_autodestroy_title
     | emf_can_be_karling_usurper
@@ -6318,13 +6233,14 @@ variables:
     | emf_close_to_adventurer
     | emf_closest_to_adventurer
     | emf_closing_advance_tactic_troop_requirements
-    | emf_closing_aztec_combined_tactic_culture
+    | emf_closing_combined_rush_tactic_culture
     | emf_closing_infantry_rush_tactic_culture
     | emf_closing_intimidating_advance_tactic_culture
     | emf_closing_roman_triple_line_tactic_culture
     | emf_closing_shield_rush_tactic_culture
     | emf_combined_charge_tactic_culture
     | emf_combined_closing_charge_tactic_culture
+    | emf_combined_rush_tactic_culture
     | emf_common_cause
     | emf_common_coronation_requirements
     | emf_controls_all_eastern_marches_duchies
@@ -6342,8 +6258,6 @@ variables:
     | emf_dna_is_subject_to_startup_randomization
     | emf_does_not_accept_shieldmaidens
     | emf_duchy_target
-    | emf_embolon_charge_tactic_culture
-    | emf_embolon_closing_charge_tactic_culture
     | emf_empires_aed_valid_title
     | emf_faction_basic_allow_join
     | emf_faction_basic_potential
@@ -6412,9 +6326,12 @@ variables:
     | emf_hostile_true_religion_to_PREV
     | emf_hostile_true_religion_to_ROOT
     | emf_hostile_true_religion_to_target_ruler
+    | emf_hre_elector_potential
     | emf_hre_has_at_least_3_theocracy_electors
     | emf_hre_has_holder
     | emf_hre_has_spare_elector_title
+    | emf_hre_secular_elector_potential
+    | emf_hre_theocratic_elector_potential
     | emf_il_khanate_province
     | emf_imperial_close_viceroy
     | emf_imperial_government
@@ -6447,6 +6364,7 @@ variables:
     | emf_is_hre
     | emf_is_hre_being_restored
     | emf_is_hre_elector
+    | emf_is_hre_elector_title
     | emf_is_hre_precursor_kingdom
     | emf_is_karling_dynasty
     | emf_is_karling_title
@@ -6493,6 +6411,7 @@ variables:
     | emf_is_sicilian_source_culture
     | emf_is_sicilian_source_province
     | emf_is_skilled_adventurer
+    | emf_is_sterile_trigger
     | emf_is_title_type_special
     | emf_is_uncrowned
     | emf_is_valid_hre_elector_title
@@ -6510,14 +6429,19 @@ variables:
     | emf_laws_crownlaw_title_limited_ca_plus
     | emf_laws_crownlaw_title_medium_ca_plus
     | emf_laws_crownlaw_title_not_high_ca_plus
+    | emf_laws_has_elective_law_type
+    | emf_laws_has_full_council_power
     | emf_laws_has_gender_succ_flag
     | emf_laws_has_high_TO_plus
     | emf_laws_has_high_ca_plus
+    | emf_laws_has_high_council_power
     | emf_laws_has_limited_TO_plus
     | emf_laws_has_limited_ca_plus
     | emf_laws_has_medium_TO_plus
     | emf_laws_has_medium_ca_plus
+    | emf_laws_has_medium_council_power
     | emf_laws_has_no_TO
+    | emf_laws_has_no_council_power
     | emf_laws_has_old_gender_succ_flag
     | emf_laws_has_old_succ_flag
     | emf_laws_has_succ_flag
@@ -6537,6 +6461,11 @@ variables:
     | emf_may_build_temple
     | emf_melee_charge_tactic_troop_requirements
     | emf_minor_title_basic_allowed_to_hold
+    | emf_monastic_order_benedictine_religion
+    | emf_monastic_order_dominican_religion
+    | emf_monastic_order_monophysite_religion
+    | emf_monastic_order_nestorian_religion
+    | emf_monastic_order_orthodox_religion
     | emf_mongol_invasion_mission
     | emf_mongol_invasion_valid_target
     | emf_mongol_invasion_valid_target_province
@@ -6619,10 +6548,11 @@ variables:
     | emf_province_is_italian_building_culture
     | emf_province_is_jewish_building_culture
     | emf_province_is_ligurian_building_culture
+    | emf_province_is_mongol_building_culture
     | emf_province_is_nahuatl_building_culture
     | emf_province_is_north_african_building_culture
     | emf_province_is_north_germanic_building_culture
-    | emf_province_is_pictish_building_culture
+    | emf_province_is_persian_building_culture
     | emf_province_is_portuguese_galician_andalusian_building_culture
     | emf_province_is_radhanite_quarter_culture
     | emf_province_is_roman_building_culture
@@ -6634,6 +6564,7 @@ variables:
     | emf_province_is_steppe_culture
     | emf_province_is_suebi_building_culture
     | emf_province_is_tibetan_building_culture
+    | emf_province_is_turkish_building_culture
     | emf_province_is_venetian_building_culture
     | emf_province_is_west_african_building_culture
     | emf_province_same_region_as_home
@@ -6708,6 +6639,8 @@ variables:
     | emf_stand_fast_tactic_troop_requirements
     | emf_startup_ruler_needs_extra_daughter
     | emf_swarm_tactic_troop_requirements
+    | emf_swarming_charge_tactic_culture
+    | emf_swarming_closing_charge_tactic_culture
     | emf_syncretized_religion_with_FROM
     | emf_syncretized_religion_with_PREV
     | emf_syncretized_religion_with_PREVPREV

@@ -155,12 +155,12 @@ ca_culture_indian_2                         # War Elephant Pens
 ca_culture_indian_3                         # War Elephant Pens
 ca_culture_indian_4                         # War Elephant Pens
 ca_culture_indian_5                         # War Elephant Pens
-ca_culture_irish_0                          # Gallowglass Training Ground
-ca_culture_irish_1                          # Gallowglass Training Ground
-ca_culture_irish_2                          # Gallowglass Training Ground
-ca_culture_irish_3                          # Gallowglass Training Ground
-ca_culture_irish_4                          # Gallowglass Training Ground
-ca_culture_irish_5                          # Gallowglass Training Ground
+ca_culture_irish_0                          # Hall of War
+ca_culture_irish_1                          # Hall of War
+ca_culture_irish_2                          # Hall of War
+ca_culture_irish_3                          # Hall of War
+ca_culture_irish_4                          # Hall of War
+ca_culture_irish_5                          # Hall of War
 ca_culture_italian_0                        # Cavalleria Training Ground
 ca_culture_italian_1                        # Cavalleria Training Ground
 ca_culture_italian_2                        # Cavalleria Training Ground
@@ -179,18 +179,24 @@ ca_culture_ligurian_2                       # Balestrieri Drilling Grounds
 ca_culture_ligurian_3                       # Balestrieri Drilling Grounds
 ca_culture_ligurian_4                       # Balestrieri Drilling Grounds
 ca_culture_ligurian_5                       # Balestrieri Drilling Grounds
+ca_culture_mongol_0                         # Kheshig Drilling Grounds
+ca_culture_mongol_1                         # Kheshig Drilling Grounds
+ca_culture_mongol_2                         # Kheshig Drilling Grounds
+ca_culture_mongol_3                         # Kheshig Drilling Grounds
+ca_culture_mongol_4                         # Kheshig Drilling Grounds
+ca_culture_mongol_5                         # Kheshig Drilling Grounds
 ca_culture_nahuatl_0                        # Jaguar Warrior Lodge
 ca_culture_nahuatl_1                        # Jaguar Warrior Lodge
 ca_culture_nahuatl_2                        # Jaguar Warrior Lodge
 ca_culture_nahuatl_3                        # Jaguar Warrior Lodge
 ca_culture_nahuatl_4                        # Jaguar Warrior Lodge
 ca_culture_nahuatl_5                        # Jaguar Warrior Lodge
-ca_culture_pictish_0                        # Hall of War
-ca_culture_pictish_1                        # Hall of War
-ca_culture_pictish_2                        # Hall of War
-ca_culture_pictish_3                        # Hall of War
-ca_culture_pictish_4                        # Hall of War
-ca_culture_pictish_5                        # Hall of War
+ca_culture_persian_0                        # Gholaman Training Ground
+ca_culture_persian_1                        # Gholaman Training Ground
+ca_culture_persian_2                        # Gholaman Training Ground
+ca_culture_persian_3                        # Gholaman Training Ground
+ca_culture_persian_4                        # Gholaman Training Ground
+ca_culture_persian_5                        # Gholaman Training Ground
 ca_culture_portuguese_galician_andalusian_0 # Jinete Riding Grounds
 ca_culture_portuguese_galician_andalusian_1 # Jinete Riding Grounds
 ca_culture_portuguese_galician_andalusian_2 # Jinete Riding Grounds
@@ -239,6 +245,12 @@ ca_culture_tibetan_2                        # Mountaineer Academy
 ca_culture_tibetan_3                        # Mountaineer Academy
 ca_culture_tibetan_4                        # Mountaineer Academy
 ca_culture_tibetan_5                        # Mountaineer Academy
+ca_culture_turkish_0                        # Timarli Sipahi Training Ground
+ca_culture_turkish_1                        # Timarli Sipahi Training Ground
+ca_culture_turkish_2                        # Timarli Sipahi Training Ground
+ca_culture_turkish_3                        # Timarli Sipahi Training Ground
+ca_culture_turkish_4                        # Timarli Sipahi Training Ground
+ca_culture_turkish_5                        # Timarli Sipahi Training Ground
 ca_culture_venetian_0                       # Marine Barracks
 ca_culture_venetian_1                       # Marine Barracks
 ca_culture_venetian_2                       # Marine Barracks
@@ -421,22 +433,6 @@ medical_academy_1                           # Medical Academy
 mercenary_garrison_1                        # Small Mercenary Garrison
 mercenary_garrison_2                        # Medium Mercenary Garrison
 mercenary_garrison_3                        # Large Mercenary Garrison
-no_airag_producer_1                         # Airag Producer
-no_airag_producer_2                         # Airag Producer
-no_airag_producer_3                         # Airag Producer
-no_airag_producer_4                         # Airag Producer
-no_airag_producer_5                         # Airag Producer
-no_airag_producer_6                         # Airag Producer
-no_airag_producer_7                         # Airag Producer
-no_airag_producer_8                         # Airag Producer
-no_baghatur_council_1                       # Baghatur Council
-no_baghatur_council_2                       # Baghatur Council
-no_baghatur_council_3                       # Baghatur Council
-no_baghatur_council_4                       # Baghatur Council
-no_baghatur_council_5                       # Baghatur Council
-no_baghatur_council_6                       # Baghatur Council
-no_baghatur_council_7                       # Baghatur Council
-no_baghatur_council_8                       # Baghatur Council
 no_camp_fortifications_1                    # Camp Fortifications
 no_camp_fortifications_2                    # Camp Fortifications
 no_camp_fortifications_3                    # Camp Fortifications
@@ -445,38 +441,6 @@ no_camp_fortifications_5                    # Camp Fortifications
 no_camp_fortifications_6                    # Camp Fortifications
 no_camp_fortifications_7                    # Camp Fortifications
 no_camp_fortifications_8                    # Camp Fortifications
-no_cattle_pens_1                            # Cattle Pens
-no_cattle_pens_2                            # Cattle Pens
-no_cattle_pens_3                            # Cattle Pens
-no_cattle_pens_4                            # Cattle Pens
-no_cattle_pens_5                            # Cattle Pens
-no_cattle_pens_6                            # Cattle Pens
-no_cattle_pens_7                            # Cattle Pens
-no_cattle_pens_8                            # Cattle Pens
-no_composite_bow_crafter_1                  # Composite Bow
-no_composite_bow_crafter_2                  # Composite Bow
-no_composite_bow_crafter_3                  # Composite Bow
-no_composite_bow_crafter_4                  # Composite Bow
-no_composite_bow_crafter_5                  # Composite Bow
-no_composite_bow_crafter_6                  # Composite Bow
-no_composite_bow_crafter_7                  # Composite Bow
-no_composite_bow_crafter_8                  # Composite Bow
-no_felt_crafter_1                           # Felt Crafter
-no_felt_crafter_2                           # Felt Crafter
-no_felt_crafter_3                           # Felt Crafter
-no_felt_crafter_4                           # Felt Crafter
-no_felt_crafter_5                           # Felt Crafter
-no_felt_crafter_6                           # Felt Crafter
-no_felt_crafter_7                           # Felt Crafter
-no_felt_crafter_8                           # Felt Crafter
-no_fishing_village_1                        # Fishing Village
-no_fishing_village_2                        # Fishing Village
-no_fishing_village_3                        # Fishing Village
-no_fishing_village_4                        # Fishing Village
-no_fishing_village_5                        # Fishing Village
-no_fishing_village_6                        # Fishing Village
-no_fishing_village_7                        # Fishing Village
-no_fishing_village_8                        # Fishing Village
 no_gathering_hall_1                         # Clan Gathering Hall
 no_gathering_hall_2                         # Clan Gathering Hall
 no_gathering_hall_3                         # Clan Gathering Hall
@@ -485,14 +449,6 @@ no_gathering_hall_5                         # Clan Gathering Hall
 no_gathering_hall_6                         # Clan Gathering Hall
 no_gathering_hall_7                         # Clan Gathering Hall
 no_gathering_hall_8                         # Clan Gathering Hall
-no_ger_crafter_1                            # Ger Crafter
-no_ger_crafter_2                            # Ger Crafter
-no_ger_crafter_3                            # Ger Crafter
-no_ger_crafter_4                            # Ger Crafter
-no_ger_crafter_5                            # Ger Crafter
-no_ger_crafter_6                            # Ger Crafter
-no_ger_crafter_7                            # Ger Crafter
-no_ger_crafter_8                            # Ger Crafter
 no_harbor_1                                 # Harbor
 no_harbor_2                                 # Harbor
 no_harbor_3                                 # Harbor
@@ -501,63 +457,23 @@ no_harbor_5                                 # Harbor
 no_harbor_6                                 # Harbor
 no_harbor_7                                 # Harbor
 no_harbor_8                                 # Harbor
-no_horse_breeder_1                          # War Mount Breeder
-no_horse_breeder_2                          # War Mount Breeder
-no_horse_breeder_3                          # War Mount Breeder
-no_horse_breeder_4                          # War Mount Breeder
-no_horse_breeder_5                          # War Mount Breeder
-no_horse_breeder_6                          # War Mount Breeder
-no_horse_breeder_7                          # War Mount Breeder
-no_horse_breeder_8                          # War Mount Breeder
-no_hunting_parties_1                        # Hunting Parties
-no_hunting_parties_2                        # Hunting Parties
-no_hunting_parties_3                        # Hunting Parties
-no_hunting_parties_4                        # Hunting Parties
-no_hunting_parties_5                        # Hunting Parties
-no_hunting_parties_6                        # Hunting Parties
-no_hunting_parties_7                        # Hunting Parties
-no_hunting_parties_8                        # Hunting Parties
-no_lamellar_armor_crafter_1                 # Lamellar Armor Crafter
-no_lamellar_armor_crafter_2                 # Lamellar Armor Crafter
-no_lamellar_armor_crafter_3                 # Lamellar Armor Crafter
-no_lamellar_armor_crafter_4                 # Lamellar Armor Crafter
-no_lamellar_armor_crafter_5                 # Lamellar Armor Crafter
-no_lamellar_armor_crafter_6                 # Lamellar Armor Crafter
-no_lamellar_armor_crafter_7                 # Lamellar Armor Crafter
-no_lamellar_armor_crafter_8                 # Lamellar Armor Crafter
+no_horse_breeder_1                          # Horse Breeder
+no_horse_breeder_2                          # Horse Breeder
+no_horse_breeder_3                          # Horse Breeder
+no_horse_breeder_4                          # Horse Breeder
+no_horse_breeder_5                          # Horse Breeder
+no_horse_breeder_6                          # Horse Breeder
+no_horse_breeder_7                          # Horse Breeder
+no_horse_breeder_8                          # Horse Breeder
 no_lucky_1                                  # Lucky Warhorse Stables
-no_meat_preserver_1                         # Meat Preserver
-no_meat_preserver_2                         # Meat Preserver
-no_meat_preserver_3                         # Meat Preserver
-no_meat_preserver_4                         # Meat Preserver
-no_meat_preserver_5                         # Meat Preserver
-no_meat_preserver_6                         # Meat Preserver
-no_meat_preserver_7                         # Meat Preserver
-no_meat_preserver_8                         # Meat Preserver
-no_minority_shrine_1                        # Minority Shrines
-no_minority_shrine_2                        # Minority Shrines
-no_minority_shrine_3                        # Minority Shrines
-no_minority_shrine_4                        # Minority Shrines
-no_minority_shrine_5                        # Minority Shrines
-no_minority_shrine_6                        # Minority Shrines
-no_minority_shrine_7                        # Minority Shrines
-no_minority_shrine_8                        # Minority Shrines
-no_minter_1                                 # Minter
-no_minter_2                                 # Minter
-no_minter_3                                 # Minter
-no_minter_4                                 # Minter
-no_minter_5                                 # Minter
-no_minter_6                                 # Minter
-no_minter_7                                 # Minter
-no_minter_8                                 # Minter
-no_ox_wagon_1                               # Ox & Wagon
-no_ox_wagon_2                               # Ox & Wagon
-no_ox_wagon_3                               # Ox & Wagon
-no_ox_wagon_4                               # Ox & Wagon
-no_ox_wagon_5                               # Ox & Wagon
-no_ox_wagon_6                               # Ox & Wagon
-no_ox_wagon_7                               # Ox & Wagon
-no_ox_wagon_8                               # Ox & Wagon
+no_messenger_system_1                       # Messenger System
+no_messenger_system_2                       # Messenger System
+no_messenger_system_3                       # Messenger System
+no_messenger_system_4                       # Messenger System
+no_messenger_system_5                       # Messenger System
+no_messenger_system_6                       # Messenger System
+no_messenger_system_7                       # Messenger System
+no_messenger_system_8                       # Messenger System
 no_riding_contests_1                        # Riding Contests
 no_riding_contests_2                        # Riding Contests
 no_riding_contests_3                        # Riding Contests
@@ -566,38 +482,30 @@ no_riding_contests_5                        # Riding Contests
 no_riding_contests_6                        # Riding Contests
 no_riding_contests_7                        # Riding Contests
 no_riding_contests_8                        # Riding Contests
-no_sheep_1                                  # Sheep
-no_sheep_2                                  # Sheep
-no_sheep_3                                  # Sheep
-no_sheep_4                                  # Sheep
-no_sheep_5                                  # Sheep
-no_sheep_6                                  # Sheep
-no_sheep_7                                  # Sheep
-no_sheep_8                                  # Sheep
-no_shrine_1                                 # Shrine
-no_shrine_2                                 # Shrine
-no_shrine_3                                 # Shrine
-no_shrine_4                                 # Shrine
-no_shrine_5                                 # Shrine
-no_shrine_6                                 # Shrine
-no_shrine_7                                 # Shrine
-no_shrine_8                                 # Shrine
-no_wrestling_1                              # Wrestling
-no_wrestling_2                              # Wrestling
-no_wrestling_3                              # Wrestling
-no_wrestling_4                              # Wrestling
-no_wrestling_5                              # Wrestling
-no_wrestling_6                              # Wrestling
-no_wrestling_7                              # Wrestling
-no_wrestling_8                              # Wrestling
-no_yam_1                                    # Yam
-no_yam_2                                    # Yam
-no_yam_3                                    # Yam
-no_yam_4                                    # Yam
-no_yam_5                                    # Yam
-no_yam_6                                    # Yam
-no_yam_7                                    # Yam
-no_yam_8                                    # Yam
+no_specialized_craftsmen_1                  # Specialized Craftsmen
+no_specialized_craftsmen_2                  # Specialized Craftsmen
+no_specialized_craftsmen_3                  # Specialized Craftsmen
+no_specialized_craftsmen_4                  # Specialized Craftsmen
+no_specialized_craftsmen_5                  # Specialized Craftsmen
+no_specialized_craftsmen_6                  # Specialized Craftsmen
+no_specialized_craftsmen_7                  # Specialized Craftsmen
+no_specialized_craftsmen_8                  # Specialized Craftsmen
+no_training_grounds_1                       # Training Grounds
+no_training_grounds_2                       # Training Grounds
+no_training_grounds_3                       # Training Grounds
+no_training_grounds_4                       # Training Grounds
+no_training_grounds_5                       # Training Grounds
+no_training_grounds_6                       # Training Grounds
+no_training_grounds_7                       # Training Grounds
+no_training_grounds_8                       # Training Grounds
+no_wagon_train_1                            # Wagon Train
+no_wagon_train_2                            # Wagon Train
+no_wagon_train_3                            # Wagon Train
+no_wagon_train_4                            # Wagon Train
+no_wagon_train_5                            # Wagon Train
+no_wagon_train_6                            # Wagon Train
+no_wagon_train_7                            # Wagon Train
+no_wagon_train_8                            # Wagon Train
 observatory_1                               # Observatory
 pharmacology_laboratory_1                   # Pharmacology Laboratory
 pilgrims_inn_1                              # Pilgrim's Inn
@@ -709,10 +617,10 @@ tb_culture_indian_1                         # War Elephant Pens
 tb_culture_indian_2                         # War Elephant Pens
 tb_culture_indian_3                         # War Elephant Pens
 tb_culture_indian_4                         # War Elephant Pens
-tb_culture_irish_1                          # Gallowglass Training Ground
-tb_culture_irish_2                          # Gallowglass Training Ground
-tb_culture_irish_3                          # Gallowglass Training Ground
-tb_culture_irish_4                          # Gallowglass Training Ground
+tb_culture_irish_1                          # Hall of War
+tb_culture_irish_2                          # Hall of War
+tb_culture_irish_3                          # Hall of War
+tb_culture_irish_4                          # Hall of War
 tb_culture_italian_1                        # Cavalleria Training Ground
 tb_culture_italian_2                        # Cavalleria Training Ground
 tb_culture_italian_3                        # Cavalleria Training Ground
@@ -725,14 +633,18 @@ tb_culture_ligurian_1                       # Balestrieri Drilling Grounds
 tb_culture_ligurian_2                       # Balestrieri Drilling Grounds
 tb_culture_ligurian_3                       # Balestrieri Drilling Grounds
 tb_culture_ligurian_4                       # Balestrieri Drilling Grounds
+tb_culture_mongol_1                         # Kheshig Drilling Grounds
+tb_culture_mongol_2                         # Kheshig Drilling Grounds
+tb_culture_mongol_3                         # Kheshig Drilling Grounds
+tb_culture_mongol_4                         # Kheshig Drilling Grounds
 tb_culture_nahuatl_1                        # Jaguar Warrior Lodge
 tb_culture_nahuatl_2                        # Jaguar Warrior Lodge
 tb_culture_nahuatl_3                        # Jaguar Warrior Lodge
 tb_culture_nahuatl_4                        # Jaguar Warrior Lodge
-tb_culture_pictish_1                        # Hall of War
-tb_culture_pictish_2                        # Hall of War
-tb_culture_pictish_3                        # Hall of War
-tb_culture_pictish_4                        # Hall of War
+tb_culture_persian_1                        # Gholaman Training Ground
+tb_culture_persian_2                        # Gholaman Training Ground
+tb_culture_persian_3                        # Gholaman Training Ground
+tb_culture_persian_4                        # Gholaman Training Ground
 tb_culture_portuguese_galician_andalusian_1 # Jinete Riding Grounds
 tb_culture_portuguese_galician_andalusian_2 # Jinete Riding Grounds
 tb_culture_portuguese_galician_andalusian_3 # Jinete Riding Grounds
@@ -765,6 +677,10 @@ tb_culture_tibetan_1                        # Mountaineer Academy
 tb_culture_tibetan_2                        # Mountaineer Academy
 tb_culture_tibetan_3                        # Mountaineer Academy
 tb_culture_tibetan_4                        # Mountaineer Academy
+tb_culture_turkish_1                        # Timarli Sipahi Training Ground
+tb_culture_turkish_2                        # Timarli Sipahi Training Ground
+tb_culture_turkish_3                        # Timarli Sipahi Training Ground
+tb_culture_turkish_4                        # Timarli Sipahi Training Ground
 tb_culture_venetian_1                       # Marine Barracks
 tb_culture_venetian_2                       # Marine Barracks
 tb_culture_venetian_3                       # Marine Barracks
