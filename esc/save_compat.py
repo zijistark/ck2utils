@@ -65,13 +65,14 @@ def get_checkpoint_commit_from_file(mod_path):
 
     cp_dir = mod_path
     while cp_dir != repo_dir.parent:
-        if (cp_dir / cp_filename).exists():
+        cp_path = cp_dir / cp_filename
+        if cp_path.exists():
             break
         cp_dir = cp_dir.parent
     else:
         raise RuntimeError('{} not found for {}'.format(cp_filename, mod_path))
 
-    cp_contents = (cp_dir / cp_filename).read_text()
+    cp_contents = cp_path.read_text(encoding='cp1252', errors='replace')
     commit_str = cp_contents.partition('#')[0].strip()
 
     commit = repo.commit(commit_str)
