@@ -14,10 +14,12 @@ my $WIDTH = 120;
 
 my $opt_emf = 0;
 my $opt_swmh = 0;
+my $opt_coa = 0;
 
 GetOptions(
 	'emf' => \$opt_emf,
 	'swmh' => \$opt_swmh,
+	'coa' => \$opt_coa,
 ) or croak;
 
 # these turn on extra filters for ignoring certain file patterns for certain error/warning types, but they're not required:
@@ -110,6 +112,11 @@ if ($EMF_V) {
 elsif ($EMF_S) {
 	push @title_redefined_ignored_file, qr/color_overrides/i;
 	push @title_redefined_ignored_file, qr/name_tier_overrides/i;
+}
+
+if ($opt_coa) {
+	push @title_redefined_ignored_file, qr/ARKOpack_baronies/i;
+	push @title_redefined_ignored_file, qr/hellene_et_les_garcons/i;
 }
 
 open(my $f, '<:crlf', $log_file) or croak "open: $!: $log_file";
