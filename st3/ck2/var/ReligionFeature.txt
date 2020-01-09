@@ -1,4 +1,3 @@
-religion_adventuring           # Daring
 religion_animistic             # Animistic
 religion_astrology             # Astrology
 religion_autocephaly           # Autocephalous
@@ -35,7 +34,6 @@ religion_relentless            # Unrelenting
 religion_ritual_sacrifice      # Bloodthirsty Gods
 religion_seafaring             # Sea-bound
 religion_stable                # Stability
-religion_syncretic             # Syncretism
 religion_syncretic_christian   # Christian Syncretism
 religion_syncretic_indian      # Eastern Syncretism
 religion_syncretic_muslim      # Muslim Syncretism

@@ -441,14 +441,22 @@ no_camp_fortifications_5                    # Camp Fortifications
 no_camp_fortifications_6                    # Camp Fortifications
 no_camp_fortifications_7                    # Camp Fortifications
 no_camp_fortifications_8                    # Camp Fortifications
-no_gathering_hall_1                         # Clan Gathering Hall
-no_gathering_hall_2                         # Clan Gathering Hall
-no_gathering_hall_3                         # Clan Gathering Hall
-no_gathering_hall_4                         # Clan Gathering Hall
-no_gathering_hall_5                         # Clan Gathering Hall
-no_gathering_hall_6                         # Clan Gathering Hall
-no_gathering_hall_7                         # Clan Gathering Hall
-no_gathering_hall_8                         # Clan Gathering Hall
+no_craftsmens_quarter_1                     # Craftsmen's Quarter
+no_craftsmens_quarter_2                     # Craftsmen's Quarter
+no_craftsmens_quarter_3                     # Craftsmen's Quarter
+no_craftsmens_quarter_4                     # Craftsmen's Quarter
+no_craftsmens_quarter_5                     # Craftsmen's Quarter
+no_craftsmens_quarter_6                     # Craftsmen's Quarter
+no_craftsmens_quarter_7                     # Craftsmen's Quarter
+no_craftsmens_quarter_8                     # Craftsmen's Quarter
+no_gathering_hall_1                         # [EMF_Get_no_gathering_hall_Name]
+no_gathering_hall_2                         # [EMF_Get_no_gathering_hall_Name]
+no_gathering_hall_3                         # [EMF_Get_no_gathering_hall_Name]
+no_gathering_hall_4                         # [EMF_Get_no_gathering_hall_Name]
+no_gathering_hall_5                         # [EMF_Get_no_gathering_hall_Name]
+no_gathering_hall_6                         # [EMF_Get_no_gathering_hall_Name]
+no_gathering_hall_7                         # [EMF_Get_no_gathering_hall_Name]
+no_gathering_hall_8                         # [EMF_Get_no_gathering_hall_Name]
 no_harbor_1                                 # Harbor
 no_harbor_2                                 # Harbor
 no_harbor_3                                 # Harbor
@@ -466,14 +474,14 @@ no_horse_breeder_6                          # Horse Breeder
 no_horse_breeder_7                          # Horse Breeder
 no_horse_breeder_8                          # Horse Breeder
 no_lucky_1                                  # Lucky Warhorse Stables
-no_messenger_system_1                       # Messenger System
-no_messenger_system_2                       # Messenger System
-no_messenger_system_3                       # Messenger System
-no_messenger_system_4                       # Messenger System
-no_messenger_system_5                       # Messenger System
-no_messenger_system_6                       # Messenger System
-no_messenger_system_7                       # Messenger System
-no_messenger_system_8                       # Messenger System
+no_messenger_system_1                       # [EMF_Get_no_messenger_system_Name]
+no_messenger_system_2                       # [EMF_Get_no_messenger_system_Name]
+no_messenger_system_3                       # [EMF_Get_no_messenger_system_Name]
+no_messenger_system_4                       # [EMF_Get_no_messenger_system_Name]
+no_messenger_system_5                       # [EMF_Get_no_messenger_system_Name]
+no_messenger_system_6                       # [EMF_Get_no_messenger_system_Name]
+no_messenger_system_7                       # [EMF_Get_no_messenger_system_Name]
+no_messenger_system_8                       # [EMF_Get_no_messenger_system_Name]
 no_riding_contests_1                        # Riding Contests
 no_riding_contests_2                        # Riding Contests
 no_riding_contests_3                        # Riding Contests
@@ -482,14 +490,6 @@ no_riding_contests_5                        # Riding Contests
 no_riding_contests_6                        # Riding Contests
 no_riding_contests_7                        # Riding Contests
 no_riding_contests_8                        # Riding Contests
-no_specialized_craftsmen_1                  # Specialized Craftsmen
-no_specialized_craftsmen_2                  # Specialized Craftsmen
-no_specialized_craftsmen_3                  # Specialized Craftsmen
-no_specialized_craftsmen_4                  # Specialized Craftsmen
-no_specialized_craftsmen_5                  # Specialized Craftsmen
-no_specialized_craftsmen_6                  # Specialized Craftsmen
-no_specialized_craftsmen_7                  # Specialized Craftsmen
-no_specialized_craftsmen_8                  # Specialized Craftsmen
 no_training_grounds_1                       # Training Grounds
 no_training_grounds_2                       # Training Grounds
 no_training_grounds_3                       # Training Grounds

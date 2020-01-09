@@ -55,6 +55,7 @@ RETTYPE_CUL_JURCHEN     # Tie-Futu
 RETTYPE_CUL_LIGURIAN    # Balestriero Genoveso
 RETTYPE_CUL_LITHUANIAN  # Perkuno Karys
 RETTYPE_CUL_LOM         # [lombard.GetName] Heavy Infantry
+RETTYPE_CUL_MOGER       # Luvosiiazu
 RETTYPE_CUL_MONGOL      # Kheshig
 RETTYPE_CUL_NAHUA       # Jaguar Warrior
 RETTYPE_CUL_NORMAN      # Chevalier

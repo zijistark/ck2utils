@@ -3168,6 +3168,14 @@ variables:
     | no_camp_fortifications_6
     | no_camp_fortifications_7
     | no_camp_fortifications_8
+    | no_craftsmens_quarter_1
+    | no_craftsmens_quarter_2
+    | no_craftsmens_quarter_3
+    | no_craftsmens_quarter_4
+    | no_craftsmens_quarter_5
+    | no_craftsmens_quarter_6
+    | no_craftsmens_quarter_7
+    | no_craftsmens_quarter_8
     | no_gathering_hall_1
     | no_gathering_hall_2
     | no_gathering_hall_3
@@ -3209,14 +3217,6 @@ variables:
     | no_riding_contests_6
     | no_riding_contests_7
     | no_riding_contests_8
-    | no_specialized_craftsmen_1
-    | no_specialized_craftsmen_2
-    | no_specialized_craftsmen_3
-    | no_specialized_craftsmen_4
-    | no_specialized_craftsmen_5
-    | no_specialized_craftsmen_6
-    | no_specialized_craftsmen_7
-    | no_specialized_craftsmen_8
     | no_training_grounds_1
     | no_training_grounds_2
     | no_training_grounds_3
@@ -5374,8 +5374,7 @@ variables:
     )
   vReligionFeature: |-
     (?xi:
-      religion_adventuring
-    | religion_animistic
+      religion_animistic
     | religion_astrology
     | religion_autocephaly
     | religion_beatification
@@ -5411,7 +5410,6 @@ variables:
     | religion_ritual_sacrifice
     | religion_seafaring
     | religion_stable
-    | religion_syncretic
     | religion_syncretic_christian
     | religion_syncretic_indian
     | religion_syncretic_muslim
@@ -5489,6 +5487,7 @@ variables:
     | RETTYPE_CUL_LIGURIAN
     | RETTYPE_CUL_LITHUANIAN
     | RETTYPE_CUL_LOM
+    | RETTYPE_CUL_MOGER
     | RETTYPE_CUL_MONGOL
     | RETTYPE_CUL_NAHUA
     | RETTYPE_CUL_NORMAN
@@ -5713,7 +5712,6 @@ variables:
     | emf_dna_remove_trait_wrymouth
     | emf_dna_reset_flags_positively
     | emf_dna_reverse_homozygous_recessive
-    | emf_dna_savecompat_shorten_flag_names
     | emf_dna_set_flags_for_absentminded
     | emf_dna_set_flags_for_ambidextrous
     | emf_dna_set_flags_for_average_attractiveness
@@ -5838,6 +5836,8 @@ variables:
     | emf_log_hre_elector_titles
     | emf_log_potential_title_for_cadet_dynasty_name
     | emf_make_ROOT_preferred_holding_county_capital
+    | emf_make_aragon_dejure
+    | emf_make_castille_dejure
     | emf_make_court_family_english
     | emf_make_court_family_neapolitan
     | emf_make_court_family_sicilian
@@ -5898,6 +5898,7 @@ variables:
     | emf_remove_suzerain_under_ROOT
     | emf_remove_symptom_traits
     | emf_replace_invalid_hre_elector_title
+    | emf_reset_settable_religion_flags
     | emf_return_home
     | emf_revolt_clear_religion_title_flags
     | emf_revolt_clear_source_province_targets
@@ -5940,6 +5941,74 @@ variables:
     | emf_seljuk_spawn_wife
     | emf_seljuk_target_initial_invasion
     | emf_set_bloodline_founder_religion_flag
+    | emf_set_default_flags_for_adoptionist
+    | emf_set_default_flags_for_apostolic
+    | emf_set_default_flags_for_arian
+    | emf_set_default_flags_for_aztec
+    | emf_set_default_flags_for_aztec_reformed
+    | emf_set_default_flags_for_baltic_pagan
+    | emf_set_default_flags_for_baltic_pagan_reformed
+    | emf_set_default_flags_for_bogomilist
+    | emf_set_default_flags_for_bon
+    | emf_set_default_flags_for_bon_reformed
+    | emf_set_default_flags_for_buddhist
+    | emf_set_default_flags_for_cathar
+    | emf_set_default_flags_for_catholic
+    | emf_set_default_flags_for_druze
+    | emf_set_default_flags_for_finnish_pagan
+    | emf_set_default_flags_for_finnish_pagan_reformed
+    | emf_set_default_flags_for_fraticelli
+    | emf_set_default_flags_for_haruri
+    | emf_set_default_flags_for_hellenic_pagan
+    | emf_set_default_flags_for_hellenic_pagan_reformed
+    | emf_set_default_flags_for_hindu
+    | emf_set_default_flags_for_hurufi
+    | emf_set_default_flags_for_ibadi
+    | emf_set_default_flags_for_iconoclast
+    | emf_set_default_flags_for_ismaili
+    | emf_set_default_flags_for_jain
+    | emf_set_default_flags_for_jewish
+    | emf_set_default_flags_for_karaite
+    | emf_set_default_flags_for_kharijite
+    | emf_set_default_flags_for_khurmazta
+    | emf_set_default_flags_for_lollard
+    | emf_set_default_flags_for_mahdiyya
+    | emf_set_default_flags_for_mandaean
+    | emf_set_default_flags_for_manichean
+    | emf_set_default_flags_for_maronite
+    | emf_set_default_flags_for_mazdaki
+    | emf_set_default_flags_for_messalian
+    | emf_set_default_flags_for_miaphysite
+    | emf_set_default_flags_for_monophysite
+    | emf_set_default_flags_for_monothelite
+    | emf_set_default_flags_for_nabawiyya
+    | emf_set_default_flags_for_nestorian
+    | emf_set_default_flags_for_norse_pagan
+    | emf_set_default_flags_for_norse_pagan_reformed
+    | emf_set_default_flags_for_orthodox
+    | emf_set_default_flags_for_paulician
+    | emf_set_default_flags_for_qarmatian
+    | emf_set_default_flags_for_samaritan
+    | emf_set_default_flags_for_shiite
+    | emf_set_default_flags_for_slavic_pagan
+    | emf_set_default_flags_for_slavic_pagan_reformed
+    | emf_set_default_flags_for_sunni
+    | emf_set_default_flags_for_syriac
+    | emf_set_default_flags_for_taoist
+    | emf_set_default_flags_for_tengri_pagan
+    | emf_set_default_flags_for_tengri_pagan_reformed
+    | emf_set_default_flags_for_tondrakian
+    | emf_set_default_flags_for_waldensian
+    | emf_set_default_flags_for_waqifi
+    | emf_set_default_flags_for_west_african_pagan
+    | emf_set_default_flags_for_west_african_pagan_reformed
+    | emf_set_default_flags_for_yazidi
+    | emf_set_default_flags_for_zaydi
+    | emf_set_default_flags_for_zikri
+    | emf_set_default_flags_for_zoroastrian
+    | emf_set_default_flags_for_zun_pagan
+    | emf_set_default_flags_for_zun_pagan_reformed
+    | emf_set_default_flags_for_zurvanist
     | emf_set_eastern_marches_capital
     | emf_set_gender_female
     | emf_set_gender_male
@@ -5993,6 +6062,7 @@ variables:
     | emf_usurp_revolter_titles
     | emf_vanish_character
     | emf_vary_created_courtier_female_fertility
+    | emf_view_hre_elector_titles_effect
     | emf_willfully_abdicate
     | emf_zoroastrian_conversion
     | pf_begin_civil_war_effect
@@ -6006,12 +6076,16 @@ variables:
     | pf_clear_war_flags_effect
     | pf_court_minus1_effect
     | pf_court_minus2_effect
+    | pf_court_minus4_effect
     | pf_court_plus1_effect
     | pf_court_plus2_effect
+    | pf_court_plus4_effect
     | pf_glory_minus1_effect
     | pf_glory_minus2_effect
+    | pf_glory_minus4_effect
     | pf_glory_plus1_effect
     | pf_glory_plus2_effect
+    | pf_glory_plus4_effect
     | pf_leader_vote_effect
     | pf_liege_change_effect
     | pf_liege_change_under_title_begin_effect
@@ -6028,6 +6102,7 @@ variables:
     | pf_member_vote_effect
     | pf_mood_refresh_delayed_effect
     | pf_mood_refresh_effect
+    | pf_mood_stimulate_effect
     | pf_prosperity_minus1_effect
     | pf_prosperity_minus2_effect
     | pf_prosperity_minus4_effect
@@ -6135,17 +6210,7 @@ variables:
     | duelist_with_ranged_skill_is_high_group_trigger
     | duelist_with_ranged_skill_is_low_group_trigger
     | duelist_with_ranged_skill_is_medium_group_trigger
-    | emf_FROM_is_syncretized_with_religion
-    | emf_PREVPREV_is_syncretized_with_religion
-    | emf_PREV_is_syncretized_with_religion
-    | emf_PREV_is_syncretized_with_true_religion
-    | emf_PREV_true_religion_is_syncretized_with_religion
-    | emf_PREV_true_religion_is_syncretized_with_true_religion
     | emf_ROOT_completely_controls_counties
-    | emf_ROOT_is_syncretized_with_religion
-    | emf_ROOT_is_syncretized_with_true_religion
-    | emf_ROOT_true_religion_is_syncretized_with_religion
-    | emf_ROOT_true_religion_is_syncretized_with_true_religion
     | emf_accepts_shieldmaidens
     | emf_advance_tactic_troop_requirements
     | emf_adventurer_can_approach
@@ -6245,6 +6310,7 @@ variables:
     | emf_common_coronation_requirements
     | emf_controls_all_eastern_marches_duchies
     | emf_controls_extra_bosnia_duchies
+    | emf_controls_required_leon_counties
     | emf_create_switzerland_basic_allow
     | emf_create_switzerland_basic_potential
     | emf_crossbow_culture
@@ -6266,6 +6332,7 @@ variables:
     | emf_faction_has_relation_blocker
     | emf_faction_has_special_chance_blocker
     | emf_far_from_adventurer
+    | emf_female_homosexual_indifferent_religion
     | emf_feminist_religion
     | emf_feminist_true_religion
     | emf_feudal_can_hold_temples
@@ -6455,6 +6522,7 @@ variables:
     | emf_laws_succ_basic_potential
     | emf_likes_adventurer_target
     | emf_longbow_volley_tactic_culture
+    | emf_male_homosexual_indifferent_religion
     | emf_mameluke_charge_tactic_culture
     | emf_mameluke_closing_charge_tactic_culture
     | emf_mameluke_raid_tactic_culture
@@ -6471,16 +6539,6 @@ variables:
     | emf_mongol_invasion_valid_target_province
     | emf_needs_coronation
     | emf_nomadic_province
-    | emf_not_FROM_is_syncretized_with_religion
-    | emf_not_PREVPREV_is_syncretized_with_religion
-    | emf_not_PREV_is_syncretized_with_religion
-    | emf_not_PREV_is_syncretized_with_true_religion
-    | emf_not_PREV_true_religion_is_syncretized_with_religion
-    | emf_not_PREV_true_religion_is_syncretized_with_true_religion
-    | emf_not_ROOT_is_syncretized_with_religion
-    | emf_not_ROOT_is_syncretized_with_true_religion
-    | emf_not_ROOT_true_religion_is_syncretized_with_religion
-    | emf_not_ROOT_true_religion_is_syncretized_with_true_religion
     | emf_not_alternate_start
     | emf_not_animistic_religion
     | emf_not_antifeminist_religion
@@ -6488,12 +6546,14 @@ variables:
     | emf_not_bad_candidate
     | emf_not_close_to_adventurer
     | emf_not_divine_blood_religion
+    | emf_not_female_homosexual_indifferent_religion
     | emf_not_feminist_religion
     | emf_not_gender_equal_religion
     | emf_not_haruspicy_religion
     | emf_not_has_swmh
     | emf_not_isolated_character
     | emf_not_jizya_religion
+    | emf_not_male_homosexual_indifferent_religion
     | emf_not_pacifist_true_religion
     | emf_not_polytheist_religion
     | emf_not_ritual_sacrifice_religion
@@ -6502,9 +6562,12 @@ variables:
     | emf_not_seafaring_religion
     | emf_not_shattered_world
     | emf_not_syncretized_religion_with_FROM
+    | emf_not_syncretized_religion_with_FROMs_true_religion
     | emf_not_syncretized_religion_with_PREV
     | emf_not_syncretized_religion_with_PREVPREV
+    | emf_not_syncretized_religion_with_PREVs_true_religion
     | emf_not_syncretized_religion_with_ROOT
+    | emf_not_syncretized_religion_with_ROOTs_true_religion
     | emf_not_syncretized_true_religion_with_FROM
     | emf_not_syncretized_true_religion_with_FROMs_true_religion
     | emf_not_syncretized_true_religion_with_PREV
@@ -6514,12 +6577,12 @@ variables:
     | emf_not_true_unreformed_pagan
     | emf_not_unreformed_pagan
     | emf_not_western_christian_religion
+    | emf_optional_aragon_county_control
     | emf_pacifist_true_religion
     | emf_pike_assault_tactic_culture
     | emf_pike_square_tactic_troop_requirements
     | emf_polytheist_religion
     | emf_prefers_axe_over_mace
-    | emf_province_feminist_religion
     | emf_province_is_afghan_building_culture
     | emf_province_is_altaic_building_culture
     | emf_province_is_altaic_jurchen_building_culture
@@ -6642,9 +6705,12 @@ variables:
     | emf_swarming_charge_tactic_culture
     | emf_swarming_closing_charge_tactic_culture
     | emf_syncretized_religion_with_FROM
+    | emf_syncretized_religion_with_FROMs_true_religion
     | emf_syncretized_religion_with_PREV
     | emf_syncretized_religion_with_PREVPREV
+    | emf_syncretized_religion_with_PREVs_true_religion
     | emf_syncretized_religion_with_ROOT
+    | emf_syncretized_religion_with_ROOTs_true_religion
     | emf_syncretized_true_religion_with_FROM
     | emf_syncretized_true_religion_with_FROMs_true_religion
     | emf_syncretized_true_religion_with_PREV
@@ -6667,6 +6733,7 @@ variables:
     | emf_valid_adv_target_title
     | emf_valid_adventurer
     | emf_valid_mongol_heir_for_ROOT
+    | emf_view_hre_elector_titles_potential
     | emf_volley_tactic_troop_requirements
     | emf_was_hre_recently_restored
     | emf_was_strong_basileus
@@ -6979,22 +7046,52 @@ variables:
     | dysentery
     | eagle_warrior
     | elusive_shadow
-    | emf_boost_ambition
-    | emf_boost_greed
-    | emf_boost_honor
-    | emf_boost_rationality
-    | emf_boost_zeal
+    | emf_boost_ambition_100
+    | emf_boost_ambition_200
+    | emf_boost_ambition_25
+    | emf_boost_ambition_50
+    | emf_boost_greed_100
+    | emf_boost_greed_200
+    | emf_boost_greed_25
+    | emf_boost_greed_50
+    | emf_boost_honor_100
+    | emf_boost_honor_200
+    | emf_boost_honor_25
+    | emf_boost_honor_50
+    | emf_boost_rationality_100
+    | emf_boost_rationality_200
+    | emf_boost_rationality_25
+    | emf_boost_rationality_50
+    | emf_boost_zeal_100
+    | emf_boost_zeal_200
+    | emf_boost_zeal_25
+    | emf_boost_zeal_50
     | emf_cadet_dynasty_founder
     | emf_cannot_inherit
     | emf_crowned
     | emf_crowned_by_pope
     | emf_customize_ruler
     | emf_isis_courtier
-    | emf_reduce_ambition
-    | emf_reduce_greed
-    | emf_reduce_honor
-    | emf_reduce_rationality
-    | emf_reduce_zeal
+    | emf_reduce_ambition_100
+    | emf_reduce_ambition_200
+    | emf_reduce_ambition_25
+    | emf_reduce_ambition_50
+    | emf_reduce_greed_100
+    | emf_reduce_greed_200
+    | emf_reduce_greed_25
+    | emf_reduce_greed_50
+    | emf_reduce_honor_100
+    | emf_reduce_honor_200
+    | emf_reduce_honor_25
+    | emf_reduce_honor_50
+    | emf_reduce_rationality_100
+    | emf_reduce_rationality_200
+    | emf_reduce_rationality_25
+    | emf_reduce_rationality_50
+    | emf_reduce_zeal_100
+    | emf_reduce_zeal_200
+    | emf_reduce_zeal_25
+    | emf_reduce_zeal_50
     | emf_saint
     | emf_saint_converted
     | emf_saint_converter
@@ -7003,7 +7100,11 @@ variables:
     | emf_saint_true_knight
     | emf_saint_voice_jesus
     | emf_seljuk_invader
-    | emf_temporary
+    | emf_temporary_0
+    | emf_temporary_1
+    | emf_temporary_2
+    | emf_temporary_3
+    | emf_temporary_4
     | envious
     | erudite
     | eunuch

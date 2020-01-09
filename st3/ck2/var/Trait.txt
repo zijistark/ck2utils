@@ -150,22 +150,52 @@ dynasty_decadence_med          # Very Decadent Dynasty
 dysentery                      # Dysentery
 eagle_warrior                  # Eagle Knight
 elusive_shadow                 # Elusive Shadow
-emf_boost_ambition             # Boost AI Ambition
-emf_boost_greed                # Boost AI Greed
-emf_boost_honor                # Boost AI Honor
-emf_boost_rationality          # Boost AI Rationality
-emf_boost_zeal                 # Boost AI Zeal
+emf_boost_ambition_100         # AI Ambition §G+100§!
+emf_boost_ambition_200         # AI Ambition §G+200§!
+emf_boost_ambition_25          # AI Ambition §G+25§!
+emf_boost_ambition_50          # AI Ambition §G+50§!
+emf_boost_greed_100            # AI Greed §G+100§!
+emf_boost_greed_200            # AI Greed §G+200§!
+emf_boost_greed_25             # AI Greed §G+25§!
+emf_boost_greed_50             # AI Greed §G+50§!
+emf_boost_honor_100            # AI Honor §G+100§!
+emf_boost_honor_200            # AI Honor §G+200§!
+emf_boost_honor_25             # AI Honor §G+25§!
+emf_boost_honor_50             # AI Honor §G+50§!
+emf_boost_rationality_100      # AI Rationality §G+100§!
+emf_boost_rationality_200      # AI Rationality §G+200§!
+emf_boost_rationality_25       # AI Rationality §G+25§!
+emf_boost_rationality_50       # AI Rationality §G+50§!
+emf_boost_zeal_100             # AI Zeal §G+100§!
+emf_boost_zeal_200             # AI Zeal §G+200§!
+emf_boost_zeal_25              # AI Zeal §G+25§!
+emf_boost_zeal_50              # AI Zeal §G+50§!
 emf_cadet_dynasty_founder      # Founder of Cadet House [Root.GetOnlyDynastyName]
 emf_cannot_inherit             # Cannot Inherit
 emf_crowned                    # Crowned
 emf_crowned_by_pope            # Crowned By The Pope
 emf_customize_ruler            # Customize Ruler Dynasty
 emf_isis_courtier              # Servant of The All-Seeing Isis
-emf_reduce_ambition            # Reduce AI Ambition
-emf_reduce_greed               # Reduce AI Greed
-emf_reduce_honor               # Reduce AI Honor
-emf_reduce_rationality         # Reduce AI Rationality
-emf_reduce_zeal                # Reduce AI Zeal
+emf_reduce_ambition_100        # AI Ambition §R-100§!
+emf_reduce_ambition_200        # AI Ambition §R-200§!
+emf_reduce_ambition_25         # AI Ambition §R-25§!
+emf_reduce_ambition_50         # AI Ambition §R-50§!
+emf_reduce_greed_100           # AI Greed §R-100§!
+emf_reduce_greed_200           # AI Greed §R-200§!
+emf_reduce_greed_25            # AI Greed §R-25§!
+emf_reduce_greed_50            # AI Greed §R-50§!
+emf_reduce_honor_100           # AI Honor §R-100§!
+emf_reduce_honor_200           # AI Honor §R-200§!
+emf_reduce_honor_25            # AI Honor §R-25§!
+emf_reduce_honor_50            # AI Honor §R-50§!
+emf_reduce_rationality_100     # AI Rationality §R-100§!
+emf_reduce_rationality_200     # AI Rationality §R-200§!
+emf_reduce_rationality_25      # AI Rationality §R-25§!
+emf_reduce_rationality_50      # AI Rationality §R-50§!
+emf_reduce_zeal_100            # AI Zeal §R-100§!
+emf_reduce_zeal_200            # AI Zeal §R-200§!
+emf_reduce_zeal_25             # AI Zeal §R-25§!
+emf_reduce_zeal_50             # AI Zeal §R-50§!
 emf_saint                      # Saint
 emf_saint_converted            # HIDDEN (Saint Brought New Faith to Their Realm)
 emf_saint_converter            # HIDDEN (Saint Converted an Important Ruler)
@@ -174,7 +204,11 @@ emf_saint_schism               # HIDDEN (Saint Mended a Schism)
 emf_saint_true_knight          # HIDDEN (Saint Was a True Christian Knight)
 emf_saint_voice_jesus          # HIDDEN (Saint Could Hear the Voice of God)
 emf_seljuk_invader             # Seljuk Invader
-emf_temporary                  # Temporary
+emf_temporary_0                # Temporary Trait I
+emf_temporary_1                # Temporary Trait II
+emf_temporary_2                # Temporary Trait III
+emf_temporary_3                # Temporary Trait IV
+emf_temporary_4                # Temporary Trait V
 envious                        # Envious
 erudite                        # Erudite
 eunuch                         # Eunuch
