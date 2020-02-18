@@ -3,6 +3,7 @@ bogomilist_imperial_government          # Patareni Imperial
 bogomilist_merchant_republic_government # Patareni Merchant Republic
 chinese_imperial_government             # Chinese Imperial
 confucian_bureaucracy                   # Confucian Bureaucracy
+fake_feudal_government                  # Fake Feudal
 feudal_government                       # Feudal
 imperial_government                     # Imperial
 merchant_republic_government            # Merchant Republic

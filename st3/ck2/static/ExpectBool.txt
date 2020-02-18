@@ -6,6 +6,7 @@ adventurer # create_title
 ai
 ai # event pre-trigger
 ai_fabricate_claims
+ai_peaceful # religion group
 allow_bastards
 allow_in_ruler_designer
 allow_looting

@@ -759,6 +759,7 @@ variables:
     | ai
     | ai
     | ai_fabricate_claims
+    | ai_peaceful
     | allow_bastards
     | allow_in_ruler_designer
     | allow_looting
@@ -4028,6 +4029,7 @@ variables:
     | bogomilist_merchant_republic_government
     | chinese_imperial_government
     | confucian_bureaucracy
+    | fake_feudal_government
     | feudal_government
     | imperial_government
     | merchant_republic_government
@@ -5595,7 +5597,13 @@ variables:
     | emf_cb_thirdparty_on_success_posttitle
     | emf_cb_victory
     | emf_cb_victory_other
+    | emf_character_abandon_heresy
     | emf_character_become_heretic
+    | emf_character_set_religion_to_FROM
+    | emf_character_set_religion_to_FROMFROM
+    | emf_character_set_religion_to_ROOT
+    | emf_character_set_religion_to_reformed
+    | emf_character_set_religion_to_target_religion
     | emf_check_adventurer_government
     | emf_clear_adventurer_location
     | emf_clear_standard_title_state
@@ -5787,6 +5795,7 @@ variables:
     | emf_imperial_decay_plus_2
     | emf_imperial_decay_victory
     | emf_imperial_save_viceroy_pick
+    | emf_increase_fertility
     | emf_invalidate_karling_usurper
     | emf_jewish_conversion
     | emf_laws_agnatic_succession_reactions
@@ -5863,12 +5872,11 @@ variables:
     | emf_nomad_settlement_spawn_unit
     | emf_normalize_decay
     | emf_normalize_decay_change_on_new_holder
-    | emf_nwo_create_female_ruler
-    | emf_nwo_create_male_ruler
     | emf_promote_diplomat_trait
     | emf_promote_education_trait
     | emf_promote_warrior_trait
     | emf_province_become_heretic
+    | emf_raise_title_tribal_organization
     | emf_randomize_relhead_title_names
     | emf_reduce_fertility
     | emf_relsub_add_unrest
@@ -6013,6 +6021,7 @@ variables:
     | emf_set_gender_female
     | emf_set_gender_male
     | emf_set_government_to_match_PREV
+    | emf_set_theocracy_government_safe
     | emf_set_viceroy_exemption
     | emf_spawn_byz
     | emf_spawn_hre_elector_title
@@ -6230,6 +6239,8 @@ variables:
     | emf_can_add_holding_slot
     | emf_can_autodestroy_title
     | emf_can_be_karling_usurper
+    | emf_can_be_patrician_heir_if_can_inherit
+    | emf_can_be_patrician_heir_if_can_inherit_no_tooltip
     | emf_can_convert_culture
     | emf_can_convert_province_culture
     | emf_can_convert_religion
@@ -6333,6 +6344,7 @@ variables:
     | emf_faction_has_special_chance_blocker
     | emf_far_from_adventurer
     | emf_female_homosexual_indifferent_religion
+    | emf_female_homosexual_indifferent_true_religion
     | emf_feminist_religion
     | emf_feminist_true_religion
     | emf_feudal_can_hold_temples
@@ -6480,6 +6492,7 @@ variables:
     | emf_is_skilled_adventurer
     | emf_is_sterile_trigger
     | emf_is_title_type_special
+    | emf_is_trophy_spouse
     | emf_is_uncrowned
     | emf_is_valid_hre_elector_title
     | emf_is_valid_karling_usurper
@@ -6523,6 +6536,7 @@ variables:
     | emf_likes_adventurer_target
     | emf_longbow_volley_tactic_culture
     | emf_male_homosexual_indifferent_religion
+    | emf_male_homosexual_indifferent_true_religion
     | emf_mameluke_charge_tactic_culture
     | emf_mameluke_closing_charge_tactic_culture
     | emf_mameluke_raid_tactic_culture
@@ -6576,6 +6590,7 @@ variables:
     | emf_not_syncretized_true_religion_with_ROOTs_true_religion
     | emf_not_true_unreformed_pagan
     | emf_not_unreformed_pagan
+    | emf_not_warlike_true_religion
     | emf_not_western_christian_religion
     | emf_optional_aragon_county_control
     | emf_pacifist_true_religion
@@ -6652,6 +6667,7 @@ variables:
     | emf_relsub_has_light_unrest
     | emf_relsub_has_normal_unrest
     | emf_relsub_has_unrest
+    | emf_requires_workaround_for_religion_switch
     | emf_retinue_hire_basic_potential
     | emf_retreat_and_ambush_tactic_culture
     | emf_revolt_ROOT_religion_matches_rebel_victory_title
@@ -6735,6 +6751,7 @@ variables:
     | emf_valid_mongol_heir_for_ROOT
     | emf_view_hre_elector_titles_potential
     | emf_volley_tactic_troop_requirements
+    | emf_warlike_true_religion
     | emf_was_hre_recently_restored
     | emf_was_strong_basileus
     | emf_western_christian_religion

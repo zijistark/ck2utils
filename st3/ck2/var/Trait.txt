@@ -139,7 +139,7 @@ doctores                       # Doctores
 drunkard                       # Drunkard
 druze_ajawid                   # Ajawid
 druze_juhhal                   # Juhhal
-druze_uqqal                    # Uqqal
+druze_uqqal                    # [druze.GetPriestTitleCap]
 duelist                        # Duelist
 dull                           # Dull
 dwarf                          # Dwarf
@@ -202,7 +202,7 @@ emf_saint_converter            # HIDDEN (Saint Converted an Important Ruler)
 emf_saint_religion_head        # HIDDEN (Saint Was Leader of Religion)
 emf_saint_schism               # HIDDEN (Saint Mended a Schism)
 emf_saint_true_knight          # HIDDEN (Saint Was a True Christian Knight)
-emf_saint_voice_jesus          # HIDDEN (Saint Could Hear the Voice of God)
+emf_saint_voice_jesus          # HIDDEN (Saint Could Hear the Voice of [Root.Religion.GetHighGodName])
 emf_seljuk_invader             # Seljuk Invader
 emf_temporary_0                # Temporary Trait I
 emf_temporary_1                # Temporary Trait II
