@@ -6,6 +6,9 @@ from print_time import print_time
 
 parser = ck3parser.SimpleParser()
 
+ai_values = ['ai_honor', 'ai_zeal', 'ai_greed', 'ai_compassion',
+             'ai_boldness', 'ai_rationality', 'ai_vengefulness', 'ai_energy']
+
 
 @print_time
 def main():
@@ -20,8 +23,7 @@ def get_attrs(my_traits):
     all_traits = ck3parser.traits(parser)
     static_values = ck3parser.static_values(parser)
 
-    attr = {a: 0 for a in ('ai_honor', 'ai_rationality', 'ai_vengefulness',
-                           'ai_compassion', 'ai_sociability')}
+    attr = {a: 0 for a in ai_values}
 
     for trait in my_traits:
         for n, v in all_traits[trait].contents:
@@ -33,7 +35,7 @@ def get_attrs(my_traits):
 
 def output(attr):
     for k, v in attr.items():
-        print(f'{v:>4} {k}')
+        print(f'{v:>4} {k[3:]}')
 
 
 if __name__ == '__main__':
