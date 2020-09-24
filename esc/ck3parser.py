@@ -4,6 +4,7 @@ import collections
 import csv
 import functools
 import hashlib
+import io
 import operator
 import os
 import pathlib
@@ -15,7 +16,7 @@ import traceback
 from funcparserlib.lexer import make_tokenizer, Token
 from funcparserlib.parser import (some, a, maybe, many, finished, skip,
                                   oneplus, forward_decl, NoParseError)
-from localpaths import rootpath, vanilladir, cachedir
+from localpaths import rootpath, ck3dir, ck3cachedir
 
 try:
     import git
@@ -23,86 +24,119 @@ try:
 except ImportError:
     git_present = False
 
-VERSION = 3
+VERSION = 1
 
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
                      quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
 
 def csv_rows(path, linenum=False, comments=False):
-    with open(str(path), newline='', encoding='cp1252', errors='replace') as f:
-        gen = ((r, i + 1) if linenum else r
-               for i, r in enumerate(csv.reader(f, dialect='ckii'))
-               if (r and r[0] and
-                   (r[0].startswith('#') and comments or
-                    not r[0].startswith('#') and len(r) > 1)))
-        yield from gen
+    try:
+        with open(str(path), newline='', encoding='utf_8_sig') as f:
+            text = f.read()
+    except UnicodeDecodeError:
+        with open(str(path), newline='', encoding='cp1252',
+                  errors='replace') as f:
+            text = f.read()
+    f = io.StringIO(text)
+    gen = ((r, i + 1) if linenum else r
+            for i, r in enumerate(csv.reader(f, dialect='ckii'))
+            if (r and r[0] and
+                (r[0].startswith('#') and comments or
+                not r[0].startswith('#') and len(r) > 1)))
+    yield from gen
 
 # give mod dirs in descending lexicographical order of mod name (Z-A),
 # modified for dependencies as necessary.
-def files(glob, moddirs=(), basedir=vanilladir, reverse=False):
+def files(glob, moddirs=(), basedir=ck3dir, reverse=False):
     result_paths = {p.relative_to(d): p
                     for d in (basedir,) + tuple(moddirs) for p in d.glob(glob)}
     for _, p in sorted(result_paths.items(), key=lambda t: t[0].parts,
                        reverse=reverse):
         yield p
 
-def get_cultures(parser, groups=True):
-    cultures = []
-    culture_groups = []
-    for _, tree in parser.parse_files('common/cultures/*.txt'):
+# def get_cultures(parser, groups=True):
+#     cultures = []
+#     culture_groups = []
+#     for _, tree in parser.parse_files('common/cultures/*.txt'):
+#         for n, v in tree:
+#             culture_groups.append(n.val)
+#             cultures.extend(n2.val for n2, v2 in v
+#                             if n2.val not in ['graphical_cultures',
+#                                               'unit_graphical_cultures',
+#                                               'alternate_start'])
+#     return (cultures, culture_groups) if groups else cultures
+
+# def get_religions(parser, groups=True):
+#     religions = []
+#     religion_groups = []
+#     for _, tree in parser.parse_files('common/religions/*.txt'):
+#         for n, v in tree:
+#             if n.val == 'secret_religion_visibility_trigger':
+#                 continue
+#             religion_groups.append(n.val)
+#             religions.extend(n2.val for n2, v2 in v
+#                              if (isinstance(v2, Obj) and
+#                                  n2.val not in ['color', 'male_names',
+#                                                 'female_names',
+#                                                 'interface_skin']))
+#     return (religions, religion_groups) if groups else religions
+
+# def get_province_id_name_map(parser):
+#     defs = parser.parse_file('map/default.map')['definitions'].val
+#     id_name_map = {}
+#     for row in csv_rows(parser.file('map/' + defs)):
+#         try:
+#             id_name_map[int(row[0])] = row[4]
+#         except (IndexError, ValueError):
+#             continue
+#     return id_name_map
+
+# def get_provinces(parser):
+#     id_name = get_province_id_name_map(parser)
+#     for path in parser.files('history/provinces/* - *.txt'):
+#         number, name = path.stem.split(' - ')
+#         number = int(number)
+#         if id_name.get(number) == name:
+#             tree = parser.parse_file(path)
+#             try:
+#                 title = tree['title'].val
+#             except KeyError:
+#                 continue
+#             yield number, title, tree
+
+# def get_localisation(moddirs=(), basedir=ck3dir, ordered=False):
+#     locs = collections.OrderedDict() if ordered else {}
+#     for path in files('localisation/*.csv', moddirs, basedir=basedir):
+#         for row in csv_rows(path):
+#             if row[0] not in locs:
+#                 locs[row[0]] = row[1]
+#     return locs
+
+def localization():
+    localization_dict = {}
+    for path in (ck3dir / 'localization').glob('*_l_english.yml'):
+        with path.open(encoding='utf-8-sig') as f:
+            for line in f:
+                match = re.fullmatch(r'\s*([^#\s:]+):\d?\s*"(.*)"[^"]*', line)
+                if match:
+                    localization_dict[match.group(1)] = match.group(2)
+    return localization_dict
+
+def static_values(parser):
+    static_values_dict = {}
+    for path, tree in parser.parse_files('common/script_values/*.txt'):
+        for p in tree:
+            if isinstance(p, Pair) and isinstance(p.value, Number):
+                static_values_dict[p.key.val] = p.value.val
+    return static_values_dict
+
+def traits(parser):
+    traits_dict = {}
+    for _, tree in parser.parse_files('common/traits/*.txt'):
         for n, v in tree:
-            culture_groups.append(n.val)
-            cultures.extend(n2.val for n2, v2 in v
-                            if n2.val not in ['graphical_cultures',
-                                              'unit_graphical_cultures',
-                                              'alternate_start'])
-    return (cultures, culture_groups) if groups else cultures
-
-def get_religions(parser, groups=True):
-    religions = []
-    religion_groups = []
-    for _, tree in parser.parse_files('common/religions/*.txt'):
-        for n, v in tree:
-            if n.val == 'secret_religion_visibility_trigger':
-                continue
-            religion_groups.append(n.val)
-            religions.extend(n2.val for n2, v2 in v
-                             if (isinstance(v2, Obj) and
-                                 n2.val not in ['color', 'male_names',
-                                                'female_names',
-                                                'interface_skin']))
-    return (religions, religion_groups) if groups else religions
-
-def get_province_id_name_map(parser):
-    defs = parser.parse_file('map/default.map')['definitions'].val
-    id_name_map = {}
-    for row in csv_rows(parser.file('map/' + defs)):
-        try:
-            id_name_map[int(row[0])] = row[4]
-        except (IndexError, ValueError):
-            continue
-    return id_name_map
-
-def get_provinces(parser):
-    id_name = get_province_id_name_map(parser)
-    for path in parser.files('history/provinces/* - *.txt'):
-        number, name = path.stem.split(' - ')
-        number = int(number)
-        if id_name.get(number) == name:
-            tree = parser.parse_file(path)
-            try:
-                title = tree['title'].val
-            except KeyError:
-                continue
-            yield number, title, tree
-
-def get_localisation(moddirs=(), basedir=vanilladir, ordered=False):
-    locs = collections.OrderedDict() if ordered else {}
-    for path in files('localisation/*.csv', moddirs, basedir=basedir):
-        for row in csv_rows(path):
-            if row[0] not in locs:
-                locs[row[0]] = row[1]
-    return locs
+            if isinstance(v, Obj):
+                traits_dict[n.val] = v
+    return traits_dict
 
 def first_post_comment(item):
     if item.post_comment:
@@ -169,6 +203,8 @@ def comments_to_str(parser, comments, indent):
 
 
 class Comment:
+    __slots__ = 'val',
+
     def __init__(self, string):
         if string and string[0] == '#':
             string = string[1:]
@@ -179,10 +215,11 @@ class Comment:
 
 
 class Stringifiable:
-    pass
+    __slots__ = ()
 
 
 class TopLevel(Stringifiable):
+    __slots__ = 'contents', 'post_comments', '_dictionary', 'settings'
 
     def __init__(self, contents=None, post_comments=None):
         super().__init__()
@@ -277,6 +314,7 @@ class TopLevel(Stringifiable):
 
 
 class Commented(Stringifiable):
+    __slots__ = 'pre_comments', 'val', 'post_comment'
 
     def __init__(self, *args):
         super().__init__()
@@ -354,6 +392,7 @@ class Commented(Stringifiable):
 
 
 class String(Commented):
+    __slots__ = 'force_quote',
 
     def __init__(self, *args):
         super().__init__(*args)
@@ -362,7 +401,7 @@ class String(Commented):
     def val_str(self):
         s = self.val
         if self.force_quote or not re.fullmatch(r'\S+', s):
-            s = '"{}"'.format(s)
+            s = f'"{s}"'
         return s
 
 
@@ -389,6 +428,7 @@ class Op(Commented):
 
 
 class Pair(Stringifiable):
+    __slots__ = 'key', 'op', 'value'
 
     def __init__(self, *args):
         super().__init__()
@@ -496,6 +536,7 @@ class Pair(Stringifiable):
 
 
 class Obj(Stringifiable):
+    __slots__ = 'kel', 'contents', 'ker', '_dictionary'
 
     def __init__(self, kel, contents=None, ker=None):
         super().__init__()
@@ -724,10 +765,9 @@ class SimpleParser:
     tokenizer = SimpleTokenizer
     repos = {}
 
-    def __init__(self, *moddirs, strict=True):
+    def __init__(self, *moddirs):
         self.moddirs = list(moddirs)
-        self.basedir = vanilladir
-        self.strict = strict
+        self.basedir = ck3dir
         self.cache_hits = 0
         self.cache_misses = 0
         self.parse_tree_cache = {}
@@ -740,11 +780,11 @@ class SimpleParser:
         self.no_fold_keys = []
         self.no_fold_to_depth = -1
         self.newlines_to_depth = -1
-        self.crlf = True
-        self.encoding = 'cp1252'
+        self.crlf = False
+        self.encoding = 'utf_8_sig'
         self.ignore_cache = False
-        self.vanilla_is_repo = True
-        self.cachedir = cachedir / self.__class__.__name__
+        self.vanilla_is_repo = False
+        self.cachedir = ck3cachedir / self.__class__.__name__
         self.cachedir.mkdir(parents=True, exist_ok=True)
         self.setup_parser()
 
@@ -765,15 +805,13 @@ class SimpleParser:
         date = toktype('Date') >> Date
         name = toktype('Name') >> String
         string = toktype('String') >> (lambda s: s[1:-1]) >> String
-        key = date | number | name
+        key = name | date | number | string
         pair = forward_decl()
-        if self.strict:
-            obj = kel + many(pair | string | key) + ker >> unarg(Obj)
-        else:
-            obj = (kel + many(pair | string | key) +
-                   (ker | skip(finished)) >> unarg(Obj))
-        pair.define(key + op + (obj | string | key) >> unarg(Pair))
-        self.toplevel = many(pair) + skip(finished) >> TopLevel
+        obj = forward_decl()
+        obj.define(kel + many(pair | key | obj) + (ker | skip(finished)) >>
+                   unarg(Obj))
+        pair.define(key + op + (obj | key) >> unarg(Pair))
+        self.toplevel = many(pair | key | obj) + skip(finished) >> TopLevel
 
     def flush(self, path=None):
         if path is None:
@@ -792,13 +830,11 @@ class SimpleParser:
             if bad_repo_path != None:
                 del self.repos[bad_repo_path]
 
-    def get_cachepath(self, path, encoding):
+    def get_cachepath(self, path):
         m = hashlib.md5()
-        m.update(encoding.encode())
         m.update(bytes(path))
-        cachedir = self.cachedir
         name = m.hexdigest()
-        if not self.vanilla_is_repo and vanilladir in path.parents:
+        if not self.vanilla_is_repo and ck3dir in path.parents:
             return self.cachedir / 'vanilla' / name, False
         for repo_path, (latest_commit, dirty_paths) in self.repos.items():
             if repo_path in path.parents:
@@ -815,7 +851,7 @@ class SimpleParser:
             else:
                 no_git = True
             if no_git:
-                if self.vanilla_is_repo and vanilladir in path.parents:
+                if self.vanilla_is_repo and ck3dir in path.parents:
                     self.vanilla_is_repo = False
                     return self.cachedir / 'vanilla' / name, False
                 return self.cachedir / name, False
@@ -872,7 +908,7 @@ class SimpleParser:
             if path.is_file():
                 yield path.resolve(), self.parse_file(path, **kwargs)
 
-    def parse_file(self, path, encoding=None, errors='replace',
+    def parse_file(self, path, encoding=None, errors=None,
                    memcache=None, diskcache=None):
         try:
             path = path.resolve()
@@ -884,31 +920,42 @@ class SimpleParser:
         if diskcache is None:
             diskcache = self.diskcache_default
         if encoding is None:
-            encoding = self.encoding
-        ignore_cache = (self.ignore_cache or errors != 'replace')
+            errors = None
+        ignore_cache = self.ignore_cache
         if not ignore_cache:
             if path in self.parse_tree_cache:
                 return self.parse_tree_cache[path]
-            cachepath, is_indexed = self.get_cachepath(path, encoding)
+            cachepath, is_indexed = self.get_cachepath(path)
             try:
                 if cachepath.exists() and (is_indexed or
                                            (os.path.getmtime(str(cachepath)) >=
                                             os.path.getmtime(str(path)))):
                     with cachepath.open('rb') as f:
                         tree = pickle.load(f)
-                        if tree.version == VERSION:
+                        if tree.settings == (VERSION, encoding, errors):
                             if memcache:
                                 self.parse_tree_cache[path] = tree
                             self.cache_hits += 1
                             return tree
-            except AttributeError:
-                pass
-            except (pickle.PickleError, EOFError, ImportError, IndexError):
+            # except AttributeError:
+            #     pass
+            except (pickle.PickleError, EOFError, ImportError, IndexError,
+                    AttributeError):
                 print('Error retrieving cache for {}'.format(path),
                       file=sys.stderr)
                 traceback.print_exc()
-                pass
             self.cache_misses += 1
+        args = (path, errors, ignore_cache, diskcache, cachepath, memcache,
+                encoding)
+        if encoding is not None:
+            return self.parse_file_as(encoding, *args)
+        try:
+            return self.parse_file_as('utf_8_sig', *args)
+        except UnicodeDecodeError:
+            return self.parse_file_as('cp1252', *args)
+
+    def parse_file_as(self, encoding, path, errors, ignore_cache, diskcache,
+                      cachepath, memcache, orig_encoding):
         with path.open(encoding=encoding, errors=errors) as f:
             try:
                 tree = self.parse(f.read())
@@ -917,13 +964,21 @@ class SimpleParser:
                         cachepath.parent.mkdir(parents=True, exist_ok=True)
                         # possible todo: put this i/o in another thread
                         with cachepath.open('wb') as f:
-                            tree.version = VERSION
+                            tree.settings = VERSION, orig_encoding, errors
                             pickle.dump(tree, f)
                     if memcache:
                         self.parse_tree_cache[path] = tree
                 return tree
+            except UnicodeDecodeError:
+                raise
             except:
                 print(path, file=sys.stderr)
+                # if (path.name in ('00_bastard_triggers.txt',
+                #                   'stress_threshold_events.txt') or
+                #     any(p.name == 'map_object_data' for p in path.parents)):
+                #     print('discarding parse error assumed from vanilla',
+                #           file=sys.stderr)
+                #     return None
                 raise
 
     def parse(self, string):
@@ -962,13 +1017,17 @@ class FullParser(SimpleParser):
         op = commented(toktype('op')) >> unarg(Op)
         number = commented(toktype('number')) >> unarg(Number)
         date = commented(toktype('date')) >> unarg(Date)
-        key = unquoted_string | date | number
+        key = unquoted_string | date | number | quoted_string
         value = forward_decl()
         pair = key + op + value >> unarg(Pair)
-        if self.strict:
-            obj = kel + many(pair | value) + ker >> unarg(Obj)
-        else:
-            obj = kel + many(pair | value) + (ker | end) >> unarg(Obj)
-        value.define(obj | key | quoted_string)
-        self.toplevel = (many(pair) + many(nl + comment) + end >>
+        obj = kel + many(pair | value) + (ker | end) >> unarg(Obj)
+        value.define(obj | key)
+        self.toplevel = (many(pair | value) + many(nl + comment) + end >>
                          unarg(TopLevel))
+
+# maybe todo: build StrictParser & StrictFullParser.
+#  - final kers required
+#  - refine requirements on obj/toplevel
+#    - try to catch errors like missing = in pair
+#    - but still have to allow e.g. hsv { 0 0 0 }
+#  - could maybe have logic to share cache, storing strictness in the pickle
