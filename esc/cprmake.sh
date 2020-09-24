@@ -1,8 +1,9 @@
 #!/bin/sh
 
 BUILD=${HOME}/cpr-build
-cd ${REPO_ROOT}/CPRplus2019
 mkdir -p $BUILD
-rsync -a --del --exclude='*.rar' CPRplus* $BUILD && \
-unrar x -idq -phip -y "CPRplus\gfx.rar" "`cygpath -w $BUILD/CPRplus`" && \
-../HIP-tools/installer/shrinkwrap.py --modules-dir $BUILD
+cd /c
+rsync -a --del --exclude='*.rar' ${REPO_ROOT:3}/CPRplus2019/CPRplus* ${BUILD:3} && \
+cd ${REPO_ROOT}
+unrar x -idq -phip -y "CPRplus2019/CPRplus/gfx.rar" "$BUILD/CPRplus" && \
+py HIP-tools/installer/shrinkwrap.py --modules-dir $BUILD
