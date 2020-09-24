@@ -1031,3 +1031,12 @@ class FullParser(SimpleParser):
 #    - try to catch errors like missing = in pair
 #    - but still have to allow e.g. hsv { 0 0 0 }
 #  - could maybe have logic to share cache, storing strictness in the pickle
+
+# or, more like, multiple parser objects are defined by the existing classes,
+#   and one mode of operation involves trying each of them from strictest
+#   to most tolerant. the intention being that only vanilla,
+#   or maybe only certain vanilla files, will get that treatment, so
+#   mod files can get stricter checking.
+
+# this would probably also allow folding fullparser and simpleparser back
+#   together
