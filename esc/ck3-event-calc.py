@@ -45,7 +45,7 @@ def handle_args(args):
 def get_attrs(my_traits):
     all_traits = ck3parser.traits(parser)
 
-    attr = {a: 0 for a in ai_values}
+    attr = dict.fromkeys(ai_values, 0)
 
     for trait in my_traits:
         for n, v in all_traits[trait].contents:
@@ -56,7 +56,7 @@ def get_attrs(my_traits):
 
 
 def handle_reading(event, traits, stat):
-    results = {x: 50 for x in ['religious', 'entertaining', 'informative']}
+    results = dict.fromkeys(['religious', 'entertaining', 'informative'], 50)
 
     results['religious'] += stat['ai_zeal'] * 4
     results['religious'] += stat['ai_honor'] * 2
@@ -90,14 +90,12 @@ def handle_reading(event, traits, stat):
 
 
 def output(attr, event_result):
-    if event_result:
-        print(event_result)
-    for k, v in attr.items():
+    for k, v in {**event_result, **attr}.items():
         print(f'{v:>4} {k[3:]}')
 
 
 handlers = {
-    None: lambda _: None,
+    None: lambda _: {},
     'reading': handle_reading
 }
 
