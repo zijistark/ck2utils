@@ -38,7 +38,9 @@ def handle_args(args):
             'learning': int(args[6]),
             'piety_level': int(args[7])
         }
-        traits = args[8:]
+        traits = set(args[8:])
+    else:
+        traits = set(args)
     return event, stat, traits
 
 
@@ -48,9 +50,10 @@ def get_attrs(my_traits):
     attr = dict.fromkeys(ai_values, 0)
 
     for trait in my_traits:
-        for n, v in all_traits[trait].contents:
-            if n.val in attr:
-                attr[n.val] += static_values.get(v.val, v.val)
+        if trait_def := all_traits.get(trait):
+            for n, v in trait_def.contents:
+                if n.val in attr:
+                    attr[n.val] += static_values.get(v.val, v.val)
 
     return attr
 
@@ -86,17 +89,46 @@ def handle_reading(event, traits, stat):
     if 'shrewd' in traits:
         results['informative'] += 20
 
-    return max(results.items(), key=lambda x: x[1])[0]
+    return results
+
+
+def handle_gift(event, traits, stat):
+    results = {x: {True: 75, False: 25}
+               for x in ['embroidery', 'poem', 'woodcarving']}
+
+    if traits.isdisjoint({'education_diplomacy', 'diplomacy_lifestyle',
+                          'compassionate', 'family_first'}):
+        results['embroidery'][True] += 100
+    if 'greedy' in traits:
+        results['embroidery'][False] += 100
+
+    if traits.isdisjoint({'education_learning', 'lustful', 'gluttonous',
+                          'lifestyle_reveler', 'gregarious', 'diplomat',
+                          'august', 'family_first', 'ambitious'}):
+        results['poem'][True] += 100
+    if traits.isdisjoint({'chaste', 'temperate', 'content'}):
+        results['poem'][False] += 100
+
+    if (traits.isdisjoint({'education_stewardship', 'architect',
+                           'administrator', 'avaricious',
+                           'stewardship_lifestyle'}) or
+            stat['stewardship'] > 10):
+        results['woodcarving'][True] += 100
+    if traits.isdisjoint({'lazy', 'content'}):
+        results['woodcarving'][False] += 100
+
+    return {k: v[True] / (v[True] + v[False]) for k, v in results.items()}
 
 
 def output(attr, event_result):
     for k, v in {**event_result, **attr}.items():
-        print(f'{v:>4} {k[3:]}')
+        print(f'{v:7.2f} {k}')
 
 
 handlers = {
-    None: lambda _: {},
-    'reading': handle_reading
+    None: lambda *_: {},
+    'reading': handle_reading,
+    'gift': handle_gift
 }
 
 if __name__ == '__main__':
