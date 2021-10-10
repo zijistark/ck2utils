@@ -7,7 +7,7 @@ import sys
 from print_time import print_time
 
 LINE_ENDINGS = False
-IGNORE_COMMENTS = True
+IGNORE_COMMENTS = False
 
 BINARY = ['.dds', '.tga', '.xac', '.bmp', '.db', '.jpg', '.yml', '.xlsx',
           '.ogg', '.wav', '.xcf', '.psd', '.sublime-workspace', '.rar', '.ttf',

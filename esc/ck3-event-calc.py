@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+from collections.abc import Callable, Container, Iterable, Mapping, Sequence
 import ck3parser
 from print_time import print_time
 
@@ -25,7 +26,7 @@ def main():
     output(attr, event_result)
 
 
-def handle_args(args):
+def handle_args(args: Sequence[str]):
     args = [x.casefold() for x in args]
     event, stat, traits = None, {}, None
     if args[0] == '-e':
@@ -44,7 +45,7 @@ def handle_args(args):
     return event, stat, traits
 
 
-def get_attrs(my_traits):
+def get_attrs(my_traits: Iterable[str]):
     all_traits = ck3parser.traits(parser)
 
     attr = dict.fromkeys(ai_values, 0)
@@ -58,7 +59,7 @@ def get_attrs(my_traits):
     return attr
 
 
-def handle_reading(event, traits, stat):
+def handle_reading(_, traits: Container[str], stat: Mapping[str, int]):
     results = dict.fromkeys(['religious', 'entertaining', 'informative'], 50)
 
     results['religious'] += stat['ai_zeal'] * 4
@@ -92,9 +93,10 @@ def handle_reading(event, traits, stat):
     return results
 
 
-def handle_gift(event, traits, stat):
-    results = {x: {True: 75, False: 25}
-               for x in ['embroidery', 'poem', 'woodcarving']}
+def handle_gift(_, traits: Container[str], stat: Mapping[str, int]):
+    results = {x: {True: 75, False: 25} for x in [
+        'embroidery', 'poem', 'woodcarving', 'rare book', 'handkerchief',
+        'sea shell']}
 
     if traits.isdisjoint({'education_diplomacy', 'diplomacy_lifestyle',
                           'compassionate', 'family_first'}):
@@ -117,15 +119,22 @@ def handle_gift(event, traits, stat):
     if traits.isdisjoint({'lazy', 'content'}):
         results['woodcarving'][False] += 100
 
+    if (stat['learning'] >= 10 or
+            traits.isdisjoint({'scholar', 'whole_of_body', 'theologian'})):
+        results['rare book'][True] += 100
+    if 'impatient' in traits or stat['learning'] < 10:
+        results['rare book'][False] += 100
+
     return {k: v[True] / (v[True] + v[False]) for k, v in results.items()}
 
 
-def output(attr, event_result):
+def output(attr: Mapping[str, int], event_result: Mapping[str, int]):
     for k, v in {**event_result, **attr}.items():
         print(f'{v:7.2f} {k}')
 
 
-handlers = {
+handlers: dict[str | None, Callable[[str, Container[str], Mapping[str, int]],
+                                    Mapping[str, int]]] = {
     None: lambda *_: {},
     'reading': handle_reading,
     'gift': handle_gift
