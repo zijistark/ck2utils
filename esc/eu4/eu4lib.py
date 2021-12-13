@@ -36,7 +36,12 @@ class Religion():
         self.color = color
 
 class IdeaGroup(NameableEntity):
+    overridden_display_names = {
+        'latin_ideas': 'Italian (minor) ideas',
+    }
     def __init__(self, name, display_name, ideas, bonus, traditions = None, category = None):
+        if name in self.overridden_display_names:
+            display_name = self.overridden_display_names[name]
         super().__init__(name, display_name)
         self.ideas = ideas
         bonus.idea_group = self
@@ -66,6 +71,8 @@ class Idea(NameableEntity):
     overridden_display_names = {
         'daimyo_ideas_start': 'Daimyo traditions', # the game calls them "Sengoku Jidai"
         'TTL_ideas_start': 'Three Leagues traditions', # the game calls them "League Traditions"
+        'latin_ideas_start': 'Italian (minor) traditions',
+        'latin_ideas_bonus': 'Italian (minor) ambition',
     }
     def __init__(self, name, display_name, modifiers):
         if name in self.overridden_display_names:
