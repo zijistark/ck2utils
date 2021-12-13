@@ -69,13 +69,15 @@ class Eu4Parser(object):
         return modifiers
 
     @cached_property
-    def all_idea_groups(self):
+    def all_idea_groups(self, filter_groups=['SYN_ideas', 'JMN_ideas']):
         # collect all ideas to handle duplicate ideas which are not always specified again
         all_ideas = {}
         all_idea_groups = {}
         for _, tree in self.parser.parse_files('common/ideas/*'):
             for n, v in tree:
                 idea_group_name = n.val
+                if idea_group_name in filter_groups:
+                    continue
                 category = None
                 bonus = None
                 traditions = None
