@@ -16,7 +16,8 @@ ai_values = ['ai_boldness', 'ai_compassion', 'ai_greed', 'ai_energy',
 @print_time
 def main():
     # py -m ck3-event-calc calm humble honest
-    # py -m ck3-event-calc -e reading 14 6 6 3 8 1 chaste zealous just
+    # py -m ck3-event-calc -e reading 14 6 6 3 8 1
+    #     education_diplomacy chaste zealous just diplomacy_lifestyle
     event, stat, traits = handle_args(sys.argv[1:])
 
     attr = get_attrs(traits)
@@ -95,35 +96,87 @@ def handle_reading(_, traits: Container[str], stat: Mapping[str, int]):
 
 def handle_gift(_, traits: Container[str], stat: Mapping[str, int]):
     results = {x: {True: 75, False: 25} for x in [
-        'embroidery', 'poem', 'woodcarving', 'rare book', 'handkerchief',
-        'sea shell']}
+        'tapestry', 'horse', 'tailor',
+        'embroidery', 'poem', 'woodcarving',
+        'jewelry', 'stuffed animal', 'flower',
+        'rare book', 'handkerchief', 'object']}
 
-    if traits.isdisjoint({'education_diplomacy', 'diplomacy_lifestyle',
-                          'compassionate', 'family_first'}):
+    if not traits.isdisjoint({'family_first', 'arrogant', 'ambitious'}):
+        # also if same dynasty
+        results['tapestry'][True] += 100
+    if not traits.isdisjoint({'humble', 'honest'}):
+        # honest only counts if prestige_level < 2
+        results['tapestry'][False] += 100
+
+    if not traits.isdisjoint({'lifestyle_hunter', 'strategist', 'overseer',
+                              'gallant', 'martial_lifestyle'}):
+        results['horse'][True] += 100
+    if not traits.isdisjoint({'lazy', 'craven'}):
+        results['horse'][False] += 100
+
+    if not traits.isdisjoint({'lifestyle_reveler', 'arrogant'}):
+        results['tailor'][True] += 100
+    if not traits.isdisjoint({'content', 'chaste'}):
+        results['tailor'][False] += 100
+
+    if not traits.isdisjoint({'education_diplomacy', 'diplomacy_lifestyle',
+                              'compassionate', 'family_first'}):
         results['embroidery'][True] += 100
     if 'greedy' in traits:
         results['embroidery'][False] += 100
 
-    if traits.isdisjoint({'education_learning', 'lustful', 'gluttonous',
-                          'lifestyle_reveler', 'gregarious', 'diplomat',
-                          'august', 'family_first', 'ambitious'}):
+    if not traits.isdisjoint({'education_learning', 'lustful', 'gluttonous',
+                              'lifestyle_reveler', 'gregarious', 'diplomat',
+                              'august', 'family_first', 'ambitious'}):
         results['poem'][True] += 100
-    if traits.isdisjoint({'chaste', 'temperate', 'content'}):
+    if not traits.isdisjoint({'chaste', 'temperate', 'content'}):
         results['poem'][False] += 100
 
-    if (traits.isdisjoint({'education_stewardship', 'architect',
-                           'administrator', 'avaricious',
-                           'stewardship_lifestyle'}) or
+    if (not traits.isdisjoint({'education_stewardship', 'architect',
+                               'administrator', 'avaricious',
+                               'stewardship_lifestyle'}) or
             stat['stewardship'] > 10):
         results['woodcarving'][True] += 100
-    if traits.isdisjoint({'lazy', 'content'}):
+    if not traits.isdisjoint({'lazy', 'content'}):
         results['woodcarving'][False] += 100
 
+    if not traits.isdisjoint({'greedy', 'beauty_good', 'arrogant', 'lustful'}):
+        results['jewelry'][True] += 100
+    if not traits.isdisjoint({'temperate', 'generous'}):
+        results['jewelry'][False] += 100
+
+    if not traits.isdisjoint({'lifestyle_hunter', 'sadistic', 'torturer',
+                              'ambitious', 'deceitful'}):
+        results['stuffed animal'][True] += 100
+    if not traits.isdisjoint({'compassionate', 'content'}):
+        results['stuffed animal'][False] += 100
+
+    if not traits.isdisjoint({'architect', 'administrator', 'avaricious',
+                              'seducer', 'diligent', 'beauty_good'}):
+        results['flower'][True] += 100
+    if 'lazy' in traits:
+        results['flower'][False] += 100
+
     if (stat['learning'] >= 10 or
-            traits.isdisjoint({'scholar', 'whole_of_body', 'theologian'})):
+            not traits.isdisjoint({'scholar', 'whole_of_body', 'theologian'})):
         results['rare book'][True] += 100
     if 'impatient' in traits or stat['learning'] < 10:
         results['rare book'][False] += 100
+
+    # likes: ill, opinion >= 50, prestige level lower, or tier lower
+    results['handkerchief'][True] += 100
+    # dislikes: prestige level higher or opinion < 50
+
+    # likes: opinion >= 60 or "potential lover" based on earlier interactions,
+    # else:
+    if 'callous' in traits:
+        results['object'][False] += 100
+
+    if not traits.isdisjoint({'architect', 'administrator', 'avaricious',
+                              'seducer', 'diligent', 'beauty_good'}):
+        results['object'][True] += 100
+    if 'lazy' in traits:
+        results['object'][False] += 100
 
     return {k: v[True] / (v[True] + v[False]) for k, v in results.items()}
 
