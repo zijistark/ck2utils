@@ -765,7 +765,7 @@ class SimpleParser:
         date = toktype('Date') >> Date
         name = toktype('Name') >> String
         string = toktype('String') >> (lambda s: s[1:-1]) >> String
-        key = date | number | name
+        key = date | number | name | string
         pair = forward_decl()
         if self.strict:
             obj = kel + many(pair | string | key) + ker >> unarg(Obj)
