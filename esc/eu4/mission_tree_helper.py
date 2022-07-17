@@ -1,7 +1,9 @@
 import pathlib
 from PIL import Image, ImageChops
 from argparse import ArgumentParser
-import os, sys
+import os
+import sys
+# add the parent folder to the path so that imports work even if the working directory is the eu4 folder
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 import ck2parser
 from localpaths import eu4dir
