@@ -16,6 +16,7 @@ from funcparserlib.lexer import make_tokenizer, Token
 from funcparserlib.parser import (some, a, maybe, many, finished, skip,
                                   oneplus, forward_decl, NoParseError)
 from localpaths import rootpath, vanilladir, cachedir
+from functools import total_ordering
 
 try:
     import git
@@ -353,6 +354,7 @@ class Commented(Stringifiable):
         return s, (nl, col)
 
 
+@total_ordering
 class String(Commented):
 
     def __init__(self, *args):
@@ -365,7 +367,26 @@ class String(Commented):
             s = '"{}"'.format(s)
         return s
 
+    def __str__(self):
+        return self.val
 
+    def __hash__(self):
+        return hash(self.val)
+
+    def __eq__(self, other):
+        if isinstance(other, String):
+            return self.val == other.val
+        else:
+            return self.val == other
+
+    def __lt__(self, other):
+        if isinstance(other, String):
+            return self.val < other.val
+        else:
+            return self.val < other
+
+
+@total_ordering
 class Number(Commented):
 
     def str_to_val(self, string):
@@ -374,6 +395,23 @@ class Number(Commented):
         except ValueError:
             return float(string)
 
+    def __hash__(self):
+        return hash(self.val)
+
+    def __str__(self):
+        return str(self.val)
+
+    def __eq__(self, other):
+        if isinstance(other, Number):
+            return self.val == other.val
+        else:
+            return self.val == other
+
+    def __lt__(self, other):
+        if isinstance(other, Number):
+            return self.val < other.val
+        else:
+            return self.val < other
 
 class Date(Commented):
 
@@ -513,7 +551,7 @@ class Obj(Stringifiable):
         return len(self.contents)
 
     def __contains__(self, item):
-        return item in self.contents
+        return item in self.contents or item in self.dictionary
 
     def __iter__(self):
         return iter(self.contents)
