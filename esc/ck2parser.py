@@ -713,7 +713,7 @@ class FullTokenizer(SimpleTokenizer):
         ('op', (r'[<=>]=?',)),
         ('date', (r'-?\d*\.\d*\.\d*',)),
         ('number', (r'-?\d+(\.\d+)?(?!\w)',)),
-        ('quoted_string', (r'".*?"',)),
+        ('quoted_string', (r'(?s)".*?"',)),
         ('unquoted_string', (r'[^\s"#<=>{}]+',))
     ]
     useless = ['whitespace']
@@ -970,7 +970,7 @@ class FullParser(SimpleParser):
         op = commented(toktype('op')) >> unarg(Op)
         number = commented(toktype('number')) >> unarg(Number)
         date = commented(toktype('date')) >> unarg(Date)
-        key = unquoted_string | date | number
+        key = unquoted_string | date | number | quoted_string
         value = forward_decl()
         pair = key + op + value >> unarg(Pair)
         if self.strict:
