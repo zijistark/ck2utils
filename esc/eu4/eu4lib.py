@@ -278,7 +278,24 @@ class TradeCompany(NameableEntityWithProvincesAndColor):
 
 
 class TradeNode(NameableEntityWithProvincesAndColor):
-    pass
+
+    def __init__(self, name, display_name, location, outgoing_node_names=None, inland=False, endnode=False, provinces=None, provinceIDs=None, parser=None, color=None):
+        super().__init__(name, display_name, provinces, provinceIDs, parser, color)
+        self.location = location
+        if outgoing_node_names is not None:
+            self.outgoing_node_names = outgoing_node_names
+        else:
+            self.outgoing_node_names = []
+        self.inland = inland
+        self.endnode = endnode
+
+    @cached_property
+    def outgoing_nodes(self):
+        return [self.parser.all_trade_nodes[name] for name in self.outgoing_node_names]
+
+    @cached_property
+    def incoming_nodes(self):
+        return [node for node in self.parser.all_trade_nodes.values() if self.name in node.outgoing_node_names]
 
 
 class IdeaGroup(NameableEntity):

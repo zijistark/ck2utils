@@ -337,8 +337,24 @@ class Eu4MapParser(Eu4Parser):
                     color = Eu4Color.new_from_parser_obj(data['color'])
                 else:
                     color = self.color_list[nodecounter]
+                if 'outgoing' in data:
+                    outgoing = [v['name'].val for k, v in data if k == 'outgoing']
+                else:
+                    outgoing = []
+                if 'inland' in data and data['inland'] == 'yes':
+                    inland = True
+                else:
+                    inland = False
+                if 'end' in data and data['end'] == 'yes':
+                    endnode = True
+                else:
+                    endnode = False
                 all_trade_nodes[trade_node_name.val] = TradeNode(trade_node_name.val,
                                                                  self.localize(trade_node_name.val),
+                                                                 location=self.all_provinces[data['location']],
+                                                                 outgoing_node_names=outgoing,
+                                                                 inland=inland,
+                                                                 endnode=endnode,
                                                                  provinceIDs=provinces, color=color, parser=self)
         return all_trade_nodes
 
