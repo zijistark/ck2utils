@@ -863,6 +863,14 @@ class SimpleParser:
     def file(self, *args, **kwargs):
         return next(self.files(*args, **kwargs))
 
+    def merge_parse(self, glob, basedir=None, moddirs=None, **kwargs):
+        """parse files, merge all top level items into one dictionary and return the items of that dictionary"""
+        dictionary = {}
+        for filename, tree in self.parse_files(glob, basedir, moddirs, **kwargs):
+            dictionary.update(tree.dictionary)
+
+        return dictionary.items()
+
     def parse_files(self, glob, basedir=None, moddirs=None, **kwargs):
         if moddirs is None:
             moddirs = self.moddirs
