@@ -16,6 +16,7 @@ from funcparserlib.lexer import make_tokenizer, Token
 from funcparserlib.parser import (some, a, maybe, many, finished, skip,
                                   oneplus, forward_decl, NoParseError)
 from localpaths import rootpath, vanilladir, cachedir
+from functools import total_ordering
 
 try:
     import git
@@ -353,6 +354,7 @@ class Commented(Stringifiable):
         return s, (nl, col)
 
 
+@total_ordering
 class String(Commented):
 
     def __init__(self, *args):
@@ -365,7 +367,26 @@ class String(Commented):
             s = '"{}"'.format(s)
         return s
 
+    def __str__(self):
+        return self.val
 
+    def __hash__(self):
+        return hash(self.val)
+
+    def __eq__(self, other):
+        if isinstance(other, String):
+            return self.val == other.val
+        else:
+            return self.val == other
+
+    def __lt__(self, other):
+        if isinstance(other, String):
+            return self.val < other.val
+        else:
+            return self.val < other
+
+
+@total_ordering
 class Number(Commented):
 
     def str_to_val(self, string):
@@ -374,6 +395,23 @@ class Number(Commented):
         except ValueError:
             return float(string)
 
+    def __hash__(self):
+        return hash(self.val)
+
+    def __str__(self):
+        return str(self.val)
+
+    def __eq__(self, other):
+        if isinstance(other, Number):
+            return self.val == other.val
+        else:
+            return self.val == other
+
+    def __lt__(self, other):
+        if isinstance(other, Number):
+            return self.val < other.val
+        else:
+            return self.val < other
 
 class Date(Commented):
 
@@ -513,7 +551,7 @@ class Obj(Stringifiable):
         return len(self.contents)
 
     def __contains__(self, item):
-        return item in self.contents
+        return item in self.contents or item in self.dictionary
 
     def __iter__(self):
         return iter(self.contents)
@@ -676,7 +714,7 @@ class SimpleTokenizer:
         ('Space', (r'\s+',)),
         ('Brace', (r'[{}]',)),
         ('Op', (r'[<=>]=?',)),
-        ('String', (r'".*?"',)),
+        ('String', (r'(?s)".*?"',)),
         ('Key', (r'[^\s"#<=>{}]+',))
     ]
     useless = ['Comment', 'Space']
@@ -713,7 +751,7 @@ class FullTokenizer(SimpleTokenizer):
         ('op', (r'[<=>]=?',)),
         ('date', (r'-?\d*\.\d*\.\d*',)),
         ('number', (r'-?\d+(\.\d+)?(?!\w)',)),
-        ('quoted_string', (r'".*?"',)),
+        ('quoted_string', (r'(?s)".*?"',)),
         ('unquoted_string', (r'[^\s"#<=>{}]+',))
     ]
     useless = ['whitespace']
@@ -765,7 +803,7 @@ class SimpleParser:
         date = toktype('Date') >> Date
         name = toktype('Name') >> String
         string = toktype('String') >> (lambda s: s[1:-1]) >> String
-        key = date | number | name
+        key = date | number | name | string
         pair = forward_decl()
         if self.strict:
             obj = kel + many(pair | string | key) + ker >> unarg(Obj)
@@ -862,6 +900,14 @@ class SimpleParser:
 
     def file(self, *args, **kwargs):
         return next(self.files(*args, **kwargs))
+
+    def merge_parse(self, glob, basedir=None, moddirs=None, **kwargs):
+        """parse files, merge all top level items into one dictionary and return the items of that dictionary"""
+        dictionary = {}
+        for filename, tree in self.parse_files(glob, basedir, moddirs, **kwargs):
+            dictionary.update(tree.dictionary)
+
+        return dictionary.items()
 
     def parse_files(self, glob, basedir=None, moddirs=None, **kwargs):
         if moddirs is None:
@@ -962,7 +1008,7 @@ class FullParser(SimpleParser):
         op = commented(toktype('op')) >> unarg(Op)
         number = commented(toktype('number')) >> unarg(Number)
         date = commented(toktype('date')) >> unarg(Date)
-        key = unquoted_string | date | number
+        key = unquoted_string | date | number | quoted_string
         value = forward_decl()
         pair = key + op + value >> unarg(Pair)
         if self.strict:

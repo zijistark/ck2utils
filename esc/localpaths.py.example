@@ -1,0 +1,34 @@
+import pathlib
+
+# this folder should be the parent folder of this repository, because some scripts assume this.
+# It is used to store some output files and some scripts for specific ck2 mods
+# assume that the git repository of the mod is checked out into a subfolder
+# of the rootpath. Other configurations default to subfolders of the rootpath, but this is optional
+rootpath = pathlib.Path(__file__).absolute().parents[2]  # go two levels up from the folder which contains this file
+# rootpath = pathlib.Path('/cygdrive/c/git')
+
+# the folder where ck2 is installed (only needed for ck2 scripts)
+vanilladir = pathlib.Path('c:/Program Files (x86)/Steam/steamapps/common/Crusader Kings II')            # windows
+# vanilladir = pathlib.Path('/cygdrive/c/Program Files (x86)/Steam/steamapps/common/Crusader Kings II') # cygwin
+# vanilladir = pathlib.Path('~/.steam/steam/steamapps/common/Crusader Kings II').expanduser()           # linux
+
+# the folder where eu4 is installed (only needed for eu4 scripts)
+eu4dir = pathlib.Path('c:/Program Files (x86)/Steam/steamapps/common/Europa Universalis IV')            # windows
+# eu4dir = pathlib.Path('/cygdrive/c/Program Files (x86)/Steam/steamapps/common/Europa Universalis IV') # cygwin
+# eu4dir = pathlib.Path('~/.steam/steam/steamapps/common/Europa Universalis IV').expanduser()           # linux
+
+# the folder where ck3 is installed (only needed for ck3 scripts)
+ck3dir = pathlib.Path('c:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III')               # windows
+# ck3dir = pathlib.Path('/cygdrive/c/Program Files (x86)/Steam/steamapps/common/Crusader Kings III')    # cygwin
+# ck3dir = pathlib.Path('~/.steam/steam/steamapps/common/Crusader Kings III').expanduser()              # linux
+
+# the ck2parser class caches its parsing in this folder. The eu4 parsers also store the output of expensive operations
+# here.  For the eu4 scripts, you can disable the caching by setting it to None, but that currently breaks the ck2parser
+cachedir = rootpath / 'parsecache'
+# the ck3parser class caches its parsing in this folder
+ck3cachedir = rootpath / 'parsecache' / 'ck3parser'
+
+# newer eu4 scripts store their output in a subfolder of the outpath named after the eu4 version number
+outpath = rootpath / 'output'
+
+
