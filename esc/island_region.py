@@ -66,7 +66,8 @@ def main():
         parent_provs = set()
         for n, v in tree:
             if n.val.startswith('c_'):
-                child_provs = {county_id_map[n.val]}
+                if not v.get('landless'):
+                    child_provs = {county_id_map[n.val]}
             elif re.match(r'[ekd]_', n.val):
                 child_provs = recurse(v)
             else:
