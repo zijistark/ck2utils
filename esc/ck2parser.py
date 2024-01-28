@@ -38,11 +38,31 @@ def csv_rows(path, linenum=False, comments=False):
                     not r[0].startswith('#') and len(r) > 1)))
         yield from gen
 
+def replace_paths_from_mod(path):
+    result = set()
+    try:
+        modfile = next(path.glob('*.mod'))
+    except StopIteration:
+        return result
+    with open(modfile) as f:
+        for line in f:
+            if match := re.match(r'replace_path\s*=\s*"([^"]+)"', line):
+                result.add(pathlib.Path(match[1]))
+    return result
+
+
 # give mod dirs in descending lexicographical order of mod name (Z-A),
 # modified for dependencies as necessary.
 def files(glob, moddirs=(), basedir=vanilladir, reverse=False):
-    result_paths = {p.relative_to(d): p
-                    for d in (basedir,) + tuple(moddirs) for p in d.glob(glob)}
+    result_paths = {}
+    for d in (basedir,) + tuple(moddirs):
+        # this should be cached...
+        if replace_paths := replace_paths_from_mod(d):
+            for k in list(result_paths.keys()):
+                if not replace_paths.isdisjoint(k.parents):
+                    del result_paths[k]
+        for p in d.glob(glob):
+            result_paths[p.relative_to(d)] = p
     for _, p in sorted(result_paths.items(), key=lambda t: t[0].parts,
                        reverse=reverse):
         yield p
