@@ -11,8 +11,11 @@ from print_time import print_time
 
 IGNORE_COMMENTS = False
 
-BINARY = ['.dds', '.tga', '.xac', '.bmp', '.db', '.jpg', '.yml', '.xlsx',
-          '.ogg', '.wav', '.xcf', '.psd', '.sublime-workspace', '.rar']
+BINARY = {'.dds', '.tga', '.xac', '.bmp', '.db', '.jpg', '.yml', '.xlsx',
+          '.ogg', '.wav', '.xcf', '.psd', '.sublime-workspace', '.rar', '.md',
+          '.anim', '.png', '.mesh', '.info', '.zip', '.mp3', '.exe', '.dll',
+          '.pak', '.xsm', '.ani', '.cur', '.xls'}
+SKIP_DIRS = {'.git', '.svn'}
 
 @print_time
 def main():
@@ -23,7 +26,7 @@ def main():
     audit = defaultdict(list)
     for path in sorted(wd.rglob('*')):
         if (path.is_file() and path.suffix not in BINARY and
-            '.git' not in path.parts):
+            SKIP_DIRS.isdisjoint(path.parts)):
             relpath = path.relative_to(wd)
             try:
                 with path.open(encoding='cp1252', errors='surrogateescape',
@@ -34,6 +37,9 @@ def main():
                         for match in re.findall(bad_chars, line):
                             result = '{}: {!r}'.format(i + 1, match)
                             audit[relpath].append(result)
+                        if len(audit[relpath]) > 99:
+                            audit[relpath] = [audit[relpath][0], '...']
+                            break
             except Exception:
                 audit[relpath].append(str(sys.exc_info()[1]))
     if audit:
