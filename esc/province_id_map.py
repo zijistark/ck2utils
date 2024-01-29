@@ -18,17 +18,19 @@ def main():
     inhabited_provs = set()
     colors = {
         'land': np.uint8((127, 127, 127)),
-        'sea': np.uint8((51, 67, 85)),
+        'sea': np.uint8((70, 92, 117)),
+        'impassable_sea': np.uint8((51, 67, 85)),
+        'major_rivers': np.uint8((89, 117, 149)),
         'desert': np.uint8((36, 36, 36)),
-        'mountains': np.uint8((0, 0, 0))
+        'impassable_land': np.uint8((0, 0, 0)),
     }
     rgb_number_map = {
         tuple(np.uint8((0, 0, 0))): np.uint16(0),
         tuple(np.uint8((255, 255, 255))): np.uint16(max_provinces)
     }
     prov_color_lut = np.full(max_provinces + 1, colors['desert'], '3u1')
-    prov_color_lut[0] = colors['mountains']
-    prov_color_lut[max_provinces] = colors['sea']
+    prov_color_lut[0] = colors['impassable_land']
+    prov_color_lut[max_provinces] = colors['impassable_sea']
     for row in csv_rows(parser.file('map/' + default_tree['definitions'].val)):
         try:
             number = int(row[0])
@@ -48,6 +50,9 @@ def main():
         if n.val == 'sea_zones':
             i, j = (int(n2.val) for n2 in v)
             prov_color_lut[i:j + 1] = colors['sea']
+    for n, v in default_tree:
+        if n.val == 'major_rivers':
+            prov_color_lut[[n2.val for n2 in v]] = colors['major_rivers']
     uninhabited_provs = set(range(1, max_provinces)) - inhabited_provs
 
     image = Image.open(str(provinces_path))
