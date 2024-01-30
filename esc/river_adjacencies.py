@@ -87,7 +87,7 @@ def main():
     old_adjacencies = []
     for row in csv_rows(parser.file('map/' + default_tree['adjacencies'].val)):
         try:
-            if row[2] == 'major_river':
+            if row[2] == 'major_river': # or row[2] == 'sea':
                 one, two, river = int(row[0]), int(row[1]), int(row[3])
                 if two < one:
                     one, two = two, one

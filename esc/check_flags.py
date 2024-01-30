@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import hashlib
+from pathlib import Path
 import re
 from ck2parser import rootpath, vanilladir, is_codename, SimpleParser
 from print_time import print_time
@@ -8,7 +9,7 @@ from print_time import print_time
 
 @print_time
 def main():
-    parser = SimpleParser(rootpath / 'SWMH-BETA/SWMH')
+    parser = SimpleParser(Path.cwd())
     placeholder_md5 = '5c9d144af032f709172c564dc1d641b9'
     titles = []
     for _, tree in parser.parse_files('common/landed_titles/*.txt'):

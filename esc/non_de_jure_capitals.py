@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from pathlib import Path
 import re
 from ck2parser import rootpath, get_provinces, SimpleParser
 from print_time import print_time
@@ -39,7 +40,7 @@ def process_landed_titles(parser, prov_title):
 
 @print_time
 def main():
-    parser = SimpleParser(rootpath / 'SWMH-BETA/SWMH')
+    parser = SimpleParser(Path.cwd())
     province_title = {prov: title for prov, title, _ in get_provinces(parser)}
     process_landed_titles(parser, province_title)
 

@@ -23,8 +23,8 @@ def main():
     mask[np.nonzero(np.all(a == 0, axis=2))] = True
     b[:, :, 3][mask] = 255 # set border pixel transparency to opaque
     out_image = Image.fromarray(b)
-    mod = parser.moddirs[0].name.lower() + '_' if parser.moddirs else ''
-    out_path = rootpath / (mod + 'borderlayer.png')
+    modnames = ''.join(x.name.lower() + '_' for x in parser.moddirs)
+    out_path = rootpath / (modnames + 'borderlayer.png')
     out_image.save(str(out_path))
 
 if __name__ == '__main__':

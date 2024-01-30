@@ -36,6 +36,7 @@ rootpath = ck2parser.rootpath
 
 modpaths = []
 # modpaths.append(rootpath / 'SWMH-BETA/SWMH')
+# modpaths.append(pathlib.Path('~/moddir/WH-Geheimnisnacht').expanduser())
 
 csv.register_dialect('ckii', delimiter=';', doublequote=False,
                      quotechar='\0', quoting=csv.QUOTE_NONE, strict=True)
@@ -46,12 +47,8 @@ CKII_DIR = ck2parser.vanilladir
 
 OUTPUT_FILE = rootpath / 'table.txt'
 
-if not modpaths:
-    borders_path = rootpath / 'borderlayer.png'
-elif modpaths[0].name == 'SWMH':
-    borders_path = rootpath / 'swmh_borderlayer.png'
-else:
-    borders_path = None
+modnames = ''.join(x.name.lower() + '_' for x in parser.moddirs)
+borders_path = rootpath / (modnames + 'borderlayer.png')
 
 EARLIEST_DATE = (float('-inf'),) * 3
 LATEST_DATE = (float('inf'),) * 3
@@ -91,6 +88,11 @@ class Title:
         return Title.instances.values()
 
     @classmethod
+    def kingdoms(cls):
+        return (title for title in Title.all()
+                if title.codename.startswith('k_'))
+
+    @classmethod
     def duchies(cls):
         return (title for title in Title.all()
                 if title.codename.startswith('d_'))
@@ -112,6 +114,15 @@ class Title:
             Title(title)
         return Title.instances[title]
 
+    @classmethod
+    def crusade_weight_values(cls, religion):
+        result = set()
+        for t in Title.kingdoms():
+            if v := t.crusade_weight.get(religion):
+                result.add(v)
+        return result
+
+
     def __init__(self, codename):
         self.codename = codename
         self.lieges = {}
@@ -122,6 +133,7 @@ class Title:
         self.name = localisation.get(codename, codename)
         self.other_names = []
         self.neighbors = []
+        self.crusade_weight = {}
         Title.instances[codename] = self
 
     def set_id(self, province_id):
@@ -204,7 +216,19 @@ class Title:
     def coastal(self):
         return any(x in Title.seas for x in Title.province_graph[self.id])
 
+    def kingdom(self, when=EARLIEST_DATE):
+        if self.codename.startswith('e'):
+            return None
+        title = self
+        while not title.codename.startswith('k'):
+            title = title.liege(when)
+            if not title:
+                return None
+        return title
+
 cultures = []
+religions = []
+religion_groups = collections.defaultdict(list)
 localisation = {}
 
 def parse_files(glob):
@@ -226,8 +250,15 @@ def parse_file(path):
 # give mod dirs in descending lexicographical order of mod name (Z-A),
 # modified for dependencies as necessary.
 def files(glob, basedir=CKII_DIR, reverse=False):
-    result_paths = {p.relative_to(d): p
-                    for d in (basedir,) + tuple(modpaths) for p in d.glob(glob)}
+    result_paths = {}
+    for d in (basedir,) + tuple(modpaths):
+        # this should be cached...
+        if replace_paths := ck2parser.replace_paths_from_mod(d):
+            for k in list(result_paths.keys()):
+                if not replace_paths.isdisjoint(k.parents):
+                    del result_paths[k]
+        for p in d.glob(glob):
+            result_paths[p.relative_to(d)] = p
     for _, p in sorted(result_paths.items(), key=lambda t: t[0].parts,
                        reverse=reverse):
         yield p
@@ -237,8 +268,18 @@ def process_cultures(cultures_txts):
         cultures.extend(n2 for _, v1 in v for n2, v2 in v1
                         if isinstance(v2, list))
 
+def process_religions(religions_txts):
+    for _, v in religions_txts:
+        for n1, v1 in v:
+            for n2, v2 in v1:
+                if isinstance(v2, list) and n2 not in {"color",
+                    "male_names", "female_names", "interface_skin"}:
+                        religions.append(n2)
+                        religion_groups[n1].append(n2)
+
 # pre: process_localisation
 # pre: process_cultures
+# pre: process_religions
 def process_landed_titles(landed_titles_txts):
     def recurse(v, n=None):
         for n1, v1 in v:
@@ -251,6 +292,11 @@ def process_landed_titles(landed_titles_txts):
             for n2, v2 in v1:
                 if n2 in cultures:
                     title.add_other_name(v2)
+                elif n2 in religions:
+                    title.crusade_weight[n2] = v2
+                elif n2 in religion_groups:
+                    for r in religion_groups[n2]:
+                        title.crusade_weight[r] = v2
             recurse(v1, n1)
 
     for _, v in landed_titles_txts:
@@ -456,6 +502,11 @@ def generate_province_map(in_path, out_dir, value):
         title_value = lambda title: (
             title.max_holdings - sum(1 for t in title.built_holdings(start)))
         vmin, vmax = 0, 6
+    elif value.endswith('chaos_crusade_weight'):
+        weights = [0] + sorted(Title.crusade_weight_values('chaos'))
+        title_value = lambda title: (
+            weights.index(title.kingdom().crusade_weight.get('chaos', 0)))
+        vmin, vmax = 0, len(weights) - 1
     elif value.endswith('divided_by_area'):
         if not value.startswith('log_'):
             wasteland_color = COLORMAP[1]
@@ -790,8 +841,10 @@ def main():
     provinces_txts = parse_files('history/provinces/*.txt')
     landed_titles_txts = parse_files('common/landed_titles/*.txt')
     cultures_txts = parse_files('common/cultures/*.txt')
+    religions_txts = parse_files('common/religions/*.txt')
     parse_csvs(files('localisation/*.csv'), process_localisation_row)
     process_cultures(cultures_txts)
+    process_religions(religions_txts)
     process_landed_titles(landed_titles_txts)
     process_provinces(provinces_txts)
     process_titles(titles_txts)
@@ -808,37 +861,38 @@ def main():
     # check_nomads()
     # provinces_info()
 
-    duchy_county_stats()
+    # duchy_county_stats()
 
-    output = format_duchies_table()
-    output = re.sub(r' {2,}', ' ', output)
-    with (rootpath / 'duchies_table.txt').open('w') as f:
-        f.write(output)
+    # output = format_duchies_table()
+    # output = re.sub(r' {2,}', ' ', output)
+    # with (rootpath / 'duchies_table.txt').open('w') as f:
+    #     f.write(output)
 
-    output = format_counties_table()
-    output = re.sub(r' {2,}', ' ', output)
-    with (rootpath / 'counties_table.txt').open('w') as f:
-        f.write(output)
+    # output = format_counties_table()
+    # output = re.sub(r' {2,}', ' ', output)
+    # with (rootpath / 'counties_table.txt').open('w') as f:
+    #     f.write(output)
 
-    output = format_other_provs_table()
-    output = re.sub(r' {2,}', ' ', output)
-    with (rootpath / 'other_provs_table.txt').open('w') as f:
-        f.write(output)
+    # output = format_other_provs_table()
+    # output = re.sub(r' {2,}', ' ', output)
+    # with (rootpath / 'other_provs_table.txt').open('w') as f:
+    #     f.write(output)
 
     province_map_out = rootpath
     maps = [
-        'max_settlements',
-        'defined_baronies',
-        'defined_baronies_minus_max_settlements',
-        '1066_built_holdings',
-        'max_settlements_minus_1066_built_holdings',
-        'max_settlements_divided_by_area',
-        'log_max_settlements_divided_by_area',
-        '1066_built_holdings_divided_by_area',
-        'log_1066_built_holdings_divided_by_area',
+        'chaos_crusade_weight',
+        # 'max_settlements',
+        # 'defined_baronies',
+        # 'defined_baronies_minus_max_settlements',
+        # '1066_built_holdings',
+        # 'max_settlements_minus_1066_built_holdings',
+        # 'max_settlements_divided_by_area',
+        # 'log_max_settlements_divided_by_area',
+        # '1066_built_holdings_divided_by_area',
+        # 'log_1066_built_holdings_divided_by_area',
     ]
-    # for value in maps:
-    #     generate_province_map(map_provinces, province_map_out, value)
+    for value in maps:
+        generate_province_map(map_provinces, province_map_out, value)
 
     # import pdb;pdb.set_trace()
 

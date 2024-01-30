@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
 from collections import defaultdict
+from pathlib import Path
 from ck2parser import rootpath, is_codename, SimpleParser
 from print_time import print_time
 
 
 @print_time
 def main():
-    parser = SimpleParser(rootpath / 'SWMH-BETA/SWMH')
+    parser = SimpleParser(Path.cwd())
     color_title_map = {}
     color_duplicates = defaultdict(set)
     for path, tree in parser.parse_files('common/landed_titles/*.txt'):

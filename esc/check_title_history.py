@@ -3,6 +3,7 @@
 from bisect import insort
 from collections import defaultdict, namedtuple
 from operator import attrgetter
+from pathlib import Path
 from intervaltree import Interval, IntervalTree
 from ck2parser import (rootpath, vanilladir, is_codename, TopLevel, Number,
                        Pair, Obj, Date as ASTDate, Comment, SimpleParser,
@@ -15,7 +16,7 @@ LANDED_TITLES_ORDER = True # if false, date order
 
 PRUNE_UNEXECUTED_HISTORY = True # prune all after last playable start
 PRUNE_IMPOSSIBLE_STARTS = True # implies prev
-PRUNE_NONBOOKMARK_STARTS = False # implies prev
+PRUNE_NONBOOKMARK_STARTS = True # implies prev
 PRUNE_NONERA_STARTS = False # implies prev
 
 PRUNE_ALL_BUT_DATES = [] # overrides above
@@ -321,9 +322,9 @@ def prune_tree(ivt, date_filter, pred=None):
 @print_time
 def main():
     intervaltree_patch_issue_41()
-    simple_parser = SimpleParser(rootpath / 'SWMH-BETA/SWMH')
+    simple_parser = SimpleParser(Path.cwd())
     if FORMAT_TITLE_HISTORY or CLEANUP_TITLE_HISTORY:
-        history_parser = FullParser(rootpath / 'SWMH-BETA/SWMH')
+        history_parser = FullParser(Path.cwd())
     else:
         history_parser = simple_parser
     history_parser.no_fold_to_depth = 0

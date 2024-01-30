@@ -13,8 +13,7 @@ from ck2parser import (rootpath, files, csv_rows, get_cultures, is_codename,
                        get_localisation, SimpleParser, FullParser, NoParseError)
 from print_time import print_time
 
-modpath = rootpath / 'SWMH-BETA/SWMH'
-# modpath = pathlib.Path('/cygdrive/c/Users/Nicholas/Documents/Paradox Interactive/Crusader Kings II/mod/Britannia')
+modpath = pathlib.Path.cwd()
 
 def recurse_comments(parser, comments):
     if comments:

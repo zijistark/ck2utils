@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
 import collections
+from pathlib import Path
 from ck2parser import rootpath, vanilladir, is_codename, Obj, SimpleParser
 from print_time import print_time
 
-modpath = rootpath / 'SWMH-BETA/SWMH'
-epoch = 1066, 9, 15
+modpath = rootpath / Path.cwd()
 
 def get_crsdr_grp_map(parser):
     crsdr_grp_map = {}
-    for _, tree in parser.parse_files('common/religions/*'):
+    for _, tree in parser.parse_files('common/religions/*.txt'):
         for n, v in tree:
             for n2, v2 in v:
                 if (isinstance(v2, Obj) and
@@ -35,14 +35,14 @@ def process_landed_titles(parser, crsdr_grp_map):
     grp_crsdr_map = collections.defaultdict(list)
     for k, v in crsdr_grp_map.items():
         grp_crsdr_map[v].append(k)
-    for _, tree in parser.parse_files('common/landed_titles/*'):
+    for _, tree in parser.parse_files('common/landed_titles/*.txt'):
         yield from recurse(tree)
 
 @print_time
 def main():
     parser = SimpleParser()
-    parser.moddirs = [rootpath / 'SWMH-BETA/SWMH']
-    crsdr_grp_map = get_crsdr_grp_map()
+    parser.moddirs = [modpath]
+    crsdr_grp_map = get_crsdr_grp_map(parser)
     relg_weights = {relg: {} for relg in crsdr_grp_map
                              if crsdr_grp_map[relg] is not None}
     weight_counts = collections.Counter()
@@ -50,7 +50,7 @@ def main():
         assert title not in relg_weights[relg]
         relg_weights[relg][title] = weight
         weight_counts[weight] += 1
-    
+
     for weight, count in sorted(weight_counts.items(), reverse=True):
         print('{:6} {:3}'.format(weight, count))
 

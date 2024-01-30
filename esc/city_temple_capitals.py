@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import collections
+from pathlib import Path
 import ck2parser
 import print_time
 
@@ -8,7 +9,7 @@ import print_time
 @print_time.print_time
 def main():
     out_path = ck2parser.rootpath / 'city_temple_capitals.txt'
-    parser = ck2parser.SimpleParser(ck2parser.rootpath / 'SWMH-BETA/SWMH')
+    parser = ck2parser.SimpleParser(Path.cwd())
     id_title = {}
     errors = []
     results = set()

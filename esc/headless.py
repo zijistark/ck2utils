@@ -87,7 +87,7 @@ def get_headless(where):
 
 @print_time
 def main():
-    headless = get_headless(swmhpath)
+    headless = get_headless(pathlib.Path.cwd())
     with (rootpath / 'out.txt').open('w') as f:
         f.write('\n'.join(headless))
 
